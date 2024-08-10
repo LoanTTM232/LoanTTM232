@@ -1,0 +1,5 @@
+# ignore for javascript
+node_modules/
+dist/
+
+.env
