@@ -1,0 +1,193 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model SportType {
+  id            Int             @id @default(autoincrement())
+  name          String          @db.VarChar(255)
+  createdAt     DateTime        @default(now()) @db.Timestamp()
+  updatedAt     DateTime        @updatedAt
+  clubSportType ClubSportType[]
+}
+
+model PaymentInfo {
+  id        Int      @id @default(autoincrement())
+  qrcode    String   @db.Text
+  username  String   @db.VarChar(255)
+  bankname  String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamp()
+  updatedAt DateTime @updatedAt
+  clubs     Club[]
+}
+
+model Service {
+  id       Int     @id @default(autoincrement())
+  name     String  @db.VarChar(255)
+  icon     String  @db.VarChar(50)
+  price    Decimal @db.Money
+  describe String  @db.Text
+  status   Int     @db.SmallInt
+  units    Unit[]
+}
+
+model Role {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(50)
+  users User[]
+}
+
+model User {
+  id              Int            @id @default(autoincrement())
+  firstname       String         @db.VarChar(100)
+  lastname        String         @db.VarChar(100)
+  email           String         @unique @db.VarChar(255)
+  phone           String         @unique @db.VarChar(30)
+  password        String         @db.VarChar(255)
+  active          Boolean        @default(false)
+  deleted         Boolean        @default(false)
+  createdAt       DateTime       @default(now()) @db.Timestamp()
+  updatedAt       DateTime       @updatedAt
+  roleId          Int
+  role            Role           @relation(fields: [roleId], references: [id])
+  sendNotify      Notification[] @relation(name: "Sender")
+  recipientNotify Notification[] @relation(name: "Recipient")
+  clubs           Club[]
+  bookings        Booking[]
+}
+
+model NotificationType {
+  id            Int            @id @default(autoincrement())
+  name          String         @db.VarChar(255)
+  template      String         @db.Text
+  describe      String         @db.Text
+  createdAt     DateTime       @default(now()) @db.Timestamp()
+  updatedAt     DateTime       @updatedAt
+  notifications Notification[]
+}
+
+model Notification {
+  id                 Int              @id @default(autoincrement())
+  readAt             DateTime         @db.Timestamp()
+  additionData       Json?
+  status             Int              @db.SmallInt
+  createdAt          DateTime         @default(now()) @db.Timestamp()
+  updatedAt          DateTime         @updatedAt
+  senderId           Int
+  sender             User             @relation(name: "Sender", fields: [senderId], references: [id])
+  recipientId        Int
+  recipient          User             @relation(name: "Recipient", fields: [recipientId], references: [id])
+  notificationTypeId Int
+  notificationType   NotificationType @relation(fields: [notificationTypeId], references: [id])
+}
+
+model Club {
+  id            Int             @id @default(autoincrement())
+  name          String          @unique @db.VarChar(255)
+  openTime      String          @db.Char(5)
+  closeTime     String          @db.Char(5)
+  createdAt     DateTime        @default(now()) @db.Timestamp()
+  updatedAt     DateTime        @updatedAt
+  paymentInfo   PaymentInfo     @relation(fields: [paymentInfoId], references: [id])
+  paymentInfoId Int
+  client        User            @relation(fields: [clientId], references: [id])
+  clientId      Int
+  clubSportType ClubSportType[]
+  clubMedia     ClubMedia[]
+}
+
+model Unit {
+  id            Int             @id @default(autoincrement())
+  name          String          @unique @db.VarChar(255)
+  address       String          @unique @db.VarChar(255)
+  phone         String          @unique @db.VarChar(30)
+  describe      String          @db.Text
+  openTime      String          @db.Char(5)
+  closeTime     String          @db.Char(5)
+  longitude     Decimal
+  latitude      Decimal
+  isAvailable   Boolean         @default(false)
+  status        Int             @db.SmallInt
+  createdAt     DateTime        @default(now()) @db.Timestamp()
+  updatedAt     DateTime        @updatedAt
+  serviceId     Int
+  service       Service         @relation(fields: [serviceId], references: [id])
+  prices        UnitPrice[]
+  unitMedias    UnitMedia[]
+  bookings      Booking[]
+  clubSportType ClubSportType[]
+}
+
+model ClubSportType {
+  id          Int       @id @default(autoincrement())
+  sportType   SportType @relation(fields: [sportTypeId], references: [id])
+  sportTypeId Int
+  clubId      Int
+  club        Club      @relation(fields: [clubId], references: [id])
+  unitId      Int
+  unit        Unit      @relation(fields: [unitId], references: [id])
+}
+
+model UnitPrice {
+  id        Int     @id @default(autoincrement())
+  value     Decimal @db.Money
+  startTime String  @db.Char(5)
+  endTime   String  @db.Char(5)
+  unitId    Int
+  unit      Unit    @relation(fields: [unitId], references: [id])
+}
+
+model Media {
+  id         Int         @id @default(autoincrement())
+  filePath   String      @db.VarChar(300)
+  fileType   String      @db.VarChar(15)
+  uploadAt   DateTime    @db.Timestamp()
+  unitMedias UnitMedia[]
+  booking    Booking?
+  clubMedia  ClubMedia[]
+}
+
+model UnitMedia {
+  id      Int   @id @default(autoincrement())
+  unitId  Int
+  unit    Unit  @relation(fields: [unitId], references: [id])
+  mediaId Int
+  media   Media @relation(fields: [mediaId], references: [id])
+}
+
+model ClubMedia {
+  id      Int   @id @default(autoincrement())
+  clubId  Int
+  club    Club  @relation(fields: [clubId], references: [id])
+  mediaId Int
+  media   Media @relation(fields: [mediaId], references: [id])
+}
+
+model Booking {
+  id         Int      @id @default(autoincrement())
+  totalPrice Decimal  @db.Money
+  startTime  DateTime @db.Timestamp()
+  endTime    DateTime @db.Timestamp()
+  status     Int      @db.SmallInt
+  isApprove  Boolean  @default(false)
+  isPaid     Boolean  @default(false)
+  createdAt  DateTime @default(now()) @db.Timestamp()
+  updatedAt  DateTime @updatedAt
+  tax        Int      @db.SmallInt
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  unitId     Int
+  unit       Unit     @relation(fields: [unitId], references: [id])
+  evidentId  Int      @unique
+  evident    Media    @relation(fields: [evidentId], references: [id])
+}

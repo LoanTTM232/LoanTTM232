@@ -1,19 +1,15 @@
-/// external package imports
-import morgan, { StreamOptions } from 'morgan'
+import { NextFunction, Request, Response } from 'express'
+import log from '@/config/logger'
 
-/// internal package imports
-import { isDev } from '@/config/env'
-import Logger from '@/config/logger'
+function loggerMiddleware(req: Request, res: Response, next: NextFunction) {
+  log.http(`Incomming - Method: [${req.method}] - Url: [${req.url}] - IP: [${req.socket.remoteAddress}]`)
 
-const stream: StreamOptions = {
-  write: (message) => Logger.http(message)
+  res.on('finish', () => {
+    log.http(
+      `Incomming - Method: [${req.method}] - Url: [${req.url}] - IP: [${req.socket.remoteAddress}] - Status: [${res.statusCode}]`
+    )
+  })
+  next()
 }
-
-const skip = () => {
-  return isDev()
-}
-
-// Build the morgan middleware
-const loggerMiddleware = morgan(':method :url :status :res[content-length] - :response-time ms', { stream, skip })
 
 export default loggerMiddleware

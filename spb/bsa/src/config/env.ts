@@ -21,7 +21,7 @@ export default {
   /**
    * API server port
    */
-  port: parseInt(process.env.PORT as string, 10) || _default.PORT,
+  server_port: parseInt(process.env.PORT as string, 10) || _default.PORT,
 
   /**
    * Database URL
