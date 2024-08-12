@@ -191,3 +191,17 @@ model Booking {
   evidentId  Int      @unique
   evident    Media    @relation(fields: [evidentId], references: [id])
 }
+
+model Location {
+  id       Int    @id @default(autoincrement())
+  province String @db.VarChar(255)
+  city     String @db.VarChar(255)
+  district String @db.VarChar(255)
+}
+
+model Metadata {
+  id      Int     @id @default(autoincrement())
+  key     String  @db.Char(255)
+  value   String  @db.Text
+  deleted Boolean @default(false)
+}

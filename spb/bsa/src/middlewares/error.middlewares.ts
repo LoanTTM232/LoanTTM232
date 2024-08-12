@@ -1,7 +1,4 @@
-/// external package imports
 import { NextFunction, Request, Response } from 'express'
-
-/// internal package imports
 import { StatusCode, StatusMessage } from '@/constants/enum'
 import HttpException from '@/exceptions/http.exception'
 
