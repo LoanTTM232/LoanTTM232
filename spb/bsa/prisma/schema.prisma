@@ -41,29 +41,35 @@ model Service {
   units    Unit[]
 }
 
-model Role {
-  id    Int    @id @default(autoincrement())
-  name  String @db.VarChar(50)
-  users User[]
-}
-
 model User {
   id              Int            @id @default(autoincrement())
   firstname       String         @db.VarChar(100)
   lastname        String         @db.VarChar(100)
+  name            String         @db.VarChar(200)
   email           String         @unique @db.VarChar(255)
   phone           String         @unique @db.VarChar(30)
   password        String         @db.VarChar(255)
-  active          Boolean        @default(false)
+  isEmailVerified Boolean        @default(false)
   deleted         Boolean        @default(false)
   createdAt       DateTime       @default(now()) @db.Timestamp()
   updatedAt       DateTime       @updatedAt
-  roleId          Int
-  role            Role           @relation(fields: [roleId], references: [id])
+  role            Role           @default(USER)
+  Token           Token[]
   sendNotify      Notification[] @relation(name: "Sender")
   recipientNotify Notification[] @relation(name: "Recipient")
   clubs           Club[]
   bookings        Booking[]
+}
+
+model Token {
+  id          Int       @id @default(autoincrement())
+  token       String
+  type        TokenType
+  expires     DateTime
+  blacklisted Boolean
+  createdAt   DateTime  @default(now())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
 }
 
 model NotificationType {
@@ -204,4 +210,17 @@ model Metadata {
   key     String  @db.Char(255)
   value   String  @db.Text
   deleted Boolean @default(false)
+}
+
+enum Role {
+  USER
+  OWNER
+  ADMIN
+}
+
+enum TokenType {
+  ACCESS
+  REFRESH
+  RESET_PASSWORD
+  VERIFY_EMAIL
 }

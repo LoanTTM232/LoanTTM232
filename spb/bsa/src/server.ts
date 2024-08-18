@@ -1,42 +1,42 @@
-import express, { Express } from 'express'
-import http from 'http'
+import { PrismaClient } from '@prisma/client'
+import app from '@/app'
 import env from '@/config/env'
 import log from '@/config/logger'
-import loggerMiddleware from '@/middlewares/logger.middlewares'
-import corsMiddleware from '@/middlewares/cors.middlewares'
-import checkHealthRoute from '@/routes/heath.routes'
 
-export const application: Express = express()
-export let httpServer: ReturnType<typeof http.createServer>
+const prisma = new PrismaClient()
 
-export const initialize = () => {
-  log.info('---------------------------------------------------------')
-  log.info('Initializing server...')
-  log.info('---------------------------------------------------------')
-  application.use(express.urlencoded({ extended: true }))
-  application.use(express.json())
-
-  log.info('---------------------------------------------------------')
-  log.info('Logging and configuring server...')
-  log.info('---------------------------------------------------------')
-  application.use(loggerMiddleware)
-  application.use(corsMiddleware)
-
-  log.info('---------------------------------------------------------')
-  log.info('Define routes...')
-  log.info('---------------------------------------------------------')
-  application.use(checkHealthRoute)
-}
-
-export const start = () => {
-  httpServer = http.createServer(application)
-  httpServer.listen(env.server_port, () => {
-    log.info(`Server started on port ${env.server_port}`)
+async function main() {
+  app.listen(env.server_port, () => {
+    log.info('---------------------------------------------------------')
+    log.info(`Server is listening on port :${env.server_port}`)
+    log.info('---------------------------------------------------------')
   })
 }
 
-export const shutdown = (callback: (err?: Error) => void) => {
-  if (httpServer) {
-    httpServer.close(callback)
-  }
+async function exit(exitCode: number = 0) {
+  log.info('---------------------------------------------------------')
+  log.info('Server is shutting down...')
+  log.info('---------------------------------------------------------')
+
+  await prisma.$disconnect()
+  log.info('Database disconnected')
+  process.exit(exitCode)
 }
+
+main()
+  .then(async () => {
+    await prisma.$connect()
+  })
+  .catch(async (err) => {
+    log.error(err)
+    exit(1)
+  })
+
+// Exit on signals
+process.on('SIGINT', async () => {
+  exit()
+})
+
+process.on('SIGTERM', async () => {
+  exit()
+})

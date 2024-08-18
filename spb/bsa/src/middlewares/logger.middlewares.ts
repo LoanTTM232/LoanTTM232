@@ -1,15 +1,27 @@
-import { NextFunction, Request, Response } from 'express'
+import httpStatus from 'http-status'
+import morgan from 'morgan'
+import { Request, Response } from 'express'
+
 import log from '@/config/logger'
+import { isDev } from '@/config/env'
 
-function loggerMiddleware(req: Request, res: Response, next: NextFunction) {
-  log.http(`Incomming - Method: [${req.method}] - Url: [${req.url}] - IP: [${req.socket.remoteAddress}]`)
+morgan.token(
+  'message',
+  (_req: Request, res: Response) => res.locals.errorMessage || ''
+)
 
-  res.on('finish', () => {
-    log.http(
-      `Incomming - Method: [${req.method}] - Url: [${req.url}] - IP: [${req.socket.remoteAddress}] - Status: [${res.statusCode}]`
-    )
-  })
-  next()
-}
+const getIpFormat = () => (isDev() ? '' : ':remote-addr - ')
+const successResponseFormat = `${getIpFormat()}:method :url :status - :response-time ms`
+const errorResponseFormat = `${getIpFormat()}:method :url :status - :response-time ms - message: :message`
 
-export default loggerMiddleware
+const successHandler = morgan(successResponseFormat, {
+  skip: (_req: Request, res: Response) => res.statusCode >= httpStatus.OK,
+  stream: { write: (message) => log.info(message.trim()) }
+})
+
+const errorHandler = morgan(errorResponseFormat, {
+  skip: (_req: Request, res: Response) => res.statusCode < httpStatus.OK,
+  stream: { write: (message) => log.error(message.trim()) }
+})
+
+export default { successHandler, errorHandler }
