@@ -23,15 +23,41 @@ export default {
   /**
    * API server port
    */
-  server_port: parseInt(process.env.PORT as string, 10) || defaultVal.PORT,
+  serverPort: parseInt(process.env.PORT as string, 10) || defaultVal.PORT,
   /**
-   * Database URL
+   * Client URL (default to all domains)
    */
-  databaseURL: process.env.POSTGRES_URL as string,
+  clientUrl: (process.env.CLIENT_URL as string) || '*',
   /**
-   * Your secret source
+   * JWT secret
    */
   jwtSecret: process.env.JWT_SECRET as string,
+  /**
+   * Redis secret
+   */
+  redisSecret: process.env.REDIS_SECRET as string,
+  /**
+   * Redis host
+   */
+  redisHost: process.env.REDIS_HOST as string,
+  /**
+   * Redis port
+   */
+  redisPort: parseInt(process.env.REDIS_PORT as string, 10) || 6379,
+  /**
+   * Redis password
+   */
+  redisPassword: process.env.REDIS_PASSWORD as string,
+  /**
+   * Cookie max age
+   */
+  cookieMaxAge:
+    parseInt(process.env.COOKIE_MAX_AGE as string, 10) ||
+    defaultVal.COOKIE_MAX_AGE,
+  /**
+   * Cookie secure (https only)
+   */
+  cookieSecure: process.env.COOKIE_SECURE === 'true',
   /**
    * Used by winston logger
    */

@@ -3,11 +3,15 @@ import {
   ExtractJwt,
   VerifyCallback
 } from 'passport-jwt'
-import { TokenType } from '@prisma/client'
+import { User } from '@prisma/client'
 
 import env from '@/config/env'
-import prisma from '@/config/prisma'
 import { ERROR_MSG } from '@/constants/message'
+import { UserRepository } from '@/repositories/user.repository'
+import { UserService } from '@/services/user.service'
+
+const userRepository = new UserRepository()
+const userService = new UserService(userRepository)
 
 const jwtOptions = {
   secretOrKey: env.jwtSecret,
@@ -16,18 +20,9 @@ const jwtOptions = {
 
 const jwtVerify: VerifyCallback = async (payload, done) => {
   try {
-    if (payload.type !== TokenType.ACCESS) {
-      throw new Error(ERROR_MSG.ERR102)
-    }
-
-    const user = await prisma.user.findUnique({
-      select: {
-        id: true,
-        email: true,
-        name: true
-      },
-      where: { id: payload.sub }
-    })
+    const userId = parseInt(payload.sub, 10)
+    const userKeys = ['id', 'email', 'name'] as (keyof User)[]
+    const user = await userService.getUserById(userId, userKeys)
 
     if (!user) {
       return done(null, false)

@@ -6,9 +6,9 @@ import log from '@/config/logger'
 const prisma = new PrismaClient()
 
 async function main() {
-  app.listen(env.server_port, () => {
+  app.listen(env.serverPort, () => {
     log.info('---------------------------------------------------------')
-    log.info(`Server is listening on port :${env.server_port}`)
+    log.info(`Server is listening on port :${env.serverPort}`)
     log.info('---------------------------------------------------------')
   })
 }

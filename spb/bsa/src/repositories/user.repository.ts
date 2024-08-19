@@ -1,23 +1,30 @@
 import prisma from '@/config/prisma'
-import { User } from '@prisma/client'
+import { Prisma, Role, User } from '@prisma/client'
+import { CreateUserRequest } from '@/types/request'
 
 export interface IUserRepository {
-  findById(id: number): Promise<User | null>
-  findByEmail(email: string): Promise<User | null>
-  create(data: User): Promise<User>
+  create(data: CreateUserRequest): Promise<User>
   update(id: number, data: User): Promise<User>
   delete(id: number): Promise<void>
-  findAll(): Promise<User[]>
-  findByRole(role: string): Promise<User[]>
+  findAll(queryArgs: Prisma.UserFindManyArgs): Promise<User[]>
+  findUnique(queryArgs: Prisma.UserFindUniqueArgs): Promise<User | null>
 }
 
-export class UserRespository implements IUserRepository {
-  findByEmail(email: string): Promise<User | null> {
-    throw new Error('Method not implemented.')
-  }
-
-  create(data: User): Promise<User> {
-    throw new Error('Method not implemented.')
+export class UserRepository implements IUserRepository {
+  create({
+    email,
+    name,
+    password,
+    role
+  }: CreateUserRequest & { role: Role }): Promise<User> {
+    return prisma.user.create({
+      data: {
+        email,
+        name,
+        password,
+        role
+      }
+    })
   }
 
   update(id: number, data: User): Promise<User> {
@@ -28,15 +35,11 @@ export class UserRespository implements IUserRepository {
     throw new Error('Method not implemented.')
   }
 
-  findAll(): Promise<User[]> {
-    throw new Error('Method not implemented.')
+  findAll(queryArgs: Prisma.UserFindManyArgs): Promise<User[]> {
+    return prisma.user.findMany(queryArgs)
   }
 
-  findByRole(role: string): Promise<User[]> {
-    throw new Error('Method not implemented.')
-  }
-
-  async findById(id: number): Promise<User | null> {
-    return null
+  findUnique(queryArgs: Prisma.UserFindUniqueArgs): Promise<User | null> {
+    return prisma.user.findUnique(queryArgs)
   }
 }

@@ -1,4 +1,4 @@
-import httpStatus from 'http-status'
+import HTTP_STATUS from 'http-status'
 import morgan from 'morgan'
 import { Request, Response } from 'express'
 
@@ -15,12 +15,14 @@ const successResponseFormat = `${getIpFormat()}:method :url :status - :response-
 const errorResponseFormat = `${getIpFormat()}:method :url :status - :response-time ms - message: :message`
 
 const successHandler = morgan(successResponseFormat, {
-  skip: (_req: Request, res: Response) => res.statusCode >= httpStatus.OK,
+  skip: (_req: Request, res: Response) =>
+    res.statusCode >= HTTP_STATUS.NOT_FOUND,
   stream: { write: (message) => log.info(message.trim()) }
 })
 
 const errorHandler = morgan(errorResponseFormat, {
-  skip: (_req: Request, res: Response) => res.statusCode < httpStatus.OK,
+  skip: (_req: Request, res: Response) =>
+    res.statusCode < HTTP_STATUS.NOT_FOUND,
   stream: { write: (message) => log.error(message.trim()) }
 })
 

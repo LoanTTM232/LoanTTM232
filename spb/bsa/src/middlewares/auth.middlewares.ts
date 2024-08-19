@@ -1,4 +1,4 @@
-import HttpStatus from 'http-status'
+import HTTP_STATUS from 'http-status'
 import passport from 'passport'
 import { NextFunction, Request } from 'express'
 import { User } from '@prisma/client'
@@ -19,7 +19,7 @@ const verifyCallback =
   ) =>
   async (err: unknown, user: User | false, info: unknown) => {
     if (err || info || !user) {
-      return reject(new ApiError(HttpStatus.UNAUTHORIZED, ERROR_MSG.ERR106))
+      return reject(new ApiError(HTTP_STATUS.UNAUTHORIZED, ERROR_MSG.ERR106))
     }
     req.user = user
 
@@ -30,7 +30,7 @@ const verifyCallback =
       )
 
       if (!hasRequiredRights && req.params.userId !== user.id.toString()) {
-        return reject(new ApiError(HttpStatus.FORBIDDEN, ERROR_MSG.ERR107))
+        return reject(new ApiError(HTTP_STATUS.FORBIDDEN, ERROR_MSG.ERR107))
       }
     }
 
@@ -48,3 +48,5 @@ const auth =
       )(req, res, next)
     })
   }
+
+export default auth

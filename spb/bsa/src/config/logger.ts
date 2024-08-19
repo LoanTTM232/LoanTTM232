@@ -2,6 +2,9 @@ import winston from 'winston'
 import env, { isDev } from '@/config/env'
 import _default from '@/constants/default'
 
+/**
+ *  Mapping error stack to message for error log
+ */
 const enumerateErrorFormat = winston.format((info) => {
   if (info instanceof Error) {
     Object.assign(info, { message: info.stack })
@@ -9,6 +12,9 @@ const enumerateErrorFormat = winston.format((info) => {
   return info
 })
 
+/**
+ *  Define winston logger (console)
+ */
 const logger = winston.createLogger({
   level: env.logs.level,
   format: winston.format.combine(
