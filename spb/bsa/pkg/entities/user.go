@@ -1,15 +1,19 @@
 package entities
 
-import "gorm.io/gorm"
+const UserTN = "user"
 
 type User struct {
-	gorm.Model
-	FullName        string `gorm:"not null"`
-	Email           string `gorm:"uniqueIndex;not nul"`
+	Base
+	Email           string `gorm:"unique;not null"`
 	Password        string `gorm:"not null"`
-	Phone           string `gorm:"not null"`
-	Active          bool
+	FullName        string
+	Phone           string
+	Active          bool `gorm:"default:false"`
 	IsEmailVerified bool `gorm:"not null"`
-	RoleID          uint `gorm:"uniqueIndex;not nul"`
+	RoleID          uint `gorm:"unique;not null"`
 	Role            Role `gorm:"foreignKey:RoleID"`
+}
+
+func (User) TableName() string {
+	return UserTN
 }

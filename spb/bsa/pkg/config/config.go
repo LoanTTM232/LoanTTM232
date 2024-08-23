@@ -26,13 +26,9 @@ type DbConf struct {
 
 type Logging struct {
 	Level       int
-	Type        []string
 	DebugSymbol *string
-
-	Zap struct {
-		Output   []string
-		Filename string
-	}
+	Output      []string
+	Filename    string
 }
 
 type ServerConf struct {
@@ -42,7 +38,9 @@ type ServerConf struct {
 }
 
 type Jwt struct {
-	Secret string
+	Secret          string
+	AccessTokenExp  int
+	RefreshTokenExp int
 }
 
 type Smtp struct {
@@ -65,6 +63,11 @@ type Config struct {
 	Vpr           *viper.Viper
 }
 
+// @author: LoanTT
+// @function: LoadEnvVariables
+// @description: Load env variables from configs/{localhost/docker}.yaml
+// @param: c *Config
+// @return: error
 func (c *Config) LoadEnvVariables() error {
 	c.Vpr.SetConfigType("yaml")
 
@@ -95,7 +98,11 @@ func (c *Config) LoadEnvVariables() error {
 	return nil
 }
 
-// Get server url
+// @author: LoanTT
+// @function: GetServerUrl
+// @description: Get server url
+// @param: c *Config
+// @return: string server url
 func (c *Config) GetServerUrl() string {
 	url := fmt.Sprintf("http://%s", c.ServerConf.Host)
 	if len(c.ServerConf.Port) > 0 {

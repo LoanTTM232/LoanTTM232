@@ -11,6 +11,11 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+// @author: LoanTT
+// @function: JwtMiddleware
+// @description: Jwt middleware
+// @param: ignorePaths []string
+// @return: func(c *fiber.Ctx) error
 func JwtMiddleware(ignorePaths ...string) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
 		url := string(ctx.Request().URI().Path())

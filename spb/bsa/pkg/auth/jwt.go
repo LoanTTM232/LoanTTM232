@@ -10,6 +10,11 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+// @author: LoanTT
+// @function: ParseJwt
+// @description: Parse token to jwt.MapClaims
+// @param: token string
+// @return: *jwt.Token, error
 func ParseJwt(token string) (jwt.MapClaims, error) {
 	tokenPaths := strings.Split(token, "Bearer ")
 
@@ -41,11 +46,21 @@ func ParseJwt(token string) (jwt.MapClaims, error) {
 	return claims, nil
 }
 
+// @author: LoanTT
+// @function: GetToken
+// @description: Create token
+// @param: claims jwt.Claims
+// @return: *jwt.Token
 func GetToken(claims jwt.Claims) *jwt.Token {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token
 }
 
+// @author: LoanTT
+// @function: GetTokenFromCookie
+// @description: Get token from cookie
+// @param: ctx *fiber.Ctx
+// @return: jwt.MapClaims, error
 func GetTokenFromCookie(ctx fiber.Ctx) (jwt.MapClaims, error) {
 	jwt := ctx.Get("accessToken")
 	if len(jwt) == 0 {
@@ -53,7 +68,6 @@ func GetTokenFromCookie(ctx fiber.Ctx) (jwt.MapClaims, error) {
 	}
 
 	accessToken := "Bearer " + jwt
-
 	claims, err := ParseJwt(accessToken)
 	if err != nil {
 		return nil, ErrParseTokenFromCookie(err)
@@ -62,6 +76,11 @@ func GetTokenFromCookie(ctx fiber.Ctx) (jwt.MapClaims, error) {
 	return claims, nil
 }
 
+// @author: LoanTT
+// @function: GetTokenFromHeader
+// @description: Get token from header
+// @param: ctx *fiber.Ctx
+// @return: jwt.MapClaims, error
 func GetTokenFromHeader(ctx fiber.Ctx) (jwt.MapClaims, error) {
 	accessToken := ctx.Get("Authorization")
 	if len(accessToken) == 0 {

@@ -2,29 +2,62 @@ package handler
 
 import (
 	"spb/bsa/internal/auth/model"
+	"spb/bsa/pkg/entities"
+	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
 )
 
-func (h *Handler) Login(ctx fiber.Ctx) error {
-	user := model.UserDTO{}
+var ErrLoginFailed = fiber.NewError(fiber.StatusBadRequest, "email or password is wrong")
+
+// @author: LoanTT
+// @function: AccountLogin
+// @description: handler account login with email and password
+// @param: ctx *fiber.Ctx
+// @return: err error
+func (h *Handler) AccountLogin(ctx fiber.Ctx) error {
+	var err error
+	reqBody := new(model.LoginRequest)
 
 	fctx := utils.FiberCtx{Fctx: ctx}
-	reqCtx := utils.ReqContext{Payload: &fctx}
-	if userErr, _ := reqCtx.Payload.ParseJsonToStruct(&user, nil); userErr != nil {
-		logger.Errorf("userErr: %+v\n", userErr)
-	}
-	if user.Password == "" {
-		return fctx.JsonResponse(respCode, map[string]interface{}{"message": "password is required"})
+	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
+		logger.Errorf("error parse json to struct: %v", err)
+		return fctx.ErrResponse(ErrLoginFailed)
 	}
 
-	result, httpErr := h.service.Login(user)
-	if httpErr != nil {
-		return fctx.JsonResponse(respCode, map[string]interface{}{"message": httpErr.Error()})
+	user, err := h.service.AccountLogin(*reqBody)
+	if err != nil {
+		logger.Errorf("error login: %v", err)
+		return fctx.ErrResponse(ErrLoginFailed)
 	}
 
-	respCode = fiber.StatusOK
-	return fctx.JsonResponse(respCode, map[string]interface{}{"data": result})
+	tokens := GenUserTokenResponse(*user)
+	if tokens == nil {
+		return fctx.ErrResponse(ErrLoginFailed)
+	}
+	if err = SetTokenToCookie(tokens, ctx); err != nil {
+		return fctx.ErrResponse(ErrLoginFailed)
+	}
+
+	loginResponse := MappingLoginResponse(user, tokens)
+	return fctx.JsonResponse(fiber.StatusOK, map[string]interface{}{"data": loginResponse})
+}
+
+// @author: LoanTT
+// @function: MappingLoginResponse
+// @description: mapping user to user response
+// @param: user *entities.User
+// @param: tokens map[string]string
+// @return: *model.LoginResponse
+func MappingLoginResponse(user *entities.User, tokens map[string]string) model.LoginResponse {
+	return model.LoginResponse{
+		AccessToken: tokens["accessToken"],
+		User: model.UserResponse{
+			FullName: user.FullName,
+			Email:    user.Email,
+			Phone:    user.Phone,
+		},
+	}
 }
