@@ -16,7 +16,7 @@ func (s *Service) RefreshToken(refreshToken string, claims jwt.MapClaims) (*tb.U
 	var user *tb.User
 
 	err := s.db.Preload("Role").
-		Where("email = ?", claims["Email"]).
+		Where("email = ?", claims["email"]).
 		Where("active = ?", true).
 		Where("is_email_verified = ?", true).
 		First(&user).Error

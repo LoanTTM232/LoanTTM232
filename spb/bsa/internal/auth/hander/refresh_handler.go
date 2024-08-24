@@ -10,7 +10,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-var ErrRefreshTokenFailed = fiber.NewError(fiber.StatusExpectationFailed, "please try to login again")
+var ErrRefreshTokenFailed = fiber.NewError(fiber.StatusBadRequest, "please try to login again")
 
 // @author: LoanTT
 // @function: AccountRefreshToken

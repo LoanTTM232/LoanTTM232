@@ -30,7 +30,6 @@ func corsOptions() cors.Config {
 		AllowHeaders:     corsOpts.AllowHeaders,
 		AllowCredentials: corsOpts.AllowCredentials,
 		AllowMethods:     corsOpts.AllowMethods,
-		ExposeHeaders:    corsOpts.ExposeHeaders,
 	}
 }
 

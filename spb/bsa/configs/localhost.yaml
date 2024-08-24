@@ -10,17 +10,14 @@ cors:
         - "http://127.0.0.1"
     allowHeaders:
         - "Content-Type"
+        - "Origin"
+        - "Accept"
     allowMethods:
         - "GET"
         - "POST"
         - "PUT"
         - "DELETE"
-    exposeHeaders:
-        - "Content-Length"
-        - "Access-Control-Allow-Origin"
-        - "Access-Control-Allow-Headers"
-        - "Content-Type"
-    allowCredentials: false
+    allowCredentials: true
 
 jwt:
     secret: "1234balhblahblah"

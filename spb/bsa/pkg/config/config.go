@@ -53,7 +53,6 @@ type CORS struct {
 	AllowOrigin      []string
 	AllowMethods     []string
 	AllowHeaders     []string
-	ExposeHeaders    []string
 	AllowCredentials bool
 }
 
