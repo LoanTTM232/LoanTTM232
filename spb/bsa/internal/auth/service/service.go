@@ -5,13 +5,14 @@ import (
 	"spb/bsa/pkg/entities"
 	"spb/bsa/pkg/global"
 
+	"github.com/golang-jwt/jwt/v5"
 	"gorm.io/gorm"
 )
 
 type IService interface {
 	AccountLogin(*model.LoginRequest) (*model.LoginResponse, error)
 	AccountRegister(email string, password string) (*entities.User, error)
-	Refresh() (map[string]interface{}, error)
+	RefreshToken(refreshToken string, claims jwt.MapClaims) (*entities.User, error)
 }
 
 type Service struct {

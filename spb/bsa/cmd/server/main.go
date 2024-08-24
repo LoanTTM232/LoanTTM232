@@ -10,6 +10,7 @@ import (
 	"spb/bsa/pkg/global"
 	zaplog "spb/bsa/pkg/logger"
 	"spb/bsa/pkg/middleware"
+	"spb/bsa/pkg/redis"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/goccy/go-json"
@@ -18,6 +19,20 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/gofiber/fiber/v3/middleware/recover"
 )
+
+// @author: LoanTT
+// @function: corsOptions
+// @description: Configure cors
+func corsOptions() cors.Config {
+	corsOpts := global.SPB_CONFIG.CORS
+	return cors.Config{
+		AllowOrigins:     corsOpts.AllowOrigin,
+		AllowHeaders:     corsOpts.AllowHeaders,
+		AllowCredentials: corsOpts.AllowCredentials,
+		AllowMethods:     corsOpts.AllowMethods,
+		ExposeHeaders:    corsOpts.ExposeHeaders,
+	}
+}
 
 type Fiber struct {
 	App *fiber.App
@@ -42,6 +57,13 @@ func (f *Fiber) GetApp() {
 		fmt.Print(err.Error())
 		runtime.Goexit()
 	}
+	// connect redis
+	global.SPB_REDIS, err = redis.ConnectRedis(global.SPB_CONFIG)
+	if err != nil {
+		fmt.Print(err.Error())
+		runtime.Goexit()
+	}
+
 	// initialize validator
 	global.SPB_VALIDATOR = validator.New()
 	// create fiber app
@@ -63,11 +85,7 @@ func (f *Fiber) GetApp() {
 func (f *Fiber) LoadMiddleware() {
 	f.App.Use(logger.New())
 	f.App.Use(recover.New())
-	f.App.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
-		AllowCredentials: true,
-	}))
+	f.App.Use(cors.New(corsOptions()))
 }
 
 // TODO: Add swagger docs
@@ -90,10 +108,10 @@ func (f *Fiber) LoadRoutes() {
 
 	auth.GetRoutes(router)
 
-	// a custom 404 handler instead of default "Cannot GET /page-not-found"
+	// a custom 404 handler
 	f.App.Use(func(ctx fiber.Ctx) error {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "Resource Not Found",
+			"message": "resource Not Found",
 		})
 	})
 }

@@ -1,14 +1,14 @@
 package service
 
 import (
+	"errors"
+
 	"spb/bsa/internal/auth/model"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/utils"
-
-	"github.com/gofiber/fiber/v3"
 )
 
-var ErrEmailExists = fiber.NewError(fiber.StatusBadRequest, "email already exists")
+var ErrEmailExists = errors.New("email already exists")
 
 // @author: LoanTT
 // @function: AccountLogin

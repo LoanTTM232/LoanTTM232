@@ -4,6 +4,7 @@ import (
 	"strings"
 	"time"
 
+	"spb/bsa/pkg/config"
 	"spb/bsa/pkg/global"
 
 	"github.com/gofiber/fiber/v3"
@@ -16,7 +17,7 @@ import (
 // @param: token string
 // @return: *jwt.Token, error
 func ParseJwt(token string) (jwt.MapClaims, error) {
-	tokenPaths := strings.Split(token, "Bearer ")
+	tokenPaths := strings.Split(token, config.JWT_PREFIX)
 
 	if len(tokenPaths) != 2 {
 		return nil, ErrInvalidToken
@@ -27,7 +28,7 @@ func ParseJwt(token string) (jwt.MapClaims, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, ErrUnexpectedSignMethod(token.Header["alg"])
 		}
-		secret := global.SPB_CONFIG.Jwt.Secret
+		secret := global.SPB_CONFIG.JWT.Secret
 		return []byte(secret), nil
 	})
 	if err != nil {
@@ -62,12 +63,12 @@ func GetToken(claims jwt.Claims) *jwt.Token {
 // @param: ctx *fiber.Ctx
 // @return: jwt.MapClaims, error
 func GetTokenFromCookie(ctx fiber.Ctx) (jwt.MapClaims, error) {
-	jwt := ctx.Get("accessToken")
+	jwt := ctx.Get(config.ACCESS_TOKEN_NAME)
 	if len(jwt) == 0 {
 		return nil, ErrAccessKeyNotFound
 	}
 
-	accessToken := "Bearer " + jwt
+	accessToken := config.JWT_PREFIX + jwt
 	claims, err := ParseJwt(accessToken)
 	if err != nil {
 		return nil, ErrParseTokenFromCookie(err)

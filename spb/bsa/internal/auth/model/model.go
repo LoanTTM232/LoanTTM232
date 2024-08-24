@@ -5,10 +5,10 @@ import (
 )
 
 type UserClaims struct {
-	Email       string
-	FullName    string
-	Role        string
-	Permissions []string
+	Email       string   `json:"email,omitempty"`
+	FullName    string   `json:"full_name,omitempty"`
+	Role        string   `json:"role,omitempty"`
+	Permissions []string `json:"permissions,omitempty"`
 	jwt.RegisteredClaims
 }
 
@@ -33,7 +33,6 @@ type RegisterRequest struct {
 	Password string `json:"password" validate:"min=6,max=32,required"`
 }
 
-type RegisterResponse struct {
-	AccessToken string       `json:"access_token"`
-	User        UserResponse `json:"user"`
+type RefreshTokenResponse struct {
+	AccessToken string `json:"access_token"`
 }

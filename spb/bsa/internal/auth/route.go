@@ -18,4 +18,5 @@ func GetRoutes(router fiber.Router) {
 	authRoute := router.Group("/api/auth")
 	authRoute.Post("/login", handlers.AccountLogin)
 	authRoute.Post("/register", handlers.AccountRegister)
+	authRoute.Post("/refresh", handlers.AccountRefreshToken)
 }

@@ -17,12 +17,12 @@ import (
 // @return: string
 func GetDbUrl(config *config.Config) string {
 	return fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
-		*config.DbConf.PostgresConf.Host,
-		*config.DbConf.PostgresConf.Port,
-		*config.DbConf.PostgresConf.User,
-		*config.DbConf.PostgresConf.Dbname,
-		*config.DbConf.PostgresConf.Password,
-		*config.DbConf.PostgresConf.SSLMode,
+		config.DbConf.PostgresConf.Host,
+		config.DbConf.PostgresConf.Port,
+		config.DbConf.PostgresConf.User,
+		config.DbConf.PostgresConf.Dbname,
+		config.DbConf.PostgresConf.Password,
+		config.DbConf.PostgresConf.SSLMode,
 	)
 }
 

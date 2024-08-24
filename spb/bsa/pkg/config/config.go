@@ -11,17 +11,29 @@ import (
 )
 
 type PostgresConf struct {
-	Host     *string
-	Port     *string
-	User     *string
-	Password *string
-	Dbname   *string
-	SSLMode  *string
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Dbname   string
+	SSLMode  string
 }
 
 type DbConf struct {
 	Driver       string `mapstructure:"engine"`
 	PostgresConf `mapstructure:"postgres"`
+}
+
+type RedisConf struct {
+	UseCluster   bool
+	ClusterAddrs []string
+	Host         string
+	Port         int
+	Username     string
+	Password     string
+	Reset        bool
+	PoolSize     int
+	DB           int
 }
 
 type Logging struct {
@@ -37,10 +49,19 @@ type ServerConf struct {
 	Port string
 }
 
-type Jwt struct {
+type CORS struct {
+	AllowOrigin      []string
+	AllowMethods     []string
+	AllowHeaders     []string
+	ExposeHeaders    []string
+	AllowCredentials bool
+}
+
+type JWT struct {
 	Secret          string
 	AccessTokenExp  int
 	RefreshTokenExp int
+	ExpireCache     int
 }
 
 type Smtp struct {
@@ -55,9 +76,11 @@ type Notification struct {
 }
 
 type Config struct {
-	*DbConf       `mapstructure:"database"`
 	*ServerConf   `mapstructure:"server"`
-	*Jwt          `mapstructure:"jwt"`
+	*JWT          `mapstructure:"jwt"`
+	*DbConf       `mapstructure:"database"`
+	*RedisConf    `mapstructure:"redis"`
+	*CORS         `mapstructure:"cors"`
 	*Logging      `mapstructure:"logging"`
 	*Notification `mapstructure:"notification"`
 	Vpr           *viper.Viper

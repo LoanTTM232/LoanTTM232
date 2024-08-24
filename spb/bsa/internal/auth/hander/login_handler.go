@@ -2,6 +2,7 @@ package handler
 
 import (
 	"spb/bsa/internal/auth/model"
+	"spb/bsa/pkg/config"
 	"spb/bsa/pkg/entities"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
@@ -26,34 +27,33 @@ func (h *Handler) AccountLogin(ctx fiber.Ctx) error {
 		logger.Errorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(ErrLoginFailed)
 	}
-
 	user, err := h.service.AccountLogin(*reqBody)
 	if err != nil {
 		logger.Errorf("error login: %v", err)
 		return fctx.ErrResponse(ErrLoginFailed)
 	}
-
 	tokens := GenUserTokenResponse(*user)
 	if tokens == nil {
 		return fctx.ErrResponse(ErrLoginFailed)
 	}
-	if err = SetTokenToCookie(tokens, ctx); err != nil {
+	err = TokenNext(&fctx, ctx, user, tokens)
+	if err != nil {
 		return fctx.ErrResponse(ErrLoginFailed)
 	}
 
-	loginResponse := MappingLoginResponse(user, tokens)
-	return fctx.JsonResponse(fiber.StatusOK, map[string]interface{}{"data": loginResponse})
+	loginResponse := mappingLoginResponse(user, tokens)
+	return fctx.JsonResponse(fiber.StatusOK, fiber.Map{"data": loginResponse})
 }
 
 // @author: LoanTT
-// @function: MappingLoginResponse
+// @function: mappingLoginResponse
 // @description: mapping user to user response
 // @param: user *entities.User
 // @param: tokens map[string]string
 // @return: *model.LoginResponse
-func MappingLoginResponse(user *entities.User, tokens map[string]string) model.LoginResponse {
+func mappingLoginResponse(user *entities.User, tokens map[string]string) model.LoginResponse {
 	return model.LoginResponse{
-		AccessToken: tokens["accessToken"],
+		AccessToken: tokens[config.ACCESS_TOKEN_NAME],
 		User: model.UserResponse{
 			FullName: user.FullName,
 			Email:    user.Email,
