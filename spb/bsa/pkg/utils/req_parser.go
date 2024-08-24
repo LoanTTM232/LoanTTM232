@@ -2,12 +2,11 @@ package utils
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"strings"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
 	"github.com/iancoleman/strcase"
 )
@@ -51,7 +50,6 @@ func GetQueryString(queryString []byte) (map[string]interface{}, error) {
 	}
 
 	paramsMap := make(map[string]interface{}, 0)
-
 	for key, value := range params {
 		snakeCase := strcase.ToSnake(key)
 		if strings.Contains(snakeCase, "date") || strings.Contains(snakeCase, "_at") {
@@ -68,15 +66,6 @@ func GetQueryString(queryString []byte) (map[string]interface{}, error) {
 	return paramsMap, nil
 }
 
-type IReqPayload interface {
-	ParseJsonToStruct(interface{}, interface{}) (error, error)
-	ValidateJson() error
-}
-
-type ReqContext struct {
-	Payload IReqPayload
-}
-
 type FiberCtx struct {
 	Fctx fiber.Ctx
 }
@@ -88,16 +77,14 @@ func (ctx *FiberCtx) ValidateJson() error {
 	return nil
 }
 
-func (ctx *FiberCtx) ParseJsonToStruct(single interface{}, plural interface{}) (error, error) {
-	singleErr := ctx.Fctx.Bind().Body(single)
-	pluralErr := ctx.Fctx.Bind().Body(plural)
-
-	var allFailed error
-	if singleErr != nil && pluralErr != nil {
-		allFailed = errors.Join(fmt.Errorf("failed to parse given json into struct. "), singleErr, pluralErr)
+func (ctx *FiberCtx) ParseJsonToStruct(dest interface{}, validate *validator.Validate) error {
+	if err := ctx.Fctx.Bind().JSON(dest); err != nil {
+		return err
 	}
-
-	return singleErr, allFailed
+	if err := validate.Struct(dest); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (ctx *FiberCtx) JsonResponse(respCode int, data map[string]interface{}) error {
@@ -106,6 +93,6 @@ func (ctx *FiberCtx) JsonResponse(respCode int, data map[string]interface{}) err
 		JSON(data)
 }
 
-func (ctx *FiberCtx) ErrResponse(respCode int, err error) error {
-	return ctx.Fctx.Status(respCode).JSON(map[string]interface{}{"message": err.Error()})
+func (ctx *FiberCtx) ErrResponse(err *fiber.Error) error {
+	return ctx.Fctx.Status(err.Code).JSON(map[string]interface{}{"message": err.Error()})
 }

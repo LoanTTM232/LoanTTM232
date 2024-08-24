@@ -11,12 +11,12 @@ import (
 )
 
 type PostgresConf struct {
-	Host     *string
-	Port     *string
-	User     *string
-	Password *string
-	Dbname   *string
-	SSLMode  *string
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Dbname   string
+	SSLMode  string
 }
 
 type DbConf struct {
@@ -24,15 +24,23 @@ type DbConf struct {
 	PostgresConf `mapstructure:"postgres"`
 }
 
+type RedisConf struct {
+	UseCluster   bool
+	ClusterAddrs []string
+	Host         string
+	Port         int
+	Username     string
+	Password     string
+	Reset        bool
+	PoolSize     int
+	DB           int
+}
+
 type Logging struct {
 	Level       int
-	Type        []string
 	DebugSymbol *string
-
-	Zap struct {
-		Output   []string
-		Filename string
-	}
+	Output      []string
+	Filename    string
 }
 
 type ServerConf struct {
@@ -41,8 +49,18 @@ type ServerConf struct {
 	Port string
 }
 
-type Jwt struct {
-	Secret string
+type CORS struct {
+	AllowOrigin      []string
+	AllowMethods     []string
+	AllowHeaders     []string
+	AllowCredentials bool
+}
+
+type JWT struct {
+	Secret          string
+	AccessTokenExp  int
+	RefreshTokenExp int
+	ExpireCache     int
 }
 
 type Smtp struct {
@@ -57,14 +75,21 @@ type Notification struct {
 }
 
 type Config struct {
-	*DbConf       `mapstructure:"database"`
 	*ServerConf   `mapstructure:"server"`
-	*Jwt          `mapstructure:"jwt"`
+	*JWT          `mapstructure:"jwt"`
+	*DbConf       `mapstructure:"database"`
+	*RedisConf    `mapstructure:"redis"`
+	*CORS         `mapstructure:"cors"`
 	*Logging      `mapstructure:"logging"`
 	*Notification `mapstructure:"notification"`
 	Vpr           *viper.Viper
 }
 
+// @author: LoanTT
+// @function: LoadEnvVariables
+// @description: Load env variables from configs/{localhost/docker}.yaml
+// @param: c *Config
+// @return: error
 func (c *Config) LoadEnvVariables() error {
 	c.Vpr.SetConfigType("yaml")
 
@@ -95,7 +120,11 @@ func (c *Config) LoadEnvVariables() error {
 	return nil
 }
 
-// Get server url
+// @author: LoanTT
+// @function: GetServerUrl
+// @description: Get server url
+// @param: c *Config
+// @return: string server url
 func (c *Config) GetServerUrl() string {
 	url := fmt.Sprintf("http://%s", c.ServerConf.Host)
 	if len(c.ServerConf.Port) > 0 {

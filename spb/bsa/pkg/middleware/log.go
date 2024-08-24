@@ -3,12 +3,10 @@ package middleware
 import (
 	"encoding/base64"
 	"encoding/json"
-	"slices"
 	"strings"
 	"time"
 
 	"spb/bsa/pkg/auth"
-	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
@@ -18,6 +16,9 @@ import (
 
 var excludeLogRoutes = []string{}
 
+// @author: LoanTT
+// @function: LogMiddleware
+// @description: Log middleware
 func LogMiddleware() fiber.Handler {
 	return func(ctx fiber.Ctx) error {
 		for _, route := range excludeLogRoutes {
@@ -77,21 +78,19 @@ func LogMiddleware() fiber.Handler {
 			}
 
 			// create log to files
-			if slices.Contains(global.SPB_CONFIG.Logging.Type, "zap") {
-				logger.SysLog("FIBER REQ LOG",
-					logger.GetField("UserId", userId),
-					logger.GetField("IpAddress", ip),
-					logger.GetField("HttpMethod", ctx.Method()),
-					logger.GetField("Route", ctx.Request().URI().String()),
-					logger.GetField("UserAgent", (ctx.Request().Header.UserAgent())),
-					logger.GetField("RequestHeader", (reqHeader)),
-					logger.GetField("RequestBody", reqBodyJson),
-					logger.GetField("ResponseBody", resBodyJson),
-					logger.GetField("Status", int64(ctx.Response().StatusCode())),
-					logger.GetField("Duration", time.Since(start).Milliseconds()),
-					logger.GetField("CreatedAt", &utils.CustomDatetime{Time: &start, Format: utils.ToPtr(time.RFC3339)}),
-				)
-			}
+			logger.SysLog("FIBER REQ LOG",
+				logger.GetField("UserId", userId),
+				logger.GetField("IpAddress", ip),
+				logger.GetField("HttpMethod", ctx.Method()),
+				logger.GetField("Route", ctx.Request().URI().String()),
+				logger.GetField("UserAgent", (ctx.Request().Header.UserAgent())),
+				logger.GetField("RequestHeader", (reqHeader)),
+				logger.GetField("RequestBody", reqBodyJson),
+				logger.GetField("ResponseBody", resBodyJson),
+				logger.GetField("Status", int64(ctx.Response().StatusCode())),
+				logger.GetField("Duration", time.Since(start).Milliseconds()),
+				logger.GetField("CreatedAt", &utils.CustomDatetime{Time: &start, Format: utils.ToPtr(time.RFC3339)}),
+			)
 		}()
 		return ctx.Next()
 	}

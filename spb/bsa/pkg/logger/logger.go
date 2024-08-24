@@ -6,7 +6,7 @@ import (
 	"slices"
 	"sync"
 
-	"spb/bsa/pkg/global"
+	"spb/bsa/pkg/config"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -44,14 +44,20 @@ var logFile = &lumberjack.Logger{
 	Compress:   true,
 }
 
-func NewZlog() {
+// @author: LoanTT
+// @function: NewZlog
+// @description: Create a new Zap logger
+// @param: config *config.Config
+func NewZlog(config *config.Config) {
 	Zlog.Output = OutputTypes{
-		File:    slices.Contains(global.SPB_CONFIG.Logging.Zap.Output, "file"),
-		Console: slices.Contains(global.SPB_CONFIG.Logging.Zap.Output, "console"),
+		File:    slices.Contains(config.Logging.Output, "file"),
+		Console: slices.Contains(config.Logging.Output, "console"),
 	}
-	Zlog.Level = global.SPB_CONFIG.Logging.Level
-	Zlog.DebugSymbol = global.SPB_CONFIG.Logging.DebugSymbol
-	Zlog.Filename = &global.SPB_CONFIG.Zap.Filename
+	Zlog.Level = config.Logging.Level
+	Zlog.DebugSymbol = config.Logging.DebugSymbol
+	Zlog.Filename = &config.Filename
+	Zlog.setLevel(config.Logging.Level)
+
 	logFile.Filename = fmt.Sprintf("./log/%s", *Zlog.Filename)
 }
 
@@ -104,7 +110,6 @@ func (zl *ZapLog) sysLog(msg string, keysAndValues ...zapcore.Field) {
 		logger.Fatal(msg, keysAndValues...)
 	}
 
-	zl.setLevel(global.SPB_CONFIG.Logging.Level)
 	zl.mu.Unlock()
 }
 
@@ -115,21 +120,17 @@ func SysLog(msg string, keysandvalues ...zapcore.Field) {
 func fileLogger(outputTypes OutputTypes) (*zap.Logger, error) {
 	config := zap.NewProductionEncoderConfig()
 	config.EncodeTime = zapcore.RFC3339TimeEncoder
-
 	// Create file and console encoders
 	fileEncoder := zapcore.NewJSONEncoder(config)
 	consoleEncoder := zapcore.NewConsoleEncoder(config)
-
 	// Create writers for file and console
 	fileWriter := zapcore.AddSync(logFile)
 	consoleWriter := zapcore.AddSync(os.Stdout)
-
 	// Set the log level
 	defaultLogLevel := zapcore.DebugLevel
-
+	// Create cores
 	fileCore := zapcore.NewCore(fileEncoder, fileWriter, defaultLogLevel)
 	consoleCore := zapcore.NewCore(consoleEncoder, consoleWriter, defaultLogLevel)
-
 	// Combine cores
 	var core zapcore.Core
 	if outputTypes.Console && outputTypes.File {
@@ -141,6 +142,5 @@ func fileLogger(outputTypes OutputTypes) (*zap.Logger, error) {
 	}
 
 	logger := zap.New(core, zap.AddCaller(), zap.AddCallerSkip(2))
-
 	return logger, nil
 }

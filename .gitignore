@@ -1,13 +1,12 @@
 # ignore for javascript
-node_modules/
 dist/
-logs/
-
-# prisma
-migrations/
+log/
 
 .env
 
 # backup files
 *.bkp
 *.dtmp
+
+# docker volumns
+workspace/develop/database

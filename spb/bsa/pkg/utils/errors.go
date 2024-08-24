@@ -1,15 +1,9 @@
 package utils
 
-import "fmt"
+import "errors"
 
 var ErrRequestJsonNotValid = NewError("request json is not valid")
 
 func NewError(msg string) error {
-	return fmt.Errorf(msg)
-}
-
-func NewErrorArgs(msg string) func(...interface{}) error {
-	return func(args ...interface{}) error {
-		return fmt.Errorf(msg, args)
-	}
+	return errors.New(msg)
 }

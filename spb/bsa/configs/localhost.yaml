@@ -2,11 +2,29 @@ projectName: "Sport booking"
 
 server:
     env: local # local, prod
-    host: "localhost"
+    host: "127.0.0.1"
     port: 7000
+
+cors:
+    allowOrigin:
+        - "http://127.0.0.1"
+    allowHeaders:
+        - "Content-Type"
+        - "Origin"
+        - "Accept"
+    allowMethods:
+        - "GET"
+        - "POST"
+        - "PUT"
+        - "DELETE"
+    allowCredentials: true
 
 jwt:
     secret: "1234balhblahblah"
+    # minutes
+    accessTokenExp: 10
+    refreshTokenExp: 43200
+    expireCache: 43200
 
 database:
     engine: "postgres"
@@ -18,15 +36,25 @@ database:
         dbname: "spb_database"
         sslMode: "disable"
 
+redis:
+    useCluster: false
+    password: "spb_password"
+    username: ""
+    # user cluster
+    clusterAddrs: []
+    # don't use cluster
+    host: "localhost"
+    port: 6379
+    reset: false
+    poolSize: 10
+    db: 0
+
 logging:
     level: 0 # debug:0, info:1, warning:2, error:3
-    type:
-        - "zap" # log into logs/requests.log
-    zap:
-        output:
-            # - "console"
-            - "file"
-        filename: "requests.log"
+    output:
+        # - "console"
+        - "file"
+    filename: "requests.log"
     debugSymbol: "-"
 
 notification:
@@ -35,7 +63,3 @@ notification:
         port: 587
         user: "xxxx@gmail.com"
         pass: "xxxxyyyyyzzzxz"
-
-redis:
-    host: "localhost"
-    port: "6379"

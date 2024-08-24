@@ -5,12 +5,14 @@ import (
 	"os"
 	"strings"
 
-	"spb/bsa/pkg/global"
-
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
+// @author: LoanTT
+// @function: newConsoleLogger
+// @description: newConsoleLogger
+// @return: *zap.Logger
 func newConsoleLogger() *zap.Logger {
 	config := zap.NewProductionEncoderConfig()
 	config.TimeKey = zapcore.OmitKey
@@ -59,8 +61,6 @@ func (zl *ZapLog) Debugf(format string, args ...interface{}) {
 			sugar.Debugf(format, args...)
 		}
 	}
-
-	zl.SetDebugSymbol(global.SPB_CONFIG.Logging.DebugSymbol) // reset to default symbol
 }
 
 func (zl *ZapLog) Infof(format string, args ...interface{}) {
