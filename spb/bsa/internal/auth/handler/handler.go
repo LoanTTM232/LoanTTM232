@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"spb/bsa/internal/auth/model"
-	"spb/bsa/internal/auth/service"
+	serv "spb/bsa/internal/auth/service"
 	"spb/bsa/pkg/auth"
 	"spb/bsa/pkg/config"
 	"spb/bsa/pkg/entities"
@@ -18,14 +18,8 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-type IHander interface {
-	AccountLogin(ctx *fiber.Ctx) error
-	AccountRegister(ctx *fiber.Ctx) error
-	AccountRefreshToken(ctx *fiber.Ctx) error
-}
-
 type Handler struct {
-	service *service.Service
+	service serv.IService
 }
 
 // @author: LoanTT
@@ -33,7 +27,7 @@ type Handler struct {
 // @description: Create a new auth handler
 // @param: auth service
 // @return: fiber.Handler
-func NewHandler(service *service.Service) *Handler {
+func NewHandler(service serv.IService) *Handler {
 	return &Handler{
 		service: service,
 	}
@@ -77,7 +71,7 @@ func SetTokenToCookie(tokens map[string]string, ctx fiber.Ctx) error {
 // @description: generate token response (access token and refresh token)
 // @param: user entities.User
 // @return: map[string]string {accessToken, refreshToken}
-func GenUserTokenResponse(user entities.User) map[string]string {
+func GenUserTokenResponse(user *entities.User) map[string]string {
 	accessClaims := GenerateUserToken(user, config.ACCESS_TOKEN_NAME)
 	refreshClaims := GenerateUserToken(user, config.REFRESH_TOKEN_NAME)
 
@@ -100,7 +94,7 @@ func GenUserTokenResponse(user entities.User) map[string]string {
 // @param: user entities.User
 // @param: tokenType string
 // @return: *jwt.Token
-func GenerateUserToken(user entities.User, tokenType string) *jwt.Token {
+func GenerateUserToken(user *entities.User, tokenType string) *jwt.Token {
 	var duration time.Duration
 
 	if tokenType == config.REFRESH_TOKEN_NAME {

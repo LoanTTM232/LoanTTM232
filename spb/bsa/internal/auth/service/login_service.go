@@ -15,7 +15,7 @@ var ErrIncorrectPassword = errors.New("incorrect password")
 // @description: User login with email and password
 // @param: user model.UserDTO
 // @return: user entities.User, error
-func (s *Service) AccountLogin(u model.LoginRequest) (*tb.User, error) {
+func (s *Service) AccountLogin(u *model.LoginRequest) (*tb.User, error) {
 	var user tb.User
 
 	err := s.db.Preload("Role").

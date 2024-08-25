@@ -2,7 +2,7 @@ package service
 
 import (
 	"spb/bsa/internal/auth/model"
-	"spb/bsa/pkg/entities"
+	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/global"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -10,9 +10,9 @@ import (
 )
 
 type IService interface {
-	AccountLogin(*model.LoginRequest) (*model.LoginResponse, error)
-	AccountRegister(email string, password string) (*entities.User, error)
-	RefreshToken(refreshToken string, claims jwt.MapClaims) (*entities.User, error)
+	AccountLogin(*model.LoginRequest) (*tb.User, error)
+	AccountRegister(*model.RegisterRequest) (*tb.User, error)
+	RefreshToken(string, jwt.MapClaims) (*tb.User, error)
 }
 
 type Service struct {
@@ -23,6 +23,6 @@ type Service struct {
 // @function: NewService
 // @description: Create a new auth service
 // @return: Service
-func NewService() *Service {
+func NewService() IService {
 	return &Service{db: global.SPB_DB}
 }

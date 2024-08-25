@@ -38,7 +38,7 @@ type ZapLog struct {
 var Zlog = &ZapLog{}
 
 var logFile = &lumberjack.Logger{
-	MaxSize:    500,
+	MaxSize:    10,
 	MaxBackups: 10,
 	MaxAge:     28,
 	Compress:   true,

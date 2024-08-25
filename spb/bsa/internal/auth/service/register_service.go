@@ -15,7 +15,7 @@ var ErrEmailExists = errors.New("email already exists")
 // @description: User login with email and password
 // @param: user model.UserDTO
 // @return: user entities.User, error
-func (s *Service) AccountRegister(u model.RegisterRequest) (*tb.User, error) {
+func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 	var count int64
 	var err error
 

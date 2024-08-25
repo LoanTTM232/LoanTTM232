@@ -27,12 +27,12 @@ func (h *Handler) AccountLogin(ctx fiber.Ctx) error {
 		logger.Errorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(ErrLoginFailed)
 	}
-	user, err := h.service.AccountLogin(*reqBody)
+	user, err := h.service.AccountLogin(reqBody)
 	if err != nil {
 		logger.Errorf("error login: %v", err)
 		return fctx.ErrResponse(ErrLoginFailed)
 	}
-	tokens := GenUserTokenResponse(*user)
+	tokens := GenUserTokenResponse(user)
 	if tokens == nil {
 		return fctx.ErrResponse(ErrLoginFailed)
 	}

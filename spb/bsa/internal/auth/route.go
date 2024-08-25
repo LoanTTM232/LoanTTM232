@@ -1,7 +1,7 @@
 package auth
 
 import (
-	handler "spb/bsa/internal/auth/hander"
+	handler "spb/bsa/internal/auth/handler"
 	"spb/bsa/internal/auth/service"
 
 	"github.com/gofiber/fiber/v3"

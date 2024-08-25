@@ -34,7 +34,7 @@ func (h *Handler) AccountRefreshToken(ctx fiber.Ctx) error {
 	if err != nil {
 		return fctx.ErrResponse(ErrRefreshTokenFailed)
 	}
-	tokens := GenUserTokenResponse(*user)
+	tokens := GenUserTokenResponse(user)
 	if tokens == nil {
 		return fctx.ErrResponse(ErrRefreshTokenFailed)
 	}
