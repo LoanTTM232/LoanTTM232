@@ -35,7 +35,7 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 		Email:           u.Email,
 		Password:        utils.BcryptHash(u.Password),
 		Role:            role,
-		RoleID:          *role.ID,
+		RoleID:          role.ID,
 		Active:          false,
 		IsEmailVerified: false,
 	}
