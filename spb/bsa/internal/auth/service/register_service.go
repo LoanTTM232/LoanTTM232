@@ -19,18 +19,21 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 	var count int64
 	var err error
 
-	// check email exists
-	if s.db.Where("email = ?", u.Email).Count(&count); count > 0 {
+	if s.db.Model(&tb.User{}).
+		Where("email = ?", u.Email).
+		Where(s.db.Where(s.db.Scopes(userIsActive, emailIsVerity)).Or(s.db.Scopes(userIsNotActive, emailIsNotVerity))).
+		Count(&count); count > 0 {
 		return nil, ErrEmailExists
 	}
 
-	// get role id for user
 	var role tb.Role
-	if err = s.db.Where("name = ?", tb.ROLE_USER).First(&role).Error; err != nil {
+	if err = s.db.Model(&tb.Role{}).
+		Preload("Permissions").
+		Where("name = ?", tb.ROLE_USER).
+		First(&role).Error; err != nil {
 		return nil, err
 	}
 
-	// create user
 	user := tb.User{
 		Email:           u.Email,
 		Password:        utils.BcryptHash(u.Password),
@@ -40,7 +43,6 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 		IsEmailVerified: false,
 	}
 
-	// save user
 	if err = s.db.Create(&user).Error; err != nil {
 		return nil, err
 	}

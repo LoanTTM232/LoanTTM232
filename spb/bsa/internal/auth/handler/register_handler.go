@@ -17,7 +17,7 @@ var (
 // @author: LoanTT
 // @function: AccountRegister
 // @description: handler account register with email and password
-// @param: ctx *fiber.Ctx
+// @param: ctx fiber.Ctx
 // @return: err error
 func (h *Handler) AccountRegister(ctx fiber.Ctx) error {
 	reqBody := new(model.RegisterRequest)

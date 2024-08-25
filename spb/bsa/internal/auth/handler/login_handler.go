@@ -16,7 +16,7 @@ var ErrLoginFailed = fiber.NewError(fiber.StatusBadRequest, "email or password i
 // @author: LoanTT
 // @function: AccountLogin
 // @description: handler account login with email and password
-// @param: ctx *fiber.Ctx
+// @param: ctx fiber.Ctx
 // @return: err error
 func (h *Handler) AccountLogin(ctx fiber.Ctx) error {
 	var err error
@@ -34,10 +34,12 @@ func (h *Handler) AccountLogin(ctx fiber.Ctx) error {
 	}
 	tokens := GenUserTokenResponse(user)
 	if tokens == nil {
+		logger.Errorf("gen user tokens failed: %v", err)
 		return fctx.ErrResponse(ErrLoginFailed)
 	}
 	err = TokenNext(&fctx, ctx, user, tokens)
 	if err != nil {
+		logger.Errorf("set token to cookie failed: %v", err)
 		return fctx.ErrResponse(ErrLoginFailed)
 	}
 

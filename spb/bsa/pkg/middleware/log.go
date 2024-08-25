@@ -3,12 +3,11 @@ package middleware
 import (
 	"encoding/base64"
 	"encoding/json"
-	"strings"
-	"time"
-
 	"spb/bsa/pkg/auth"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
+	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
@@ -49,10 +48,7 @@ func LogMiddleware() fiber.Handler {
 
 		var userId interface{}
 		var claims jwt.MapClaims
-		claims, _ = auth.GetTokenFromHeader(ctx)
-		if len(claims) == 0 {
-			claims, _ = auth.GetTokenFromCookie(ctx)
-		}
+		claims, _ = auth.GetTokenFromCookie(ctx)
 
 		if len(claims) > 0 {
 			userId = claims["userId"]

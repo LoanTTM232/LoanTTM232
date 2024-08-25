@@ -3,23 +3,23 @@ package handler
 import (
 	"errors"
 	"fmt"
-	"time"
-
 	"spb/bsa/internal/auth/model"
-	serv "spb/bsa/internal/auth/service"
 	"spb/bsa/pkg/auth"
 	"spb/bsa/pkg/config"
 	"spb/bsa/pkg/entities"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
+	"time"
+
+	serv "spb/bsa/internal/auth/service"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
 )
 
 type Handler struct {
-	service serv.IService
+	service *serv.Service
 }
 
 // @author: LoanTT
@@ -27,7 +27,7 @@ type Handler struct {
 // @description: Create a new auth handler
 // @param: auth service
 // @return: fiber.Handler
-func NewHandler(service serv.IService) *Handler {
+func NewHandler(service *serv.Service) *Handler {
 	return &Handler{
 		service: service,
 	}
@@ -37,7 +37,7 @@ func NewHandler(service serv.IService) *Handler {
 // @function: SetTokenToCookie
 // @description: set token to cookie
 // @param: user model.LoginResponse
-// @param: ctx *fiber.Ctx
+// @param: ctx fiber.Ctx
 // @return: err error
 func SetTokenToCookie(tokens map[string]string, ctx fiber.Ctx) error {
 	if tokens[config.ACCESS_TOKEN_NAME] == "" || tokens[config.REFRESH_TOKEN_NAME] == "" {

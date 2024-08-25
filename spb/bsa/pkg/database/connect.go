@@ -52,16 +52,10 @@ func ConnectDB(config *config.Config) (*gorm.DB, error) {
 // @param: db *gorm.DB
 // @return: error
 func AutoMigrate(db *gorm.DB) error {
-	var err error
-	err = db.AutoMigrate(&tb.User{}, &tb.Permission{},
-		&tb.Role{}, &tb.SportType{})
+	err := db.AutoMigrate(&tb.User{}, &tb.Permission{}, &tb.Role{}, &tb.SportType{})
 	if err != nil {
 		return ErrMigrationFailed(err)
 	}
 
-	err = db.SetupJoinTable(&tb.Role{}, "Permissions", &tb.RolePermission{})
-	if err != nil {
-		return ErrJoinTableFailed(err)
-	}
 	return nil
 }

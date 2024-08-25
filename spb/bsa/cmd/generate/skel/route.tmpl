@@ -1,0 +1,19 @@
+package {{.ModuleName}}
+
+import (
+	handler "spb/bsa/internal/{{.ModuleName}}/handler"
+	"spb/bsa/internal/{{.ModuleName}}/service"
+
+	"github.com/gofiber/fiber/v3"
+)
+
+// @author: LoanTT
+// @function: GetRoutes
+// @description: Register {{.ModuleName}} routes
+// @param: router fiber.Router
+func GetRoutes(router fiber.Router) {
+	service := service.NewService()
+	handlers := handler.NewHandler(service)
+
+	authRoute := router.Group("/api/{{.ModuleName}}")
+}

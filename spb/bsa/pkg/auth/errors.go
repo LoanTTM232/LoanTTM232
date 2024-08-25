@@ -12,7 +12,6 @@ var (
 	ErrUnauthorized         = NewError("unauthorized")
 	ErrAccessKeyNotFound    = NewError("['accessToken'] isn't present")
 	ErrParseTokenFromCookie = NewErrorArgs("failed to parse token from cookie: %+v")
-	ErrParseTokenFromHeader = NewErrorArgs("failed to parse token from header: %+v")
 )
 
 func NewError(msg string) error {

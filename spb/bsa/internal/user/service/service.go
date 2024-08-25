@@ -12,8 +12,8 @@ type Service struct {
 
 // @author: LoanTT
 // @function: NewService
-// @description: Create a new auth service
-// @return: Service
+// @description: Create a new user service
+// @return: *Service
 func NewService() *Service {
 	return &Service{db: global.SPB_DB}
 }
@@ -35,17 +35,11 @@ func emailIsVerity(db *gorm.DB) *gorm.DB {
 }
 
 // @author: LoanTT
-// @function: Check user is not active
+// @function: Check user is satisfied
 // @description: Return db
 // @return: *gorm.DB
-func userIsNotActive(db *gorm.DB) *gorm.DB {
-	return db.Where("active = ?", false)
-}
-
-// @author: LoanTT
-// @function: Check email is not verify
-// @description: Return db
-// @return: *gorm.DB
-func emailIsNotVerity(db *gorm.DB) *gorm.DB {
-	return db.Where("is_email_verified = ?", false)
+func SatisfiedUser(roles []uint) func(*gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Scopes(userIsActive, emailIsVerity).Where("role_id IN ?", roles)
+	}
 }

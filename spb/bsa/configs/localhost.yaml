@@ -15,7 +15,7 @@ cors:
     allowMethods:
         - "GET"
         - "POST"
-        - "PUT"
+        - "PATCH"
         - "DELETE"
     allowCredentials: true
 
@@ -52,8 +52,8 @@ redis:
 logging:
     level: 0 # debug:0, info:1, warning:2, error:3
     output:
-        # - "console"
-        - "file"
+        - "console"
+        # - "file"
     filename: "requests.log"
     debugSymbol: "-"
 

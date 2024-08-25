@@ -18,10 +18,10 @@ var ErrIncorrectPassword = errors.New("incorrect password")
 func (s *Service) AccountLogin(u *model.LoginRequest) (*tb.User, error) {
 	var user tb.User
 
-	err := s.db.Preload("Role").
+	err := s.db.Model(&tb.User{}).
+		Scopes(userIsActive, emailIsVerity).
 		Where("email = ?", u.Email).
-		Where("active = ?", true).
-		Where("is_email_verified = ?", true).
+		Preload("Role").
 		First(&user).Error
 	if err == nil {
 		if ok := utils.BcryptCheck(u.Password, user.Password); !ok {

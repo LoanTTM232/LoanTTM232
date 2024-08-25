@@ -35,11 +35,10 @@ func ConnectRedis(config *config.Config) (*redis.Storage, error) {
 			PoolSize: config.RedisConf.PoolSize * runtime.GOMAXPROCS(0),
 		})
 	}
-	pong, err := store.Get("ping")
+	_, err := store.Get("PING")
 	if err != nil {
 		fmt.Printf("redis connect error: %v\n", err)
 		return nil, err
 	}
-	fmt.Printf("redis connect success: %v\n", pong)
 	return store, nil
 }

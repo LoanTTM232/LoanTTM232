@@ -1,0 +1,26 @@
+package service
+
+import (
+	"spb/bsa/internal/{{.ModuleName}}/model"
+	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/global"
+
+	"github.com/golang-jwt/jwt/v5"
+	"gorm.io/gorm"
+)
+
+type IService interface {
+
+}
+
+type Service struct {
+	db *gorm.DB
+}
+
+// @author: LoanTT
+// @function: NewService
+// @description: Create a new {{.ModuleName}} service
+// @return: Service
+func NewService() IService {
+	return &Service{db: global.SPB_DB}
+}

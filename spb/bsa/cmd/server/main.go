@@ -6,11 +6,13 @@ import (
 	"strings"
 
 	"spb/bsa/internal/auth"
+	"spb/bsa/internal/role"
 	"spb/bsa/pkg/database"
 	"spb/bsa/pkg/global"
-	zaplog "spb/bsa/pkg/logger"
 	"spb/bsa/pkg/middleware"
 	"spb/bsa/pkg/redis"
+
+	zaplog "spb/bsa/pkg/logger"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/goccy/go-json"
@@ -87,7 +89,11 @@ func (f *Fiber) LoadMiddleware() {
 	f.App.Use(cors.New(corsOptions()))
 }
 
-// TODO: Add swagger docs
+// @author: LoanTT
+// @function: LoadSwagger
+// @description: Load swagger
+func (f *Fiber) LoadSwagger() {
+}
 
 // @author: LoanTT
 // @function: LoadRoutes
@@ -105,7 +111,8 @@ func (f *Fiber) LoadRoutes() {
 		custMiddlewares.CheckJwt(skipJwtCheckRoutes...), // add jwt check to all routes
 	)
 
-	auth.GetRoutes(router)
+	auth.LoadModule(router)
+	role.LoadModule(router)
 
 	// a custom 404 handler
 	f.App.Use(func(ctx fiber.Ctx) error {

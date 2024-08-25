@@ -78,7 +78,7 @@ func (ctx *FiberCtx) ValidateJson() error {
 }
 
 func (ctx *FiberCtx) ParseJsonToStruct(dest interface{}, validate *validator.Validate) error {
-	if err := ctx.Fctx.Bind().JSON(dest); err != nil {
+	if err := ctx.Fctx.Bind().Body(dest); err != nil {
 		return err
 	}
 	if err := validate.Struct(dest); err != nil {

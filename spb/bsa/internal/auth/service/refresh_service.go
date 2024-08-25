@@ -15,10 +15,10 @@ import (
 func (s *Service) RefreshToken(refreshToken string, claims jwt.MapClaims) (*tb.User, error) {
 	var user *tb.User
 
-	err := s.db.Preload("Role").
+	err := s.db.Model(&tb.User{}).
+		Scopes(userIsActive, emailIsVerity).
 		Where("email = ?", claims["email"]).
-		Where("active = ?", true).
-		Where("is_email_verified = ?", true).
+		Preload("Role").
 		First(&user).Error
 	if err != nil {
 		return nil, err

@@ -1,11 +1,10 @@
 package auth
 
 import (
-	"strings"
-	"time"
-
 	"spb/bsa/pkg/config"
 	"spb/bsa/pkg/global"
+	"strings"
+	"time"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
@@ -60,10 +59,10 @@ func GetToken(claims jwt.Claims) *jwt.Token {
 // @author: LoanTT
 // @function: GetTokenFromCookie
 // @description: Get token from cookie
-// @param: ctx *fiber.Ctx
+// @param: ctx fiber.Ctx
 // @return: jwt.MapClaims, error
 func GetTokenFromCookie(ctx fiber.Ctx) (jwt.MapClaims, error) {
-	jwt := ctx.Get(config.ACCESS_TOKEN_NAME)
+	jwt := ctx.Cookies(config.ACCESS_TOKEN_NAME)
 	if len(jwt) == 0 {
 		return nil, ErrAccessKeyNotFound
 	}
@@ -72,25 +71,6 @@ func GetTokenFromCookie(ctx fiber.Ctx) (jwt.MapClaims, error) {
 	claims, err := ParseJwt(accessToken)
 	if err != nil {
 		return nil, ErrParseTokenFromCookie(err)
-	}
-
-	return claims, nil
-}
-
-// @author: LoanTT
-// @function: GetTokenFromHeader
-// @description: Get token from header
-// @param: ctx *fiber.Ctx
-// @return: jwt.MapClaims, error
-func GetTokenFromHeader(ctx fiber.Ctx) (jwt.MapClaims, error) {
-	accessToken := ctx.Get("Authorization")
-	if len(accessToken) == 0 {
-		return nil, ErrAccessKeyNotFound
-	}
-
-	claims, err := ParseJwt(accessToken)
-	if err != nil {
-		return nil, ErrParseTokenFromHeader(err)
 	}
 
 	return claims, nil

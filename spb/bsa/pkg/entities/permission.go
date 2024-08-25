@@ -4,7 +4,7 @@ const PermissionTN = "permission"
 
 type Permission struct {
 	Base
-	Name string `gorm:"unique;not null"`
+	Name string `gorm:"not null"`
 }
 
 func (Permission) TableName() string {

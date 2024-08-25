@@ -1,0 +1,34 @@
+package handler
+
+import (
+	"errors"
+	"fmt"
+	"time"
+
+	"spb/bsa/internal/{{.ModuleName}}/model"
+	serv "spb/bsa/internal/{{.ModuleName}}/service"
+	"spb/bsa/pkg/{{.ModuleName}}"
+	"spb/bsa/pkg/config"
+	"spb/bsa/pkg/entities"
+	"spb/bsa/pkg/global"
+	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/utils"
+
+	"github.com/gofiber/fiber/v3"
+	"github.com/golang-jwt/jwt/v5"
+)
+
+type Handler struct {
+	service serv.IService
+}
+
+// @author: LoanTT
+// @function: NewHandler
+// @description: Create a new {{.ModuleName}} handler
+// @param: {{.ModuleName}} service
+// @return: fiber.Handler
+func NewHandler(service serv.IService) *Handler {
+	return &Handler{
+		service: service,
+	}
+}

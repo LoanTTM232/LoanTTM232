@@ -14,6 +14,8 @@ type Role struct {
 	Base
 	Name        string       `gorm:"unique;not null"`
 	Permissions []Permission `gorm:"many2many:role_permission;"`
+	ParentId    uint         `json:"parentId"`
+	Children    []Role       `gorm:"foreignKey:ParentId" json:"children"`
 }
 
 func (Role) TableName() string {
