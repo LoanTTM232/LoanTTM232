@@ -1,0 +1,19 @@
+package service
+
+import tb "spb/bsa/pkg/entities"
+
+// @author: LoanTT
+// @function: Delete
+// @description: Service for {{.ModuleName}} deletion
+// @param: uint {{.ModuleName}} id
+// @return: error
+func (s *Service) Delete({{.ModuleName}}Id uint) error {
+	{{.ModuleName}} := tb.User{}
+	{{.ModuleName}}.ID = {{.ModuleName}}Id
+
+	err := s.db.Delete(&{{.ModuleName}}).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}

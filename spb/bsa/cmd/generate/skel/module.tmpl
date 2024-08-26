@@ -1,0 +1,29 @@
+package {{.ModuleName}}
+
+import (
+	handler "spb/bsa/internal/{{.ModuleName}}/handler"
+	"spb/bsa/internal/{{.ModuleName}}/service"
+
+	"github.com/gofiber/fiber/v3"
+)
+
+var (
+	{{.StructName}}Service *service.Service
+	{{.StructName}}Handler *handler.Handler
+)
+
+// @author: LoanTT
+// @function: LoadModule
+// @description: Register {{.ModuleName}} routes
+// @param: router fiber.Router
+func LoadModule(router fiber.Router) {
+	{{.StructName}}Service = service.NewService()
+	{{.StructName}}Handler = handler.NewHandler({{.StructName}}Service)
+
+	{{.ModuleName}}Route := router.Group("/api/v1/{{.ModuleName}}")
+	{{.ModuleName}}Route.Get("/", {{.StructName}}Handler.GetAll)
+	{{.ModuleName}}Route.Get("/:id", {{.StructName}}Handler.GetByID)
+	{{.ModuleName}}Route.Post("/", {{.StructName}}Handler.Create)
+	{{.ModuleName}}Route.Patch("/", {{.StructName}}Handler.Update)
+	{{.ModuleName}}Route.Delete("/:id", {{.StructName}}Handler.Delete)
+}

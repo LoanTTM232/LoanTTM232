@@ -1,0 +1,22 @@
+package service
+
+import (
+	"errors"
+
+	"spb/bsa/internal/{{.ModuleName}}/model"
+	"spb/bsa/internal/{{.ModuleName}}/utility"
+	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/utils"
+)
+
+// @author: LoanTT
+// @function: Create
+// @description: Service for {{.ModuleName}} creation
+// @param: {{.ModuleName}} model.Create{{.StructName}}Request
+// @return: {{.ModuleName}} entities.{{.StructName}}, error
+func (s *Service) Create(reqBody *model.Create{{.StructName}}Request) (*tb.{{.StructName}}, error) {
+	var err error
+	var count int64
+
+	return {{.ModuleName}}, nil
+}

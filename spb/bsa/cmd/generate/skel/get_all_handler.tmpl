@@ -1,0 +1,60 @@
+package handler
+
+import (
+	"spb/bsa/internal/{{.ModuleName}}/model"
+	"spb/bsa/internal/{{.ModuleName}}/utility"
+	"spb/bsa/pkg/auth"
+	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/utils"
+
+	"github.com/gofiber/fiber/v3"
+)
+
+var ErrGet{{.Plural}}Failed = fiber.NewError(fiber.StatusNotFound, "get {{.ModuleNamePlural}} failed")
+
+// @author: LoanTT
+// @function: GetAll
+// @description: Handler for getting all {{.ModuleNamePlural}}
+// @param: ctx fiber.Ctx
+// @return: error
+func (s *Handler) GetAll(ctx fiber.Ctx) error {
+	var err error
+	var reqBody model.Get{{.Plural}}Request
+	fctx := utils.FiberCtx{Fctx: ctx}
+
+	pagination := utils.GetPagination(ctx.Queries())
+	reqBody.Pagination = pagination
+
+	claims, err := auth.GetTokenFromCookie(ctx)
+	if err != nil {
+		logger.Errorf("error parse jwt: %v", err)
+		return fctx.ErrResponse(ErrGet{{.Plural}}Failed)
+	}
+
+	reqBody.Role = claims["role"].(string)
+
+	{{.ModuleNamePlural}}, err := s.service.GetAll(reqBody)
+	if err != nil {
+		logger.Errorf("error get {{.ModuleNamePlural}}: %v", err)
+		return fctx.ErrResponse(ErrGet{{.Plural}}Failed)
+	}
+
+	{{.ModuleName}}Response := map{{.Plural}}EntityToResponse({{.ModuleNamePlural}})
+	return fctx.JsonResponse(fiber.StatusOK, fiber.Map{"data": {{.ModuleName}}Response})
+}
+
+// @author: LoanTT
+// @function: map{{.Plural}}EntityToResponse
+// @description: Map {{.ModuleNamePlural}} entity to response
+// @param: {{.ModuleNamePlural}} []*tb.User
+// @return: *model.Get{{.Plural}}Response
+func map{{.Plural}}EntityToResponse({{.ModuleNamePlural}} []tb.User) *model.Get{{.Plural}}Response {
+	res := new(model.Get{{.Plural}}Response)
+	for _, {{.ModuleName}} := range {{.ModuleNamePlural}} {
+		res.{{.Plural}} = append(res.{{.Plural}}, utility.MapUserEntityToResponse(&{{.ModuleName}}))
+	}
+
+	res.Total = len(res.{{.Plural}})
+	return res
+}

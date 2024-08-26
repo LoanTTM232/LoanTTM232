@@ -1,0 +1,37 @@
+package handler
+
+import (
+	"spb/bsa/internal/{{.ModuleName}}/model"
+	"spb/bsa/internal/{{.ModuleName}}/utility"
+	"spb/bsa/pkg/global"
+	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/utils"
+
+	"github.com/gofiber/fiber/v3"
+)
+
+var ErrUpdate{{.StructName}}Failed = fiber.NewError(fiber.StatusBadRequest, "update {{.ModuleName}} failed")
+
+// @author: LoanTT
+// @function: Update
+// @description: Handler for update {{.ModuleName}}
+// @param: ctx fiber.Ctx
+// @return: error
+func (s *Handler) Update(ctx fiber.Ctx) error {
+	var err error
+	reqBody := new(model.Update{{.StructName}}Request)
+
+	fctx := utils.FiberCtx{Fctx: ctx}
+	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
+		logger.Errorf("error parse json to struct: %v", err)
+		return fctx.ErrResponse(ErrUpdate{{.StructName}}Failed)
+	}
+	{{.ModuleName}}Updated, err := s.service.Update(reqBody)
+	if err != nil {
+		logger.Errorf("error create {{.ModuleName}}: %v", err)
+		return fctx.ErrResponse(ErrUpdate{{.StructName}}Failed)
+	}
+	{{.ModuleName}}Response := utility.Map{{.StructName}}EntityToResponse({{.ModuleName}}Updated)
+
+	return fctx.JsonResponse(fiber.StatusOK, fiber.Map{"data": {{.ModuleName}}Response})
+}

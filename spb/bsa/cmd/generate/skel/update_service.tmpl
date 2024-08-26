@@ -1,0 +1,61 @@
+package service
+
+import (
+	"errors"
+
+	"spb/bsa/internal/{{.ModuleName}}/model"
+	"spb/bsa/internal/{{.ModuleName}}/utility"
+	tb "spb/bsa/pkg/entities"
+
+	"gorm.io/gorm/clause"
+)
+
+var Err{{.StructName}}NotFound = errors.New("{{.ModuleName}} not found")
+
+// @author: LoanTT
+// @function: Update
+// @description: Service for {{.ModuleName}} update
+// @param: {{.ModuleName}} *model.Update{{.StructName}}Request
+// @return: {{.ModuleName}} *entities.{{.StructName}}, error
+func (s *Service) Update(reqBody *model.Update{{.StructName}}Request) (*tb.{{.StructName}}, error) {
+	var err error
+	var count int64
+	var {{.ModuleNamePlural}} []tb.{{.StructName}}
+
+	// check if {{.ModuleName}} exists
+	if err = s.db.Model(&tb.{{.StructName}}{}).
+		Scopes(utility.EmailIsVerity).
+		Where("id = ?", reqBody.{{.StructName}}Id).
+		Count(&count).Error; err == nil && count == 0 {
+		return nil, Err{{.StructName}}NotFound
+	} else if err != nil {
+		return nil, err
+	}
+
+	{{.ModuleName}}Update := mapUpdateFields(reqBody)
+	// update {{.ModuleName}}
+	err = s.db.Model(&{{.ModuleNamePlural}}).
+		Clauses(clause.Returning{}).
+		Where("id = ?", reqBody.{{.StructName}}Id).
+		Updates({{.ModuleName}}Update).Error
+	if err != nil {
+		return nil, err
+	}
+	if len({{.ModuleNamePlural}}) == 0 {
+		return nil, Err{{.StructName}}NotFound
+	}
+
+	return &{{.ModuleNamePlural}}[0], nil
+}
+
+// @author: LoanTT
+// @function: mapUpdateFields
+// @description: mapping update fields
+// @param: reqBody *model.Update{{.StructName}}Request
+// @return: tb.{{.StructName}}
+func mapUpdateFields(reqBody *model.Update{{.StructName}}Request) tb.{{.StructName}} {
+	var {{.ModuleName}}Update tb.{{.StructName}}
+
+
+	return {{.ModuleName}}Update
+}

@@ -1,0 +1,34 @@
+package handler
+
+import (
+	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/utils"
+	"strconv"
+
+	"github.com/gofiber/fiber/v3"
+)
+
+var ErrDelete{{.StructName}}Failed = fiber.NewError(fiber.StatusBadRequest, "delete {{.ModuleName}} failed")
+
+// @author: LoanTT
+// @function: Delete
+// @description: Handler delete {{.ModuleName}}
+// @param: ctx fiber.Ctx
+// @return: err error
+func (s *Handler) Delete(ctx fiber.Ctx) error {
+	var err error
+	var {{.ModuleName}}Id int
+
+	fctx := utils.FiberCtx{Fctx: ctx}
+	if {{.ModuleName}}Id, err = strconv.Atoi(ctx.Params("id")); err != nil {
+		logger.Errorf("error parse {{.ModuleName}} id: %v", err)
+		return fctx.ErrResponse(ErrDelete{{.StructName}}Failed)
+	}
+
+	err = s.service.Delete(uint({{.ModuleName}}Id))
+	if err != nil {
+		logger.Errorf("error delete {{.ModuleName}}: %v", err)
+		return fctx.ErrResponse(ErrDelete{{.StructName}}Failed)
+	}
+	return fctx.JsonResponse(fiber.StatusOK, fiber.Map{"message": "delete {{.ModuleName}} success"})
+}

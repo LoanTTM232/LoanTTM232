@@ -15,7 +15,7 @@ Group APIs: **_/api/v1_**
 
 ---
 
-**/user**
+**/users**
 
 -   [x] GET /?i={items}&p={page}&b={order by}&t={order by}
 -   [x] GET /:id
@@ -25,7 +25,7 @@ Group APIs: **_/api/v1_**
 
 ---
 
-**/club**
+**/clubs**
 
 -   [ ] GET /
 -   [ ] GET /:id

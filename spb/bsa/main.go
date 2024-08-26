@@ -36,11 +36,13 @@ func executeServer() {
 // @author: LoanTT
 // @function: executeGenerate
 // @description: generate new module
-func executeGenerate() {
-	generate.GenerateNewModule()
+func executeGenerate(moduleName string) {
+	generate.GenerateNewModule(moduleName)
 }
 
 func main() {
+	var moduleName string
+
 	app := &cli.App{
 		Name:  "Sport booking",
 		Usage: "Sport booking system",
@@ -54,10 +56,18 @@ func main() {
 				},
 			},
 			{
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:        "module_name",
+						Aliases:     []string{"m"},
+						Usage:       "Name of module to generate",
+						Destination: &moduleName,
+					},
+				},
 				Name:  "generate",
 				Usage: "generate new module",
 				Action: func(c *cli.Context) error {
-					executeGenerate()
+					executeGenerate(moduleName)
 					return nil
 				},
 			},
