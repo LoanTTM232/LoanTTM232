@@ -1,6 +1,9 @@
 package model
 
-import "spb/bsa/pkg/utils"
+import (
+	roleModel "spb/bsa/internal/role/model"
+	"spb/bsa/pkg/utils"
+)
 
 type GetUsersRequest struct {
 	Pagination utils.Pagination
@@ -8,12 +11,12 @@ type GetUsersRequest struct {
 }
 
 type UserResponse struct {
-	UserId          uint   `json:"user_id"`
-	Email           string `json:"email"`
-	Role            string `json:"role"`
-	FullName        string `json:"full_name"`
-	Phone           string `json:"phone"`
-	IsEmailVerified bool   `json:"is_email_verified"`
+	UserId          uint                   `json:"user_id"`
+	Email           string                 `json:"email"`
+	Role            roleModel.RoleResponse `json:"role"`
+	FullName        string                 `json:"full_name"`
+	Phone           string                 `json:"phone"`
+	IsEmailVerified bool                   `json:"is_email_verified"`
 }
 
 type PermissionResponse struct {
@@ -29,13 +32,12 @@ type GetUsersResponse struct {
 type CreateUserRequest struct {
 	Email    string `json:"email" validate:"min=6,max=32,required,email"`
 	Password string `json:"password" validate:"min=6,max=32,required"`
-	Role     string `json:"role" validate:"required,number"`
+	Role     uint   `json:"role" validate:"required,number"`
 }
 
 type UpdateUserRequest struct {
-	UserId   uint   `json:"user_id,omitempty" validate:"number"`
-	Password string `json:"password,omitempty" validate:"min=6,max=32"`
-	Phone    string `json:"phone,omitempty" validate:"e164"`
-	FullName string `json:"full_name,omitempty" validate:"min=2,max=255"`
-	Role     uint   `json:"role,omitempty" validate:"number"`
+	UserId   uint   `json:"user_id,omitempty" validate:"number,required"`
+	Phone    string `json:"phone,omitempty" validate:"e164,omitempty"`
+	FullName string `json:"full_name,omitempty" validate:"min=2,max=255,omitempty"`
+	Role     uint   `json:"role,omitempty" validate:"number,omitempty"`
 }

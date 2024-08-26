@@ -10,7 +10,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// Get Root Dir
+// @author: LoanTT
+// @function: RootDir
+// @description: get root path
+// @return: string
 func RootDir(level int) string {
 	parentPath := ""
 	for p := 0; p < level; p++ {
@@ -21,7 +24,10 @@ func RootDir(level int) string {
 	return filepath.Dir(d)
 }
 
-// Generate random string by given length
+// @author: LoanTT
+// @function: GetRandString
+// @description: get random string
+// @return: string
 func GetRandString(length int) string {
 	if length < 1 {
 		length = 1
@@ -31,7 +37,10 @@ func GetRandString(length int) string {
 	return fmt.Sprintf("%x", b)
 }
 
-// Hash the given plain string by bcrypt
+// @author: LoanTT
+// @function: HashPassword
+// @description: hash password
+// @return: string
 func HashPassword(pwd string) string {
 	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), bcrypt.MinCost)
 	if err != nil {
@@ -40,12 +49,18 @@ func HashPassword(pwd string) string {
 	return string(hash)
 }
 
-// Get the pointer of object
+// @author: LoanTT
+// @function: ToPtr
+// @description: convert to pointer
+// @return: *T
 func ToPtr[T any](v T) *T {
 	return &v
 }
 
-// Get the value of pointer
+// @author: LoanTT
+// @function: Defer
+// @description: defer
+// @return: T
 func Defer[T any](v *T) T {
 	return *v
 }

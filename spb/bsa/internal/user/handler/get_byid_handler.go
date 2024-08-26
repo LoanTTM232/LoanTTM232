@@ -1,11 +1,12 @@
 package handler
 
 import (
-	"spb/bsa/internal/user/model"
+	"strconv"
+
+	"spb/bsa/internal/user/utility"
 	"spb/bsa/pkg/auth"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
-	"strconv"
 
 	tb "spb/bsa/pkg/entities"
 
@@ -45,22 +46,6 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(ErrUserNotFound)
 	}
 
-	userResponse := mapUserEntityToResponse(user)
+	userResponse := utility.MapUserEntityToResponse(user)
 	return fctx.JsonResponse(fiber.StatusOK, fiber.Map{"data": userResponse})
-}
-
-// @author: LoanTT
-// @function: mapUserEntityToResponse
-// @description: Mapping user entity to response
-// @param: user tb.User
-// @return: model.UserResponse
-func mapUserEntityToResponse(user *tb.User) model.UserResponse {
-	return model.UserResponse{
-		UserId:          user.ID,
-		Email:           user.Email,
-		Role:            user.Role.Name,
-		FullName:        user.FullName,
-		Phone:           user.Phone,
-		IsEmailVerified: user.IsEmailVerified,
-	}
 }

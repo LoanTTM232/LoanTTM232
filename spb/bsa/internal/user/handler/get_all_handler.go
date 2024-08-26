@@ -2,6 +2,7 @@ package handler
 
 import (
 	"spb/bsa/internal/user/model"
+	"spb/bsa/internal/user/utility"
 	"spb/bsa/pkg/auth"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/logger"
@@ -48,10 +49,10 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 // @description: Map users entity to response
 // @param: users []*tb.User
 // @return: *model.GetUsersResponse
-func mapUsersEntityToResponse(users []*tb.User) *model.GetUsersResponse {
+func mapUsersEntityToResponse(users []tb.User) *model.GetUsersResponse {
 	res := new(model.GetUsersResponse)
 	for _, user := range users {
-		res.Users = append(res.Users, mapUserEntityToResponse(user))
+		res.Users = append(res.Users, utility.MapUserEntityToResponse(&user))
 	}
 
 	res.Total = len(res.Users)

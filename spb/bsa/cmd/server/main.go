@@ -7,6 +7,7 @@ import (
 
 	"spb/bsa/internal/auth"
 	"spb/bsa/internal/role"
+	"spb/bsa/internal/user"
 	"spb/bsa/pkg/database"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/middleware"
@@ -113,6 +114,7 @@ func (f *Fiber) LoadRoutes() {
 
 	auth.LoadModule(router)
 	role.LoadModule(router)
+	user.LoadModule(router)
 
 	// a custom 404 handler
 	f.App.Use(func(ctx fiber.Ctx) error {

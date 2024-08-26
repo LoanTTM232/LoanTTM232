@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"spb/bsa/internal/user/model"
+	"spb/bsa/internal/user/utility"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/utils"
 )
@@ -20,16 +21,16 @@ func (s *Service) Create(reqBody *model.CreateUserRequest) (*tb.User, error) {
 	var count int64
 
 	if s.db.Model(&tb.User{}).
-		Scopes(userIsActive, emailIsVerity).
+		Scopes(utility.EmailIsVerity).
 		Where("email = ?", reqBody.Email).
 		Count(&count); count > 0 {
 		return nil, ErrEmailExists
 	}
 
 	var role tb.Role
-	if err = s.db.Model(&tb.Role{}).
+	if err = s.db.
 		Preload("Permissions").
-		Where("name = ?", reqBody.Role).
+		Where("id = ?", reqBody.Role).
 		First(&role).Error; err != nil {
 		return nil, err
 	}
@@ -54,7 +55,6 @@ func mapCreateRequestToEntity(reqBody *model.CreateUserRequest, role tb.Role) *t
 		Password:        utils.BcryptHash(reqBody.Password),
 		Role:            role,
 		RoleID:          role.ID,
-		Active:          false,
 		IsEmailVerified: false,
 	}
 }

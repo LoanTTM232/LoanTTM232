@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"spb/bsa/internal/auth/model"
+	"spb/bsa/internal/auth/utility"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/utils"
 )
@@ -18,8 +19,8 @@ var ErrIncorrectPassword = errors.New("incorrect password")
 func (s *Service) AccountLogin(u *model.LoginRequest) (*tb.User, error) {
 	var user tb.User
 
-	err := s.db.Model(&tb.User{}).
-		Scopes(userIsActive, emailIsVerity).
+	err := s.db.
+		Scopes(utility.EmailIsVerity).
 		Where("email = ?", u.Email).
 		Preload("Role").
 		First(&user).Error

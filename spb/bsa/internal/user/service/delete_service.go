@@ -8,7 +8,10 @@ import tb "spb/bsa/pkg/entities"
 // @param: uint user id
 // @return: error
 func (s *Service) Delete(userId uint) error {
-	err := s.db.Model(&tb.User{}).Where("id = ?", userId).Update("active = ?", false).Error
+	user := tb.User{}
+	user.ID = userId
+
+	err := s.db.Delete(&user).Error
 	if err != nil {
 		return err
 	}

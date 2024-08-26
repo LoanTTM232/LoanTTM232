@@ -13,6 +13,11 @@ import (
 
 type FlexInt int64
 
+// @author: LoanTT
+// @function: UnmarshalJSON
+// @description: Unmarshal JSON
+// @param: b []byte
+// @return: error
 func (fi *FlexInt) UnmarshalJSON(b []byte) error {
 	if b[0] != '"' {
 		return json.Unmarshal(b, (*int64)(fi))
@@ -34,11 +39,21 @@ type Optional[T any] struct {
 	Value     *T
 }
 
+// @author: LoanTT
+// @function: UnmarshalJSON
+// @description: Unmarshal JSON
+// @param: data []byte
+// @return: error
 func (o *Optional[T]) UnmarshalJSON(data []byte) error {
 	o.Presented = true
 	return json.Unmarshal(data, &o.Value)
 }
 
+// @author: LoanTT
+// @function: GetQueryString
+// @description: Get query string
+// @param: queryString []byte
+// @return: map[string]interface{}, error
 func GetQueryString(queryString []byte) (map[string]interface{}, error) {
 	decodedQuerystring, err := url.QueryUnescape(string(queryString))
 	if err != nil {
@@ -70,6 +85,11 @@ type FiberCtx struct {
 	Fctx fiber.Ctx
 }
 
+// @author: LoanTT
+// @function: ValidateJson
+// @description: Validate json
+// @param: ctx *fiber.Ctx
+// @return: error
 func (ctx *FiberCtx) ValidateJson() error {
 	if !json.Valid(ctx.Fctx.BodyRaw()) {
 		return ErrRequestJsonNotValid
@@ -77,6 +97,13 @@ func (ctx *FiberCtx) ValidateJson() error {
 	return nil
 }
 
+// @author: LoanTT
+// @function: ParseJsonToStruct
+// @description: Parse json to struct
+// @param: ctx *fiber.Ctx
+// @param: dest interface{}
+// @param: validate *validator.Validate
+// @return: error
 func (ctx *FiberCtx) ParseJsonToStruct(dest interface{}, validate *validator.Validate) error {
 	if err := ctx.Fctx.Bind().Body(dest); err != nil {
 		return err
@@ -87,12 +114,25 @@ func (ctx *FiberCtx) ParseJsonToStruct(dest interface{}, validate *validator.Val
 	return nil
 }
 
+// @author: LoanTT
+// @function: JsonResponse
+// @description: Json response
+// @param: ctx *fiber.Ctx
+// @param: respCode int
+// @param: data map[string]interface{}
+// @return: error
 func (ctx *FiberCtx) JsonResponse(respCode int, data map[string]interface{}) error {
 	return ctx.Fctx.
 		Status(respCode).
 		JSON(data)
 }
 
+// @author: LoanTT
+// @function: ErrResponse
+// @description: Err response
+// @param: ctx *fiber.Ctx
+// @param: err *fiber.Error
+// @return: error
 func (ctx *FiberCtx) ErrResponse(err *fiber.Error) error {
 	return ctx.Fctx.Status(err.Code).JSON(map[string]interface{}{"message": err.Error()})
 }

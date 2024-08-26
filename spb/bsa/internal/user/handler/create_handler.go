@@ -2,7 +2,7 @@ package handler
 
 import (
 	"spb/bsa/internal/user/model"
-	tb "spb/bsa/pkg/entities"
+	"spb/bsa/internal/user/utility"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
@@ -10,7 +10,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-var ErrCreateUserFailed = fiber.NewError(fiber.StatusBadRequest, "Create user failed")
+var ErrCreateUserFailed = fiber.NewError(fiber.StatusBadRequest, "create user failed")
 
 // @author: LoanTT
 // @function: Create
@@ -32,23 +32,7 @@ func (s *Handler) Create(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(ErrCreateUserFailed)
 	}
 	// TODO: send email verification
-	userResponse := mapCreateUserEntityToResponse(userCreated)
+	userResponse := utility.MapCreateUserEntityToResponse(userCreated)
 
 	return fctx.JsonResponse(fiber.StatusOK, fiber.Map{"data": userResponse})
-}
-
-// @author: LoanTT
-// @function: mapCreateUserEntityToResponse
-// @description: Map user entity to response
-// @param: user *tb.User
-// @return: *model.CreateUserResponse
-func mapCreateUserEntityToResponse(user *tb.User) *model.UserResponse {
-	return &model.UserResponse{
-		UserId:          user.ID,
-		Email:           user.Email,
-		FullName:        user.FullName,
-		Role:            user.Role.Name,
-		Phone:           user.Phone,
-		IsEmailVerified: user.IsEmailVerified,
-	}
 }

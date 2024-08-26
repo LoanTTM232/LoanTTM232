@@ -21,15 +21,14 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 
 	if s.db.Model(&tb.User{}).
 		Where("email = ?", u.Email).
-		Where(s.db.Where(s.db.Scopes(userIsActive, emailIsVerity)).Or(s.db.Scopes(userIsNotActive, emailIsNotVerity))).
 		Count(&count); count > 0 {
 		return nil, ErrEmailExists
 	}
 
 	var role tb.Role
-	if err = s.db.Model(&tb.Role{}).
-		Preload("Permissions").
+	if err = s.db.
 		Where("name = ?", tb.ROLE_USER).
+		Preload("Permissions").
 		First(&role).Error; err != nil {
 		return nil, err
 	}
@@ -39,7 +38,6 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 		Password:        utils.BcryptHash(u.Password),
 		Role:            role,
 		RoleID:          role.ID,
-		Active:          false,
 		IsEmailVerified: false,
 	}
 

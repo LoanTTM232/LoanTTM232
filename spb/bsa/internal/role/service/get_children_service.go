@@ -4,7 +4,6 @@ import (
 	tb "spb/bsa/pkg/entities"
 
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 // @author: LoanTT
@@ -23,9 +22,9 @@ func (s *Service) GetChildren(role interface{}) ([]tb.Role, error) {
 		roleCondition = "id = ?"
 	}
 
-	err := s.db.Model(&tb.Role{}).
+	err := s.db.
 		Where(roleCondition, role).
-		Preload(clause.Associations, preloadRole).
+		Preload("Children", preloadRole).
 		Find(&childrenRoles).Error
 	if err != nil {
 		return nil, err
@@ -39,5 +38,5 @@ func (s *Service) GetChildren(role interface{}) ([]tb.Role, error) {
 // @param: *gorm.DB
 // @return: *gorm.DB
 func preloadRole(db *gorm.DB) *gorm.DB {
-	return db.Preload("Parent", preloadRole)
+	return db.Preload("Children", preloadRole)
 }

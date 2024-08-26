@@ -2,6 +2,7 @@ package handler
 
 import (
 	"spb/bsa/internal/user/model"
+	"spb/bsa/internal/user/utility"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
@@ -23,14 +24,14 @@ func (s *Handler) Update(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
 		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(ErrCreateUserFailed)
+		return fctx.ErrResponse(ErrUpdateUserFailed)
 	}
 	userUpdated, err := s.service.Update(reqBody)
 	if err != nil {
 		logger.Errorf("error create user: %v", err)
 		return fctx.ErrResponse(ErrUpdateUserFailed)
 	}
-	userResponse := mapUserEntityToResponse(userUpdated)
+	userResponse := utility.MapUserEntityToResponse(userUpdated)
 
 	return fctx.JsonResponse(fiber.StatusOK, fiber.Map{"data": userResponse})
 }

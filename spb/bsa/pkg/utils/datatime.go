@@ -12,6 +12,11 @@ type CustomDatetime struct {
 	Format *string
 }
 
+// @author: LoanTT
+// @function: ParseInputDatetime
+// @description: Parse datetime
+// @param: datetime string
+// @return: time.Time, error
 func ParseInputDatetime(datetime string) (*time.Time, error) {
 	var err error
 	newTime := time.Time{}
@@ -32,6 +37,11 @@ func ParseInputDatetime(datetime string) (*time.Time, error) {
 	return nil, fmt.Errorf("failed to parse given datetime: %s", datetime)
 }
 
+// @author: LoanTT
+// @function: UnmarshalJSON
+// @description: Unmarshal JSON
+// @param: input []byte
+// @return: error
 func (t *CustomDatetime) UnmarshalJSON(input []byte) error {
 	strInput := strings.Trim(string(input), `"`)
 	parsedTime, err := ParseInputDatetime(strInput)
@@ -41,6 +51,11 @@ func (t *CustomDatetime) UnmarshalJSON(input []byte) error {
 	return err
 }
 
+// @author: LoanTT
+// @function: MarshalJSON
+// @description: Marshal JSON
+// @param: input []byte
+// @return: error
 func (t CustomDatetime) MarshalJSON() ([]byte, error) {
 	var jsonDatetime string
 	if t.Format == nil {
@@ -50,10 +65,19 @@ func (t CustomDatetime) MarshalJSON() ([]byte, error) {
 	return []byte(`"` + jsonDatetime + `"`), nil
 }
 
+// @author: LoanTT
+// @function: Value
+// @description: Value
+// @return: time.Time, error
 func (t CustomDatetime) Value() (time.Time, error) {
 	return time.Time(*t.Time), nil
 }
 
+// @author: LoanTT
+// @function: Scan
+// @description: Scan
+// @param: src interface{}
+// @return: error
 func (t *CustomDatetime) Scan(src interface{}) error {
 	if val, ok := src.(time.Time); ok {
 		t.Time = &val
@@ -63,6 +87,11 @@ func (t *CustomDatetime) Scan(src interface{}) error {
 	return nil
 }
 
+// @author: LoanTT
+// @function: Timer
+// @description: Timer
+// @param: start time.Time
+// @return: func()
 func Timer(start time.Time) func() {
 	return func() {
 		duration := time.Since(start)

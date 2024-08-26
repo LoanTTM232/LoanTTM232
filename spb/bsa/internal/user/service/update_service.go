@@ -4,8 +4,8 @@ import (
 	"errors"
 
 	"spb/bsa/internal/user/model"
+	"spb/bsa/internal/user/utility"
 	tb "spb/bsa/pkg/entities"
-	"spb/bsa/pkg/utils"
 
 	"gorm.io/gorm/clause"
 )
@@ -20,14 +20,13 @@ var ErrUserNotFound = errors.New("user not found")
 func (s *Service) Update(reqBody *model.UpdateUserRequest) (*tb.User, error) {
 	var err error
 	var count int64
-	var user *tb.User
 	var users []tb.User
 
 	// check if user exists
 	if err = s.db.Model(&tb.User{}).
-		Scopes(userIsActive, emailIsVerity).
+		Scopes(utility.EmailIsVerity).
 		Where("id = ?", reqBody.UserId).
-		Count(&count).First(user).Error; err == nil && count > 0 {
+		Count(&count).Error; err == nil && count == 0 {
 		return nil, ErrUserNotFound
 	} else if err != nil {
 		return nil, err
@@ -35,7 +34,10 @@ func (s *Service) Update(reqBody *model.UpdateUserRequest) (*tb.User, error) {
 
 	userUpdate := mapUpdateFields(reqBody)
 	// update user
-	err = s.db.Model(&users).Clauses(clause.Returning{}).Where("id = ?", reqBody.UserId).Updates(userUpdate).Error
+	err = s.db.Model(&users).
+		Clauses(clause.Returning{}).
+		Where("id = ?", reqBody.UserId).
+		Updates(userUpdate).Error
 	if err != nil {
 		return nil, err
 	}
@@ -56,9 +58,6 @@ func mapUpdateFields(reqBody *model.UpdateUserRequest) tb.User {
 
 	if reqBody.FullName != "" {
 		userUpdate.FullName = reqBody.FullName
-	}
-	if reqBody.Password != "" {
-		userUpdate.Password = utils.BcryptHash(reqBody.Password)
 	}
 	if reqBody.Phone != "" {
 		userUpdate.Phone = reqBody.Phone
