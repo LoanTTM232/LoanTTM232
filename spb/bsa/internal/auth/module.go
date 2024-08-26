@@ -20,7 +20,7 @@ func LoadModule(router fiber.Router) {
 	AuthService = service.NewService()
 	AuthHandler = handler.NewHandler(AuthService)
 
-	authRoute := router.Group("/api/auth")
+	authRoute := router.Group("/api/v1/auth")
 	authRoute.Post("/login", AuthHandler.AccountLogin)
 	authRoute.Post("/register", AuthHandler.AccountRegister)
 	authRoute.Post("/refresh", AuthHandler.AccountRefreshToken)

@@ -1,58 +1,88 @@
 ## Backend server application
 
-**_APIs_**
+### APIs
 
-- /auth
+Group APIs: **_/api/v1_**
 
-  - [ ] /login
-  - [ ] /logout
-  - [ ] /register
-  - [ ] /approve
+---
 
-- /unit
+**_/auth_**
 
-  - [ ] /search?by{name,location,rate}&sort={price}
-  - [ ] /name
-  - [ ] /:id
-  - [ ] /
+-   [x] POST /login
+-   [x] POST /register
+-   [x] POST /refresh
+-   [ ] POST /logout
 
-- /location
+---
 
-  - [ ] /
+**/user**
 
-- /metadata
+-   [x] GET /?i={items}&p={page}&b={order by}&t={order by}
+-   [x] GET /:id
+-   [x] POST /
+-   [x] PATCH /
+-   [x] DELETE /:id
 
-  - [ ] /pricing
+---
 
-- /booking
+**/club**
 
-  - [ ] /
-  - [ ] /book
-  - [ ] /request
-  - [ ] /request/:id
-  - [ ] /request/approve
-  - [ ] /order
-  - [ ] /order/:id
-  - [ ] /order/approve
+-   [ ] GET /
+-   [ ] GET /:id
+-   [ ] POST /
+-   [ ] PATCH /
+-   [ ] DELETE /:id
 
-- /media
+---
 
-  - [ ] /:club
-  - [ ] /:club/:unit
-  - [ ] /upload
-  - [ ] /:id
+**/unit**
 
-- /club
+-   [ ] GET /
+-   [ ] GET /:id
+-   [ ] POST /
+-   [ ] PATCH /
+-   [ ] DELETE /:id
 
-  - [ ] /
-  - [ ] /:id
+---
 
-- /analyze
+**/location**
 
-  - [ ] /
-  - [ ] /totalprice
+-   [ ] GET /
+-   [ ] GET /:id
 
-- /user
+---
 
-  - [ ] /
-  - [ ] /:id
+**/metadata**
+
+-   [ ] GET /
+-   [ ] POST /:id
+
+---
+
+**/booking**
+
+-   [ ] POST /
+-   [ ] POST /book
+-   [ ] POST /request
+-   [ ] POST /request/:id
+-   [ ] POST /request/approve
+-   [ ] POST /order
+-   [ ] POST /order/:id
+-   [ ] POST /order/approve
+
+---
+
+**/media**
+
+-   [ ] GET /
+-   [ ] GET /:id
+-   [ ] POST /
+-   [ ] PATCH /
+-   [ ] DELETE /:id
+
+---
+
+**/analyze**
+
+-   [ ] POST /
+-   [ ] POST /totalprice
