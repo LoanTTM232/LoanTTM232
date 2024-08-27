@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
+	"github.com/google/uuid"
 	"github.com/iancoleman/strcase"
 )
 
@@ -112,6 +113,21 @@ func (ctx *FiberCtx) ParseJsonToStruct(dest interface{}, validate *validator.Val
 		return err
 	}
 	return nil
+}
+
+// @author: LoanTT
+// @function: ParseUUID
+// @description: Parse UUID
+// @param: ctx *fiber.Ctx
+// @param: key string
+// @return: string, error
+func (ctx *FiberCtx) ParseUUID(key string) (string, error) {
+	uuidVal := ctx.Fctx.Params(key)
+	value, err := uuid.Parse(uuidVal)
+	if err != nil {
+		return "", err
+	}
+	return value.String(), nil
 }
 
 // @author: LoanTT

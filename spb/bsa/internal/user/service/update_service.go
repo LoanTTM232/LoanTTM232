@@ -57,12 +57,12 @@ func mapUpdateFields(reqBody *model.UpdateUserRequest) tb.User {
 	var userUpdate tb.User
 
 	if reqBody.FullName != "" {
-		userUpdate.FullName = reqBody.FullName
+		userUpdate.FullName = &reqBody.FullName
 	}
 	if reqBody.Phone != "" {
-		userUpdate.Phone = reqBody.Phone
+		userUpdate.Phone = &reqBody.FullName
 	}
-	if reqBody.Role != 0 {
+	if reqBody.Role != "" {
 		userUpdate.RoleID = reqBody.Role
 	}
 	return userUpdate

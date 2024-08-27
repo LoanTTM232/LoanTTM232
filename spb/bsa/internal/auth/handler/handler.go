@@ -2,7 +2,8 @@ package handler
 
 import (
 	"errors"
-	"fmt"
+	"time"
+
 	"spb/bsa/internal/auth/model"
 	"spb/bsa/pkg/auth"
 	"spb/bsa/pkg/config"
@@ -10,7 +11,6 @@ import (
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
-	"time"
 
 	serv "spb/bsa/internal/auth/service"
 
@@ -105,9 +105,8 @@ func GenerateUserToken(user *entities.User, tokenType string) *jwt.Token {
 	expireTime := &jwt.NumericDate{Time: time.Now().Add(duration)}
 
 	claims := &model.UserClaims{
-		Email:    user.Email,
-		FullName: user.FullName,
-		Role:     user.Role.Name,
+		Email: user.Email,
+		Role:  user.Role.Name,
 		Permissions: func() []string {
 			var permissions []string
 			for _, p := range user.Role.Permissions {
@@ -116,7 +115,7 @@ func GenerateUserToken(user *entities.User, tokenType string) *jwt.Token {
 			return permissions
 		}(),
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    fmt.Sprintf("%d", user.ID),
+			Issuer:    user.ID,
 			ExpiresAt: expireTime,
 		},
 	}

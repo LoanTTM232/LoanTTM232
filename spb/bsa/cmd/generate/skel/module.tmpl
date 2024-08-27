@@ -20,7 +20,7 @@ func LoadModule(router fiber.Router) {
 	{{.StructName}}Service = service.NewService()
 	{{.StructName}}Handler = handler.NewHandler({{.StructName}}Service)
 
-	{{.ModuleName}}Route := router.Group("/api/v1/{{.ModuleName}}")
+	{{.ModuleName}}Route := router.Group("/api/v1/{{.RouteName}}")
 	{{.ModuleName}}Route.Get("/", {{.StructName}}Handler.GetAll)
 	{{.ModuleName}}Route.Get("/:id", {{.StructName}}Handler.GetByID)
 	{{.ModuleName}}Route.Post("/", {{.StructName}}Handler.Create)

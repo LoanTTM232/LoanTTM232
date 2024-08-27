@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"strconv"
-
 	"spb/bsa/internal/user/utility"
 	"spb/bsa/pkg/auth"
 	"spb/bsa/pkg/logger"
@@ -25,7 +23,7 @@ var (
 // @return: err error
 func (s *Handler) GetByID(ctx fiber.Ctx) error {
 	var err error
-	var userId int
+	var userId string
 	var user *tb.User
 
 	fctx := utils.FiberCtx{Fctx: ctx}
@@ -35,13 +33,13 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(ErrGetUserFailed)
 	}
 
-	if userId, err = strconv.Atoi(ctx.Params("id")); err != nil {
+	if userId, err = fctx.ParseUUID("id"); err != nil {
 		logger.Errorf("error parse user id: %v", err)
 		return fctx.ErrResponse(ErrGetUserFailed)
 	}
 
 	role := claims["role"].(string)
-	if user, err = s.service.GetByID(uint(userId), role); err != nil {
+	if user, err = s.service.GetByID(userId, role); err != nil {
 		logger.Errorf("error get user by id: %v", err)
 		return fctx.ErrResponse(ErrUserNotFound)
 	}

@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"strconv"
-
 	"spb/bsa/internal/{{.ModuleName}}/utility"
 	"spb/bsa/pkg/auth"
 	"spb/bsa/pkg/logger"
@@ -25,7 +23,7 @@ var (
 // @return: err error
 func (s *Handler) GetByID(ctx fiber.Ctx) error {
 	var err error
-	var {{.ModuleName}}Id int
+	var {{.ModuleName}}Id string
 	var {{.ModuleName}} *tb.{{.StructName}}
 
 	fctx := utils.FiberCtx{Fctx: ctx}
@@ -35,13 +33,13 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(ErrGet{{.StructName}}Failed)
 	}
 
-	if {{.ModuleName}}Id, err = strconv.Atoi(ctx.Params("id")); err != nil {
+	if {{.ModuleName}}Id, err = fctx.ParseUUID("id"); err != nil {
 		logger.Errorf("error parse {{.ModuleName}} id: %v", err)
 		return fctx.ErrResponse(ErrGet{{.StructName}}Failed)
 	}
 
 	role := claims["role"].(string)
-	if {{.ModuleName}}, err = s.service.GetByID(uint({{.ModuleName}}Id), role); err != nil {
+	if {{.ModuleName}}, err = s.service.GetByID({{.ModuleName}}Id, role); err != nil {
 		logger.Errorf("error get {{.ModuleName}} by id: %v", err)
 		return fctx.ErrResponse(Err{{.StructName}}NotFound)
 	}

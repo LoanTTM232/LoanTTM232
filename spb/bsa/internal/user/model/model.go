@@ -11,33 +11,33 @@ type GetUsersRequest struct {
 }
 
 type UserResponse struct {
-	UserId          uint                   `json:"user_id"`
+	UserId          string                 `json:"user_id"`
 	Email           string                 `json:"email"`
 	Role            roleModel.RoleResponse `json:"role"`
-	FullName        string                 `json:"full_name"`
-	Phone           string                 `json:"phone"`
+	FullName        *string                `json:"full_name,omitempty"`
+	Phone           *string                `json:"phone,omitempty"`
 	IsEmailVerified bool                   `json:"is_email_verified"`
 }
 
 type PermissionResponse struct {
-	PermissionId   uint   `json:"id"`
+	PermissionId   string `json:"id"`
 	PermissionName string `json:"name"`
 }
 
 type GetUsersResponse struct {
 	Users []UserResponse `json:"users"`
-	Total int            `json:"total"`
+	Total uint           `json:"total"`
 }
 
 type CreateUserRequest struct {
 	Email    string `json:"email" validate:"min=6,max=32,required,email"`
 	Password string `json:"password" validate:"min=6,max=32,required"`
-	Role     uint   `json:"role" validate:"required,number"`
+	Role     string `json:"role" validate:"required,uuid"`
 }
 
 type UpdateUserRequest struct {
-	UserId   uint   `json:"user_id,omitempty" validate:"number,required"`
+	UserId   string `json:"user_id,omitempty" validate:"uuid,required"`
 	Phone    string `json:"phone,omitempty" validate:"e164,omitempty"`
 	FullName string `json:"full_name,omitempty" validate:"min=2,max=255,omitempty"`
-	Role     uint   `json:"role,omitempty" validate:"number,omitempty"`
+	Role     string `json:"role,omitempty" validate:"uuid,omitempty"`
 }

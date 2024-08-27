@@ -31,7 +31,7 @@ func (s *Service) AccountLogin(u *model.LoginRequest) (*tb.User, error) {
 
 		permissions := new([]tb.Permission)
 		err = s.db.Model(&tb.Permission{}).
-			Joins("join role_permission rp on rp.permission_id = permission.id").
+			Joins("join role_permissions rp on rp.permission_id = permission.id").
 			Where("rp.role_id = ?", user.RoleID).
 			Find(permissions).Error
 		if err != nil {

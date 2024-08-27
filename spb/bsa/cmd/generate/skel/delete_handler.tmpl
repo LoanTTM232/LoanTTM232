@@ -3,7 +3,6 @@ package handler
 import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
-	"strconv"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -17,15 +16,15 @@ var ErrDelete{{.StructName}}Failed = fiber.NewError(fiber.StatusBadRequest, "del
 // @return: err error
 func (s *Handler) Delete(ctx fiber.Ctx) error {
 	var err error
-	var {{.ModuleName}}Id int
+	var {{.ModuleName}}Id string
 
 	fctx := utils.FiberCtx{Fctx: ctx}
-	if {{.ModuleName}}Id, err = strconv.Atoi(ctx.Params("id")); err != nil {
+	if {{.ModuleName}}Id, err = fctx.ParseUUID("id"); err != nil {
 		logger.Errorf("error parse {{.ModuleName}} id: %v", err)
 		return fctx.ErrResponse(ErrDelete{{.StructName}}Failed)
 	}
 
-	err = s.service.Delete(uint({{.ModuleName}}Id))
+	err = s.service.Delete({{.ModuleName}}Id)
 	if err != nil {
 		logger.Errorf("error delete {{.ModuleName}}: %v", err)
 		return fctx.ErrResponse(ErrDelete{{.StructName}}Failed)

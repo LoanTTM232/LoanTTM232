@@ -5,19 +5,18 @@ import (
 )
 
 type UserClaims struct {
-	UserId      uint     `json:"user_id"`
+	UserId      string   `json:"user_id"`
 	Email       string   `json:"email"`
-	FullName    string   `json:"full_name"`
 	Role        string   `json:"role"`
 	Permissions []string `json:"permissions"`
 	jwt.RegisteredClaims
 }
 
 type UserResponse struct {
-	UserId   uint   `json:"user_id"`
-	Email    string `json:"email"`
-	FullName string `json:"full_name"`
-	Phone    string `json:"phone"`
+	UserId   string  `json:"user_id"`
+	Email    string  `json:"email"`
+	FullName *string `json:"full_name,omitempty"`
+	Phone    *string `json:"phone,omitempty"`
 }
 
 type LoginRequest struct {

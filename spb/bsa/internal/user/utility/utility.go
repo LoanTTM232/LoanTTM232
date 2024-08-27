@@ -60,7 +60,7 @@ func EmailIsNotVerity(db *gorm.DB) *gorm.DB {
 // @function: Check user is satisfied
 // @description: Return db
 // @return: *gorm.DB
-func SatisfiedUser(roles []uint) func(*gorm.DB) *gorm.DB {
+func SatisfiedUser(roles []string) func(*gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Scopes(EmailIsVerity).Where("\"user\".role_id IN ?", roles)
 	}

@@ -52,7 +52,28 @@ func ConnectDB(config *config.Config) (*gorm.DB, error) {
 // @param: db *gorm.DB
 // @return: error
 func AutoMigrate(db *gorm.DB) error {
-	err := db.AutoMigrate(&tb.User{}, &tb.Permission{}, &tb.Role{}, &tb.SportType{})
+	err := db.AutoMigrate(
+		&tb.Metadata{},
+		&tb.NotificationType{},
+		&tb.Notification{},
+		&tb.Media{},
+		&tb.Location{},
+		&tb.Club{},
+		&tb.ClubMember{},
+		&tb.Unit{},
+		&tb.UnitPrice{},
+		&tb.Service{},
+		&tb.Permission{},
+		&tb.Role{},
+		&tb.User{},
+		&tb.Address{},
+		&tb.Order{},
+		&tb.PaymentInfo{},
+		&tb.PaymentMethod{},
+		&tb.Payments{},
+		&tb.SportType{},
+		&tb.Transactions{},
+		&tb.WebHook{})
 	if err != nil {
 		return ErrMigrationFailed(err)
 	}

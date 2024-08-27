@@ -9,6 +9,8 @@ import (
 	"spb/bsa/pkg/utils"
 )
 
+var ErrEmailExists = errors.New("email already exists")
+
 // @author: LoanTT
 // @function: Create
 // @description: Service for {{.ModuleName}} creation
@@ -18,5 +20,8 @@ func (s *Service) Create(reqBody *model.Create{{.StructName}}Request) (*tb.{{.St
 	var err error
 	var count int64
 
+	// TODO: check model is exist
+
 	return {{.ModuleName}}, nil
 }
+

@@ -11,15 +11,14 @@ import (
 // @description: Get children roles by parent id
 // @param: role (roleName or roleId)
 // @return: *[]tb.Role, error
-func (s *Service) GetChildren(role interface{}) ([]tb.Role, error) {
+func (s *Service) GetChildren(byId bool, role interface{}) ([]tb.Role, error) {
 	var childrenRoles []tb.Role
 	var roleCondition string
 
-	switch role.(type) {
-	case string:
-		roleCondition = "name = ?"
-	case uint:
+	if byId {
 		roleCondition = "id = ?"
+	} else {
+		roleCondition = "name = ?"
 	}
 
 	err := s.db.

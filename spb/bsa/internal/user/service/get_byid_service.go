@@ -9,9 +9,9 @@ import (
 // @author: LoanTT
 // @function: GetByID
 // @description: Service for get user
-// @param: userId uint, currentUseRole string
+// @param: userId string, currentUserRoleName string
 // @return: *tb.User, error
-func (s *Service) GetByID(userId uint, currentUseRole string) (*tb.User, error) {
+func (s *Service) GetByID(userId string, currentUserRoleName string) (*tb.User, error) {
 	var err error
 	user := new(tb.User)
 
@@ -20,7 +20,7 @@ func (s *Service) GetByID(userId uint, currentUseRole string) (*tb.User, error) 
 		return nil, err
 	}
 
-	childrenRoles, err := roleModule.RoleService.GetChildren(currentUseRole)
+	childrenRoles, err := roleModule.RoleService.GetChildren(false, currentUserRoleName)
 	if err != nil {
 		return nil, err
 	}

@@ -13,9 +13,9 @@ import (
 type entity struct {
 	ModuleName       string // name of module
 	StructName       string // just Uppercase 1st char
-	Plural           string // the plural of the new module
+	StructNamePlural string // the plural of the new module
 	ModuleNamePlural string
-	RouteName        *string
+	RouteName        string
 	Path             string
 }
 
@@ -86,7 +86,7 @@ func getNewModuleStruct(inputName string) *entity {
 	)
 
 	newDirectory := fmt.Sprintf("internal/%s", inputName)
-	newModule := &entity{inputName, structName, plural, inputNamePlural, &routeName, newDirectory}
+	newModule := &entity{inputName, structName, plural, inputNamePlural, routeName, newDirectory}
 	return newModule
 }
 

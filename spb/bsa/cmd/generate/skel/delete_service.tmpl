@@ -5,10 +5,10 @@ import tb "spb/bsa/pkg/entities"
 // @author: LoanTT
 // @function: Delete
 // @description: Service for {{.ModuleName}} deletion
-// @param: uint {{.ModuleName}} id
+// @param: string {{.ModuleName}} id
 // @return: error
-func (s *Service) Delete({{.ModuleName}}Id uint) error {
-	{{.ModuleName}} := tb.User{}
+func (s *Service) Delete({{.ModuleName}}Id string) error {
+	{{.ModuleName}} := tb.{{.StructName}}{}
 	{{.ModuleName}}.ID = {{.ModuleName}}Id
 
 	err := s.db.Delete(&{{.ModuleName}}).Error

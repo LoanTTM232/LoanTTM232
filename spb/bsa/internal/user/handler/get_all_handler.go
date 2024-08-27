@@ -55,6 +55,6 @@ func mapUsersEntityToResponse(users []tb.User) *model.GetUsersResponse {
 		res.Users = append(res.Users, utility.MapUserEntityToResponse(&user))
 	}
 
-	res.Total = len(res.Users)
+	res.Total = uint(len(res.Users))
 	return res
 }

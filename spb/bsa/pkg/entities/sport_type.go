@@ -4,7 +4,7 @@ const SportTypeTN = "sport_type"
 
 type SportType struct {
 	Base
-	Name string `json:"name" gorm:"not null"`
+	Name string `gorm:"size:255;not null" json:"name"`
 }
 
 func (SportType) TableName() string {

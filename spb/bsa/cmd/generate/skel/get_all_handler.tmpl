@@ -11,7 +11,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-var ErrGet{{.Plural}}Failed = fiber.NewError(fiber.StatusNotFound, "get {{.ModuleNamePlural}} failed")
+var ErrGet{{.StructNamePlural}}Failed = fiber.NewError(fiber.StatusNotFound, "get {{.ModuleNamePlural}} failed")
 
 // @author: LoanTT
 // @function: GetAll
@@ -20,7 +20,7 @@ var ErrGet{{.Plural}}Failed = fiber.NewError(fiber.StatusNotFound, "get {{.Modul
 // @return: error
 func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	var err error
-	var reqBody model.Get{{.Plural}}Request
+	var reqBody model.Get{{.StructNamePlural}}Request
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	pagination := utils.GetPagination(ctx.Queries())
@@ -29,7 +29,7 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	claims, err := auth.GetTokenFromCookie(ctx)
 	if err != nil {
 		logger.Errorf("error parse jwt: %v", err)
-		return fctx.ErrResponse(ErrGet{{.Plural}}Failed)
+		return fctx.ErrResponse(ErrGet{{.StructNamePlural}}Failed)
 	}
 
 	reqBody.Role = claims["role"].(string)
@@ -37,24 +37,24 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	{{.ModuleNamePlural}}, err := s.service.GetAll(reqBody)
 	if err != nil {
 		logger.Errorf("error get {{.ModuleNamePlural}}: %v", err)
-		return fctx.ErrResponse(ErrGet{{.Plural}}Failed)
+		return fctx.ErrResponse(ErrGet{{.StructNamePlural}}Failed)
 	}
 
-	{{.ModuleName}}Response := map{{.Plural}}EntityToResponse({{.ModuleNamePlural}})
+	{{.ModuleName}}Response := map{{.StructNamePlural}}EntityToResponse({{.ModuleNamePlural}})
 	return fctx.JsonResponse(fiber.StatusOK, fiber.Map{"data": {{.ModuleName}}Response})
 }
 
 // @author: LoanTT
-// @function: map{{.Plural}}EntityToResponse
+// @function: map{{.StructNamePlural}}EntityToResponse
 // @description: Map {{.ModuleNamePlural}} entity to response
-// @param: {{.ModuleNamePlural}} []*tb.User
-// @return: *model.Get{{.Plural}}Response
-func map{{.Plural}}EntityToResponse({{.ModuleNamePlural}} []tb.User) *model.Get{{.Plural}}Response {
-	res := new(model.Get{{.Plural}}Response)
+// @param: {{.ModuleNamePlural}} []*tb.{{.StructName}}
+// @return: *model.Get{{.StructNamePlural}}Response
+func map{{.StructNamePlural}}EntityToResponse({{.ModuleNamePlural}} []tb.{{.StructName}}) *model.Get{{.StructNamePlural}}Response {
+	res := new(model.Get{{.StructNamePlural}}Response)
 	for _, {{.ModuleName}} := range {{.ModuleNamePlural}} {
-		res.{{.Plural}} = append(res.{{.Plural}}, utility.MapUserEntityToResponse(&{{.ModuleName}}))
+		res.{{.StructNamePlural}} = append(res.{{.StructNamePlural}}, utility.Map{{.StructName}}EntityToResponse(&{{.ModuleName}}))
 	}
 
-	res.Total = len(res.{{.Plural}})
+	res.Total = uint(len(res.{{.StructNamePlural}}))
 	return res
 }

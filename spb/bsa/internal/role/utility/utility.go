@@ -40,9 +40,9 @@ func MapPermissionEntityToResponse(permission tb.Permission) model.PermissionRes
 // @function: FlattenAndGetRoleIds
 // @description: Flatten role tree and get role ids
 // @param: []tb.Role
-// @return: []uint
-func FlattenAndGetRoleIds(roles []tb.Role) []uint {
-	var children []uint
+// @return: []string
+func FlattenAndGetRoleIds(roles []tb.Role) []string {
+	var children []string
 	for _, role := range roles {
 		children = append(children, role.ID)
 		children = append(children, FlattenAndGetRoleIds(role.Children)...)

@@ -12,9 +12,10 @@ const (
 
 type Role struct {
 	Base
-	Name        string       `gorm:"unique;not null"`
-	Permissions []Permission `gorm:"many2many:role_permission;"`
-	ParentId    uint         `json:"parentId"`
+	Name        string       `gorm:"size:10;unique;not null" json:"name"`
+	Description string       `gorm:"size:255" json:"description"`
+	Permissions []Permission `gorm:"many2many:role_permissions;" json:"permissions"`
+	ParentId    *string      `gorm:"type:uuid" json:"parentId"`
 	Children    []Role       `gorm:"foreignKey:ParentId" json:"children"`
 }
 

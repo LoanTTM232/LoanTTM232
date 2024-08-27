@@ -4,3 +4,13 @@ import (
 	roleModel "spb/bsa/internal/role/model"
 	"spb/bsa/pkg/utils"
 )
+
+type Get{{.StructNamePlural}}Request struct {
+	Pagination utils.Pagination
+	Role       string
+}
+
+type {{.StructName}}Response struct {
+	{{.StructName}}Id          string                 `json:"{{.ModuleName}}_id"`
+}
+
