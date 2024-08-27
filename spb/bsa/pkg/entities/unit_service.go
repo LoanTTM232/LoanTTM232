@@ -1,8 +1,8 @@
 package entities
 
-var ServiceTN = "service"
+var UnitServiceTN = "unit_service"
 
-type Service struct {
+type UnitService struct {
 	Base
 	Name        string  `gorm:"size:255;not null" json:"name"`
 	Icon        string  `gorm:"size:255;" json:"icon"`
@@ -12,6 +12,6 @@ type Service struct {
 	UnitID      string  `gorm:"type:uuid;not null" json:"unit_id"`
 }
 
-func (Service) TableName() string {
-	return ServiceTN
+func (UnitService) TableName() string {
+	return UnitServiceTN
 }

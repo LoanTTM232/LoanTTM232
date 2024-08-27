@@ -62,7 +62,7 @@ func AutoMigrate(db *gorm.DB) error {
 		&tb.ClubMember{},
 		&tb.Unit{},
 		&tb.UnitPrice{},
-		&tb.Service{},
+		&tb.UnitService{},
 		&tb.Permission{},
 		&tb.Role{},
 		&tb.User{},
