@@ -112,9 +112,9 @@ func (f *Fiber) LoadRoutes() {
 		custMiddlewares.CheckJwt(skipJwtCheckRoutes...), // add jwt check to all routes
 	)
 
-	auth.LoadModule(router)
-	role.LoadModule(router)
-	user.LoadModule(router)
+	auth.LoadModule(router, custMiddlewares)
+	role.LoadModule(router, custMiddlewares)
+	user.LoadModule(router, custMiddlewares)
 
 	// a custom 404 handler
 	f.App.Use(func(ctx fiber.Ctx) error {

@@ -3,6 +3,7 @@ package auth
 import (
 	handler "spb/bsa/internal/auth/handler"
 	"spb/bsa/internal/auth/service"
+	"spb/bsa/pkg/middleware"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -16,7 +17,8 @@ var (
 // @function: LoadModule
 // @description: Register auth routes
 // @param: router fiber.Router
-func LoadModule(router fiber.Router) {
+// @param: customMiddleware middleware.ICustomMiddleware
+func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddleware) {
 	AuthService = service.NewService()
 	AuthHandler = handler.NewHandler(AuthService)
 

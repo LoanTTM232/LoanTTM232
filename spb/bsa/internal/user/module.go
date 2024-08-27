@@ -3,6 +3,7 @@ package user
 import (
 	handler "spb/bsa/internal/user/handler"
 	"spb/bsa/internal/user/service"
+	"spb/bsa/pkg/middleware"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -16,7 +17,8 @@ var (
 // @function: LoadModule
 // @description: Register user routes
 // @param: router fiber.Router
-func LoadModule(router fiber.Router) {
+// @param: customMiddleware middleware.ICustomMiddleware
+func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddleware) {
 	UserService = service.NewService()
 	UserHandler = handler.NewHandler(UserService)
 

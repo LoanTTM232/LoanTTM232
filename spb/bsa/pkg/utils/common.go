@@ -68,3 +68,24 @@ func ToPtr[T any](v T) *T {
 func Defer[T any](v *T) T {
 	return *v
 }
+
+// @author: LoanTT
+// @function: IsSubSet
+// @description: check (subSet) is subset of (setCheck)
+// @param: subSet, setCheck []string
+// @return: bool
+func IsSubSet(subSet, setCheck []string) bool {
+	for subCID := range subSet {
+		hasSubItem := false
+		for setCID := range setCheck {
+			if subSet[subCID] == setCheck[setCID] {
+				hasSubItem = true
+			}
+		}
+
+		if !hasSubItem {
+			return false
+		}
+	}
+	return false
+}
