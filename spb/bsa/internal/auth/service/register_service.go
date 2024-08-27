@@ -19,17 +19,14 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 	var count int64
 	var err error
 
-	if s.db.Model(&tb.User{}).
-		Where("email = ?", u.Email).
-		Count(&count); count > 0 {
+	s.db.Model(&tb.User{}).Where("email = ?", u.Email).Count(&count)
+	if count > 0 {
 		return nil, ErrEmailExists
 	}
 
 	var role tb.Role
-	if err = s.db.
-		Where("name = ?", tb.ROLE_USER).
-		Preload("Permissions").
-		First(&role).Error; err != nil {
+	err = s.db.Where("name = ?", tb.ROLE_USER).Preload("Permissions").First(&role).Error
+	if err != nil {
 		return nil, err
 	}
 
@@ -41,7 +38,7 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 		IsEmailVerified: false,
 	}
 
-	if err = s.db.Create(&user).Error; err != nil {
+	if err := s.db.Create(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil

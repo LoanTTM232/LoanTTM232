@@ -20,7 +20,7 @@ var ErrGetUsersFailed = fiber.NewError(fiber.StatusNotFound, "get users failed")
 // @return: error
 func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	var err error
-	var reqBody model.GetUsersRequest
+	reqBody := new(model.GetUsersRequest)
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	pagination := utils.GetPagination(ctx.Queries())
@@ -28,7 +28,7 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 
 	claims, err := auth.GetTokenFromCookie(ctx)
 	if err != nil {
-		logger.Errorf("error parse jwt: %v", err)
+		logger.FErrorf("error parse jwt: %v", err)
 		return fctx.ErrResponse(ErrGetUsersFailed)
 	}
 
@@ -36,7 +36,7 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 
 	users, err := s.service.GetAll(reqBody)
 	if err != nil {
-		logger.Errorf("error get users: %v", err)
+		logger.FErrorf("error get users: %v", err)
 		return fctx.ErrResponse(ErrGetUsersFailed)
 	}
 
@@ -51,8 +51,8 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 // @return: *model.GetUsersResponse
 func mapUsersEntityToResponse(users []tb.User) *model.GetUsersResponse {
 	res := new(model.GetUsersResponse)
-	for _, user := range users {
-		res.Users = append(res.Users, utility.MapUserEntityToResponse(&user))
+	for id := range users {
+		res.Users = append(res.Users, utility.MapUserEntityToResponse(&users[id]))
 	}
 
 	res.Total = uint(len(res.Users))

@@ -16,9 +16,9 @@ var ErrPermission = errors.New("user does not have permission")
 // @author: LoanTT
 // @function: GetAll
 // @description: Service for get all users
-// @param: model.GetUsersRequest
+// @param: *model.GetUsersRequest
 // @return: []*entities.User, error
-func (s *Service) GetAll(reqBody model.GetUsersRequest) ([]tb.User, error) {
+func (s *Service) GetAll(reqBody *model.GetUsersRequest) ([]tb.User, error) {
 	var users []tb.User
 
 	childrenRoles, err := roleModule.RoleService.GetChildren(true, reqBody.Role)

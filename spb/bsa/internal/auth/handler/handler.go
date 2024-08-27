@@ -78,7 +78,7 @@ func GenUserTokenResponse(user *entities.User) map[string]string {
 	accessToken, accessErr := accessClaims.SignedString([]byte(global.SPB_CONFIG.JWT.Secret))
 	refreshToken, refreshErr := refreshClaims.SignedString([]byte(global.SPB_CONFIG.JWT.Secret))
 	if accessErr != nil || refreshErr != nil {
-		logger.Errorf("failed to make jwt: %+v", errors.Join(accessErr, refreshErr).Error())
+		logger.FErrorf("failed to make jwt: %+v", errors.Join(accessErr, refreshErr).Error())
 		return nil
 	}
 
@@ -133,25 +133,21 @@ func GenerateUserToken(user *entities.User, tokenType string) *jwt.Token {
 func TokenNext(fctx *utils.FiberCtx, ctx fiber.Ctx, user *entities.User, tokens map[string]string) error {
 	if prevToken, err := auth.JwtCacheApp.GetJwt(user.Email); err == nil && prevToken == "" {
 		if err = auth.JwtCacheApp.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME]); err != nil {
-			logger.Errorf("error set token to cache: %v", err)
-			return err
+			return logger.Errorf("error set token to cache: %v", err)
 		}
-		if err = SetTokenToCookie(tokens, ctx); err != nil {
+		if err := SetTokenToCookie(tokens, ctx); err != nil {
 			return err
 		}
 	} else if err != nil {
-		logger.Errorf("error get token to cache: %v", err)
-		return err
+		return logger.Errorf("error get token to cache: %v", err)
 	} else {
 		if err = auth.JwtCacheApp.SetToBlackList(prevToken, global.SPB_CONFIG.JWT.AccessTokenExp); err != nil {
-			logger.Errorf("error set token to cache: %v", err)
-			return err
+			return logger.Errorf("error set token to cache: %v", err)
 		}
 		if err = auth.JwtCacheApp.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME]); err != nil {
-			logger.Errorf("error set token to cache: %v", err)
-			return err
+			return logger.Errorf("error set token to cache: %v", err)
 		}
-		if err = SetTokenToCookie(tokens, ctx); err != nil {
+		if err := SetTokenToCookie(tokens, ctx); err != nil {
 			return err
 		}
 	}

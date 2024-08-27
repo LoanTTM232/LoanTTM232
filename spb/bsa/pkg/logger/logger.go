@@ -48,15 +48,15 @@ var logFile = &lumberjack.Logger{
 // @function: NewZlog
 // @description: Create a new Zap logger
 // @param: config *config.Config
-func NewZlog(config *config.Config) {
+func NewZlog(configVal *config.Config) {
 	Zlog.Output = OutputTypes{
-		File:    slices.Contains(config.Logging.Output, "file"),
-		Console: slices.Contains(config.Logging.Output, "console"),
+		File:    slices.Contains(configVal.Logging.Output, "file"),
+		Console: slices.Contains(configVal.Logging.Output, "console"),
 	}
-	Zlog.Level = config.Logging.Level
-	Zlog.DebugSymbol = config.Logging.DebugSymbol
-	Zlog.Filename = &config.Filename
-	Zlog.setLevel(config.Logging.Level)
+	Zlog.Level = configVal.Logging.Level
+	Zlog.DebugSymbol = configVal.Logging.DebugSymbol
+	Zlog.Filename = &configVal.Filename
+	Zlog.setLevel(configVal.Logging.Level)
 
 	logFile.Filename = fmt.Sprintf("./log/%s", *Zlog.Filename)
 }
@@ -98,31 +98,50 @@ func (zl *ZapLog) sysLog(msg string, keysAndValues ...zapcore.Field) {
 		fmt.Printf("failed to initialize logger: %v\n", err)
 		return
 	}
-	defer logger.Sync()
+	defer func() {
+		err := logger.Sync()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	}()
 
-	if zl.Level <= InfoLevel {
-		logger.Info(msg, keysAndValues...)
-	} else if zl.Level <= WarnLevel {
-		logger.Warn(msg, keysAndValues...)
-	} else if zl.Level <= ErrorLevel {
-		logger.Error(msg, keysAndValues...)
-	} else if zl.Level <= FatalLevel {
+	switch zl.Level {
+	case FatalLevel:
 		logger.Fatal(msg, keysAndValues...)
+	case ErrorLevel:
+		logger.Error(msg, keysAndValues...)
+	case WarnLevel:
+		logger.Warn(msg, keysAndValues...)
+	case InfoLevel:
+		logger.Info(msg, keysAndValues...)
+	default:
+		logger.Debug(msg, keysAndValues...)
 	}
 
 	zl.mu.Unlock()
 }
 
+// @author: LoanTT
+// @function: sysLog
+// @description: SysLog
+// @param: msg string
+// @param: keysandvalues ...zap.Field
 func SysLog(msg string, keysandvalues ...zapcore.Field) {
 	Zlog.sysLog(msg, keysandvalues...)
 }
 
+// @author: LoanTT
+// @function: fileLogger
+// @description: Create a new logger
+// @param: outputTypes OutputTypes
+// @return: *zap.Logger, error
 func fileLogger(outputTypes OutputTypes) (*zap.Logger, error) {
-	config := zap.NewProductionEncoderConfig()
-	config.EncodeTime = zapcore.RFC3339TimeEncoder
+	configVal := zap.NewProductionEncoderConfig()
+	configVal.EncodeTime = zapcore.RFC3339TimeEncoder
 	// Create file and console encoders
-	fileEncoder := zapcore.NewJSONEncoder(config)
-	consoleEncoder := zapcore.NewConsoleEncoder(config)
+	fileEncoder := zapcore.NewJSONEncoder(configVal)
+	consoleEncoder := zapcore.NewConsoleEncoder(configVal)
 	// Create writers for file and console
 	fileWriter := zapcore.AddSync(logFile)
 	consoleWriter := zapcore.AddSync(os.Stdout)
@@ -133,11 +152,12 @@ func fileLogger(outputTypes OutputTypes) (*zap.Logger, error) {
 	consoleCore := zapcore.NewCore(consoleEncoder, consoleWriter, defaultLogLevel)
 	// Combine cores
 	var core zapcore.Core
-	if outputTypes.Console && outputTypes.File {
+	switch {
+	case outputTypes.Console && outputTypes.File:
 		core = zapcore.NewTee(fileCore, consoleCore)
-	} else if outputTypes.Console {
+	case outputTypes.Console:
 		core = zapcore.NewTee(consoleCore)
-	} else if outputTypes.File {
+	case outputTypes.File:
 		core = zapcore.NewTee(fileCore)
 	}
 

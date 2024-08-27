@@ -11,7 +11,7 @@ import (
 // @description: Service for get user
 // @param: userId string, currentUserRoleName string
 // @return: *tb.User, error
-func (s *Service) GetByID(userId string, currentUserRoleName string) (*tb.User, error) {
+func (s *Service) GetByID(userId, currentUserRoleName string) (*tb.User, error) {
 	var err error
 	user := new(tb.User)
 

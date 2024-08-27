@@ -6,3 +6,8 @@ go.sum
 
 # executable file 
 bsa
+
+build/
+
+.vscode
+cover.out

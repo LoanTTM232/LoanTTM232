@@ -24,22 +24,22 @@ func (h *Handler) AccountLogin(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("error parse json to struct: %v", err)
+		logger.FErrorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(ErrLoginFailed)
 	}
 	user, err := h.service.AccountLogin(reqBody)
 	if err != nil {
-		logger.Errorf("error login: %v", err)
+		logger.FErrorf("error login: %v", err)
 		return fctx.ErrResponse(ErrLoginFailed)
 	}
 	tokens := GenUserTokenResponse(user)
 	if tokens == nil {
-		logger.Errorf("gen user tokens failed: %v", err)
+		logger.FErrorf("gen user tokens failed: %v", err)
 		return fctx.ErrResponse(ErrLoginFailed)
 	}
 	err = TokenNext(&fctx, ctx, user, tokens)
 	if err != nil {
-		logger.Errorf("set token to cookie failed: %v", err)
+		logger.FErrorf("set token to cookie failed: %v", err)
 		return fctx.ErrResponse(ErrLoginFailed)
 	}
 

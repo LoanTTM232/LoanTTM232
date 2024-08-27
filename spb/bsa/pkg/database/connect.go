@@ -15,14 +15,14 @@ import (
 // @description: Get database url from config
 // @param: c *Config
 // @return: string
-func GetDbUrl(config *config.Config) string {
+func GetDbUrl(configVal *config.Config) string {
 	return fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
-		config.DbConf.PostgresConf.Host,
-		config.DbConf.PostgresConf.Port,
-		config.DbConf.PostgresConf.User,
-		config.DbConf.PostgresConf.Dbname,
-		config.DbConf.PostgresConf.Password,
-		config.DbConf.PostgresConf.SSLMode,
+		configVal.DbConf.PostgresConf.Host,
+		configVal.DbConf.PostgresConf.Port,
+		configVal.DbConf.PostgresConf.User,
+		configVal.DbConf.PostgresConf.Dbname,
+		configVal.DbConf.PostgresConf.Password,
+		configVal.DbConf.PostgresConf.SSLMode,
 	)
 }
 
@@ -31,8 +31,8 @@ func GetDbUrl(config *config.Config) string {
 // @description: Connect to database
 // @param: c *Config
 // @return: *gorm.DB, error
-func ConnectDB(config *config.Config) (*gorm.DB, error) {
-	databaseURL := GetDbUrl(config)
+func ConnectDB(configVal *config.Config) (*gorm.DB, error) {
+	databaseURL := GetDbUrl(configVal)
 
 	db, err := gorm.Open(postgres.Open(databaseURL), &gorm.Config{})
 	if err != nil {

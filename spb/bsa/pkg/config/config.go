@@ -127,7 +127,7 @@ func (c *Config) LoadEnvVariables() error {
 // @return: string server url
 func (c *Config) GetServerUrl() string {
 	url := fmt.Sprintf("http://%s", c.ServerConf.Host)
-	if len(c.ServerConf.Port) > 0 {
+	if c.ServerConf.Port != "" {
 		url = fmt.Sprintf("%s:%s", url, c.ServerConf.Port)
 	}
 

@@ -63,7 +63,7 @@ func (j *JwtCache) GetJwt(key string) (string, error) {
 // @param: key string
 // @param: value string
 // @return: error
-func (j *JwtCache) SetJwt(key string, value string) error {
+func (j *JwtCache) SetJwt(key, value string) error {
 	expires := time.Minute * time.Duration(global.SPB_CONFIG.JWT.ExpireCache)
 	err := global.SPB_REDIS.Set(key, []byte(value), expires)
 	if err != nil {

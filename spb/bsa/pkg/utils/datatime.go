@@ -30,8 +30,8 @@ func ParseInputDatetime(datetime string) (*time.Time, error) {
 		"2006-01-02 15:04:05",
 	}
 	for _, format := range dateFormats {
-		if newTime, err = time.Parse(fmt.Sprint(format), datetime); err == nil {
-			return &newTime, err
+		if newTime, err = time.Parse(format, datetime); err == nil {
+			return &newTime, nil
 		}
 	}
 	return nil, fmt.Errorf("failed to parse given datetime: %s", datetime)
@@ -59,7 +59,7 @@ func (t *CustomDatetime) UnmarshalJSON(input []byte) error {
 func (t CustomDatetime) MarshalJSON() ([]byte, error) {
 	var jsonDatetime string
 	if t.Format == nil {
-		jsonDatetime = fmt.Sprintf("\"%s\"", t.Time.Format(time.RFC3339))
+		jsonDatetime = fmt.Sprintf("%q", t.Time.Format(time.RFC3339))
 		return []byte(jsonDatetime), nil
 	}
 	return []byte(`"` + jsonDatetime + `"`), nil

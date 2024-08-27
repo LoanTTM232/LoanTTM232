@@ -23,12 +23,12 @@ func (s *Handler) Update(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("error parse json to struct: %v", err)
+		logger.FErrorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(ErrUpdateUserFailed)
 	}
 	userUpdated, err := s.service.Update(reqBody)
 	if err != nil {
-		logger.Errorf("error create user: %v", err)
+		logger.FErrorf("error create user: %v", err)
 		return fctx.ErrResponse(ErrUpdateUserFailed)
 	}
 	userResponse := utility.MapUserEntityToResponse(userUpdated)

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"text/template"
 
 	"github.com/iancoleman/strcase"
@@ -29,19 +30,19 @@ func GenerateNewModule(moduleName string) {
 	fmt.Printf("Generate new module %+v\n", newModule)
 
 	/* create tries */
-	if err := os.Mkdir(newModule.Path, 0o755); err != nil {
+	if err := os.Mkdir(newModule.Path, 0o750); err != nil {
 		fmt.Println("err:", err)
 	}
-	if err := os.Mkdir(newModule.Path+"/handler", 0o755); err != nil {
+	if err := os.Mkdir(newModule.Path+"/handler", 0o750); err != nil {
 		fmt.Println("err:", err)
 	}
-	if err := os.Mkdir(newModule.Path+"/model", 0o755); err != nil {
+	if err := os.Mkdir(newModule.Path+"/model", 0o750); err != nil {
 		fmt.Println("err:", err)
 	}
-	if err := os.Mkdir(newModule.Path+"/service", 0o755); err != nil {
+	if err := os.Mkdir(newModule.Path+"/service", 0o750); err != nil {
 		fmt.Println("err:", err)
 	}
-	if err := os.Mkdir(newModule.Path+"/utility", 0o755); err != nil {
+	if err := os.Mkdir(newModule.Path+"/utility", 0o750); err != nil {
 		fmt.Println("err:", err)
 	}
 
@@ -96,11 +97,12 @@ func getNewModuleStruct(inputName string) *entity {
 // @param: string
 // @return: string
 func Pluralfy(word string) (plural string) {
-	if word[len(word)-1:] == "y" { // handle the word ends with y --> ies
+	switch word[len(word)-1:] {
+	case "y":
 		plural = word[0:len(word)-1] + "ies"
-	} else if word[len(word)-1:] == "s" {
-		plural = word + "es" // handle the word ends with s --> es
-	} else {
+	case "s":
+		plural = word + "es"
+	default:
 		plural = word + "s"
 	}
 	return plural
@@ -112,14 +114,17 @@ func Pluralfy(word string) (plural string) {
 // @param: string
 // @param: string
 func (e *entity) createFile(templateFile, filePath string) {
-	file, err := os.Create(filePath)
+	file, err := os.Create(filepath.Clean(filePath))
 	if err != nil {
 		log.Printf("create %s failed: %s\n", filePath, err)
 		return
 	}
 
 	t := template.Must(template.New(filePath).Parse(templateFile))
-	t.Execute(file, e)
+	if err := t.Execute(file, e); err != nil {
+		log.Printf("create %s failed: %s\n", filePath, err)
+	}
+
 	fmt.Printf("   + CREATED FILES: %s\n", filePath)
 }
 

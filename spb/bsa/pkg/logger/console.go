@@ -40,6 +40,10 @@ func Errorf(format string, args ...interface{}) error {
 	return fmt.Errorf(format, args...)
 }
 
+func FErrorf(format string, args ...interface{}) {
+	Zlog.Errorf(format, args...)
+}
+
 func Fatalf(format string, args ...interface{}) {
 	Zlog.Fatalf(format, args...)
 }
@@ -48,7 +52,13 @@ func (zl *ZapLog) Debugf(format string, args ...interface{}) {
 	zl.mu.Lock()
 	defer zl.mu.Unlock()
 	Zlog.ConsoleLogger = newConsoleLogger()
-	defer Zlog.ConsoleLogger.Sync()
+	defer func() {
+		err := Zlog.ConsoleLogger.Sync()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	}()
 
 	sugar := Zlog.ConsoleLogger.Sugar()
 
@@ -67,7 +77,13 @@ func (zl *ZapLog) Infof(format string, args ...interface{}) {
 	zl.mu.Lock()
 	defer zl.mu.Unlock()
 	Zlog.ConsoleLogger = newConsoleLogger()
-	defer Zlog.ConsoleLogger.Sync()
+	defer func() {
+		err := Zlog.ConsoleLogger.Sync()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	}()
 
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= InfoLevel {
@@ -79,7 +95,13 @@ func (zl *ZapLog) Warnf(format string, args ...interface{}) {
 	zl.mu.Lock()
 	defer zl.mu.Unlock()
 	Zlog.ConsoleLogger = newConsoleLogger()
-	defer Zlog.ConsoleLogger.Sync()
+	defer func() {
+		err := Zlog.ConsoleLogger.Sync()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	}()
 
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= WarnLevel {
@@ -91,7 +113,13 @@ func (zl *ZapLog) Errorf(format string, args ...interface{}) {
 	zl.mu.Lock()
 	defer zl.mu.Unlock()
 	Zlog.ConsoleLogger = newConsoleLogger()
-	defer Zlog.ConsoleLogger.Sync()
+	defer func() {
+		err := Zlog.ConsoleLogger.Sync()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	}()
 
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= ErrorLevel {
@@ -103,7 +131,13 @@ func (zl *ZapLog) Fatalf(format string, args ...interface{}) {
 	zl.mu.Lock()
 	defer zl.mu.Unlock()
 	Zlog.ConsoleLogger = newConsoleLogger()
-	defer Zlog.ConsoleLogger.Sync()
+	defer func() {
+		err := Zlog.ConsoleLogger.Sync()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	}()
 
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= ErrorLevel {

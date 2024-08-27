@@ -13,8 +13,8 @@ type Handler struct {
 // @description: Create a new user handler
 // @param: user service
 // @return: fiber.Handler
-func NewHandler(service *service.Service) *Handler {
+func NewHandler(serv *service.Service) *Handler {
 	return &Handler{
-		service: service,
+		service: serv,
 	}
 }

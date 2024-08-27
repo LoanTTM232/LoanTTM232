@@ -1,10 +1,11 @@
 package auth
 
 import (
-	"spb/bsa/pkg/config"
-	"spb/bsa/pkg/global"
 	"strings"
 	"time"
+
+	"spb/bsa/pkg/config"
+	"spb/bsa/pkg/global"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
@@ -62,12 +63,12 @@ func GetToken(claims jwt.Claims) *jwt.Token {
 // @param: ctx fiber.Ctx
 // @return: jwt.MapClaims, error
 func GetTokenFromCookie(ctx fiber.Ctx) (jwt.MapClaims, error) {
-	jwt := ctx.Cookies(config.ACCESS_TOKEN_NAME)
-	if len(jwt) == 0 {
+	jwtCookie := ctx.Cookies(config.ACCESS_TOKEN_NAME)
+	if jwtCookie == "" {
 		return nil, ErrAccessKeyNotFound
 	}
 
-	accessToken := config.JWT_PREFIX + jwt
+	accessToken := config.JWT_PREFIX + jwtCookie
 	claims, err := ParseJwt(accessToken)
 	if err != nil {
 		return nil, ErrParseTokenFromCookie(err)

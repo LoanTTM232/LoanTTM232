@@ -3,7 +3,6 @@
 APP_NAME = spb_bsa
 BUILD_DIR = $(PWD)/build
 MIGRATIONS_DIR = $(PWD)/migrations
-DATABASE_URL = postgres://spambot:spambot@postgres:5432/spambot
 
 clean:
 	rm -rf $(BUILD_DIR)
@@ -24,17 +23,8 @@ test: clean critic security lint
 build: test
 	CGO_ENABLED=0 go build -ldflags="-w -s" -o $(BUILD_DIR)/$(APP_NAME) ./main.go
 
-run: swag build
-	$(BUILD_DIR)/$(APP_NAME)
+run: build
+	$(BUILD_DIR)/$(APP_NAME) start
 
-migrate.up:
-	migrate -path $(MIGRATIONS_DIR) -database "$(DATABASE_URL)" up
-
-migrate.down:
-	migrate -path $(MIGRATIONS_DIR) -database "$(DATABASE_URL)" down
-
-migrate.force:
-	migrate -path $(MIGRATIONS_DIR) -database "$(DATABASE_URL)" force $(version)
-
-swag:
-	swag init
+# swag:
+# 	swag init

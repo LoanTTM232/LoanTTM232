@@ -3,11 +3,12 @@ package middleware
 import (
 	"encoding/base64"
 	"encoding/json"
+	"strings"
+	"time"
+
 	"spb/bsa/pkg/auth"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
-	"strings"
-	"time"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
@@ -28,7 +29,7 @@ func LogMiddleware() fiber.Handler {
 
 		bodyBytes := ctx.BodyRaw()
 		var reqBodyJson, resBodyJson *string
-		if len(string(bodyBytes)) > 0 {
+		if len(bodyBytes) > 0 {
 			if string(ctx.Request().Header.ContentType()) == "application/json" {
 				reqBodyJson = utils.ToPtr(string(bodyBytes))
 			} else {
@@ -37,7 +38,7 @@ func LogMiddleware() fiber.Handler {
 				nonJsonMap["requestType"] = string(ctx.Request().Header.ContentType())
 				nonJsonMap["base64"] = b64Str
 				if jsonBytes, err := json.Marshal(nonJsonMap); err != nil {
-					logger.Errorf("failed to marshal nonJsonMap, err: %s", err.Error())
+					logger.FErrorf("failed to marshal nonJsonMap, err: %s", err.Error())
 				} else {
 					reqBodyJson = utils.ToPtr(string(jsonBytes))
 				}
@@ -57,7 +58,7 @@ func LogMiddleware() fiber.Handler {
 		start := time.Now()
 		defer func() {
 			ip := ctx.IP()
-			if len(string(ctx.Response().Body())) > 0 {
+			if len(ctx.Response().Body()) > 0 {
 				if string(ctx.Response().Header.ContentType()) == "application/json" {
 					resBodyJson = utils.ToPtr(string(ctx.Response().Body()))
 				} else {
@@ -66,7 +67,7 @@ func LogMiddleware() fiber.Handler {
 					nonJsonMap["responseType"] = string(ctx.Response().Header.ContentType())
 					nonJsonMap["base64"] = b64Str
 					if jsonBytes, err := json.Marshal(nonJsonMap); err != nil {
-						logger.Errorf("failed to marshal nonJsonMap, err: %s", err.Error())
+						logger.FErrorf("failed to marshal nonJsonMap, err: %s", err.Error())
 					} else {
 						resBodyJson = utils.ToPtr(string(jsonBytes))
 					}

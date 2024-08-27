@@ -24,12 +24,12 @@ func (h *Handler) AccountRegister(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("parse json to struct failed: %v", err)
+		logger.FErrorf("parse json to struct failed: %v", err)
 		return fctx.ErrResponse(ErrRequestParseFailed)
 	}
 	_, err := h.service.AccountRegister(reqBody)
 	if err != nil {
-		logger.Errorf("register failed: %v", err)
+		logger.FErrorf("register failed: %v", err)
 		return fctx.ErrResponse(ErrRegisterFailed)
 	}
 

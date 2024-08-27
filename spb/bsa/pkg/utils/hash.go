@@ -8,7 +8,7 @@ import "golang.org/x/crypto/bcrypt"
 // @param: strVal string
 // @param: hashVal string
 // @return: bool
-func BcryptCheck(strVal string, hashVal string) bool {
+func BcryptCheck(strVal, hashVal string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hashVal), []byte(strVal))
 	return err == nil
 }

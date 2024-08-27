@@ -17,7 +17,7 @@ func MapRoleEntityToResponse(role *tb.Role) model.RoleResponse {
 		Permissions: func() []model.PermissionResponse {
 			var permissions []model.PermissionResponse
 			for _, permission := range role.Permissions {
-				permissions = append(permissions, MapPermissionEntityToResponse(permission))
+				permissions = append(permissions, MapPermissionEntityToResponse(&permission))
 			}
 			return permissions
 		}(),
@@ -29,7 +29,7 @@ func MapRoleEntityToResponse(role *tb.Role) model.RoleResponse {
 // @description: map permission entity to permission response
 // @param: permission tb.Permission
 // @return: model.PermissionResponse
-func MapPermissionEntityToResponse(permission tb.Permission) model.PermissionResponse {
+func MapPermissionEntityToResponse(permission *tb.Permission) model.PermissionResponse {
 	return model.PermissionResponse{
 		PermissionId:   permission.ID,
 		PermissionName: permission.Name,
@@ -43,10 +43,10 @@ func MapPermissionEntityToResponse(permission tb.Permission) model.PermissionRes
 // @return: []string
 func FlattenAndGetRoleIds(roles []tb.Role) []string {
 	var children []string
-	for _, role := range roles {
-		children = append(children, role.ID)
-		children = append(children, FlattenAndGetRoleIds(role.Children)...)
-		role.Children = nil
+	for id := range roles {
+		children = append(children, roles[id].ID)
+		children = append(children, FlattenAndGetRoleIds(roles[id].Children)...)
+		roles[id].Children = nil
 	}
 	return children
 }
@@ -58,10 +58,10 @@ func FlattenAndGetRoleIds(roles []tb.Role) []string {
 // @return: []string
 func FlattenAndGetRoleNames(roles []tb.Role) []string {
 	var children []string
-	for _, role := range roles {
-		children = append(children, role.Name)
-		children = append(children, FlattenAndGetRoleNames(role.Children)...)
-		role.Children = nil
+	for id := range roles {
+		children = append(children, roles[id].Name)
+		children = append(children, FlattenAndGetRoleNames(roles[id].Children)...)
+		roles[id].Children = nil
 	}
 	return children
 }

@@ -32,8 +32,12 @@ func GetRandString(length int) string {
 	if length < 1 {
 		length = 1
 	}
+
 	b := make([]byte, length)
-	rand.Read(b)
+	bytes, err := rand.Read(b)
+	if err != nil || bytes != length {
+		return ""
+	}
 	return fmt.Sprintf("%x", b)
 }
 
