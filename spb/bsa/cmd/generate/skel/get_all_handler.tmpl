@@ -8,7 +8,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
 var ErrGet{{.StructNamePlural}}Failed = fiber.NewError(fiber.StatusNotFound, "get {{.ModuleNamePlural}} failed")
@@ -16,9 +16,9 @@ var ErrGet{{.StructNamePlural}}Failed = fiber.NewError(fiber.StatusNotFound, "ge
 // @author: LoanTT
 // @function: GetAll
 // @description: Handler for getting all {{.ModuleNamePlural}}
-// @param: ctx fiber.Ctx
+// @param: ctx *fiber.Ctx
 // @return: error
-func (s *Handler) GetAll(ctx fiber.Ctx) error {
+func (s *Handler) GetAll(ctx *fiber.Ctx) error {
 	var err error
 	var reqBody model.Get{{.StructNamePlural}}Request
 	fctx := utils.FiberCtx{Fctx: ctx}
@@ -41,7 +41,7 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	}
 
 	{{.ModuleName}}Response := map{{.StructNamePlural}}EntityToResponse({{.ModuleNamePlural}})
-	return fctx.JsonResponse(fiber.StatusOK, fiber.Map{"data": {{.ModuleName}}Response})
+	return fctx.JsonResponse(fiber.StatusOK, {{.ModuleName}}Response)
 }
 
 // @author: LoanTT

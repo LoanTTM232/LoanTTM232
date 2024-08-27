@@ -7,7 +7,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
 var ErrCreate{{.StructName}}Failed = fiber.NewError(fiber.StatusBadRequest, "create {{.ModuleName}} failed")
@@ -15,9 +15,9 @@ var ErrCreate{{.StructName}}Failed = fiber.NewError(fiber.StatusBadRequest, "cre
 // @author: LoanTT
 // @function: Create
 // @description: Handler create {{.ModuleName}}
-// @param: ctx fiber.Ctx
+// @param: ctx *fiber.Ctx
 // @return: error
-func (s *Handler) Create(ctx fiber.Ctx) error {
+func (s *Handler) Create(ctx *fiber.Ctx) error {
 	var err error
 	reqBody := new(model.Create{{.StructName}}Request)
 
@@ -34,5 +34,5 @@ func (s *Handler) Create(ctx fiber.Ctx) error {
 	// TODO: send email verification
 	{{.ModuleName}}Response := utility.MapCreate{{.StructName}}EntityToResponse({{.ModuleName}}Created)
 
-	return fctx.JsonResponse(fiber.StatusOK, fiber.Map{"data": {{.ModuleName}}Response})
+	return fctx.JsonResponse(fiber.StatusOK, {{.ModuleName}}Response)
 }

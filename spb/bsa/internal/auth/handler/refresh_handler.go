@@ -8,7 +8,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
 var ErrRefreshTokenFailed = fiber.NewError(fiber.StatusBadRequest, "please try to login again")
@@ -17,8 +17,8 @@ var ErrRefreshTokenFailed = fiber.NewError(fiber.StatusBadRequest, "please try t
 // @function: AccountRefreshToken
 // @description: Mapping refresh token response
 // @return: error
-// @param: ctx fiber.Ctx
-func (h *Handler) AccountRefreshToken(ctx fiber.Ctx) error {
+// @param: ctx *fiber.Ctx
+func (h *Handler) AccountRefreshToken(ctx *fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	prevRefreshToken := ctx.Cookies(config.REFRESH_TOKEN_NAME)
@@ -55,7 +55,7 @@ func (h *Handler) AccountRefreshToken(ctx fiber.Ctx) error {
 	}
 
 	refreshResponse := mappingRefreshResponse(tokens)
-	return fctx.JsonResponse(fiber.StatusOK, fiber.Map{"data": refreshResponse})
+	return fctx.JsonResponse(fiber.StatusOK, refreshResponse)
 }
 
 // @author: LoanTT

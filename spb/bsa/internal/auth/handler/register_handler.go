@@ -6,7 +6,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
 var (
@@ -17,9 +17,9 @@ var (
 // @author: LoanTT
 // @function: AccountRegister
 // @description: handler account register with email and password
-// @param: ctx fiber.Ctx
+// @param: ctx *fiber.Ctx
 // @return: err error
-func (h *Handler) AccountRegister(ctx fiber.Ctx) error {
+func (h *Handler) AccountRegister(ctx *fiber.Ctx) error {
 	reqBody := new(model.RegisterRequest)
 
 	fctx := utils.FiberCtx{Fctx: ctx}
@@ -35,5 +35,5 @@ func (h *Handler) AccountRegister(ctx fiber.Ctx) error {
 
 	// TODO: send email verification
 
-	return fctx.JsonResponse(fiber.StatusOK, fiber.Map{"message": "register success"})
+	return fctx.JsonResponse(fiber.StatusOK, nil, "register success")
 }

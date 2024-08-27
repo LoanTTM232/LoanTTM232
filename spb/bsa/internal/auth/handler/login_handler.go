@@ -8,7 +8,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
 var ErrLoginFailed = fiber.NewError(fiber.StatusBadRequest, "email or password is wrong")
@@ -16,9 +16,9 @@ var ErrLoginFailed = fiber.NewError(fiber.StatusBadRequest, "email or password i
 // @author: LoanTT
 // @function: AccountLogin
 // @description: handler account login with email and password
-// @param: ctx fiber.Ctx
+// @param: ctx *fiber.Ctx
 // @return: err error
-func (h *Handler) AccountLogin(ctx fiber.Ctx) error {
+func (h *Handler) AccountLogin(ctx *fiber.Ctx) error {
 	var err error
 	reqBody := new(model.LoginRequest)
 
@@ -44,7 +44,7 @@ func (h *Handler) AccountLogin(ctx fiber.Ctx) error {
 	}
 
 	loginResponse := mappingLoginResponse(user, tokens)
-	return fctx.JsonResponse(fiber.StatusOK, fiber.Map{"data": loginResponse})
+	return fctx.JsonResponse(fiber.StatusOK, loginResponse)
 }
 
 // @author: LoanTT

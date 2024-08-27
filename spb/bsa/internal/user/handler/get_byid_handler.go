@@ -8,7 +8,7 @@ import (
 
 	tb "spb/bsa/pkg/entities"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
 var (
@@ -16,12 +16,18 @@ var (
 	ErrUserNotFound  = fiber.NewError(fiber.StatusNotFound, "user not found")
 )
 
-// @author: LoanTT
-// @function: GetByID
-// @description: Handler get user by id
-// @param: ctx fiber.Ctx
-// @return: err error
-func (s *Handler) GetByID(ctx fiber.Ctx) error {
+// UserGetAll godoc
+//
+// @Summary 		Get user by id
+// @Description 	Get user by id
+// @Tags 			users
+// @Accept  		json
+// @Produce 		json
+// @Param 			id path string true "User ID"
+// @Success 		200 {object} utils.JSONResult{message=string}		"Get user by id success"
+// @Failure 		400 {object} utils.ErrorResult{message=string}      "Get user by id failed"
+// @Router 			/api/v1/users/{id} [delete]
+func (s *Handler) GetByID(ctx *fiber.Ctx) error {
 	var err error
 	var userId string
 	var user *tb.User
@@ -45,5 +51,5 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 	}
 
 	userResponse := utility.MapUserEntityToResponse(user)
-	return fctx.JsonResponse(fiber.StatusOK, fiber.Map{"data": userResponse})
+	return fctx.JsonResponse(fiber.StatusOK, userResponse)
 }

@@ -4,7 +4,7 @@ import (
 	"spb/bsa/internal/role/service"
 	"spb/bsa/pkg/middleware"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
 var RoleService *service.Service

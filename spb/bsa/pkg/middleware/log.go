@@ -10,7 +10,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -20,7 +20,7 @@ var excludeLogRoutes = []string{}
 // @function: LogMiddleware
 // @description: Log middleware
 func LogMiddleware() fiber.Handler {
-	return func(ctx fiber.Ctx) error {
+	return func(ctx *fiber.Ctx) error {
 		for _, route := range excludeLogRoutes {
 			if strings.Contains(ctx.Request().URI().String(), route) {
 				return ctx.Next()

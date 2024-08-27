@@ -32,11 +32,11 @@ Manage users by Admin, Club Owner, Member
 
 | No  | Implemented | Method | Path                                                  | Permission  | Description                                                                |
 | --- | ----------- | ------ | ----------------------------------------------------- | ----------- | -------------------------------------------------------------------------- |
-| 1   | &#x2705;    | GET    | /users?i={items}&p={page}&b={order by}&t={order type} | read_users  | Get all users with pagination and sorting and full name depend on **role** |
-| 2   | &#x2705;    | GET    | /users/:id                                            | read_user   | Get user by id depend on **role**                                          |
-| 3   | &#x2705;    | POST   | /users/                                               | create_user | Create new user depend on **role**                                         |
-| 4   | &#x2705;    | PATCH  | /users/:id                                            | update_user | Update user depend on **role**                                             |
-| 5   | &#x2705;    | DELETE | /users/:id                                            | delete_user | Delete user depend on **role**                                             |
+| 1   | &#x2705;    | GET    | /users?i={items}&p={page}&b={order by}&t={order type} | user:list   | Get all users with pagination and sorting and full name depend on **role** |
+| 2   | &#x2705;    | GET    | /users/:id                                            | user:read   | Get user by id depend on **role**                                          |
+| 3   | &#x2705;    | POST   | /users/                                               | user:create | Create new user depend on **role**                                         |
+| 4   | &#x2705;    | PATCH  | /users/:id                                            | user:update | Update user depend on **role**                                             |
+| 5   | &#x2705;    | DELETE | /users/:id                                            | user:delete | Delete user depend on **role**                                             |
 
 ---
 
@@ -46,11 +46,11 @@ Manage unit services for club and unit
 
 | No  | Implemented | Method | Path                                                                                                      | Permission          | Description                                                                    |
 | --- | ----------- | ------ | --------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------------------------------ |
-| 1   | &#x274c;    | GET    | /unit_service?i={items}&p={page}&b={order by}&t={order type}&k={kind club or unit}&u={club id or unit id} | read_unit_services  | Get all services for **club** or **unit** with pagination and sorting and name |
-| 2   | &#x274c;    | GET    | /unit_service/:id                                                                                         | read_unit_service   | Get service for **club** or **unit** by id                                     |
-| 3   | &#x274c;    | POST   | /unit_service/                                                                                            | create_unit_service | Create service for **club**                                                    |
-| 4   | &#x274c;    | PATCH  | /unit_service/:id                                                                                         | update_unit_service | Update, Assign or Unassign service to **unit**                                 |
-| 5   | &#x274c;    | DELETE | /unit_service/:id                                                                                         | delete_unit_service | Delete service from **club** by id                                             |
+| 1   | &#x274c;    | GET    | /unit_service?i={items}&p={page}&b={order by}&t={order type}&k={kind club or unit}&u={club id or unit id} | unit_service:list   | Get all services for **club** or **unit** with pagination and sorting and name |
+| 2   | &#x274c;    | GET    | /unit_service/:id                                                                                         | unit_service:read   | Get service for **club** or **unit** by id                                     |
+| 3   | &#x274c;    | POST   | /unit_service/                                                                                            | unit_service:create | Create service for **club**                                                    |
+| 4   | &#x274c;    | PATCH  | /unit_service/:id                                                                                         | unit_service:update | Update, Assign or Unassign service to **unit**                                 |
+| 5   | &#x274c;    | DELETE | /unit_service/:id                                                                                         | unit_service:delete | Delete service from **club** by id                                             |
 
 ---
 
@@ -60,11 +60,11 @@ Manage clubs by Admin, Club Owner
 
 | No  | Implemented | Method | Path                                                                                                            | Permission  | Description                                          |
 | --- | ----------- | ------ | --------------------------------------------------------------------------------------------------------------- | ----------- | ---------------------------------------------------- |
-| 1   | &#x274c;    | GET    | /clubs?i={items}&p={page}&b={order by}&t={order type}&c={club name}&lg={longitude}&lt={latitude}&s={sport type} | read_clubs  | Get all clubs with pagination and sorting and filter |
-| 2   | &#x274c;    | GET    | /clubs/:id                                                                                                      | read_club   | Get club by id                                       |
-| 3   | &#x274c;    | POST   | /clubs/                                                                                                         | create_club | Create new club                                      |
-| 4   | &#x274c;    | PATCH  | /clubs/:id                                                                                                      | update_club | Update club info                                     |
-| 5   | &#x274c;    | DELETE | /clubs/:id                                                                                                      | delete_club | Delete club                                          |
+| 1   | &#x274c;    | GET    | /clubs?i={items}&p={page}&b={order by}&t={order type}&c={club name}&lg={longitude}&lt={latitude}&s={sport type} | club:list   | Get all clubs with pagination and sorting and filter |
+| 2   | &#x274c;    | GET    | /clubs/:id                                                                                                      | club:read   | Get club by id                                       |
+| 3   | &#x274c;    | POST   | /clubs/                                                                                                         | club:create | Create new club                                      |
+| 4   | &#x274c;    | PATCH  | /clubs/:id                                                                                                      | club:update | Update club info                                     |
+| 5   | &#x274c;    | DELETE | /clubs/:id                                                                                                      | club:delete | Delete club                                          |
 
 ---
 
@@ -74,11 +74,11 @@ Manage units by Admin, Club Owner, Member
 
 | No  | Implemented | Method | Path                                                                                                            | Permission  | Description                                             |
 | --- | ----------- | ------ | --------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------- |
-| 1   | &#x274c;    | GET    | /units?i={items}&p={page}&b={order by}&t={order type}&c={unit name}&lg={longitude}&lt={latitude}&s={sport type} | read_units  | Get all units with pagination and sorting and full name |
-| 2   | &#x274c;    | GET    | /units/:id                                                                                                      | read_unit   | Get unit by id                                          |
-| 3   | &#x274c;    | POST   | /units/                                                                                                         | create_unit | Create new unit                                         |
-| 4   | &#x274c;    | PATCH  | /units/:id                                                                                                      | update_unit | Update unit info                                        |
-| 5   | &#x274c;    | DELETE | /units/:id                                                                                                      | delete_unit | Delete unit                                             |
+| 1   | &#x274c;    | GET    | /units?i={items}&p={page}&b={order by}&t={order type}&c={unit name}&lg={longitude}&lt={latitude}&s={sport type} | unit:list   | Get all units with pagination and sorting and full name |
+| 2   | &#x274c;    | GET    | /units/:id                                                                                                      | unit:read   | Get unit by id                                          |
+| 3   | &#x274c;    | POST   | /units/                                                                                                         | unit:create | Create new unit                                         |
+| 4   | &#x274c;    | PATCH  | /units/:id                                                                                                      | unit:update | Update unit info                                        |
+| 5   | &#x274c;    | DELETE | /units/:id                                                                                                      | unit:delete | Delete unit                                             |
 
 ---
 
@@ -88,8 +88,8 @@ Manage locations
 
 | No  | Implemented | Method | Path       | Permission      | Description         |
 | --- | ----------- | ------ | ---------- | --------------- | ------------------- |
-| 1   | &#x274c;    | GET    | /locations | read_locations  | Get all locations   |
-| 2   | &#x274c;    | POST   | /locations | create_location | Create new location |
+| 1   | &#x274c;    | GET    | /locations | location:read   | Get all locations   |
+| 2   | &#x274c;    | POST   | /locations | location:create | Create new location |
 
 ---
 
@@ -99,8 +99,8 @@ Manage metadata
 
 | No  | Implemented | Method | Path      | Permission      | Description         |
 | --- | ----------- | ------ | --------- | --------------- | ------------------- |
-| 1   | &#x274c;    | GET    | /metadata | read_metadata   | Get all metadata    |
-| 2   | &#x274c;    | POST   | /metadata | create_metadata | Create new metadata |
+| 1   | &#x274c;    | GET    | /metadata | metadata:read   | Get all metadata    |
+| 2   | &#x274c;    | POST   | /metadata | metadata:create | Create new metadata |
 
 ---
 
@@ -110,12 +110,12 @@ Manage orders by Admin, Club Owner, Member, User
 
 | No  | Implemented | Method | Path                                                               | Permission            | Description                      |
 | --- | ----------- | ------ | ------------------------------------------------------------------ | --------------------- | -------------------------------- |
-| 1   | &#x274c;    | GET    | /orders?i={items}&p={page}&b={order by}&t={order type}&u={unit id} | read_orders           | Get all orders                   |
-| 2   | &#x274c;    | GET    | /orders/:id                                                        | read_order            | Get order by id                  |
-| 3   | &#x274c;    | POST   | /orders/request                                                    | create_order          | Create new order - request order |
-| 4   | &#x274c;    | POST   | /orders/approve-request                                            | approve_request_order | Approve or reject request order  |
-| 5   | &#x274c;    | POST   | /orders/payment                                                    | create_order          | Create new order - payment       |
-| 6   | &#x274c;    | POST   | /orders/approve-payment                                            | approve_payment_order | Approve payment order            |
+| 1   | &#x274c;    | GET    | /orders?i={items}&p={page}&b={order by}&t={order type}&u={unit id} | order:list            | Get all orders                   |
+| 2   | &#x274c;    | GET    | /orders/:id                                                        | order:read            | Get order by id                  |
+| 3   | &#x274c;    | POST   | /orders/request                                                    | order:create          | Create new order - request order |
+| 4   | &#x274c;    | POST   | /orders/approve-request                                            | order:approve_request | Approve or reject request order  |
+| 5   | &#x274c;    | POST   | /orders/payment                                                    | order:create          | Create new order - payment       |
+| 6   | &#x274c;    | POST   | /orders/approve-payment                                            | order:approve_payment | Approve payment order            |
 
 ---
 

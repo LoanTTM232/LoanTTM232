@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/iancoleman/strcase"
 )
@@ -83,7 +83,7 @@ func GetQueryString(queryString []byte) (map[string]interface{}, error) {
 }
 
 type FiberCtx struct {
-	Fctx fiber.Ctx
+	Fctx *fiber.Ctx
 }
 
 // @author: LoanTT
@@ -106,7 +106,7 @@ func (ctx *FiberCtx) ValidateJson() error {
 // @param: validate *validator.Validate
 // @return: error
 func (ctx *FiberCtx) ParseJsonToStruct(dest interface{}, validate *validator.Validate) error {
-	if err := ctx.Fctx.Bind().Body(dest); err != nil {
+	if err := ctx.Fctx.BodyParser(dest); err != nil {
 		return err
 	}
 	if err := validate.Struct(dest); err != nil {
@@ -135,12 +135,21 @@ func (ctx *FiberCtx) ParseUUID(key string) (string, error) {
 // @description: Json response
 // @param: ctx *fiber.Ctx
 // @param: respCode int
-// @param: data map[string]interface{}
+// @param: data interface{}
 // @return: error
-func (ctx *FiberCtx) JsonResponse(respCode int, data map[string]interface{}) error {
+func (ctx *FiberCtx) JsonResponse(respCode int, data interface{}, message ...string) error {
+	var msg *string
+	var dataVal *interface{}
+
+	switch {
+	case len(message) > 0:
+		msg = &message[0]
+	case data != nil:
+		dataVal = &data
+	}
 	return ctx.Fctx.
 		Status(respCode).
-		JSON(data)
+		JSON(JSONResult{Data: dataVal, Message: msg})
 }
 
 // @author: LoanTT
@@ -150,5 +159,5 @@ func (ctx *FiberCtx) JsonResponse(respCode int, data map[string]interface{}) err
 // @param: err *fiber.Error
 // @return: error
 func (ctx *FiberCtx) ErrResponse(err *fiber.Error) error {
-	return ctx.Fctx.Status(err.Code).JSON(map[string]interface{}{"message": err.Error()})
+	return ctx.Fctx.Status(err.Code).JSON(ErrorResult{Message: err.Error()})
 }

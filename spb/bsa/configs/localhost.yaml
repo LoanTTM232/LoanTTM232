@@ -6,17 +6,9 @@ server:
     port: 7000
 
 cors:
-    allowOrigin:
-        - "http://127.0.0.1"
-    allowHeaders:
-        - "Content-Type"
-        - "Origin"
-        - "Accept"
-    allowMethods:
-        - "GET"
-        - "POST"
-        - "PATCH"
-        - "DELETE"
+    allowOrigin: "http://127.0.0.1"
+    allowHeaders: "Content-Type, Origin, Accept"
+    allowMethods: "GET, POST, PATCH, DELETE"
     allowCredentials: true
 
 jwt:

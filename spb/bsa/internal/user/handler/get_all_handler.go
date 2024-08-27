@@ -8,17 +8,26 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
 var ErrGetUsersFailed = fiber.NewError(fiber.StatusNotFound, "get users failed")
 
-// @author: LoanTT
-// @function: GetAll
-// @description: Handler for getting all users
-// @param: ctx fiber.Ctx
-// @return: error
-func (s *Handler) GetAll(ctx fiber.Ctx) error {
+// UserGetAll godoc
+//
+// @Summary 		Get all users
+// @Description 	Get all users
+// @Tags 			users
+// @Accept  		json
+// @Produce 		json
+// @Param 			i query int false "Number items on page"
+// @Param 			p query int false "Page number"
+// @Param			b query string false "Order by"
+// @Param			t query string false "Order type"
+// @Success 		200 {object} utils.JSONResult{data=model.GetUsersResponse}	"Get all users success"
+// @Failure 		404 {object} utils.ErrorResult{message=string}        		"Get all users failed"
+// @Router 			/api/v1/users [get]
+func (s *Handler) GetAll(ctx *fiber.Ctx) error {
 	var err error
 	reqBody := new(model.GetUsersRequest)
 	fctx := utils.FiberCtx{Fctx: ctx}
@@ -41,7 +50,7 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	}
 
 	userResponse := mapUsersEntityToResponse(users)
-	return fctx.JsonResponse(fiber.StatusOK, fiber.Map{"data": userResponse})
+	return fctx.JsonResponse(fiber.StatusOK, userResponse)
 }
 
 // @author: LoanTT

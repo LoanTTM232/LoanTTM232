@@ -4,7 +4,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
 var ErrDelete{{.StructName}}Failed = fiber.NewError(fiber.StatusBadRequest, "delete {{.ModuleName}} failed")
@@ -12,9 +12,9 @@ var ErrDelete{{.StructName}}Failed = fiber.NewError(fiber.StatusBadRequest, "del
 // @author: LoanTT
 // @function: Delete
 // @description: Handler delete {{.ModuleName}}
-// @param: ctx fiber.Ctx
+// @param: ctx *fiber.Ctx
 // @return: err error
-func (s *Handler) Delete(ctx fiber.Ctx) error {
+func (s *Handler) Delete(ctx *fiber.Ctx) error {
 	var err error
 	var {{.ModuleName}}Id string
 
@@ -29,5 +29,5 @@ func (s *Handler) Delete(ctx fiber.Ctx) error {
 		logger.Errorf("error delete {{.ModuleName}}: %v", err)
 		return fctx.ErrResponse(ErrDelete{{.StructName}}Failed)
 	}
-	return fctx.JsonResponse(fiber.StatusOK, fiber.Map{"message": "delete {{.ModuleName}} success"})
+	return fctx.JsonResponse(fiber.StatusOK, nil, "delete {{.ModuleName}} success")
 }

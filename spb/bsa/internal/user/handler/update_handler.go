@@ -7,17 +7,23 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 )
 
 var ErrUpdateUserFailed = fiber.NewError(fiber.StatusBadRequest, "update user failed")
 
-// @author: LoanTT
-// @function: Update
-// @description: Handler for update user
-// @param: ctx fiber.Ctx
-// @return: error
-func (s *Handler) Update(ctx fiber.Ctx) error {
+// UserGetAll godoc
+//
+// @Summary 		Update user by id
+// @Description 	Update user by id
+// @Tags 			users
+// @Accept  		json
+// @Produce 		json
+// @Param 			user body model.UpdateUserRequest true "User data"
+// @Success 		200 {object} utils.JSONResult{data=model.UserResponse}		"Update user by id success"
+// @Failure 		400 {object} utils.ErrorResult{message=string}      "Update user by id failed"
+// @Router 			/api/v1/users/{id} [patch]
+func (s *Handler) Update(ctx *fiber.Ctx) error {
 	var err error
 	reqBody := new(model.UpdateUserRequest)
 
@@ -33,5 +39,5 @@ func (s *Handler) Update(ctx fiber.Ctx) error {
 	}
 	userResponse := utility.MapUserEntityToResponse(userUpdated)
 
-	return fctx.JsonResponse(fiber.StatusOK, fiber.Map{"data": userResponse})
+	return fctx.JsonResponse(fiber.StatusOK, userResponse)
 }

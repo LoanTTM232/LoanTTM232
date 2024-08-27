@@ -7,7 +7,7 @@ import (
 	"spb/bsa/pkg/config"
 	"spb/bsa/pkg/global"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -60,9 +60,9 @@ func GetToken(claims jwt.Claims) *jwt.Token {
 // @author: LoanTT
 // @function: GetTokenFromCookie
 // @description: Get token from cookie
-// @param: ctx fiber.Ctx
+// @param: ctx *fiber.Ctx
 // @return: jwt.MapClaims, error
-func GetTokenFromCookie(ctx fiber.Ctx) (jwt.MapClaims, error) {
+func GetTokenFromCookie(ctx *fiber.Ctx) (jwt.MapClaims, error) {
 	jwtCookie := ctx.Cookies(config.ACCESS_TOKEN_NAME)
 	if jwtCookie == "" {
 		return nil, ErrAccessKeyNotFound

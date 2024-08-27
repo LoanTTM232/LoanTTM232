@@ -3,10 +3,11 @@ package middleware
 import (
 	"errors"
 	"slices"
-	"spb/bsa/pkg/auth"
 	"strings"
 
-	"github.com/gofiber/fiber/v3"
+	"spb/bsa/pkg/auth"
+
+	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -16,7 +17,7 @@ import (
 // @param: ignorePaths []string
 // @return: func(c *fiber.Ctx) error
 func JwtMiddleware(ignorePaths ...string) fiber.Handler {
-	return func(ctx fiber.Ctx) error {
+	return func(ctx *fiber.Ctx) error {
 		url := string(ctx.Request().URI().Path())
 		if slices.Contains(ignorePaths, url) {
 			return ctx.Next()

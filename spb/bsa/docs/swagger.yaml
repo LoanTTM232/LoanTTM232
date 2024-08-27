@@ -1,0 +1,252 @@
+basePath: /
+definitions:
+  model.CreateUserRequest:
+    properties:
+      email:
+        maxLength: 32
+        minLength: 6
+        type: string
+      password:
+        maxLength: 32
+        minLength: 6
+        type: string
+      role:
+        type: string
+    required:
+    - email
+    - password
+    - role
+    type: object
+  model.GetUsersResponse:
+    properties:
+      total:
+        type: integer
+      users:
+        items:
+          $ref: '#/definitions/spb_bsa_internal_user_model.UserResponse'
+        type: array
+    type: object
+  model.RoleResponse:
+    properties:
+      permissions:
+        items:
+          $ref: '#/definitions/spb_bsa_internal_role_model.PermissionResponse'
+        type: array
+      role_id:
+        type: string
+      role_name:
+        type: string
+    type: object
+  model.UpdateUserRequest:
+    properties:
+      full_name:
+        maxLength: 255
+        minLength: 2
+        type: string
+      phone:
+        type: string
+      role:
+        type: string
+      user_id:
+        type: string
+    required:
+    - user_id
+    type: object
+  spb_bsa_internal_role_model.PermissionResponse:
+    properties:
+      permission_id:
+        type: string
+      permission_name:
+        type: string
+    type: object
+  spb_bsa_internal_user_model.UserResponse:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      is_email_verified:
+        type: boolean
+      phone:
+        type: string
+      role:
+        $ref: '#/definitions/model.RoleResponse'
+      user_id:
+        type: string
+    type: object
+  utils.ErrorResult:
+    properties:
+      message:
+        type: string
+    type: object
+  utils.JSONResult:
+    properties:
+      data: {}
+      message:
+        type: string
+    type: object
+host: localhost:7000
+info:
+  contact:
+    email: loanTT@gmail.com
+    name: LoanTT
+  description: This is a swagger for Sport Booking APIs
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Sport Booking API
+  version: "1.0"
+paths:
+  /api/v1/users:
+    get:
+      consumes:
+      - application/json
+      description: Get all users
+      parameters:
+      - description: Number items on page
+        in: query
+        name: i
+        type: integer
+      - description: Page number
+        in: query
+        name: p
+        type: integer
+      - description: Order by
+        in: query
+        name: b
+        type: string
+      - description: Order type
+        in: query
+        name: t
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get all users success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.GetUsersResponse'
+              type: object
+        "404":
+          description: Get all users failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Get all users
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Create user
+      parameters:
+      - description: Create user
+        in: body
+        name: Group
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Create user success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/spb_bsa_internal_user_model.UserResponse'
+              type: object
+        "400":
+          description: Create user failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Create user
+      tags:
+      - users
+  /api/v1/users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Get user by id
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get user by id success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+        "400":
+          description: Get user by id failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Get user by id
+      tags:
+      - users
+    patch:
+      consumes:
+      - application/json
+      description: Update user by id
+      parameters:
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Update user by id success
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.JSONResult'
+            - properties:
+                data:
+                  $ref: '#/definitions/spb_bsa_internal_user_model.UserResponse'
+              type: object
+        "400":
+          description: Update user by id failed
+          schema:
+            allOf:
+            - $ref: '#/definitions/utils.ErrorResult'
+            - properties:
+                message:
+                  type: string
+              type: object
+      summary: Update user by id
+      tags:
+      - users
+swagger: "2.0"

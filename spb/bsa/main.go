@@ -40,6 +40,16 @@ func executeGenerate(moduleName string) {
 	generate.GenerateNewModule(moduleName)
 }
 
+// @title Sport Booking API
+// @version 1.0
+// @description This is a swagger for Sport Booking APIs
+// @termsOfService http://swagger.io/terms/
+// @contact.name LoanTT
+// @contact.email loanTT@gmail.com
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+// @host localhost:7000
+// @BasePath /
 func main() {
 	var moduleName string
 
