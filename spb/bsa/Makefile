@@ -1,4 +1,4 @@
-.PHONY: clean critic security lint test build run
+.PHONY: clean critic security lint test build run dev gen
 
 APP_NAME = spb_bsa
 BUILD_DIR = $(PWD)/build
@@ -26,5 +26,8 @@ build: test
 run: build
 	$(BUILD_DIR)/$(APP_NAME) start
 
-# swag:
-# 	swag init
+dev: test
+	go run $(PWD) start
+
+gen: 
+	go run $(PWD) generate --module_name $(MODULE)
