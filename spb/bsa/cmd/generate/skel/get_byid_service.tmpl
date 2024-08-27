@@ -20,7 +20,7 @@ func (s *Service) GetByID({{.ModuleName}}Id string, current{{.StructName}}RoleNa
 		return nil, err
 	}
 
-	childrenRoles, err := roleModule.RoleService.GetChildren(false, current{{.StructName}}RoleName)
+	childrenRoles, err := roleModule.RoleService.GetChildren(current{{.StructName}}RoleName)
 	if err != nil {
 		return nil, err
 	}

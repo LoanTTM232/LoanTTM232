@@ -9,20 +9,13 @@ import (
 // @author: LoanTT
 // @function: GetChildren
 // @description: Get children roles by parent id
-// @param: role (roleName or roleId)
+// @param: role
 // @return: *[]tb.Role, error
-func (s *Service) GetChildren(byId bool, role interface{}) ([]tb.Role, error) {
+func (s *Service) GetChildren(role interface{}) ([]tb.Role, error) {
 	var childrenRoles []tb.Role
-	var roleCondition string
-
-	if byId {
-		roleCondition = "id = ?"
-	} else {
-		roleCondition = "name = ?"
-	}
 
 	err := s.db.
-		Where(roleCondition, role).
+		Where("name = ?", role).
 		Preload("Children", preloadRole).
 		Find(&childrenRoles).Error
 	if err != nil {

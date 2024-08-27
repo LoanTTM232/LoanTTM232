@@ -20,7 +20,7 @@ func (s *Service) GetByID(userId, currentUserRoleName string) (*tb.User, error) 
 		return nil, err
 	}
 
-	childrenRoles, err := roleModule.RoleService.GetChildren(false, currentUserRoleName)
+	childrenRoles, err := roleModule.RoleService.GetChildren(currentUserRoleName)
 	if err != nil {
 		return nil, err
 	}

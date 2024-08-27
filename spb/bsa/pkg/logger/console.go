@@ -48,6 +48,11 @@ func Fatalf(format string, args ...interface{}) {
 	Zlog.Fatalf(format, args...)
 }
 
+// @author: LoanTT
+// @function: Debugf
+// @description: Debugf
+// @param: format string
+// @param: args ...interface{}
 func (zl *ZapLog) Debugf(format string, args ...interface{}) {
 	zl.mu.Lock()
 	defer zl.mu.Unlock()
@@ -73,6 +78,11 @@ func (zl *ZapLog) Debugf(format string, args ...interface{}) {
 	}
 }
 
+// @author: LoanTT
+// @function: Infof
+// @description: Infof
+// @param: format string
+// @param: args ...interface{}
 func (zl *ZapLog) Infof(format string, args ...interface{}) {
 	zl.mu.Lock()
 	defer zl.mu.Unlock()
@@ -91,6 +101,11 @@ func (zl *ZapLog) Infof(format string, args ...interface{}) {
 	}
 }
 
+// @author: LoanTT
+// @function: Warnf
+// @description: Warnf
+// @param: format string
+// @param: args ...interface{}
 func (zl *ZapLog) Warnf(format string, args ...interface{}) {
 	zl.mu.Lock()
 	defer zl.mu.Unlock()
@@ -109,6 +124,11 @@ func (zl *ZapLog) Warnf(format string, args ...interface{}) {
 	}
 }
 
+// @author: LoanTT
+// @function: Errorf
+// @description: Errorf
+// @param: format string
+// @param: args ...interface{}
 func (zl *ZapLog) Errorf(format string, args ...interface{}) {
 	zl.mu.Lock()
 	defer zl.mu.Unlock()
@@ -127,6 +147,11 @@ func (zl *ZapLog) Errorf(format string, args ...interface{}) {
 	}
 }
 
+// @author: LoanTT
+// @function: FErrorf
+// @description: FErrorf
+// @param: format string
+// @param: args ...interface{}
 func (zl *ZapLog) Fatalf(format string, args ...interface{}) {
 	zl.mu.Lock()
 	defer zl.mu.Unlock()

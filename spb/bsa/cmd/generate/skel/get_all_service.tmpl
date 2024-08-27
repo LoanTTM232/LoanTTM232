@@ -21,7 +21,7 @@ var ErrPermission = errors.New("{{.ModuleName}} does not have permission")
 func (s *Service) GetAll(reqBody model.Get{{.StructNamePlural}}Request) ([]tb.{{.StructName}}, error) {
 	var {{.ModuleNamePlural}} []tb.{{.StructName}}
 
-	childrenRoles, err := roleModule.RoleService.GetChildren(true, reqBody.Role)
+	childrenRoles, err := roleModule.RoleService.GetChildren(reqBody.Role)
 	if err != nil {
 		return nil, err
 	}

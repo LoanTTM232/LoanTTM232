@@ -37,7 +37,7 @@ func (j *JwtCache) IsBlackListed(token string) bool {
 func (j *JwtCache) SetToBlackList(token string, expireConf int) error {
 	blacklistToken := config.BLACKLIST_PREFIX + token
 	expires := time.Minute * time.Duration(expireConf)
-	err := global.SPB_REDIS.Set(blacklistToken, []byte("t"), expires) // need set value != ""
+	err := global.SPB_REDIS.Set(blacklistToken, []byte{0}, expires) // need set value != ""
 	if err != nil {
 		return err
 	}
