@@ -1,4 +1,4 @@
-.PHONY: clean critic security lint test build run dev gen
+.PHONY: clean critic security lint test build run dev gen install_deps
 
 APP_NAME = spb_bsa
 BUILD_DIR = $(PWD)/build
@@ -31,3 +31,8 @@ dev: test
 
 gen: 
 	go run $(PWD) generate --module_name $(MODULE)
+
+install_deps:
+	go install -v github.com/go-critic/go-critic/cmd/gocritic@latest
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.60.3
+	go install github.com/securego/gosec/v2/cmd/gosec@latest
