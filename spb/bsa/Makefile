@@ -29,6 +29,9 @@ run: build
 dev: test
 	go run $(PWD) start
 
+swag:
+	swag init
+
 gen: 
 	go run $(PWD) generate --module_name $(MODULE)
 
@@ -36,3 +39,4 @@ install_deps:
 	go install -v github.com/go-critic/go-critic/cmd/gocritic@latest
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.60.3
 	go install github.com/securego/gosec/v2/cmd/gosec@latest
+	go install github.com/swaggo/swag/cmd/swag@latest
