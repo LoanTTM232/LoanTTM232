@@ -19,8 +19,8 @@ var ErrEmailExists = errors.New("email already exists")
 func (s *Service) Create(reqBody *model.CreateUserRequest) (*tb.User, error) {
 	var count int64
 
-	s.db.Model(&tb.User{}).Scopes(utility.EmailIsVerity).Where("email = ?", reqBody.Email).Count(&count)
-	if count > 0 {
+	err := s.db.Model(&tb.User{}).Scopes(utility.EmailIsVerity).Where("email = ?", reqBody.Email).Count(&count).Error
+	if count > 0 || err != nil {
 		return nil, ErrEmailExists
 	}
 

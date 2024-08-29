@@ -28,6 +28,6 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	userRoute.Get("/", UserHandler.GetAll)
 	userRoute.Get("/:id", UserHandler.GetByID)
 	userRoute.Post("/", UserHandler.Create)
-	userRoute.Patch("/", UserHandler.Update)
+	userRoute.Patch("/:id", UserHandler.Update)
 	userRoute.Delete("/:id", UserHandler.Delete)
 }

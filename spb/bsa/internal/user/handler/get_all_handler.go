@@ -49,7 +49,7 @@ func (s *Handler) GetAll(ctx *fiber.Ctx) error {
 		return fctx.ErrResponse(ErrGetUsersFailed)
 	}
 
-	userResponse := mapUsersEntityToResponse(users)
+	userResponse := mapUsersEntityToResponse(users, reqBody)
 	return fctx.JsonResponse(fiber.StatusOK, userResponse)
 }
 
@@ -58,12 +58,14 @@ func (s *Handler) GetAll(ctx *fiber.Ctx) error {
 // @description: Map users entity to response
 // @param: users []*tb.User
 // @return: *model.GetUsersResponse
-func mapUsersEntityToResponse(users []tb.User) *model.GetUsersResponse {
+func mapUsersEntityToResponse(users []*tb.User, reqBody *model.GetUsersRequest) *model.GetUsersResponse {
 	res := new(model.GetUsersResponse)
 	for id := range users {
-		res.Users = append(res.Users, utility.MapUserEntityToResponse(&users[id]))
+		res.Users = append(res.Users, utility.MapUserEntityToResponse(users[id]))
 	}
 
 	res.Total = uint(len(res.Users))
+	res.Pagination = &reqBody.Pagination
+	res.Pagination.SetPagination(int(res.Total))
 	return res
 }

@@ -38,7 +38,7 @@ func (s *Handler) Create(ctx *fiber.Ctx) error {
 		return fctx.ErrResponse(ErrCreateUserFailed)
 	}
 	// TODO: send email verification
-	userResponse := utility.MapCreateUserEntityToResponse(userCreated)
+	userResponse := utility.MapUserEntityToResponse(userCreated)
 
 	return fctx.JsonResponse(fiber.StatusOK, userResponse)
 }

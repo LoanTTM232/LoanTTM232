@@ -3,6 +3,7 @@ package service
 import (
 	roleModule "spb/bsa/internal/role"
 	roleUtility "spb/bsa/internal/role/utility"
+	"spb/bsa/internal/user/utility"
 	tb "spb/bsa/pkg/entities"
 )
 
@@ -15,7 +16,9 @@ func (s *Service) GetByID(userId, currentUserRoleName string) (*tb.User, error) 
 	var err error
 	user := new(tb.User)
 
-	err = s.db.Where("id = ?", userId).First(user).Error
+	err = s.db.Scopes(utility.EmailIsVerity).
+		Preload("Role.Permissions").
+		Where("id = ?", userId).First(user).Error
 	if err != nil {
 		return nil, err
 	}

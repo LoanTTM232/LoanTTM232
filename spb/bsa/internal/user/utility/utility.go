@@ -17,25 +17,9 @@ func MapUserEntityToResponse(user *tb.User) model.UserResponse {
 	return model.UserResponse{
 		UserId:          user.ID,
 		Email:           user.Email,
-		Role:            roleUtils.MapRoleEntityToResponse(&user.Role),
 		FullName:        user.FullName,
 		Phone:           user.Phone,
-		IsEmailVerified: user.IsEmailVerified,
-	}
-}
-
-// @author: LoanTT
-// @function: mapCreateUserEntityToResponse
-// @description: Map user entity to response
-// @param: user *tb.User
-// @return: *model.CreateUserResponse
-func MapCreateUserEntityToResponse(user *tb.User) *model.UserResponse {
-	return &model.UserResponse{
-		UserId:          user.ID,
-		Email:           user.Email,
-		FullName:        user.FullName,
 		Role:            roleUtils.MapRoleEntityToResponse(&user.Role),
-		Phone:           user.Phone,
 		IsEmailVerified: user.IsEmailVerified,
 	}
 }

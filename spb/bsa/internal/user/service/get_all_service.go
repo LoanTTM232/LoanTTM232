@@ -18,8 +18,8 @@ var ErrPermission = errors.New("user does not have permission")
 // @description: Service for get all users
 // @param: *model.GetUsersRequest
 // @return: []*entities.User, error
-func (s *Service) GetAll(reqBody *model.GetUsersRequest) ([]tb.User, error) {
-	var users []tb.User
+func (s *Service) GetAll(reqBody *model.GetUsersRequest) ([]*tb.User, error) {
+	var users []*tb.User
 
 	childrenRoles, err := roleModule.RoleService.GetChildren(reqBody.Role)
 	if err != nil {
@@ -37,5 +37,6 @@ func (s *Service) GetAll(reqBody *model.GetUsersRequest) ([]tb.User, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return users, nil
 }

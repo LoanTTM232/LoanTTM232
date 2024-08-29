@@ -25,6 +25,7 @@ var ErrUpdateUserFailed = fiber.NewError(fiber.StatusBadRequest, "update user fa
 // @Router 			/api/v1/users/{id} [patch]
 func (s *Handler) Update(ctx *fiber.Ctx) error {
 	var err error
+	var userId string
 	reqBody := new(model.UpdateUserRequest)
 
 	fctx := utils.FiberCtx{Fctx: ctx}
@@ -32,7 +33,12 @@ func (s *Handler) Update(ctx *fiber.Ctx) error {
 		logger.FErrorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(ErrUpdateUserFailed)
 	}
-	userUpdated, err := s.service.Update(reqBody)
+	if userId, err = fctx.ParseUUID("id"); err != nil {
+		logger.FErrorf("error parse user id: %v", err)
+		return fctx.ErrResponse(ErrUpdateUserFailed)
+	}
+
+	userUpdated, err := s.service.Update(reqBody, userId)
 	if err != nil {
 		logger.FErrorf("error create user: %v", err)
 		return fctx.ErrResponse(ErrUpdateUserFailed)

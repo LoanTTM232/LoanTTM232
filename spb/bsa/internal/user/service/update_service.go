@@ -15,17 +15,18 @@ var ErrUserNotFound = errors.New("user not found")
 // @author: LoanTT
 // @function: Update
 // @description: Service for user update
-// @param: user *model.UpdateUserRequest
-// @return: user *entities.User, error
-func (s *Service) Update(reqBody *model.UpdateUserRequest) (*tb.User, error) {
+// @param: user model.UpdateUserRequest
+// @param: string user id
+// @return: user entities.User, error
+func (s *Service) Update(reqBody *model.UpdateUserRequest, userId string) (*tb.User, error) {
 	var err error
 	var count int64
 	var users []tb.User
 
 	// check if user exists
-	if err = s.db.Model(&tb.User{}).
+	if err = s.db.Model(tb.User{}).
 		Scopes(utility.EmailIsVerity).
-		Where("id = ?", reqBody.UserId).
+		Where("id = ?", userId).
 		Count(&count).Error; err == nil && count == 0 {
 		return nil, ErrUserNotFound
 	} else if err != nil {
@@ -36,7 +37,8 @@ func (s *Service) Update(reqBody *model.UpdateUserRequest) (*tb.User, error) {
 	// update user
 	err = s.db.Model(&users).
 		Clauses(clause.Returning{}).
-		Where("id = ?", reqBody.UserId).
+		Where("id = ?", userId).
+		Preload("Role.Permissions").
 		Updates(userUpdate).Error
 	if err != nil {
 		return nil, err
@@ -56,14 +58,14 @@ func (s *Service) Update(reqBody *model.UpdateUserRequest) (*tb.User, error) {
 func mapUpdateFields(reqBody *model.UpdateUserRequest) tb.User {
 	var userUpdate tb.User
 
-	if reqBody.FullName != "" {
-		userUpdate.FullName = &reqBody.FullName
+	if reqBody.FullName != nil {
+		userUpdate.FullName = reqBody.FullName
 	}
-	if reqBody.Phone != "" {
-		userUpdate.Phone = &reqBody.FullName
+	if reqBody.Phone != nil {
+		userUpdate.Phone = reqBody.Phone
 	}
-	if reqBody.Role != "" {
-		userUpdate.RoleID = reqBody.Role
+	if reqBody.Role != nil {
+		userUpdate.RoleID = *reqBody.Role
 	}
 	return userUpdate
 }

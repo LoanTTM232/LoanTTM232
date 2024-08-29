@@ -25,8 +25,9 @@ type PermissionResponse struct {
 }
 
 type GetUsersResponse struct {
-	Users []UserResponse `json:"users"`
-	Total uint           `json:"total"`
+	Users      []UserResponse    `json:"users"`
+	Total      uint              `json:"total"`
+	Pagination *utils.Pagination `json:"pagination"`
 }
 
 type CreateUserRequest struct {
@@ -36,8 +37,7 @@ type CreateUserRequest struct {
 }
 
 type UpdateUserRequest struct {
-	UserId   string `json:"user_id,omitempty" validate:"uuid,required"`
-	Phone    string `json:"phone,omitempty" validate:"e164,omitempty"`
-	FullName string `json:"full_name,omitempty" validate:"min=2,max=255,omitempty"`
-	Role     string `json:"role,omitempty" validate:"uuid,omitempty"`
+	Phone    *string `json:"phone,omitempty" validate:"omitempty,e164"`
+	FullName *string `json:"full_name,omitempty" validate:"omitempty,min=2,max=255"`
+	Role     *string `json:"role,omitempty" validate:"omitempty,uuid"`
 }
