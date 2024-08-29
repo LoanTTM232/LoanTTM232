@@ -44,13 +44,13 @@ Manage users by Admin, Club Owner, Member
 
 Manage unit services for club and unit
 
-| No  | Implemented | Method | Path                                                                                                      | Permission          | Description                                                                    |
-| --- | ----------- | ------ | --------------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------------------------------ |
-| 1   | &#x274c;    | GET    | /unit_service?i={items}&p={page}&b={order by}&t={order type}&k={kind club or unit}&u={club id or unit id} | unit_service:list   | Get all services for **club** or **unit** with pagination and sorting and name |
-| 2   | &#x274c;    | GET    | /unit_service/:id                                                                                         | unit_service:read   | Get service for **club** or **unit** by id                                     |
-| 3   | &#x274c;    | POST   | /unit_service/                                                                                            | unit_service:create | Create service for **club**                                                    |
-| 4   | &#x274c;    | PATCH  | /unit_service/:id                                                                                         | unit_service:update | Update, Assign or Unassign service to **unit**                                 |
-| 5   | &#x274c;    | DELETE | /unit_service/:id                                                                                         | unit_service:delete | Delete service from **club** by id                                             |
+| No  | Implemented | Method | Path                                                                      | Permission          | Description                                                        |
+| --- | ----------- | ------ | ------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------------------ |
+| 1   | &#x2705;    | GET    | /unit-services?i={items}&p={page}&b={order by}&t={order type}&u={unit id} | unit_service:list   | Get all services for **unit** with pagination and sorting and name |
+| 2   | &#x2705;    | GET    | /unit-services/:id                                                        | unit_service:read   | Get service for **club** or **unit** by id                         |
+| 3   | &#x2705;    | POST   | /unit-services/                                                           | unit_service:create | Create service for **club**                                        |
+| 4   | &#x2705;    | PATCH  | /unit-services/:id                                                        | unit_service:update | Update, Assign or Unassign service to **unit**                     |
+| 5   | &#x2705;    | DELETE | /unit-services/:id                                                        | unit_service:delete | Delete service from **club** by id                                 |
 
 ---
 
