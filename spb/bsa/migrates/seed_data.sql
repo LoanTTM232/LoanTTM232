@@ -3,25 +3,31 @@ INSERT INTO
 VALUES
 	(
 		'cb6541f1-a32b-42aa-a6b2-1e84024fa076',
-		'create_user',
+		'user:create',
 		NOW (),
 		NOW ()
 	),
 	(
 		'728b7199-8d4b-4a2d-bd97-7b53f284091c',
-		'update_user',
+		'user:update',
 		NOW (),
 		NOW ()
 	),
 	(
 		'3008638a-ea1c-4be3-9d24-1b2ebd578bc0',
-		'delete_user',
+		'user:delete',
 		NOW (),
 		NOW ()
 	),
 	(
 		'1683cbe9-8076-40da-8210-624a600e340d',
-		'read_user',
+		'user:read',
+		NOW (),
+		NOW ()
+	),
+	(
+		'321asdf4-4342-40dv-2d22-1234kljwer34',
+		'user:read',
 		NOW (),
 		NOW ()
 	);
