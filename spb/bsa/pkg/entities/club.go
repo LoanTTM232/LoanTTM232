@@ -12,9 +12,8 @@ type Club struct {
 	Owner        User          `gorm:"foreignKey:OwnerID" json:"owner"`
 	Media        []Media       `gorm:"many2many:club_media;" json:"media"`
 	PaymentInfos []PaymentInfo `gorm:"many2many:club_payment_infos;" json:"payment_infos"`
-
-	Units      []*Unit      `gorm:"foreignKey:ClubID" json:"units"`
-	SportTypes []*SportType `gorm:"many2many:club_sporttype;" json:"sport_types"`
+	Units        []*Unit       `gorm:"foreignKey:ClubID" json:"units"`
+	SportTypes   []*SportType  `gorm:"many2many:club_sporttype;" json:"sport_types"`
 }
 
 func (Club) TableName() string {

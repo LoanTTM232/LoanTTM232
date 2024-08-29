@@ -14,11 +14,11 @@ import (
 // @t = order type
 type Pagination struct {
 	Page       int    `json:"page,omitempty"`        // current page
-	Count      int    `json:"count,omitempty"`       // total items
+	Items      int    `json:"items,omitempty"`       // number item per page
 	OrderBy    string `json:"order_by,omitempty"`    // order by
 	OrderType  string `json:"order_type,omitempty"`  // order type
+	Count      int    `json:"count,omitempty"`       // total items
 	TotalPages int    `json:"total_pages,omitempty"` // total pages (count / items)
-	Items      int    `json:"items,omitempty"`       // number item per page
 	NextPage   string `json:"next_page,omitempty"`
 	PrevPage   string `json:"prev_page,omitempty"`
 }
@@ -50,9 +50,15 @@ func getDefaultPagination() *Pagination {
 }
 
 // @author: LoanTT
-// @function: SetPageUrls
-// @description: set page urls (next, prev)
-func (p *Pagination) SetPageUrls() {
+// @function: SetPagination
+// @description: set pagination info (count, total pages, next, prev)
+// @param: int count
+func (p *Pagination) SetPagination(count int) {
+	p.TotalPages = count / p.Items
+	p.Count = count
+	if count%int(p.Items) > 0 {
+		p.TotalPages = p.TotalPages + 1
+	}
 	p.nextPageUrl()
 	p.prevPageUrl()
 }
@@ -62,9 +68,7 @@ func (p *Pagination) SetPageUrls() {
 // @description: set next page url
 func (p *Pagination) nextPageUrl() {
 	var nextPageUrl string
-	if p.Page >= p.TotalPages {
-		nextPageUrl = fmt.Sprintf("i=%d&p=%d&b=%s&t=%s", p.Items, p.Page, p.OrderBy, p.OrderType)
-	} else {
+	if p.Page < p.TotalPages {
 		nextPageUrl = fmt.Sprintf("i=%d&p=%d&b=%s&t=%s", p.Items, p.Page+1, p.OrderBy, p.OrderType)
 	}
 	p.NextPage = nextPageUrl
@@ -75,9 +79,7 @@ func (p *Pagination) nextPageUrl() {
 // @description: set prev page url
 func (p *Pagination) prevPageUrl() {
 	var prevPageUrl string
-	if p.Page <= 1 {
-		prevPageUrl = fmt.Sprintf("i=%d&p=%d&b=%s&t=%s", p.Items, p.Page, p.OrderBy, p.OrderType)
-	} else {
+	if p.Page > 1 {
 		prevPageUrl = fmt.Sprintf("i=%d&p=%d&b=%s&t=%s", p.Items, p.Page-1, p.OrderBy, p.OrderType)
 	}
 	p.PrevPage = prevPageUrl
