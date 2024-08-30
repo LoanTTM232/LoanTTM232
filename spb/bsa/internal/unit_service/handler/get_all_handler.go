@@ -12,11 +12,20 @@ import (
 
 var ErrGetUnitServicesFailed = fiber.NewError(fiber.StatusNotFound, "get unit_services failed")
 
-// @author: LoanTT
-// @function: GetAll
-// @description: Handler for getting all unit_services
-// @param: ctx *fiber.Ctx
-// @return: error
+// UnitServiceGetAll godoc
+//
+// @Summary 		Get all unit_services
+// @Description 	Get all unit_services
+// @Tags 			unit-services
+// @Accept  		json
+// @Produce 		json
+// @Param 			i query int false "Number items on page"
+// @Param 			p query int false "Page number"
+// @Param			b query string false "Order by"
+// @Param			t query string false "Order type"
+// @Success 		200 {object} utils.JSONResult{data=model.UnitServicesResponse}	"Get all unit_services success"
+// @Failure 		404 {object} utils.ErrorResult{message=string}        	     	"Get all unit_services failed"
+// @Router 			/api/v1/unit-services [get]
 func (s *Handler) GetAll(ctx *fiber.Ctx) error {
 	var err error
 	reqBody := new(model.GetUnitServicesRequest)
@@ -27,7 +36,7 @@ func (s *Handler) GetAll(ctx *fiber.Ctx) error {
 
 	unitServices, err := s.service.GetAll(reqBody)
 	if err != nil {
-		logger.Errorf("error get unit_services: %v", err)
+		logger.FErrorf("error get unit_services: %v", err)
 		return fctx.ErrResponse(ErrGetUnitServicesFailed)
 	}
 

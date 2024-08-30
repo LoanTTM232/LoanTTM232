@@ -6,16 +6,16 @@ import (
 
 // @author: LoanTT
 // @function: GetByID
-// @description: Service for get unit_service by id
+// @description: Service for get unitService by id
 // @param: unitServiceId string
 // @return: *entities.UnitService, error
 func (s *Service) GetByID(unitServiceId string) (*tb.UnitService, error) {
-	unit_service := new(tb.UnitService)
+	unitService := new(tb.UnitService)
 
-	err := s.db.Where("id = ?", unitServiceId).First(unit_service).Error
+	err := s.db.Where("id = ?", unitServiceId).First(unitService).Error
 	if err != nil {
 		return nil, err
 	}
 
-	return unit_service, nil
+	return unitService, nil
 }

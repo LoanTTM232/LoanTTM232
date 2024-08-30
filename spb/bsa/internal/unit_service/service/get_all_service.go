@@ -8,18 +8,18 @@ import (
 
 // @author: LoanTT
 // @function: GetAll
-// @description: Service for get all unit_services
+// @description: Service for get all unitServices
 // @param: *model.GetUnitServicesRequest
 // @return: []*entities.UnitService, error
 func (s *Service) GetAll(reqBody *model.GetUnitServicesRequest) ([]*tb.UnitService, error) {
-	var unit_services []*tb.UnitService
+	var unitServices []*tb.UnitService
 
 	err := s.db.
 		Scopes(utils.Paginate(&reqBody.Pagination)).
 		Where("unit_id = ?", reqBody.UnitID).
-		Find(&unit_services).Error
+		Find(&unitServices).Error
 	if err != nil {
 		return nil, err
 	}
-	return unit_services, nil
+	return unitServices, nil
 }

@@ -4,14 +4,14 @@ import tb "spb/bsa/pkg/entities"
 
 // @author: LoanTT
 // @function: Delete
-// @description: Service for unit_service deletion
-// @param: string unit_service id
+// @description: Service for unitService deletion
+// @param: string unitService id
 // @return: error
-func (s *Service) Delete(unit_serviceId string) error {
-	unit_service := tb.UnitService{}
-	unit_service.ID = unit_serviceId
+func (s *Service) Delete(unitServiceId string) error {
+	unitService := tb.UnitService{}
+	unitService.ID = unitServiceId
 
-	err := s.db.Delete(&unit_service).Error
+	err := s.db.Delete(&unitService).Error
 	if err != nil {
 		return err
 	}

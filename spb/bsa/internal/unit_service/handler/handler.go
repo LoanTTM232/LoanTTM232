@@ -11,10 +11,10 @@ type Handler struct {
 // @author: LoanTT
 // @function: NewHandler
 // @description: Create a new unit_service handler
-// @param: unit_service service
+// @param: unit_service serv
 // @return: fiber.Handler
-func NewHandler(service *service.Service) *Handler {
+func NewHandler(serv *service.Service) *Handler {
 	return &Handler{
-		service: service,
+		service: serv,
 	}
 }

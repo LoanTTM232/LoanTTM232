@@ -12,11 +12,17 @@ import (
 
 var ErrUpdateUnitServiceFailed = fiber.NewError(fiber.StatusBadRequest, "update unit_service failed")
 
-// @author: LoanTT
-// @function: Update
-// @description: Handler for update unit_service
-// @param: ctx *fiber.Ctx
-// @return: error
+// UnitServiceGetAll godoc
+//
+// @Summary 		Update unitService by id
+// @Description 	Update unitService by id
+// @Tags 			unit-services
+// @Accept  		json
+// @Produce 		json
+// @Param 			unitService body model.UpdateUnitServiceRequest true "UnitService data"
+// @Success 		200 {object} utils.JSONResult{data=model.UnitServiceResponse}		"Update unitService by id success"
+// @Failure 		400 {object} utils.ErrorResult{message=string}     					"Update unitService by id failed"
+// @Router 			/api/v1/unit-services/{id} [patch]
 func (s *Handler) Update(ctx *fiber.Ctx) error {
 	var err error
 	var unitServiceId string
@@ -24,7 +30,7 @@ func (s *Handler) Update(ctx *fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.Errorf("error parse json to struct: %v", err)
+		logger.FErrorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(ErrUpdateUnitServiceFailed)
 	}
 	if unitServiceId, err = fctx.ParseUUID("id"); err != nil {
@@ -34,7 +40,7 @@ func (s *Handler) Update(ctx *fiber.Ctx) error {
 
 	unit_serviceUpdated, err := s.service.Update(reqBody, unitServiceId)
 	if err != nil {
-		logger.Errorf("error create unit_service: %v", err)
+		logger.FErrorf("error create unit_service: %v", err)
 		return fctx.ErrResponse(ErrUpdateUnitServiceFailed)
 	}
 	unit_serviceResponse := utility.MapUnitServiceEntityToResponse(unit_serviceUpdated)

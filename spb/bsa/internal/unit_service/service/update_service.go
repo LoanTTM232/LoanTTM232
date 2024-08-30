@@ -4,27 +4,25 @@ import (
 	"errors"
 
 	"spb/bsa/internal/unit_service/model"
-	"spb/bsa/internal/unit_service/utility"
 	tb "spb/bsa/pkg/entities"
 
 	"gorm.io/gorm/clause"
 )
 
-var ErrUnitServiceNotFound = errors.New("unit_service not found")
+var ErrUnitServiceNotFound = errors.New("unitService not found")
 
 // @author: LoanTT
 // @function: Update
-// @description: Service for unit_service update
-// @param: unit_service *model.UpdateUnitServiceRequest
-// @return: unit_service *entities.UnitService, error
+// @description: Service for unitService update
+// @param: unitService *model.UpdateUnitServiceRequest
+// @return: unitService *entities.UnitService, error
 func (s *Service) Update(reqBody *model.UpdateUnitServiceRequest, unitServiceId string) (*tb.UnitService, error) {
 	var err error
 	var count int64
 	var unitServices []tb.UnitService
 
-	// check if unit_service exists
+	// check if unitService exists
 	if err = s.db.Model(&tb.UnitService{}).
-		Scopes(utility.EmailIsVerity).
 		Where("id = ?", unitServiceId).
 		Count(&count).Error; err == nil && count == 0 {
 		return nil, ErrUnitServiceNotFound
@@ -33,7 +31,7 @@ func (s *Service) Update(reqBody *model.UpdateUnitServiceRequest, unitServiceId 
 	}
 
 	unitServiceUpdate := mapUpdateFields(reqBody)
-	// update unit_service
+	// update unitService
 	err = s.db.Model(&unitServices).
 		Clauses(clause.Returning{}).
 		Where("id = ?", unitServiceId).
