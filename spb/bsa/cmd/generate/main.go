@@ -12,6 +12,7 @@ import (
 )
 
 type entity struct {
+	PathName         string
 	ModuleName       string // name of module
 	StructName       string // just Uppercase 1st char
 	StructNamePlural string // the plural of the new module
@@ -80,6 +81,8 @@ func GenerateNewModule(moduleName string) {
 // @return: *entity
 func getNewModuleStruct(inputName string) *entity {
 	var (
+		pathName        string = inputName
+		moduleName      string = strcase.ToLowerCamel(inputName)
 		structName      string = strcase.ToCamel(inputName)
 		plural          string = Pluralfy(structName)
 		routeName       string = strcase.ToKebab(plural)
@@ -87,7 +90,7 @@ func getNewModuleStruct(inputName string) *entity {
 	)
 
 	newDirectory := fmt.Sprintf("internal/%s", inputName)
-	newModule := &entity{inputName, structName, plural, inputNamePlural, routeName, newDirectory}
+	newModule := &entity{pathName, moduleName, structName, plural, inputNamePlural, routeName, newDirectory}
 	return newModule
 }
 

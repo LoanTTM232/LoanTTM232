@@ -1,10 +1,13 @@
-package {{.ModuleName}}
+package {{.PathName}}
 
 import (
-	handler "spb/bsa/internal/{{.ModuleName}}/handler"
-	"spb/bsa/internal/{{.ModuleName}}/service"
+	handler "spb/bsa/internal/{{.PathName}}/handler"
+	"spb/bsa/internal/{{.PathName}}/service"
+	"spb/bsa/pkg/middleware"
 
 	"github.com/gofiber/fiber/v2"
+
+	_ "spb/bsa/pkg/utils"
 )
 
 var (
@@ -16,14 +19,15 @@ var (
 // @function: LoadModule
 // @description: Register {{.ModuleName}} routes
 // @param: router fiber.Router
-func LoadModule(router fiber.Router) {
+// @param: customMiddleware middleware.ICustomMiddleware
+func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddleware) {
 	{{.StructName}}Service = service.NewService()
 	{{.StructName}}Handler = handler.NewHandler({{.StructName}}Service)
 
 	{{.ModuleName}}Route := router.Group("/api/v1/{{.RouteName}}")
-	{{.ModuleName}}Route.Get("/", {{.StructName}}Handler.GetAll)
-	{{.ModuleName}}Route.Get("/:id", {{.StructName}}Handler.GetByID)
-	{{.ModuleName}}Route.Post("/", {{.StructName}}Handler.Create)
-	{{.ModuleName}}Route.Patch("/", {{.StructName}}Handler.Update)
-	{{.ModuleName}}Route.Delete("/:id", {{.StructName}}Handler.Delete)
+	{{.ModuleName}}Route.Get("/", customMiddleware.CheckAccess("{{.PathName}}:list"), {{.StructName}}Handler.GetAll)
+	{{.ModuleName}}Route.Get("/:id", customMiddleware.CheckAccess("{{.PathName}}:read"), {{.StructName}}Handler.GetByID)
+	{{.ModuleName}}Route.Post("/", customMiddleware.CheckAccess("{{.PathName}}:create"), {{.StructName}}Handler.Create)
+	{{.ModuleName}}Route.Patch("/:id", customMiddleware.CheckAccess("{{.PathName}}:update"), {{.StructName}}Handler.Update)
+	{{.ModuleName}}Route.Delete("/:id", customMiddleware.CheckAccess("{{.PathName}}:delete"), {{.StructName}}Handler.Delete)
 }

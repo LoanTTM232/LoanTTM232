@@ -1,7 +1,7 @@
 package handler
 
 import (
-	service "spb/bsa/internal/{{.ModuleName}}/service"
+	service "spb/bsa/internal/{{.PathName}}/service"
 )
 
 type Handler struct {
@@ -11,10 +11,10 @@ type Handler struct {
 // @author: LoanTT
 // @function: NewHandler
 // @description: Create a new {{.ModuleName}} handler
-// @param: {{.ModuleName}} service
+// @param: {{.ModuleName}} serv
 // @return: fiber.Handler
-func NewHandler(service *service.Service) *Handler {
+func NewHandler(serv *service.Service) *Handler {
 	return &Handler{
-		service: service,
+		service: serv,
 	}
 }

@@ -3,6 +3,7 @@ package service
 import (
 	roleModule "spb/bsa/internal/role"
 	roleUtility "spb/bsa/internal/role/utility"
+	"spb/bsa/internal/{{.PathName}}/utility"
 	tb "spb/bsa/pkg/entities"
 )
 
@@ -11,11 +12,13 @@ import (
 // @description: Service for get {{.ModuleName}}
 // @param: {{.ModuleName}}Id string, current{{.StructName}}RoleName string
 // @return: *tb.{{.StructName}}, error
-func (s *Service) GetByID({{.ModuleName}}Id string, current{{.StructName}}RoleName string) (*tb.{{.StructName}}, error) {
+func (s *Service) GetByID({{.ModuleName}}Id, current{{.StructName}}RoleName string) (*tb.{{.StructName}}, error) {
 	var err error
 	{{.ModuleName}} := new(tb.{{.StructName}})
 
-	err = s.db.Where("id = ?", {{.ModuleName}}Id).First({{.ModuleName}}).Error
+	err = s.db.Scopes(utility.EmailIsVerity).
+		Preload("Role.Permissions").
+		Where("id = ?", {{.ModuleName}}Id).First({{.ModuleName}}).Error
 	if err != nil {
 		return nil, err
 	}
