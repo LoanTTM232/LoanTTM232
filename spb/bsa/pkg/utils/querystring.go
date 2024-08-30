@@ -57,7 +57,7 @@ func (p *Pagination) SetPagination(count int) {
 	p.TotalPages = count / p.Items
 	p.Count = count
 	if count%int(p.Items) > 0 {
-		p.TotalPages = p.TotalPages + 1
+		p.TotalPages++
 	}
 	p.nextPageUrl()
 	p.prevPageUrl()

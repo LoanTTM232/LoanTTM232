@@ -75,6 +75,7 @@ type Notification struct {
 }
 
 type Config struct {
+	ProjectName   string `mapstructure:"projectName"`
 	*ServerConf   `mapstructure:"server"`
 	*JWT          `mapstructure:"jwt"`
 	*DbConf       `mapstructure:"database"`

@@ -1,4 +1,4 @@
-package auth
+package cache
 
 import (
 	"time"

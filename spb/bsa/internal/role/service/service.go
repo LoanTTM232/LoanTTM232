@@ -27,7 +27,7 @@ func NewService() *Service {
 // @return: model.RoleResponse
 func MapRoleEntityToResponse(role *tb.Role) model.RoleResponse {
 	return model.RoleResponse{
-		RoleId:   role.ID,
+		RoleID:   role.ID,
 		RoleName: role.Name,
 	}
 }

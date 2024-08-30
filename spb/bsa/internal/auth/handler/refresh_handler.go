@@ -3,6 +3,7 @@ package handler
 import (
 	"spb/bsa/internal/auth/model"
 	"spb/bsa/pkg/auth"
+	"spb/bsa/pkg/cache"
 	"spb/bsa/pkg/config"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
@@ -29,7 +30,7 @@ func (h *Handler) AccountRefreshToken(ctx *fiber.Ctx) error {
 		logger.FErrorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(ErrRefreshTokenFailed)
 	}
-	if auth.JwtCacheApp.IsBlackListed(prevRefreshToken) {
+	if cache.JwtCacheApp.IsBlackListed(prevRefreshToken) {
 		logger.FErrorf("refresh token is blacklisted: %v", prevRefreshToken)
 		return fctx.ErrResponse(ErrRefreshTokenFailed)
 	}
@@ -48,7 +49,7 @@ func (h *Handler) AccountRefreshToken(ctx *fiber.Ctx) error {
 		logger.FErrorf("set token to cookie failed: %v", err)
 		return fctx.ErrResponse(ErrRefreshTokenFailed)
 	}
-	err = auth.JwtCacheApp.SetToBlackList(prevRefreshToken, global.SPB_CONFIG.JWT.ExpireCache)
+	err = cache.JwtCacheApp.SetToBlackList(prevRefreshToken, global.SPB_CONFIG.JWT.ExpireCache)
 	if err != nil {
 		logger.FErrorf("set prev refresh token to black list failed: %v", err)
 		return fctx.ErrResponse(ErrRefreshTokenFailed)

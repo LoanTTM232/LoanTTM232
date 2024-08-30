@@ -5,7 +5,7 @@ import (
 )
 
 type UserClaims struct {
-	UserId      string   `json:"user_id"`
+	UserID      string   `json:"user_id"`
 	Email       string   `json:"email"`
 	Role        string   `json:"role"`
 	Permissions []string `json:"permissions"`
@@ -13,7 +13,7 @@ type UserClaims struct {
 }
 
 type UserResponse struct {
-	UserId   string  `json:"user_id"`
+	UserID   string  `json:"user_id"`
 	Email    string  `json:"email"`
 	FullName *string `json:"full_name,omitempty"`
 	Phone    *string `json:"phone,omitempty"`

@@ -57,7 +57,7 @@ func mappingLoginResponse(user *entities.User, tokens map[string]string) model.L
 	return model.LoginResponse{
 		AccessToken: tokens[config.ACCESS_TOKEN_NAME],
 		User: model.UserResponse{
-			UserId:   user.ID,
+			UserID:   user.ID,
 			FullName: user.FullName,
 			Email:    user.Email,
 			Phone:    user.Phone,

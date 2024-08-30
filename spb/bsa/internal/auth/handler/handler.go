@@ -6,6 +6,7 @@ import (
 
 	"spb/bsa/internal/auth/model"
 	"spb/bsa/pkg/auth"
+	"spb/bsa/pkg/cache"
 	"spb/bsa/pkg/config"
 	"spb/bsa/pkg/entities"
 	"spb/bsa/pkg/global"
@@ -131,8 +132,8 @@ func GenerateUserToken(user *entities.User, tokenType string) *jwt.Token {
 // @param: tokens map[string]string
 // @return: err error
 func TokenNext(fctx *utils.FiberCtx, ctx *fiber.Ctx, user *entities.User, tokens map[string]string) error {
-	if prevToken, err := auth.JwtCacheApp.GetJwt(user.Email); err == nil && prevToken == "" {
-		if err = auth.JwtCacheApp.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME]); err != nil {
+	if prevToken, err := cache.JwtCacheApp.GetJwt(user.Email); err == nil && prevToken == "" {
+		if err = cache.JwtCacheApp.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME]); err != nil {
 			return logger.Errorf("error set token to cache: %v", err)
 		}
 		if err := SetTokenToCookie(tokens, ctx); err != nil {
@@ -141,10 +142,10 @@ func TokenNext(fctx *utils.FiberCtx, ctx *fiber.Ctx, user *entities.User, tokens
 	} else if err != nil {
 		return logger.Errorf("error get token to cache: %v", err)
 	} else {
-		if err = auth.JwtCacheApp.SetToBlackList(prevToken, global.SPB_CONFIG.JWT.AccessTokenExp); err != nil {
+		if err = cache.JwtCacheApp.SetToBlackList(prevToken, global.SPB_CONFIG.JWT.AccessTokenExp); err != nil {
 			return logger.Errorf("error set token to cache: %v", err)
 		}
-		if err = auth.JwtCacheApp.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME]); err != nil {
+		if err = cache.JwtCacheApp.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME]); err != nil {
 			return logger.Errorf("error set token to cache: %v", err)
 		}
 		if err := SetTokenToCookie(tokens, ctx); err != nil {

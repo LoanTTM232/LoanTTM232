@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"path"
 	"path/filepath"
+	"regexp"
 	"runtime"
+	"strings"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -88,4 +90,18 @@ func IsSubSet(subSet, setCheck []string) bool {
 		}
 	}
 	return false
+}
+
+// @author: LoanTT
+// @function: CreateSlug
+// @description: create slug
+// @param: val string
+// @return: string
+func CreateSlug(val string) string {
+	slug := strings.ToLower(val)
+	reg := regexp.MustCompile(`[^\W]+`)
+	slug = reg.ReplaceAllString(slug, "-")
+
+	slug = strings.Trim(slug, "-")
+	return slug
 }

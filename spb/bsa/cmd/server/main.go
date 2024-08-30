@@ -8,14 +8,16 @@ import (
 	_ "spb/bsa/docs"
 	"spb/bsa/internal/auth"
 	"spb/bsa/internal/role"
+	"spb/bsa/internal/unit_price"
+	"spb/bsa/internal/unit_service"
 	"spb/bsa/internal/user"
+	"spb/bsa/pkg/cache"
 	"spb/bsa/pkg/database"
 	"spb/bsa/pkg/global"
 	zaplog "spb/bsa/pkg/logger"
 	"spb/bsa/pkg/middleware"
-	"spb/bsa/pkg/redis"
+	"spb/bsa/pkg/validate"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -49,7 +51,7 @@ func (f *Fiber) GetApp() {
 	// load env variables
 	err = global.SPB_CONFIG.LoadEnvVariables()
 	if err != nil {
-		fmt.Printf("failed to load env variables: %v", err)
+		fmt.Printf("failed to load env variables: %v\n", err)
 		runtime.Goexit()
 	}
 	// initialize logger
@@ -57,23 +59,26 @@ func (f *Fiber) GetApp() {
 	// connect database
 	global.SPB_DB, err = database.ConnectDB(global.SPB_CONFIG)
 	if err != nil {
-		fmt.Print(err.Error())
+		fmt.Println(err.Error())
 		runtime.Goexit()
 	}
 	// connect redis
-	global.SPB_REDIS, err = redis.ConnectRedis(global.SPB_CONFIG)
+	global.SPB_REDIS, err = cache.ConnectRedis(global.SPB_CONFIG)
 	if err != nil {
-		fmt.Print(err.Error())
+		fmt.Println(err.Error())
 		runtime.Goexit()
 	}
-
 	// initialize validator
-	global.SPB_VALIDATOR = validator.New()
+	global.SPB_VALIDATOR, err = validate.NewValidator()
+	if err != nil {
+		fmt.Println(err.Error())
+		runtime.Goexit()
+	}
 	// create fiber app
 	f.App = fiber.New(fiber.Config{
 		CaseSensitive:                true,
 		StrictRouting:                false,
-		ServerHeader:                 "Sport Booking",
+		ServerHeader:                 global.SPB_CONFIG.ProjectName,
 		BodyLimit:                    500 << 20, // 500 MB
 		DisablePreParseMultipartForm: true,
 		StreamRequestBody:            true,
@@ -108,6 +113,7 @@ func (f *Fiber) LoadRoutes() {
 		"/api/v1/auth/login",
 		"/api/v1/auth/register",
 		"/api/v1/auth/refresh",
+		"/apt/v1/locations",
 	}
 	router := f.App.Group("",
 		custMiddlewares.Log(),                           // add logging to all routes
@@ -117,6 +123,8 @@ func (f *Fiber) LoadRoutes() {
 	auth.LoadModule(router, custMiddlewares)
 	role.LoadModule(router, custMiddlewares)
 	user.LoadModule(router, custMiddlewares)
+	unit_service.LoadModule(router, custMiddlewares)
+	unit_price.LoadModule(router, custMiddlewares)
 
 	// a custom 404 handler
 	f.App.Use(func(ctx *fiber.Ctx) error {

@@ -12,7 +12,7 @@ import (
 // @return: model.RoleResponse
 func MapRoleEntityToResponse(role *tb.Role) model.RoleResponse {
 	return model.RoleResponse{
-		RoleId:   role.ID,
+		RoleID:   role.ID,
 		RoleName: role.Name,
 		Permissions: func() []model.PermissionResponse {
 			var permissions []model.PermissionResponse
@@ -31,7 +31,7 @@ func MapRoleEntityToResponse(role *tb.Role) model.RoleResponse {
 // @return: model.PermissionResponse
 func MapPermissionEntityToResponse(permission *tb.Permission) model.PermissionResponse {
 	return model.PermissionResponse{
-		PermissionId:   permission.ID,
+		PermissionID:   permission.ID,
 		PermissionName: permission.Name,
 	}
 }
