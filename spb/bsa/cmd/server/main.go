@@ -8,6 +8,7 @@ import (
 	_ "spb/bsa/docs"
 	"spb/bsa/internal/auth"
 	"spb/bsa/internal/role"
+	"spb/bsa/internal/sport_type"
 	"spb/bsa/internal/unit_price"
 	"spb/bsa/internal/unit_service"
 	"spb/bsa/internal/user"
@@ -125,6 +126,7 @@ func (f *Fiber) LoadRoutes() {
 	user.LoadModule(router, custMiddlewares)
 	unit_service.LoadModule(router, custMiddlewares)
 	unit_price.LoadModule(router, custMiddlewares)
+	sport_type.LoadModule(router, custMiddlewares)
 
 	// a custom 404 handler
 	f.App.Use(func(ctx *fiber.Ctx) error {
