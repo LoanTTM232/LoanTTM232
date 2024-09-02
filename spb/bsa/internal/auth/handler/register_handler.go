@@ -14,11 +14,17 @@ var (
 	ErrRegisterFailed     = fiber.NewError(fiber.StatusBadRequest, "register failed")
 )
 
-// @author: LoanTT
-// @function: AccountRegister
-// @description: handler account register with email and password
-// @param: ctx *fiber.Ctx
-// @return: err error
+//	 Accountlogin godoc
+//
+//		@summary		register new user
+//		@description	register new user
+//		@tags			  auth
+//		@accept			json
+//		@produce		json
+//	  @param			group body model.RegisterRequest true "register"
+//		@success		200 {object} utils.JSONResult{data=nil,message=string}	"register success"
+//		@failure		400 {object} utils.ErrorResult{message=string}					"register failed"
+//		@router			/api/v1/auth/register [post]
 func (h *Handler) AccountRegister(ctx *fiber.Ctx) error {
 	reqBody := new(model.RegisterRequest)
 

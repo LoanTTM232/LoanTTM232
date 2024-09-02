@@ -14,11 +14,16 @@ import (
 
 var ErrRefreshTokenFailed = fiber.NewError(fiber.StatusBadRequest, "please try to login again")
 
-// @author: LoanTT
-// @function: AccountRefreshToken
-// @description: Mapping refresh token response
-// @return: error
-// @param: ctx *fiber.Ctx
+//	 Accountlogin godoc
+//
+//		@summary		refresh token
+//		@description	refresh token
+//		@tags			  auth
+//		@accept			json
+//		@produce		json
+//		@success		200 {object} utils.JSONResult{data=model.LoginResponse}	"refresh token success"
+//		@failure		400 {object} utils.ErrorResult{message=string}					"refresh token failed"
+//		@router			/api/v1/auth/refresh [post]
 func (h *Handler) AccountRefreshToken(ctx *fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
