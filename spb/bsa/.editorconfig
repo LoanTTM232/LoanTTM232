@@ -6,8 +6,8 @@ root = true
 # Tab indentation
 [*]
 indent_style = tab
-indent_size = 4
+indent_size = 2
 
 [{*.json,*.yaml,*.yml}]
 indent_style = space
-indent_size = 4
+indent_size = 2
