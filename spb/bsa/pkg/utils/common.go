@@ -99,7 +99,7 @@ func IsSubSet(subSet, setCheck []string) bool {
 // @return: string
 func CreateSlug(val string) string {
 	slug := strings.ToLower(val)
-	reg := regexp.MustCompile(`[^\W]+`)
+	reg := regexp.MustCompile(`\w+`)
 	slug = reg.ReplaceAllString(slug, "-")
 
 	slug = strings.Trim(slug, "-")

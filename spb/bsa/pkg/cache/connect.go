@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"runtime"
 
-	"spb/bsa/pkg/config"
-
 	"github.com/gofiber/storage/redis/v3"
+
+	"spb/bsa/pkg/config"
 )
 
 // @author: LoanTT
@@ -41,4 +41,12 @@ func ConnectRedis(configVal *config.Config) (*redis.Storage, error) {
 		return nil, err
 	}
 	return store, nil
+}
+
+// @author: LoanTT
+// @function: CloseRedis
+// @description: Close redis
+// @param: store *redis.Storage
+func CloseRedis(store *redis.Storage) {
+	_ = store.Close()
 }

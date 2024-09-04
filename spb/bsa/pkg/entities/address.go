@@ -1,5 +1,7 @@
 package entities
 
+import "fmt"
+
 var AddressTN = "address"
 
 type Address struct {
@@ -13,4 +15,16 @@ type Address struct {
 
 func (Address) TableName() string {
 	return AddressTN
+}
+
+func (a *Address) GetGeography() (longitude, latitude float64) {
+	_, err := fmt.Sscanf(a.LocationGeography, "POINT(%f %f)", &longitude, &latitude)
+	if err != nil {
+		return 0, 0
+	}
+	return
+}
+
+func (a *Address) SetGeography(longitude, latitude float64) {
+	a.LocationGeography = fmt.Sprintf("POINT(%f %f)", longitude, latitude)
 }

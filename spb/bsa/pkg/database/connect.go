@@ -80,3 +80,12 @@ func AutoMigrate(db *gorm.DB) error {
 
 	return nil
 }
+
+// @author: LoanTT
+// @function: CloseDB
+// @description: Close database
+// @param: db *gorm.DB
+func CloseDB(db *gorm.DB) {
+	dbInstance, _ := db.DB()
+	_ = dbInstance.Close()
+}
