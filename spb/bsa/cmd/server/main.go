@@ -143,6 +143,8 @@ func (f *Fiber) Start() {
 	fmt.Println(strings.Repeat("*", 50))
 	fmt.Printf("Server env: %+v\n", global.SPB_CONFIG.ServerConf.Env)
 	fmt.Println(strings.Repeat("*", 50))
+	defer database.CloseDB(global.SPB_DB)
+	defer cache.CloseRedis(global.SPB_REDIS)
 
 	err := f.App.Listen(fmt.Sprintf(":%s", global.SPB_CONFIG.ServerConf.Port))
 	if err != nil {
