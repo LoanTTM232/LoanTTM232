@@ -118,11 +118,3 @@ Manage orders by Admin, Club Owner, Member, User
 | 6   | &#x274c;    | POST   | /orders/approve-payment                                            | order:approve_payment | Approve payment order            |
 
 ---
-
-#### **media**
-
-Manage media (images, videos)
-
-| No  | Implemented | Method | Path       | Permission | Description |
-| --- | ----------- | ------ | ---------- | ---------- | ----------- |
-| 1   | &#x274c;    | GET    | /media/:id |            | Get media   |
