@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"spb/bsa/internal/sport_type/model"
+	"spb/bsa/internal/sport_type/utility"
 	tb "spb/bsa/pkg/entities"
 )
 
@@ -22,21 +23,10 @@ func (s *Service) Create(reqBody *model.CreateSportTypeRequest) (*tb.SportType, 
 		return nil, ErrSportTypeExists
 	}
 
-	sportType := mapCreateRequestToEntity(reqBody)
+	sportType := utility.MapCreateRequestToEntity(reqBody)
 	if err := s.db.Create(&sportType).Error; err != nil {
 		return nil, err
 	}
 
 	return sportType, nil
-}
-
-// @author: LoanTT
-// @function: mapCreateRequestToEntity
-// @description: Mapping create sportType request to sportType entity
-// @param: reqBody *model.CreateSportTypeRequest
-// @return: *tb.SportType
-func mapCreateRequestToEntity(reqBody *model.CreateSportTypeRequest) *tb.SportType {
-	return &tb.SportType{
-		Name: reqBody.Name,
-	}
 }

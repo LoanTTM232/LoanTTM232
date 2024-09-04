@@ -10,20 +10,20 @@ import (
 
 var ErrGetLocationsFailed = fiber.NewError(fiber.StatusNotFound, "get locations failed")
 
-// LocationGetAll godoc
+// GetAll godoc
 //
-// @Summary 		Get all locations
-// @Description 	Get all locations
-// @Tags 			locations
-// @Accept  		json
-// @Produce 		json
-// @Param 			i query int false "Number items on page"
-// @Param 			p query int false "Page number"
-// @Param			b query string false "Order by"
-// @Param			t query string false "Order type"
-// @Success 		200 {object} utils.JSONResult{data=model.LocationsResponse}	"Get all locations success"
-// @Failure 		404 {object} utils.ErrorResult{message=string}        		"Get all locations failed"
-// @Router 			/api/v1/locations [get]
+// @summary 		Get all locations
+// @description 	Get all locations
+// @tags 			locations
+// @accept  		json
+// @produce 		json
+// @param 			i query int false "Number items on page"
+// @param 			p query int false "Page number"
+// @param			b query string false "Order by"
+// @param			t query string false "Order type"
+// @success 		200 {object} utils.JSONResult{data=model.LocationsResponse}	"Get all locations success"
+// @failure 		404 {object} utils.ErrorResult{message=string}        		"Get all locations failed"
+// @router 			/api/v1/locations [get]
 func (s *Handler) GetAll(ctx *fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 

@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"spb/bsa/internal/unit_service/model"
+	"spb/bsa/internal/unit_service/utility"
 	tb "spb/bsa/pkg/entities"
 
 	"gorm.io/gorm/clause"
@@ -30,7 +31,7 @@ func (s *Service) Update(reqBody *model.UpdateUnitServiceRequest, unitServiceId 
 		return nil, err
 	}
 
-	unitServiceUpdate := mapUpdateFields(reqBody)
+	unitServiceUpdate := utility.MapUpdateRequestToEntity(reqBody)
 	// update unitService
 	err = s.db.Model(&unitServices).
 		Clauses(clause.Returning{}).
@@ -44,25 +45,4 @@ func (s *Service) Update(reqBody *model.UpdateUnitServiceRequest, unitServiceId 
 	}
 
 	return &unitServices[0], nil
-}
-
-// @author: LoanTT
-// @function: mapUpdateFields
-// @description: mapping update fields
-// @param: reqBody *model.UpdateUnitServiceRequest
-// @return: tb.UnitService
-func mapUpdateFields(reqBody *model.UpdateUnitServiceRequest) tb.UnitService {
-	var unitServiceUpdate tb.UnitService
-
-	if reqBody.Icon != "" {
-		unitServiceUpdate.Icon = reqBody.Icon
-	}
-	if reqBody.Price != 0.0 {
-		unitServiceUpdate.Price = reqBody.Price
-	}
-	if reqBody.Description != "" {
-		unitServiceUpdate.Description = reqBody.Description
-	}
-
-	return unitServiceUpdate
 }

@@ -20,9 +20,9 @@ type SportTypesResponse struct {
 }
 
 type CreateSportTypeRequest struct {
-	Name string `json:"name"`
+	Name string `json:"name" validate:"required,max=255"`
 }
 
 type UpdateSportTypeRequest struct {
-	Name string `json:"name"`
+	Name string `json:"name" validate:"required,max=255"`
 }

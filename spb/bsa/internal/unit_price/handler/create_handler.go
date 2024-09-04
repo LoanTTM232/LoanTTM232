@@ -12,17 +12,17 @@ import (
 
 var ErrCreateUnitPriceFailed = fiber.NewError(fiber.StatusBadRequest, "create unitPrice failed")
 
-// UnitPriceGetAll godoc
+// Create godoc
 //
-// @Summary 		Create unitPrice
-// @Description 	Create unitPrice
-// @Tags 			unit-prices
-// @Accept  		json
-// @Produce 		json
-// @Param 			Group body model.CreateUnitPriceRequest true "Create unitPrice"
-// @Success 		200 {object} utils.JSONResult{data=model.UnitPriceResponse}		"Create unitPrice success"
-// @Failure 		400 {object} utils.ErrorResult{message=string}        		"Create unitPrice failed"
-// @Router 			/api/v1/unit-prices [post]
+// @summary 		Create unitPrice
+// @description 	Create unitPrice
+// @tags 			unit-prices
+// @accept  		json
+// @produce 		json
+// @param 			Group body model.CreateUnitPriceRequest true "Create unitPrice"
+// @success 		200 {object} utils.JSONResult{data=model.UnitPriceResponse}		"Create unitPrice success"
+// @failure 		400 {object} utils.ErrorResult{message=string}        		"Create unitPrice failed"
+// @router 			/api/v1/unit-prices [post]
 func (s *Handler) Create(ctx *fiber.Ctx) error {
 	var err error
 	reqBody := new(model.CreateUnitPriceRequest)

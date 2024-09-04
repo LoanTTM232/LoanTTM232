@@ -12,17 +12,17 @@ import (
 
 var ErrUpdateUnitPriceFailed = fiber.NewError(fiber.StatusBadRequest, "update unitPrice failed")
 
-// UnitPriceGetAll godoc
+// Update godoc
 //
-// @Summary 		Update unitPrice by id
-// @Description 	Update unitPrice by id
-// @Tags 			unit-prices
-// @Accept  		json
-// @Produce 		json
-// @Param 			unitPrice body model.UpdateUnitPriceRequest true "UnitPrice data"
-// @Success 		200 {object} utils.JSONResult{data=model.UnitPriceResponse}		"Update unitPrice by id success"
-// @Failure 		400 {object} utils.ErrorResult{message=string}      "Update unitPrice by id failed"
-// @Router 			/api/v1/unit-prices/{id} [patch]
+// @summary 		Update unitPrice by id
+// @description 	Update unitPrice by id
+// @tags 			unit-prices
+// @accept  		json
+// @produce 		json
+// @param 			unitPrice body model.UpdateUnitPriceRequest true "UnitPrice data"
+// @success 		200 {object} utils.JSONResult{data=model.UnitPriceResponse}		"Update unitPrice by id success"
+// @failure 		400 {object} utils.ErrorResult{message=string}      "Update unitPrice by id failed"
+// @router 			/api/v1/unit-prices/{id} [patch]
 func (s *Handler) Update(ctx *fiber.Ctx) error {
 	var err error
 	var unitPriceId string

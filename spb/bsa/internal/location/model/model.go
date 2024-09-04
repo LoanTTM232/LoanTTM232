@@ -4,7 +4,7 @@ type LocationRequest struct {
 	Province    string `json:"province" validate:"required,min=2,max=255"`
 	City        string `json:"city" validate:"required,min=2,max=255"`
 	District    string `json:"district" validate:"required,min=2,max=255"`
-	Description string `json:"description" validate:"required"`
+	Description string `json:"description" validate:"omitempty,max=3000"`
 }
 
 type LocationResponse struct {
@@ -24,13 +24,13 @@ type LocationsResponse struct {
 }
 
 type CreateLocationRequest struct {
-	Locations []LocationRequest `json:"locations"`
+	Locations []LocationRequest `json:"locations" validate:"required,min=1"`
 }
 
 type UpdateLocationRequest struct {
 	LocationID  string
-	Province    *string `json:"province,omitempty"`
-	City        *string `json:"city,omitempty"`
-	District    *string `json:"district,omitempty"`
-	Description *string `json:"description,omitempty"`
+	Province    *string `json:"province,omitempty" validate:"omitempty,min=2,max=255"`
+	City        *string `json:"city,omitempty" validate:"omitempty,min=2,max=255"`
+	District    *string `json:"district,omitempty" validate:"omitempty,min=2,max=255"`
+	Description *string `json:"description,omitempty" validate:"omitempty,max=3000"`
 }

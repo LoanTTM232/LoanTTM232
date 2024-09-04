@@ -9,17 +9,17 @@ import (
 
 var ErrDeleteUnitPriceFailed = fiber.NewError(fiber.StatusBadRequest, "delete unitPrice failed")
 
-// UnitPriceGetAll godoc
+// Delete godoc
 //
-// @Summary 		Delete unitPrice
-// @Description 	Delete unitPrice
-// @Tags 			unit-prices
-// @Accept  		json
-// @Produce 		json
-// @Param 			id path string true "unitPrice id"
-// @Success 		200 {object} utils.JSONResult{message=string}		"Delete unitPrice success"
-// @Failure 		400 {object} utils.ErrorResult{message=string}      "Delete unitPrice failed"
-// @Router 			/api/v1/unit-prices/{id} [delete]
+// @summary 		Delete unitPrice
+// @description 	Delete unitPrice
+// @tags 			unit-prices
+// @accept  		json
+// @produce 		json
+// @param 			id path string true "unitPrice id"
+// @success 		200 {object} utils.JSONResult{message=string}		"Delete unitPrice success"
+// @failure 		400 {object} utils.ErrorResult{message=string}      "Delete unitPrice failed"
+// @router 			/api/v1/unit-prices/{id} [delete]
 func (s *Handler) Delete(ctx *fiber.Ctx) error {
 	var err error
 	var unitPriceId string

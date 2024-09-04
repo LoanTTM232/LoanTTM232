@@ -12,17 +12,17 @@ import (
 
 var ErrUpdateUserFailed = fiber.NewError(fiber.StatusBadRequest, "update user failed")
 
-// UserGetAll godoc
+// Update godoc
 //
-// @Summary 		Update user by id
-// @Description 	Update user by id
-// @Tags 			users
-// @Accept  		json
-// @Produce 		json
-// @Param 			user body model.UpdateUserRequest true "User data"
-// @Success 		200 {object} utils.JSONResult{data=model.UserResponse}		"Update user by id success"
-// @Failure 		400 {object} utils.ErrorResult{message=string}      "Update user by id failed"
-// @Router 			/api/v1/users/{id} [patch]
+// @summary 		Update user by id
+// @description 	Update user by id
+// @tags 			users
+// @accept  		json
+// @produce 		json
+// @param 			user body model.UpdateUserRequest true "User data"
+// @success 		200 {object} utils.JSONResult{data=model.UserResponse}		"Update user by id success"
+// @failure 		400 {object} utils.ErrorResult{message=string}      "Update user by id failed"
+// @router 			/api/v1/users/{id} [patch]
 func (s *Handler) Update(ctx *fiber.Ctx) error {
 	var err error
 	var userId string

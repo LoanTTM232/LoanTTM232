@@ -14,15 +14,15 @@ var ErrUpdateLocationFailed = fiber.NewError(fiber.StatusBadRequest, "update loc
 
 // LocationGetAll godoc
 //
-// @Summary 		Update location by id
-// @Description 	Update location by id
-// @Tags 			locations
-// @Accept  		json
-// @Produce 		json
-// @Param 			location body model.UpdateLocationRequest true "Location data"
-// @Success 		200 {object} utils.JSONResult{data=model.LocationResponse}		"Update location by id success"
-// @Failure 		400 {object} utils.ErrorResult{message=string}      "Update location by id failed"
-// @Router 			/api/v1/locations/{id} [patch]
+// @summary 		Update location by id
+// @description 	Update location by id
+// @tags 			locations
+// @accept  		json
+// @produce 		json
+// @param 			location body model.UpdateLocationRequest true "Location data"
+// @success 		200 {object} utils.JSONResult{data=model.LocationResponse}		"Update location by id success"
+// @failure 		400 {object} utils.ErrorResult{message=string}      "Update location by id failed"
+// @router 			/api/v1/locations/{id} [patch]
 func (s *Handler) Update(ctx *fiber.Ctx) error {
 	var err error
 	var locationId string

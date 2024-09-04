@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"spb/bsa/internal/sport_type/model"
+	"spb/bsa/internal/sport_type/utility"
 	tb "spb/bsa/pkg/entities"
 
 	"gorm.io/gorm/clause"
@@ -18,12 +19,11 @@ var ErrSportTypeNotFound = errors.New("sportType not found")
 // @param: string sportType id
 // @return: sportType entities.SportType, error
 func (s *Service) Update(reqBody *model.UpdateSportTypeRequest, sportTypeId string) (*tb.SportType, error) {
-	var err error
 	var count int64
 	var sportTypes []tb.SportType
 
 	// check if sportType exists
-	if err = s.db.Model(tb.SportType{}).
+	if err := s.db.Model(tb.SportType{}).
 		Where("id = ?", sportTypeId).
 		Count(&count).Error; err == nil && count == 0 {
 		return nil, ErrSportTypeNotFound
@@ -31,9 +31,9 @@ func (s *Service) Update(reqBody *model.UpdateSportTypeRequest, sportTypeId stri
 		return nil, err
 	}
 
-	sportTypeUpdate := mapUpdateFields(reqBody)
 	// update sportType
-	err = s.db.Model(&sportTypes).
+	sportTypeUpdate := utility.MapUpdateRequestToEntity(reqBody)
+	err := s.db.Model(&sportTypes).
 		Clauses(clause.Returning{}).
 		Where("id = ?", sportTypeId).
 		Preload("Role.Permissions").
@@ -46,16 +46,4 @@ func (s *Service) Update(reqBody *model.UpdateSportTypeRequest, sportTypeId stri
 	}
 
 	return &sportTypes[0], nil
-}
-
-// @author: LoanTT
-// @function: mapUpdateFields
-// @description: mapping update fields
-// @param: reqBody *model.UpdateSportTypeRequest
-// @return: tb.SportType
-func mapUpdateFields(reqBody *model.UpdateSportTypeRequest) tb.SportType {
-	var sportTypeUpdate tb.SportType
-
-	sportTypeUpdate.Name = reqBody.Name
-	return sportTypeUpdate
 }

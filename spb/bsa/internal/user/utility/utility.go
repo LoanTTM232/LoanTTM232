@@ -25,6 +25,23 @@ func MapUserEntityToResponse(user *tb.User) model.UserResponse {
 }
 
 // @author: LoanTT
+// @function: MapUsersEntityToResponse
+// @description: Map users entity to response
+// @param: users []*tb.User
+// @return: *model.GetUsersResponse
+func MapUsersEntityToResponse(users []*tb.User, reqBody *model.GetUsersRequest) *model.GetUsersResponse {
+	res := new(model.GetUsersResponse)
+	for id := range users {
+		res.Users = append(res.Users, MapUserEntityToResponse(users[id]))
+	}
+
+	res.Total = uint(len(res.Users))
+	res.Pagination = &reqBody.Pagination
+	res.Pagination.SetPagination(int(res.Total))
+	return res
+}
+
+// @author: LoanTT
 // @function: Check email is verify
 // @description: Return db
 // @return: *gorm.DB

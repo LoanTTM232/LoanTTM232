@@ -9,17 +9,17 @@ import (
 
 var ErrDeleteUnitServiceFailed = fiber.NewError(fiber.StatusBadRequest, "delete unit_service failed")
 
-// UnitServiceGetAll godoc
+// Delete godoc
 //
-// @Summary 		Delete unitService
-// @Description 	Delete unitService
-// @Tags 			unit-services
-// @Accept  		json
-// @Produce 		json
-// @Param 			id path string true "unitService id"
-// @Success 		200 {object} utils.JSONResult{message=string}		"Delete unitService success"
-// @Failure 		400 {object} utils.ErrorResult{message=string}      "Delete unitService failed"
-// @Router 			/api/v1/unit-services/{id} [delete]
+// @summary 		Delete unitService
+// @description 	Delete unitService
+// @tags 			unit-services
+// @accept  		json
+// @produce 		json
+// @param 			id path string true "unitService id"
+// @success 		200 {object} utils.JSONResult{message=string}		"Delete unitService success"
+// @failure 		400 {object} utils.ErrorResult{message=string}      "Delete unitService failed"
+// @router 			/api/v1/unit-services/{id} [delete]
 func (s *Handler) Delete(ctx *fiber.Ctx) error {
 	var err error
 	var unitServiceId string

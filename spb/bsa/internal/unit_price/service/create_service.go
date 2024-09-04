@@ -22,23 +22,10 @@ func (s *Service) Create(reqBody *model.CreateUnitPriceRequest) (*tb.UnitPrice, 
 		return nil, err
 	}
 
-	unitPrice := mapCreateRequestToEntity(reqBody)
-	if err := s.db.Create(&unitPrice).Error; err != nil {
+	unitPrice := utility.MapCreateRequestToEntity(reqBody)
+	if err := s.db.Create(unitPrice).Error; err != nil {
 		return nil, err
 	}
 
 	return unitPrice, nil
-}
-
-// @author: LoanTT
-// @function: mapCreateRequestToEntity
-// @description: Mapping create unitPrice request to unitPrice entity
-// @param: reqBody *model.CreateUnitPriceRequest
-// @return: *tb.UnitPrice
-func mapCreateRequestToEntity(reqBody *model.CreateUnitPriceRequest) *tb.UnitPrice {
-	return &tb.UnitPrice{
-		Price:     reqBody.Price,
-		StartTime: reqBody.StartTime,
-		EndTime:   reqBody.EndTime,
-	}
 }

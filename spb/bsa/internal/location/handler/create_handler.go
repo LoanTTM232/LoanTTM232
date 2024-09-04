@@ -12,17 +12,17 @@ import (
 
 var ErrCreateLocationFailed = fiber.NewError(fiber.StatusBadRequest, "create location failed")
 
-// LocationGetAll godoc
+// Create godoc
 //
-// @Summary 		Create location
-// @Description 	Create location
-// @Tags 			locations
-// @Accept  		json
-// @Produce 		json
-// @Param 			Group body model.CreateLocationRequest true "Create location"
-// @Success 		200 {object} utils.JSONResult{data=model.LocationsResponse}		"Create location success"
-// @Failure 		400 {object} utils.ErrorResult{message=string}        			"Create location failed"
-// @Router 			/api/v1/locations [post]
+// @summary 		Create location
+// @sescription 	Create location
+// @tags 			locations
+// @accept  		json
+// @produce 		json
+// @param 			Group body model.CreateLocationRequest true "Create location"
+// @success 		200 {object} utils.JSONResult{data=model.LocationsResponse}		"Create location success"
+// @failure 		400 {object} utils.ErrorResult{message=string}        			"Create location failed"
+// @router 			/api/v1/locations [post]
 func (s *Handler) Create(ctx *fiber.Ctx) error {
 	var err error
 	reqBody := new(model.CreateLocationRequest)

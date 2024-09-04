@@ -12,17 +12,17 @@ import (
 
 var ErrUpdateUnitServiceFailed = fiber.NewError(fiber.StatusBadRequest, "update unit_service failed")
 
-// UnitServiceGetAll godoc
+// Update godoc
 //
-// @Summary 		Update unitService by id
-// @Description 	Update unitService by id
-// @Tags 			unit-services
-// @Accept  		json
-// @Produce 		json
-// @Param 			unitService body model.UpdateUnitServiceRequest true "UnitService data"
-// @Success 		200 {object} utils.JSONResult{data=model.UnitServiceResponse}		"Update unitService by id success"
-// @Failure 		400 {object} utils.ErrorResult{message=string}     					"Update unitService by id failed"
-// @Router 			/api/v1/unit-services/{id} [patch]
+// @summary 		Update unitService by id
+// @description 	Update unitService by id
+// @tags 			unit-services
+// @accept  		json
+// @produce 		json
+// @param 			unitService body model.UpdateUnitServiceRequest true "UnitService data"
+// @success 		200 {object} utils.JSONResult{data=model.UnitServiceResponse}		"Update unitService by id success"
+// @failure 		400 {object} utils.ErrorResult{message=string}     					"Update unitService by id failed"
+// @router 			/api/v1/unit-services/{id} [patch]
 func (s *Handler) Update(ctx *fiber.Ctx) error {
 	var err error
 	var unitServiceId string

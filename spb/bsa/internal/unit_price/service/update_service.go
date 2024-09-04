@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"spb/bsa/internal/unit_price/model"
+	"spb/bsa/internal/unit_price/utility"
 	tb "spb/bsa/pkg/entities"
 
 	"gorm.io/gorm/clause"
@@ -31,8 +32,8 @@ func (s *Service) Update(reqBody *model.UpdateUnitPriceRequest, unitPriceId stri
 		return nil, err
 	}
 
-	unitPriceUpdate := mapUpdateFields(reqBody)
 	// update unitPrice
+	unitPriceUpdate := utility.MapUpdateRequestToEntity(reqBody)
 	err = s.db.Model(&unit_prices).
 		Clauses(clause.Returning{}).
 		Where("id = ?", unitPriceId).
@@ -45,24 +46,4 @@ func (s *Service) Update(reqBody *model.UpdateUnitPriceRequest, unitPriceId stri
 	}
 
 	return &unit_prices[0], nil
-}
-
-// @author: LoanTT
-// @function: mapUpdateFields
-// @description: mapping update fields
-// @param: reqBody *model.UpdateUnitPriceRequest
-// @return: tb.UnitPrice
-func mapUpdateFields(reqBody *model.UpdateUnitPriceRequest) tb.UnitPrice {
-	var unitPriceUpdate tb.UnitPrice
-
-	if reqBody.Price != nil {
-		unitPriceUpdate.Price = *reqBody.Price
-	}
-	if reqBody.StartTime != nil {
-		unitPriceUpdate.StartTime = *reqBody.StartTime
-	}
-	if reqBody.EndTime != nil {
-		unitPriceUpdate.EndTime = *reqBody.EndTime
-	}
-	return unitPriceUpdate
 }

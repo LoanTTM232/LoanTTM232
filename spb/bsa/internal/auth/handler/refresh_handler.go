@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"spb/bsa/internal/auth/model"
+	"spb/bsa/internal/auth/utility"
 	"spb/bsa/pkg/auth"
 	"spb/bsa/pkg/cache"
 	"spb/bsa/pkg/config"
@@ -14,16 +14,16 @@ import (
 
 var ErrRefreshTokenFailed = fiber.NewError(fiber.StatusBadRequest, "please try to login again")
 
-//	 Accountlogin godoc
+// AccountRefreshToken godoc
 //
-//		@summary		refresh token
-//		@description	refresh token
-//		@tags			  auth
-//		@accept			json
-//		@produce		json
-//		@success		200 {object} utils.JSONResult{data=model.LoginResponse}	"refresh token success"
-//		@failure		400 {object} utils.ErrorResult{message=string}					"refresh token failed"
-//		@router			/api/v1/auth/refresh [post]
+// @summary		refresh token
+// @description	refresh token
+// @tags			auth
+// @accept			json
+// @produce		json
+// @success		200 {object} utils.JSONResult{data=model.LoginResponse}	"refresh token success"
+// @failure		400 {object} utils.ErrorResult{message=string}			"refresh token failed"
+// @router			/api/v1/auth/refresh [post]
 func (h *Handler) AccountRefreshToken(ctx *fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
@@ -60,17 +60,6 @@ func (h *Handler) AccountRefreshToken(ctx *fiber.Ctx) error {
 		return fctx.ErrResponse(ErrRefreshTokenFailed)
 	}
 
-	refreshResponse := mappingRefreshResponse(tokens)
+	refreshResponse := utility.MappingRefreshResponse(tokens)
 	return fctx.JsonResponse(fiber.StatusOK, refreshResponse)
-}
-
-// @author: LoanTT
-// @function: mappingRefreshResponse
-// @description: Mapping refresh token response
-// @return: model.RefreshTokenResponse
-// @param: tokens map[string]string
-func mappingRefreshResponse(tokens map[string]string) model.RefreshTokenResponse {
-	return model.RefreshTokenResponse{
-		AccessToken: tokens[config.ACCESS_TOKEN_NAME],
-	}
 }

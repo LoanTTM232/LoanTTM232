@@ -15,17 +15,17 @@ var (
 	ErrUnitPriceNotFound  = fiber.NewError(fiber.StatusNotFound, "unitPrice not found")
 )
 
-// UnitPriceGetAll godoc
+// GetByID godoc
 //
-// @Summary 		Get unitPrice by id
-// @Description 	Get unitPrice by id
-// @Tags 			unit-prices
-// @Accept  		json
-// @Produce 		json
-// @Param 			id path string true "UnitPrice ID"
-// @Success 		200 {object} utils.JSONResult{message=string}		"Get unitPrice by id success"
-// @Failure 		400 {object} utils.ErrorResult{message=string}      "Get unitPrice by id failed"
-// @Router 			/api/v1/unit-prices/{id} [delete]
+// @summary 		Get unitPrice by id
+// @description 	Get unitPrice by id
+// @tags 			unit-prices
+// @accept  		json
+// @produce 		json
+// @param 			id path string true "UnitPrice ID"
+// @success 		200 {object} utils.JSONResult{message=string}		"Get unitPrice by id success"
+// @failure 		400 {object} utils.ErrorResult{message=string}      "Get unitPrice by id failed"
+// @router 			/api/v1/unit-prices/{id} [delete]
 func (s *Handler) GetByID(ctx *fiber.Ctx) error {
 	var err error
 	var unitPriceId string

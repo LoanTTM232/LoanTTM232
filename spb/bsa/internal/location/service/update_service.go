@@ -4,8 +4,8 @@ import (
 	"errors"
 
 	"spb/bsa/internal/location/model"
+	"spb/bsa/internal/location/utility"
 	tb "spb/bsa/pkg/entities"
-	"spb/bsa/pkg/utils"
 
 	"gorm.io/gorm/clause"
 )
@@ -32,7 +32,7 @@ func (s *Service) Update(reqBody *model.UpdateLocationRequest, locationId string
 		return nil, err
 	}
 
-	locationUpdate := mapUpdateFields(reqBody)
+	locationUpdate := utility.MapUpdateRequestToEntity(reqBody)
 	// update location
 	err = s.db.Model(&locations).
 		Clauses(clause.Returning{}).
@@ -47,31 +47,4 @@ func (s *Service) Update(reqBody *model.UpdateLocationRequest, locationId string
 	}
 
 	return &locations[0], nil
-}
-
-// @author: LoanTT
-// @function: mapUpdateFields
-// @description: mapping update fields
-// @param: reqBody *model.UpdateLocationRequest
-// @return: tb.Location
-func mapUpdateFields(reqBody *model.UpdateLocationRequest) tb.Location {
-	var locationUpdate tb.Location
-
-	if reqBody.Province != nil {
-		locationUpdate.Province = *reqBody.Province
-		locationUpdate.ProvinceSlug = utils.CreateSlug(*reqBody.Province)
-	}
-	if reqBody.City != nil {
-		locationUpdate.City = *reqBody.City
-		locationUpdate.CitySlug = utils.CreateSlug(*reqBody.City)
-	}
-	if reqBody.District != nil {
-		locationUpdate.District = *reqBody.District
-		locationUpdate.DistrictSlug = utils.CreateSlug(*reqBody.District)
-	}
-	if reqBody.Description != nil {
-		locationUpdate.Description = *reqBody.Description
-		locationUpdate.DistrictSlug = utils.CreateSlug(*reqBody.District)
-	}
-	return locationUpdate
 }

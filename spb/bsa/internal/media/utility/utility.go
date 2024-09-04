@@ -19,3 +19,57 @@ func MapMediaEntityToResponse(media *tb.Media) model.MediaResponse {
 		UploadedAt: media.UploadedAt,
 	}
 }
+
+// @author: LoanTT
+// @function: MapCreateRequestToEntity
+// @description: Mapping create media request to media entity
+// @param: reqBody *model.CreateMediaRequest
+// @return: *tb.Media
+func MapCreateRequestToEntity(reqBody *model.CreateMediaRequest) *tb.Media {
+	return &tb.Media{
+		FilePath:   reqBody.FilePath,
+		FileType:   reqBody.FileType,
+		Hash:       reqBody.Hash,
+		UploadedAt: reqBody.UploadedAt,
+	}
+}
+
+// @author: LoanTT
+// @function: MapCreateRequestToEntities
+// @description: Mapping create media request to media entity
+// @param: reqBody []model.CreateMediaRequest
+// @return: []tb.Media
+func MapCreateRequestToEntities(reqBody []model.CreateMediaRequest) []tb.Media {
+	medias := make([]tb.Media, len(reqBody))
+	for _, media := range reqBody {
+		medias = append(medias, *MapCreateRequestToEntity(&media))
+	}
+	return medias
+}
+
+// @author: LoanTT
+// @function: MapUpdateRequestToEntity
+// @description: mapping update fields
+// @param: reqBody *model.UpdateMediaRequest
+// @return: tb.Media
+func MapUpdateRequestToEntity(reqBody *model.UpdateMediaRequest) tb.Media {
+	return tb.Media{
+		FilePath:   *reqBody.FilePath,
+		FileType:   *reqBody.FileType,
+		Hash:       *reqBody.Hash,
+		UploadedAt: reqBody.UploadedAt,
+	}
+}
+
+// @author: LoanTT
+// @function: MapUpdateRequestToEntities
+// @description: mapping update fields
+// @param: reqBody []model.UpdateMediaRequest
+// @return: []tb.Media
+func MapUpdateRequestToEntities(reqBody []model.UpdateMediaRequest) []tb.Media {
+	medias := make([]tb.Media, len(reqBody))
+	for _, media := range reqBody {
+		medias = append(medias, MapUpdateRequestToEntity(&media))
+	}
+	return medias
+}

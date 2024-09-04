@@ -31,7 +31,7 @@ type CreateUnitServiceRequest struct {
 }
 
 type UpdateUnitServiceRequest struct {
-	Icon        string  `json:"icon,omitempty" validate:"omitempty,max=255"`
-	Price       float32 `json:"price,omitempty" validate:"omitempty,gt=0"`
-	Description string  `json:"description,omitempty" validate:"omitempty,max=3000"`
+	Icon        *string  `json:"icon,omitempty" validate:"omitempty,max=255"`
+	Price       *float32 `json:"price,omitempty" validate:"omitempty,gt=0"`
+	Description *string  `json:"description,omitempty" validate:"omitempty,max=3000"`
 }

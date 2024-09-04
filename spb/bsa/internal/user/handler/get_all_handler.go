@@ -4,7 +4,6 @@ import (
 	"spb/bsa/internal/user/model"
 	"spb/bsa/internal/user/utility"
 	"spb/bsa/pkg/auth"
-	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
@@ -13,20 +12,20 @@ import (
 
 var ErrGetUsersFailed = fiber.NewError(fiber.StatusNotFound, "get users failed")
 
-// UserGetAll godoc
+// GetAll godoc
 //
-// @Summary 		Get all users
-// @Description 	Get all users
-// @Tags 			users
-// @Accept  		json
-// @Produce 		json
-// @Param 			i query int false "Number items on page"
-// @Param 			p query int false "Page number"
-// @Param			b query string false "Order by"
-// @Param			t query string false "Order type"
-// @Success 		200 {object} utils.JSONResult{data=model.GetUsersResponse}	"Get all users success"
-// @Failure 		404 {object} utils.ErrorResult{message=string}        		"Get all users failed"
-// @Router 			/api/v1/users [get]
+// @summary 		Get all users
+// @description 	Get all users
+// @tags 			users
+// @accept  		json
+// @produce 		json
+// @param 			i query int false "Number items on page"
+// @param 			p query int false "Page number"
+// @param			b query string false "Order by"
+// @param			t query string false "Order type"
+// @success 		200 {object} utils.JSONResult{data=model.GetUsersResponse}	"Get all users success"
+// @failure 		404 {object} utils.ErrorResult{message=string}        		"Get all users failed"
+// @router 			/api/v1/users [get]
 func (s *Handler) GetAll(ctx *fiber.Ctx) error {
 	var err error
 	reqBody := new(model.GetUsersRequest)
@@ -49,23 +48,6 @@ func (s *Handler) GetAll(ctx *fiber.Ctx) error {
 		return fctx.ErrResponse(ErrGetUsersFailed)
 	}
 
-	userResponse := mapUsersEntityToResponse(users, reqBody)
+	userResponse := utility.MapUsersEntityToResponse(users, reqBody)
 	return fctx.JsonResponse(fiber.StatusOK, userResponse)
-}
-
-// @author: LoanTT
-// @function: mapUsersEntityToResponse
-// @description: Map users entity to response
-// @param: users []*tb.User
-// @return: *model.GetUsersResponse
-func mapUsersEntityToResponse(users []*tb.User, reqBody *model.GetUsersRequest) *model.GetUsersResponse {
-	res := new(model.GetUsersResponse)
-	for id := range users {
-		res.Users = append(res.Users, utility.MapUserEntityToResponse(users[id]))
-	}
-
-	res.Total = uint(len(res.Users))
-	res.Pagination = &reqBody.Pagination
-	res.Pagination.SetPagination(int(res.Total))
-	return res
 }

@@ -9,17 +9,17 @@ import (
 
 var ErrDeleteUserFailed = fiber.NewError(fiber.StatusBadRequest, "delete user failed")
 
-// UserGetAll godoc
+// Delete godoc
 //
-// @Summary 		Delete user
-// @Description 	Delete user
-// @Tags 			users
-// @Accept  		json
-// @Produce 		json
-// @Param 			id path string true "user id"
-// @Success 		200 {object} utils.JSONResult{message=string}		"Delete user success"
-// @Failure 		400 {object} utils.ErrorResult{message=string}      "Delete user failed"
-// @Router 			/api/v1/users/{id} [delete]
+// @summary 		Delete user
+// @description 	Delete user
+// @tags 			users
+// @accept  		json
+// @produce 		json
+// @param 			id path string true "user id"
+// @success 		200 {object} utils.JSONResult{message=string}		"Delete user success"
+// @failure 		400 {object} utils.ErrorResult{message=string}      "Delete user failed"
+// @router 			/api/v1/users/{id} [delete]
 func (s *Handler) Delete(ctx *fiber.Ctx) error {
 	var err error
 	var userId string
