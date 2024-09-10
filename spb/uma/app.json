@@ -27,6 +27,7 @@
 		"experiments": {
 			"typedRoutes": true,
 			"tsconfigPaths": true
-		}
+		},
+		"assetBundlePatterns": ["**/*", "assets/fonts/*"]
 	}
 }

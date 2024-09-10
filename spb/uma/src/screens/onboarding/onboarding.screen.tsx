@@ -1,29 +1,47 @@
-import { styles } from '@/styles/onboarding/onboard'
-import { LinearGradient } from 'expo-linear-gradient'
-import React from 'react'
-import { Image, View } from 'react-native'
+// src/screens/onboarding/onboarding.screen.tsx
+import React from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../navigation/StackNavigator';
 
-export default function OnBoardingScreen() {
-	// let [fontsLoaded, fontError] = useFonts({
-	// 	Raleway_700Bold,
-	// 	Nunito_400Regular,
-	// 	Nunito_700Bold,
-	// })
+type OnboardingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Onboarding'>;
 
-	// if (!fontsLoaded && !fontError) {
-	// 	return null
-	// }
+type Props = {
+  navigation: OnboardingScreenNavigationProp;
+};
 
-	return (
-		<LinearGradient
-			colors={['#E5ECF9', '#F6F7F9']}
-			style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-		>
-			<View style={styles.firstContainer}>
-				<View>
-					<Image style={styles.logo} source={require('@/assets/logo.png')} />
-				</View>
-			</View>
-		</LinearGradient>
-	)
-}
+const OnboardingScreen: React.FC<Props> = ({ navigation }) => {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Welcome to the App!</Text>
+      
+      <Button
+        title="Login"
+        onPress={() => navigation.navigate('Login')}
+        color="#1e90ff"
+      />
+      
+      <Button
+        title="Register"
+        onPress={() => navigation.navigate('Register')}
+        color="#32cd32"
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+});
+
+export default OnboardingScreen;
