@@ -7,7 +7,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var ErrCreateUnitFailed = fiber.NewError(fiber.StatusBadRequest, "create unit failed")
@@ -23,7 +23,7 @@ var ErrCreateUnitFailed = fiber.NewError(fiber.StatusBadRequest, "create unit fa
 // @success 		200 {object} utils.JSONResult{data=model.UnitResponse}		"Create unit success"
 // @failure 		400 {object} utils.ErrorResult{message=string}        		"Create unit failed"
 // @router 			/api/v1/units [post]
-func (s *Handler) Create(ctx *fiber.Ctx) error {
+func (s *Handler) Create(ctx fiber.Ctx) error {
 	var err error
 	reqBody := new(model.CreateUnitRequest)
 

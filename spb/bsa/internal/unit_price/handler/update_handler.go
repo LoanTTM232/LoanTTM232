@@ -7,7 +7,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var ErrUpdateUnitPriceFailed = fiber.NewError(fiber.StatusBadRequest, "update unitPrice failed")
@@ -23,7 +23,7 @@ var ErrUpdateUnitPriceFailed = fiber.NewError(fiber.StatusBadRequest, "update un
 // @success 		200 {object} utils.JSONResult{data=model.UnitPriceResponse}		"Update unitPrice by id success"
 // @failure 		400 {object} utils.ErrorResult{message=string}      "Update unitPrice by id failed"
 // @router 			/api/v1/unit-prices/{id} [patch]
-func (s *Handler) Update(ctx *fiber.Ctx) error {
+func (s *Handler) Update(ctx fiber.Ctx) error {
 	var err error
 	var unitPriceId string
 	reqBody := new(model.UpdateUnitPriceRequest)

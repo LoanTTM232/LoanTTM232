@@ -7,7 +7,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var ErrGetUsersFailed = fiber.NewError(fiber.StatusNotFound, "get users failed")
@@ -26,7 +26,7 @@ var ErrGetUsersFailed = fiber.NewError(fiber.StatusNotFound, "get users failed")
 // @success 		200 {object} utils.JSONResult{data=model.GetUsersResponse}	"Get all users success"
 // @failure 		404 {object} utils.ErrorResult{message=string}        		"Get all users failed"
 // @router 			/api/v1/users [get]
-func (s *Handler) GetAll(ctx *fiber.Ctx) error {
+func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	var err error
 	reqBody := new(model.GetUsersRequest)
 	fctx := utils.FiberCtx{Fctx: ctx}

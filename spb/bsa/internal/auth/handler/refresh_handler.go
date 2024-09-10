@@ -9,7 +9,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var ErrRefreshTokenFailed = fiber.NewError(fiber.StatusBadRequest, "please try to login again")
@@ -24,7 +24,7 @@ var ErrRefreshTokenFailed = fiber.NewError(fiber.StatusBadRequest, "please try t
 // @success		200 {object} utils.JSONResult{data=model.LoginResponse}	"refresh token success"
 // @failure		400 {object} utils.ErrorResult{message=string}			"refresh token failed"
 // @router			/api/v1/auth/refresh [post]
-func (h *Handler) AccountRefreshToken(ctx *fiber.Ctx) error {
+func (h *Handler) AccountRefreshToken(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	prevRefreshToken := ctx.Cookies(config.REFRESH_TOKEN_NAME)

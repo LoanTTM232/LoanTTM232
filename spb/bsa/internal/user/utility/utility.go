@@ -35,9 +35,10 @@ func MapUsersEntityToResponse(users []*tb.User, reqBody *model.GetUsersRequest) 
 		res.Users = append(res.Users, MapUserEntityToResponse(users[id]))
 	}
 
-	res.Total = uint(len(res.Users))
+	userNum := len(res.Users)
+	res.Total = uint(userNum)
 	res.Pagination = &reqBody.Pagination
-	res.Pagination.SetPagination(int(res.Total))
+	res.Pagination.SetPagination(userNum)
 	return res
 }
 

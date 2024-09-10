@@ -50,9 +50,9 @@ type ServerConf struct {
 }
 
 type CORS struct {
-	AllowOrigin      string
-	AllowMethods     string
-	AllowHeaders     string
+	AllowOrigin      []string
+	AllowMethods     []string
+	AllowHeaders     []string
 	AllowCredentials bool
 }
 

@@ -32,9 +32,10 @@ func MapUnitServiceEntitiesToResponse(unitServices []*tb.UnitService, reqBody *m
 		res.UnitServices = append(res.UnitServices, MapUnitServiceEntityToResponse(unit_service))
 	}
 
-	res.Total = uint(len(res.UnitServices))
+	unitServiceNum := len(res.UnitServices)
+	res.Total = uint(unitServiceNum)
 	res.Pagination = &reqBody.Pagination
-	res.Pagination.SetPagination(int(res.Total))
+	res.Pagination.SetPagination(unitServiceNum)
 	return res
 }
 

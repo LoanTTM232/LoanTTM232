@@ -6,7 +6,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var (
@@ -25,7 +25,7 @@ var (
 // @success		200 {object} utils.JSONResult{data=nil,message=string}	"register success"
 // @failure		400 {object} utils.ErrorResult{message=string}			"register failed"
 // @router		/api/v1/auth/register [post]
-func (h *Handler) AccountRegister(ctx *fiber.Ctx) error {
+func (h *Handler) AccountRegister(ctx fiber.Ctx) error {
 	reqBody := new(model.RegisterRequest)
 
 	fctx := utils.FiberCtx{Fctx: ctx}

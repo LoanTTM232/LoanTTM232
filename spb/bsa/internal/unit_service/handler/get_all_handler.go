@@ -6,7 +6,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var ErrGetUnitServicesFailed = fiber.NewError(fiber.StatusNotFound, "get unit_services failed")
@@ -25,7 +25,7 @@ var ErrGetUnitServicesFailed = fiber.NewError(fiber.StatusNotFound, "get unit_se
 // @success 		200 {object} utils.JSONResult{data=model.UnitServicesResponse}	"Get all unit_services success"
 // @failure 		404 {object} utils.ErrorResult{message=string}        	     	"Get all unit_services failed"
 // @router 			/api/v1/unit-services [get]
-func (s *Handler) GetAll(ctx *fiber.Ctx) error {
+func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	var err error
 	reqBody := new(model.GetUnitServicesRequest)
 	fctx := utils.FiberCtx{Fctx: ctx}

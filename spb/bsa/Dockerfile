@@ -43,7 +43,7 @@ RUN adduser \
 USER appuser
 
 # Expose the port that the application listens on.
-EXPOSE 7000
+EXPOSE 3000
 
 # What the container should run when it is started.
 CMD [ "air", "-c", ".air-alpine.toml" ]

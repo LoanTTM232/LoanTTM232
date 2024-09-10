@@ -4,7 +4,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var ErrDeleteUserFailed = fiber.NewError(fiber.StatusBadRequest, "delete user failed")
@@ -20,7 +20,7 @@ var ErrDeleteUserFailed = fiber.NewError(fiber.StatusBadRequest, "delete user fa
 // @success 		200 {object} utils.JSONResult{message=string}		"Delete user success"
 // @failure 		400 {object} utils.ErrorResult{message=string}      "Delete user failed"
 // @router 			/api/v1/users/{id} [delete]
-func (s *Handler) Delete(ctx *fiber.Ctx) error {
+func (s *Handler) Delete(ctx fiber.Ctx) error {
 	var err error
 	var userId string
 

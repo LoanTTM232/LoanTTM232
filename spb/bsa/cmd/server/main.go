@@ -5,7 +5,6 @@ import (
 	"runtime"
 	"strings"
 
-	_ "spb/bsa/docs"
 	"spb/bsa/internal/auth"
 	"spb/bsa/internal/role"
 	"spb/bsa/internal/sport_type"
@@ -15,16 +14,20 @@ import (
 	"spb/bsa/pkg/cache"
 	"spb/bsa/pkg/database"
 	"spb/bsa/pkg/global"
-	zaplog "spb/bsa/pkg/logger"
 	"spb/bsa/pkg/middleware"
 	"spb/bsa/pkg/validate"
 
+	_ "spb/bsa/docs"
+
+	zaplog "spb/bsa/pkg/logger"
+
+	"spb/bsa/pkg/swagger"
+
 	"github.com/goccy/go-json"
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/gofiber/swagger"
+	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
+	"github.com/gofiber/fiber/v3/middleware/logger"
+	"github.com/gofiber/fiber/v3/middleware/recover"
 )
 
 // @author: LoanTT
@@ -129,7 +132,7 @@ func (f *Fiber) LoadRoutes() {
 	sport_type.LoadModule(router, custMiddlewares)
 
 	// a custom 404 handler
-	f.App.Use(func(ctx *fiber.Ctx) error {
+	f.App.Use(func(ctx fiber.Ctx) error {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "resource Not Found",
 		})

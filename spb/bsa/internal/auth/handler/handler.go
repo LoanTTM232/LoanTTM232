@@ -15,7 +15,7 @@ import (
 
 	serv "spb/bsa/internal/auth/service"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -38,9 +38,9 @@ func NewHandler(service *serv.Service) *Handler {
 // @function: SetTokenToCookie
 // @description: set token to cookie
 // @param: user model.LoginResponse
-// @param: ctx *fiber.Ctx
+// @param: ctx fiber.Ctx
 // @return: err error
-func SetTokenToCookie(tokens map[string]string, ctx *fiber.Ctx) error {
+func SetTokenToCookie(tokens map[string]string, ctx fiber.Ctx) error {
 	if tokens[config.ACCESS_TOKEN_NAME] == "" || tokens[config.REFRESH_TOKEN_NAME] == "" {
 		return logger.Errorf("missing access token or refresh token")
 	}
@@ -127,11 +127,11 @@ func GenerateUserToken(user *entities.User, tokenType string) *jwt.Token {
 // @function: TokenNext
 // @description: set token to cookie and cache
 // @param: fctx *utils.FiberCtx
-// @param: ctx *fiber.Ctx
+// @param: ctx fiber.Ctx
 // @param: user *entities.User
 // @param: tokens map[string]string
 // @return: err error
-func TokenNext(fctx *utils.FiberCtx, ctx *fiber.Ctx, user *entities.User, tokens map[string]string) error {
+func TokenNext(fctx *utils.FiberCtx, ctx fiber.Ctx, user *entities.User, tokens map[string]string) error {
 	if prevToken, err := cache.JwtCacheApp.GetJwt(user.Email); err == nil && prevToken == "" {
 		if err = cache.JwtCacheApp.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME]); err != nil {
 			return logger.Errorf("error set token to cache: %v", err)

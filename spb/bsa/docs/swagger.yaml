@@ -571,7 +571,7 @@ definitions:
         description: total pages (count / items)
         type: integer
     type: object
-host: localhost:7000
+host: localhost:3000
 info:
   contact:
     email: loanTT@gmail.com
