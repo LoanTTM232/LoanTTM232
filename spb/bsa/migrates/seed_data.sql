@@ -24,12 +24,6 @@ VALUES
 		'user:read',
 		NOW (),
 		NOW ()
-	),
-	(
-		'321asdf4-4342-40dv-2d22-1234kljwer34',
-		'user:read',
-		NOW (),
-		NOW ()
 	);
 
 INSERT INTO
@@ -96,26 +90,38 @@ INSERT INTO
 	)
 VALUES
 	(
-		'78574593-757c-49bc-aad1-3a8dd5c03970',
-		'2024-08-27 11:37:42.405602+07',
-		'2024-08-27 11:37:42.405602+07',
+		'78574593-757c-49bc-aad1-3a8dd5c03970' :: uuid,
+		NOW (),
+		NOW (),
 		NULL,
 		'admin@gmail.com',
 		'$2a$10$nCvN3CAF4b1mMuramtpSre8Dx7fsBf4FoRG2btotNKvbLftZPKbqu',
 		NULL,
 		NULL,
 		true,
-		'cc203bb9-7b33-4391-8917-0089588356f2'
+		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid
 	),
 	(
-		'6bb9e18d-69e7-4dd3-bf7a-7b9ee15b3aeb',
-		'2024-08-27 13:42:39.84702+07',
-		'2024-08-27 13:42:39.84702+07',
+		'6bb9e18d-69e7-4dd3-bf7a-7b9ee15b3aeb' :: uuid,
+		NOW (),
+		NOW (),
 		NULL,
 		'client@gmail.com',
 		'$2a$10$A20KBHwJ8dpuL951mY23P.D0gV6kek73rKqspLgAm2sfkCe7HgbFm',
 		NULL,
 		NULL,
 		true,
-		'6c8647dc-091f-4249-b9f7-12bed594d124'
+		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid
+	),
+	(
+		'043aad47-c234-4e76-a809-d65dc5708646' :: uuid,
+		NOW (),
+		NOW (),
+		NULL,
+		'user1@gmail.com',
+		'$2a$10$buwiJga6U0oGp4eim88zCuKYYFdxLz3cGgGxb9mhzuXoh3G5vpY26',
+		NULL,
+		NULL,
+		false,
+		'9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid
 	);
