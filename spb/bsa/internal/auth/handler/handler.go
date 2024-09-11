@@ -54,16 +54,6 @@ func SetTokenToCookie(tokens map[string]string, ctx fiber.Ctx) error {
 		Path:     "/",
 	}
 	ctx.Cookie(cookie)
-
-	cookie = &fiber.Cookie{
-		Name:     config.ACCESS_TOKEN_NAME,
-		Value:    tokens[config.ACCESS_TOKEN_NAME],
-		Expires:  expires,
-		HTTPOnly: true,
-		Secure:   global.IsProd(),
-		Path:     "/",
-	}
-	ctx.Cookie(cookie)
 	return nil
 }
 
@@ -106,8 +96,9 @@ func GenerateUserToken(user *entities.User, tokenType string) *jwt.Token {
 	expireTime := &jwt.NumericDate{Time: time.Now().Add(duration)}
 
 	claims := &model.UserClaims{
-		Email: user.Email,
-		Role:  user.Role.Name,
+		UserID: user.ID,
+		Email:  user.Email,
+		Role:   user.Role.Name,
 		Permissions: func() []string {
 			var permissions []string
 			for _, p := range user.Role.Permissions {
@@ -133,7 +124,7 @@ func GenerateUserToken(user *entities.User, tokenType string) *jwt.Token {
 // @return: err error
 func TokenNext(fctx *utils.FiberCtx, ctx fiber.Ctx, user *entities.User, tokens map[string]string) error {
 	if prevToken, err := cache.JwtCacheApp.GetJwt(user.Email); err == nil && prevToken == "" {
-		if err = cache.JwtCacheApp.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME]); err != nil {
+		if err := cache.JwtCacheApp.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME]); err != nil {
 			return logger.Errorf("error set token to cache: %v", err)
 		}
 		if err := SetTokenToCookie(tokens, ctx); err != nil {
@@ -142,10 +133,10 @@ func TokenNext(fctx *utils.FiberCtx, ctx fiber.Ctx, user *entities.User, tokens 
 	} else if err != nil {
 		return logger.Errorf("error get token to cache: %v", err)
 	} else {
-		if err = cache.JwtCacheApp.SetToBlackList(prevToken, global.SPB_CONFIG.JWT.AccessTokenExp); err != nil {
+		if err := cache.JwtCacheApp.SetToBlackList(prevToken, global.SPB_CONFIG.JWT.AccessTokenExp); err != nil {
 			return logger.Errorf("error set token to cache: %v", err)
 		}
-		if err = cache.JwtCacheApp.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME]); err != nil {
+		if err := cache.JwtCacheApp.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME]); err != nil {
 			return logger.Errorf("error set token to cache: %v", err)
 		}
 		if err := SetTokenToCookie(tokens, ctx); err != nil {

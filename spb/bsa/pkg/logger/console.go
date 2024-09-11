@@ -60,7 +60,6 @@ func (zl *ZapLog) Debugf(format string, args ...interface{}) {
 	defer func() {
 		err := Zlog.ConsoleLogger.Sync()
 		if err != nil {
-			fmt.Println(err)
 			return
 		}
 	}()
@@ -90,7 +89,6 @@ func (zl *ZapLog) Infof(format string, args ...interface{}) {
 	defer func() {
 		err := Zlog.ConsoleLogger.Sync()
 		if err != nil {
-			fmt.Println(err)
 			return
 		}
 	}()
@@ -113,7 +111,6 @@ func (zl *ZapLog) Warnf(format string, args ...interface{}) {
 	defer func() {
 		err := Zlog.ConsoleLogger.Sync()
 		if err != nil {
-			fmt.Println(err)
 			return
 		}
 	}()
@@ -136,7 +133,6 @@ func (zl *ZapLog) Errorf(format string, args ...interface{}) {
 	defer func() {
 		err := Zlog.ConsoleLogger.Sync()
 		if err != nil {
-			fmt.Println(err)
 			return
 		}
 	}()
@@ -159,7 +155,6 @@ func (zl *ZapLog) Fatalf(format string, args ...interface{}) {
 	defer func() {
 		err := Zlog.ConsoleLogger.Sync()
 		if err != nil {
-			fmt.Println(err)
 			return
 		}
 	}()

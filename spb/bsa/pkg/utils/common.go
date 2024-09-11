@@ -82,6 +82,7 @@ func IsSubSet(subSet, setCheck []string) bool {
 		for setCID := range setCheck {
 			if subSet[subCID] == setCheck[setCID] {
 				hasSubItem = true
+				break
 			}
 		}
 
@@ -89,7 +90,7 @@ func IsSubSet(subSet, setCheck []string) bool {
 			return false
 		}
 	}
-	return false
+	return true
 }
 
 // @author: LoanTT

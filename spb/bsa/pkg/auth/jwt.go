@@ -76,3 +76,20 @@ func GetTokenFromCookie(ctx fiber.Ctx) (jwt.MapClaims, error) {
 
 	return claims, nil
 }
+
+// @author: LoanTT
+// @function: GetTokenFromHeader
+// @description: Get token from header
+// @param: ctx fiber.Ctx
+// @return: jwt.MapClaims, error
+func GetTokenFromHeader(ctx fiber.Ctx) (jwt.MapClaims, error) {
+	jwtHeader := ctx.Get("Authorization")
+	if jwtHeader == "" {
+		return nil, ErrAccessKeyNotFound
+	}
+	claims, err := ParseJwt(jwtHeader)
+	if err != nil {
+		return nil, ErrParseTokenFromHeader(err)
+	}
+	return claims, nil
+}

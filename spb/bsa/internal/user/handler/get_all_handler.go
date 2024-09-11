@@ -3,11 +3,11 @@ package handler
 import (
 	"spb/bsa/internal/user/model"
 	"spb/bsa/internal/user/utility"
-	"spb/bsa/pkg/auth"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 var ErrGetUsersFailed = fiber.NewError(fiber.StatusNotFound, "get users failed")
@@ -34,12 +34,7 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	pagination := utils.GetPagination(ctx.Queries())
 	reqBody.Pagination = pagination
 
-	claims, err := auth.GetTokenFromCookie(ctx)
-	if err != nil {
-		logger.FErrorf("error parse jwt: %v", err)
-		return fctx.ErrResponse(ErrGetUsersFailed)
-	}
-
+	claims := ctx.Locals("claims").(jwt.MapClaims)
 	reqBody.Role = claims["role"].(string)
 
 	users, err := s.service.GetAll(reqBody)

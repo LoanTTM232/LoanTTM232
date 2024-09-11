@@ -25,6 +25,10 @@ jwt:
     refreshTokenExp: 43200 # minutes
     expireCache: 43200 # minutes
 
+oauth:
+    googleClientId: "xxxx"
+    googleClientSecret: "xxxx"
+
 database:
     engine: "postgres"
     postgres:
@@ -49,7 +53,7 @@ redis:
 logging:
     level: 0 # debug:0, info:1, warning:2, error:3
     output:
-        # - "console"
+        - "console"
         - "file"
     filename: "requests.log"
     debugSymbol: "-"

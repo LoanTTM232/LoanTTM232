@@ -25,9 +25,9 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	UserHandler = handler.NewHandler(UserService)
 
 	userRoute := router.Group("/api/v1/users")
-	userRoute.Get("/", customMiddleware.CheckAccess("user:list"), UserHandler.GetAll)
-	userRoute.Get("/:id", customMiddleware.CheckAccess("user:read"), UserHandler.GetByID)
-	userRoute.Post("/", customMiddleware.CheckAccess("user:create"), UserHandler.Create)
-	userRoute.Patch("/:id", customMiddleware.CheckAccess("user:update"), UserHandler.Update)
-	userRoute.Delete("/:id", customMiddleware.CheckAccess("user:delete"), UserHandler.Delete)
+	userRoute.Get("/", UserHandler.GetAll, customMiddleware.CheckAccess("user:list"))
+	userRoute.Get("/:id", UserHandler.GetByID, customMiddleware.CheckAccess("user:read"))
+	userRoute.Post("/", UserHandler.Create, customMiddleware.CheckAccess("user:create"))
+	userRoute.Patch("/:id", UserHandler.Update, customMiddleware.CheckAccess("user:update"))
+	userRoute.Delete("/:id", UserHandler.Delete, customMiddleware.CheckAccess("user:delete"))
 }

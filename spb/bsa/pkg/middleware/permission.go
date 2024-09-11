@@ -21,7 +21,7 @@ func CheckPermissionAccess(permissionsRequired ...string) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
 		fctx := utils.FiberCtx{Fctx: ctx}
 		claims := ctx.Locals("claims").(jwt.MapClaims)
-		userId := claims["userId"]
+		userId := claims["user_id"]
 
 		// get user from db by userid
 		user := new(tb.User)

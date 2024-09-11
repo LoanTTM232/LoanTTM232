@@ -63,6 +63,11 @@ type JWT struct {
 	ExpireCache     int
 }
 
+type OAuth struct {
+	GoogleClientId     string
+	GoogleClientSecret string
+}
+
 type Smtp struct {
 	Host string
 	Port string

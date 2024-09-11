@@ -49,7 +49,7 @@ func LogMiddleware() fiber.Handler {
 
 		var userId interface{}
 		var claims jwt.MapClaims
-		claims, _ = auth.GetTokenFromCookie(ctx)
+		claims, _ = auth.GetTokenFromHeader(ctx)
 
 		if len(claims) > 0 {
 			userId = claims["userId"]
@@ -75,7 +75,7 @@ func LogMiddleware() fiber.Handler {
 			}
 
 			// create log to files
-			logger.SysLog("FIBER REQ LOG",
+			logger.SysLog("SPORT BOOKING LOG",
 				logger.GetField("UserId", userId),
 				logger.GetField("IpAddress", ip),
 				logger.GetField("HttpMethod", ctx.Method()),
@@ -86,7 +86,6 @@ func LogMiddleware() fiber.Handler {
 				logger.GetField("ResponseBody", resBodyJson),
 				logger.GetField("Status", int64(ctx.Response().StatusCode())),
 				logger.GetField("Duration", time.Since(start).Milliseconds()),
-				logger.GetField("CreatedAt", &utils.CustomDatetime{Time: &start, Format: utils.ToPtr(time.RFC3339)}),
 			)
 		}()
 		return ctx.Next()
