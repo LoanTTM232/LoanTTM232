@@ -38,7 +38,7 @@ func LogMiddleware() fiber.Handler {
 				nonJsonMap["requestType"] = string(ctx.Request().Header.ContentType())
 				nonJsonMap["base64"] = b64Str
 				if jsonBytes, err := json.Marshal(nonJsonMap); err != nil {
-					logger.FErrorf("failed to marshal nonJsonMap, err: %s", err.Error())
+					logger.Errorf("failed to marshal nonJsonMap, err: %s", err.Error())
 				} else {
 					reqBodyJson = utils.ToPtr(string(jsonBytes))
 				}
@@ -67,7 +67,7 @@ func LogMiddleware() fiber.Handler {
 					nonJsonMap["responseType"] = string(ctx.Response().Header.ContentType())
 					nonJsonMap["base64"] = b64Str
 					if jsonBytes, err := json.Marshal(nonJsonMap); err != nil {
-						logger.FErrorf("failed to marshal nonJsonMap, err: %s", err.Error())
+						logger.Errorf("failed to marshal nonJsonMap, err: %s", err.Error())
 					} else {
 						resBodyJson = utils.ToPtr(string(jsonBytes))
 					}

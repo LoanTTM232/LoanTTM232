@@ -37,7 +37,7 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 
 	claims, err := auth.GetTokenFromCookie(ctx)
 	if err != nil {
-		logger.FErrorf("error parse jwt: %v", err)
+		logger.Errorf("error parse jwt: %v", err)
 		return fctx.ErrResponse(ErrGet{{.StructNamePlural}}Failed)
 	}
 
@@ -45,7 +45,7 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 
 	{{.ModuleNamePlural}}, err := s.service.GetAll(reqBody)
 	if err != nil {
-		logger.FErrorf("error get {{.ModuleNamePlural}}: %v", err)
+		logger.Errorf("error get {{.ModuleNamePlural}}: %v", err)
 		return fctx.ErrResponse(ErrGet{{.StructNamePlural}}Failed)
 	}
 

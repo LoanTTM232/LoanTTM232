@@ -2,26 +2,25 @@ package server
 
 import (
 	"fmt"
-	"runtime"
 	"strings"
 
+	_ "spb/bsa/docs"
 	"spb/bsa/internal/auth"
 	"spb/bsa/internal/role"
 	"spb/bsa/internal/sport_type"
 	"spb/bsa/internal/unit_price"
 	"spb/bsa/internal/unit_service"
 	"spb/bsa/internal/user"
-	"spb/bsa/pkg/cache"
-	"spb/bsa/pkg/database"
+	"spb/bsa/pkg/aws"
+	"spb/bsa/pkg/aws/ses"
 	"spb/bsa/pkg/global"
-	"spb/bsa/pkg/middleware"
-	"spb/bsa/pkg/validate"
-
-	_ "spb/bsa/docs"
-
 	zaplog "spb/bsa/pkg/logger"
-
+	"spb/bsa/pkg/middleware"
+	"spb/bsa/pkg/notification"
+	database "spb/bsa/pkg/postgres"
+	"spb/bsa/pkg/redis"
 	"spb/bsa/pkg/swagger"
+	"spb/bsa/pkg/utils"
 
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v3"
@@ -55,29 +54,38 @@ func (f *Fiber) GetApp() {
 	// load env variables
 	err = global.SPB_CONFIG.LoadEnvVariables()
 	if err != nil {
-		fmt.Printf("failed to load env variables: %v\n", err)
-		runtime.Goexit()
+		panic(fmt.Sprintf("failed to load env variables: %v\n", err))
 	}
 	// initialize logger
 	zaplog.NewZlog(global.SPB_CONFIG)
 	// connect database
 	global.SPB_DB, err = database.ConnectDB(global.SPB_CONFIG)
 	if err != nil {
-		fmt.Println(err.Error())
-		runtime.Goexit()
+		panic(fmt.Sprintf("failed to connect database: %v\n", err))
 	}
 	// connect redis
-	global.SPB_REDIS, err = cache.ConnectRedis(global.SPB_CONFIG)
+	global.SPB_REDIS, err = redis.NewClient(global.SPB_CONFIG)
 	if err != nil {
-		fmt.Println(err.Error())
-		runtime.Goexit()
+		panic(fmt.Sprintf("failed to connect redis: %v\n", err))
 	}
 	// initialize validator
-	global.SPB_VALIDATOR, err = validate.NewValidator()
+	global.SPB_VALIDATOR, err = utils.NewValidator()
 	if err != nil {
-		fmt.Println(err.Error())
-		runtime.Goexit()
+		panic(fmt.Sprintf("failed to create validator: %v\n", err))
 	}
+	// load aws session
+	global.SPB_AWS, err = aws.NewAWSSession(global.SPB_CONFIG)
+	if err != nil {
+		panic(fmt.Sprintf("failed to connect aws: %v\n", err))
+	}
+	global.SPB_SES = ses.NewSESService(global.SPB_AWS)
+	// initialize notification
+	global.SPB_NOTIFY = notification.NewNotification(
+		global.SPB_CONFIG,
+		zaplog.Zlog,
+		global.SPB_REDIS,
+		ses.NewSESService(global.SPB_AWS))
+
 	// create fiber app
 	f.App = fiber.New(fiber.Config{
 		CaseSensitive:                true,
@@ -144,15 +152,16 @@ func (f *Fiber) LoadRoutes() {
 // @description: Start server
 func (f *Fiber) Start() {
 	fmt.Println(strings.Repeat("*", 50))
-	fmt.Printf("Server env: %+v\n", global.SPB_CONFIG.ServerConf.Env)
+	fmt.Printf("Server env: %+v\n", global.SPB_CONFIG.Server.Env)
 	fmt.Println(strings.Repeat("*", 50))
-	defer database.CloseDB(global.SPB_DB)
-	defer cache.CloseRedis(global.SPB_REDIS)
 
-	err := f.App.Listen(fmt.Sprintf(":%s", global.SPB_CONFIG.ServerConf.Port))
+	defer database.CloseDB(global.SPB_DB)
+	defer redis.CloseRedisClient(global.SPB_REDIS)
+	defer notification.Shutdown(global.SPB_NOTIFY)
+
+	err := f.App.Listen(fmt.Sprintf(":%s", global.SPB_CONFIG.Server.Port))
 	if err != nil {
 		zaplog.Fatalf("failed to start server: %v", err)
-		runtime.Goexit()
 	}
 }
 

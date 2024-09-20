@@ -33,12 +33,12 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if unitPriceId, err = fctx.ParseUUID("id"); err != nil {
-		logger.FErrorf("error parse unitPrice id: %v", err)
+		logger.Errorf("error parse unitPrice id: %v", err)
 		return fctx.ErrResponse(ErrGetUnitPriceFailed)
 	}
 
 	if unitPrice, err = s.service.GetByID(unitPriceId); err != nil {
-		logger.FErrorf("error get unitPrice by id: %v", err)
+		logger.Errorf("error get unitPrice by id: %v", err)
 		return fctx.ErrResponse(ErrUnitPriceNotFound)
 	}
 

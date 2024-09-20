@@ -4,7 +4,7 @@ const UserTN = "user"
 
 type User struct {
 	Base
-	Email           string  `gorm:"size:255;not null;uniqueIndex" json:"email"`
+	Email           string  `gorm:"size:255;not null" json:"email"`
 	Password        string  `gorm:"size:255;not null" json:"password"`
 	FullName        *string `gorm:"size:255" json:"full_name"`
 	Phone           *string `gorm:"size:25" json:"phone"`

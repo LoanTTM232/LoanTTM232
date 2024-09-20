@@ -60,8 +60,8 @@ Manage clubs by Admin, Club Owner
 
 | No  | Implemented | Method | Path                                                                                                            | Permission  | Description                                          |
 | --- | ----------- | ------ | --------------------------------------------------------------------------------------------------------------- | ----------- | ---------------------------------------------------- |
-| 1   | &#x274c;    | GET    | /clubs?i={items}&p={page}&b={order by}&t={order type}&c={club name}&lg={longitude}&lt={latitude}&s={sport type} | club:list   | Get all clubs with pagination and sorting and filter |
-| 2   | &#x274c;    | GET    | /clubs/:id                                                                                                      | club:read   | Get club by id                                       |
+| 1   | &#x274c;    | GET    | /clubs?i={items}&p={page}&b={order by}&t={order type}&c={club name}&lg={longitude}&lt={latitude}&s={sport type} |             | Get all clubs with pagination and sorting and filter |
+| 2   | &#x274c;    | GET    | /clubs/:id                                                                                                      |             | Get club by id                                       |
 | 3   | &#x274c;    | POST   | /clubs/                                                                                                         | club:create | Create new club                                      |
 | 4   | &#x274c;    | PATCH  | /clubs/:id                                                                                                      | club:update | Update club info                                     |
 | 5   | &#x274c;    | DELETE | /clubs/:id                                                                                                      | club:delete | Delete club                                          |
@@ -72,13 +72,12 @@ Manage clubs by Admin, Club Owner
 
 Manage units by Admin, Club Owner, Member
 
-| No  | Implemented | Method | Path                                                                                                            | Permission  | Description                                             |
-| --- | ----------- | ------ | --------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------- |
-| 1   | &#x274c;    | GET    | /units?i={items}&p={page}&b={order by}&t={order type}&c={unit name}&lg={longitude}&lt={latitude}&s={sport type} | unit:list   | Get all units with pagination and sorting and full name |
-| 2   | &#x274c;    | GET    | /units/:id                                                                                                      | unit:read   | Get unit by id                                          |
-| 3   | &#x274c;    | POST   | /units/                                                                                                         | unit:create | Create new unit                                         |
-| 4   | &#x274c;    | PATCH  | /units/:id                                                                                                      | unit:update | Update unit info                                        |
-| 5   | &#x274c;    | DELETE | /units/:id                                                                                                      | unit:delete | Delete unit                                             |
+| No  | Implemented | Method | Path       | Permission  | Description      |
+| --- | ----------- | ------ | ---------- | ----------- | ---------------- |
+| 1   | &#x274c;    | GET    | /units/:id |             | Get unit by id   |
+| 2   | &#x274c;    | POST   | /units/    | unit:create | Create new unit  |
+| 3   | &#x274c;    | PATCH  | /units/:id | unit:update | Update unit info |
+| 4   | &#x274c;    | DELETE | /units/:id | unit:delete | Delete unit      |
 
 ---
 
@@ -88,7 +87,7 @@ Manage locations
 
 | No  | Implemented | Method | Path       | Permission      | Description         |
 | --- | ----------- | ------ | ---------- | --------------- | ------------------- |
-| 1   | &#x274c;    | GET    | /locations | location:read   | Get all locations   |
+| 1   | &#x274c;    | GET    | /locations |                 | Get all locations   |
 | 2   | &#x274c;    | POST   | /locations | location:create | Create new location |
 
 ---
@@ -99,7 +98,7 @@ Manage metadata
 
 | No  | Implemented | Method | Path      | Permission      | Description         |
 | --- | ----------- | ------ | --------- | --------------- | ------------------- |
-| 1   | &#x274c;    | GET    | /metadata | metadata:read   | Get all metadata    |
+| 1   | &#x274c;    | GET    | /metadata |                 | Get all metadata    |
 | 2   | &#x274c;    | POST   | /metadata | metadata:create | Create new metadata |
 
 ---

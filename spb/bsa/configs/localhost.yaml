@@ -1,4 +1,4 @@
-projectName: "Sport booking"
+project_name: "Sport booking"
 
 server:
     env: development # development, production
@@ -6,28 +6,28 @@ server:
     port: 3000
 
 cors:
-    allowOrigin:
+    allow_origin:
         - "http://127.0.0.1"
-    allowHeaders:
+    allow_headers:
         - "Content-Type"
         - "Origin"
         - "Accept"
-    allowMethods:
+    allow_methods:
         - "GET"
         - "POST"
         - "PATCH"
         - "DELETE"
-    allowCredentials: true
+    allow_credentials: true
 
 jwt:
     secret: "1234balhblahblah"
-    accessTokenExp: 10 # minutes
-    refreshTokenExp: 43200 # minutes
-    expireCache: 43200 # minutes
+    access_token_exp: 10 # minutes
+    refresh_token_exp: 43200 # minutes
+    expire_cache: 43200 # minutes
 
 oauth:
-    googleClientId: "xxxx"
-    googleClientSecret: "xxxx"
+    google_client_id: "xxxx"
+    google_client_secret: "xxxx"
 
 database:
     engine: "postgres"
@@ -37,30 +37,35 @@ database:
         user: "spb_user"
         password: "spb_password"
         dbname: "spb_database"
-        sslMode: "disable"
+        ssl_mode: "disable"
 
 redis:
-    useCluster: false
+    addrs:
+        - "localhost:6379"
     password: "spb_password"
     username: ""
-    clusterAddrs: []
-    host: "localhost"
-    port: 6379
     reset: false
-    poolSize: 10
+    pool_size: 10
     db: 0
 
 logging:
     level: 0 # debug:0, info:1, warning:2, error:3
     output:
         - "console"
-        - "file"
+        # - "file"
     filename: "requests.log"
-    debugSymbol: "-"
+    debug_symbol: "-"
+
+aws:
+    region: "us-east-1"
+    max_retries: 3
 
 notification:
-    smtp:
-        host: "smtp.gmail.com"
-        port: 587
-        user: "xxxx@gmail.com"
-        pass: "xxxxyyyyyzzzxz"
+    ios:
+        enabled: false
+    android:
+        enabled: false
+    redis_queue:
+        channel_name: "notification"
+        channel_size: 10
+        worker_num: 4

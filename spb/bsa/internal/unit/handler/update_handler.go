@@ -30,17 +30,17 @@ func (s *Handler) Update(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.FErrorf("error parse json to struct: %v", err)
+		logger.Errorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(ErrUpdateUnitFailed)
 	}
 	if unitId, err = fctx.ParseUUID("id"); err != nil {
-		logger.FErrorf("error parse unit id: %v", err)
+		logger.Errorf("error parse unit id: %v", err)
 		return fctx.ErrResponse(ErrUpdateUnitFailed)
 	}
 
 	unitUpdated, err := s.service.Update(reqBody, unitId)
 	if err != nil {
-		logger.FErrorf("error create unit: %v", err)
+		logger.Errorf("error create unit: %v", err)
 		return fctx.ErrResponse(ErrUpdateUnitFailed)
 	}
 	unitResponse := utility.MapUnitEntityToResponse(unitUpdated)

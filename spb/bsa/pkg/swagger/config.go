@@ -10,7 +10,7 @@ type Config struct {
 	// default: ""
 	InstanceName string `json:"-"`
 
-	// Title pointing to title of HTML page.
+	// Title pointing to title of HTMLpage.
 	// default: "Swagger UI"
 	Title string `json:"-"`
 
@@ -253,29 +253,27 @@ type OAuthConfig struct {
 	UsePkceWithAuthorizationCodeGrant bool `json:"usePkceWithAuthorizationCodeGrant,omitempty"`
 }
 
-var (
-	ConfigDefault = Config{
-		Title:  "Swagger UI",
-		Layout: "StandaloneLayout",
-		Plugins: []template.JS{
-			template.JS("SwaggerUIBundle.plugins.DownloadUrl"),
-		},
-		Presets: []template.JS{
-			template.JS("SwaggerUIBundle.presets.apis"),
-			template.JS("SwaggerUIStandalonePreset"),
-		},
-		DeepLinking:              true,
-		DefaultModelsExpandDepth: 1,
-		DefaultModelExpandDepth:  1,
-		DefaultModelRendering:    "example",
-		DocExpansion:             "list",
-		SyntaxHighlight: &SyntaxHighlightConfig{
-			Activate: true,
-			Theme:    "agate",
-		},
-		ShowMutatedRequest: true,
-	}
-)
+var ConfigDefault = Config{
+	Title:  "Swagger UI",
+	Layout: "StandaloneLayout",
+	Plugins: []template.JS{
+		template.JS("SwaggerUIBundle.plugins.DownloadUrl"),
+	},
+	Presets: []template.JS{
+		template.JS("SwaggerUIBundle.presets.apis"),
+		template.JS("SwaggerUIStandalonePreset"),
+	},
+	DeepLinking:              true,
+	DefaultModelsExpandDepth: 1,
+	DefaultModelExpandDepth:  1,
+	DefaultModelRendering:    "example",
+	DocExpansion:             "list",
+	SyntaxHighlight: &SyntaxHighlightConfig{
+		Activate: true,
+		Theme:    "agate",
+	},
+	ShowMutatedRequest: true,
+}
 
 // Helper function to set default values
 func configDefault(config ...Config) Config {

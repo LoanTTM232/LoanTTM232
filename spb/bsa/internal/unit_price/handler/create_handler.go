@@ -29,15 +29,14 @@ func (s *Handler) Create(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.FErrorf("error parse json to struct: %v", err)
+		logger.Errorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(ErrCreateUnitPriceFailed)
 	}
 	unitPriceCreated, err := s.service.Create(reqBody)
 	if err != nil {
-		logger.FErrorf("error create unitPrice: %v", err)
+		logger.Errorf("error create unitPrice: %v", err)
 		return fctx.ErrResponse(ErrCreateUnitPriceFailed)
 	}
-	// TODO: send email verification
 	unitPriceResponse := utility.MapUnitPriceEntityToResponse(unitPriceCreated)
 
 	return fctx.JsonResponse(fiber.StatusOK, unitPriceResponse)

@@ -30,16 +30,21 @@ func (h *Handler) AccountRegister(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.FErrorf("parse json to struct failed: %v", err)
+		logger.Errorf("parse json to struct failed: %v", err)
 		return fctx.ErrResponse(ErrRequestParseFailed)
 	}
 	_, err := h.service.AccountRegister(reqBody)
 	if err != nil {
-		logger.FErrorf("register failed: %v", err)
+		logger.Errorf("register failed: %v", err)
 		return fctx.ErrResponse(ErrRegisterFailed)
 	}
 
 	// TODO: send email verification
+	// notifyType, err := notification_type.NotificationTypeService.GetByName(config.VERIFY_USER_NT)
+	// if err != nil {
+	// 	logger.Errorf("get notification type failed: %v", err)
+	// 	return fctx.ErrResponse(ErrRegisterFailed)
+	// }
 
 	return fctx.JsonResponse(fiber.StatusOK, nil, "register success")
 }

@@ -29,12 +29,12 @@ func (s *Handler) Create(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.FErrorf("error parse json to struct: %v", err)
+		logger.Errorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(ErrCreate{{.StructName}}Failed)
 	}
 	{{.ModuleName}}Created, err := s.service.Create(reqBody)
 	if err != nil {
-		logger.FErrorf("error create {{.ModuleName}}: %v", err)
+		logger.Errorf("error create {{.ModuleName}}: %v", err)
 		return fctx.ErrResponse(ErrCreate{{.StructName}}Failed)
 	}
 	// TODO: send email verification

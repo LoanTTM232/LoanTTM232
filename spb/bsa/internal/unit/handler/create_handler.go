@@ -29,15 +29,14 @@ func (s *Handler) Create(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.FErrorf("error parse json to struct: %v", err)
+		logger.Errorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(ErrCreateUnitFailed)
 	}
 	unitCreated, err := s.service.Create(reqBody)
 	if err != nil {
-		logger.FErrorf("error create unit: %v", err)
+		logger.Errorf("error create unit: %v", err)
 		return fctx.ErrResponse(ErrCreateUnitFailed)
 	}
-	// TODO: send email verification
 	unitResponse := utility.MapUnitEntityToResponse(unitCreated)
 
 	return fctx.JsonResponse(fiber.StatusOK, unitResponse)

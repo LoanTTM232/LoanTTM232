@@ -1,13 +1,19 @@
 package entities
 
-import "time"
+import (
+	"time"
+
+	"spb/bsa/pkg/entities/enum"
+)
 
 var NotificationTN = "notification"
 
 type Notification struct {
 	Base
-	AdditionalData     string           `gorm:"type:text" json:"additional_data"`
-	Status             int8             `json:"status"`
+	Status             enum.Progress    `gorm:"type:progress" json:"status"`
+	Platform           enum.Platform    `gorm:"type:platform" json:"platform"`
+	Title              string           `gorm:"size:255;not null" json:"title"`
+	Message            string           `gorm:"type:text" json:"message"`
 	NotificationTypeID string           `gorm:"type:uuid;not null" json:"notification_type_id"`
 	NotificationType   NotificationType `gorm:"foreignKey:NotificationTypeID" json:"notification_type"`
 	SenderID           string           `gorm:"type:uuid;not null" json:"sender_id"`

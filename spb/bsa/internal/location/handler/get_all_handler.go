@@ -29,7 +29,7 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 
 	locations, err := s.service.GetAll()
 	if err != nil {
-		logger.FErrorf("error get locations: %v", err)
+		logger.Errorf("error get locations: %v", err)
 		return fctx.ErrResponse(ErrGetLocationsFailed)
 	}
 

@@ -26,13 +26,13 @@ func (s *Handler) Delete(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if {{.ModuleName}}Id, err = fctx.ParseUUID("id"); err != nil {
-		logger.FErrorf("error parse {{.ModuleName}} id: %v", err)
+		logger.Errorf("error parse {{.ModuleName}} id: %v", err)
 		return fctx.ErrResponse(ErrDelete{{.StructName}}Failed)
 	}
 
 	err = s.service.Delete({{.ModuleName}}Id)
 	if err != nil {
-		logger.FErrorf("error delete {{.ModuleName}}: %v", err)
+		logger.Errorf("error delete {{.ModuleName}}: %v", err)
 		return fctx.ErrResponse(ErrDelete{{.StructName}}Failed)
 	}
 	return fctx.JsonResponse(fiber.StatusOK, "delete {{.ModuleName}} success")

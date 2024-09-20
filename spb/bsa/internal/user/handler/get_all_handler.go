@@ -39,7 +39,7 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 
 	users, err := s.service.GetAll(reqBody)
 	if err != nil {
-		logger.FErrorf("error get users: %v", err)
+		logger.Errorf("error get users: %v", err)
 		return fctx.ErrResponse(ErrGetUsersFailed)
 	}
 

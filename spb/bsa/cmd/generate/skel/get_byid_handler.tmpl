@@ -35,18 +35,18 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	claims, err := auth.GetTokenFromCookie(ctx)
 	if err != nil {
-		logger.FErrorf("error parse jwt: %v", err)
+		logger.Errorf("error parse jwt: %v", err)
 		return fctx.ErrResponse(ErrGet{{.StructName}}Failed)
 	}
 
 	if {{.ModuleName}}Id, err = fctx.ParseUUID("id"); err != nil {
-		logger.FErrorf("error parse {{.ModuleName}} id: %v", err)
+		logger.Errorf("error parse {{.ModuleName}} id: %v", err)
 		return fctx.ErrResponse(ErrGet{{.StructName}}Failed)
 	}
 
 	role := claims["role"].(string)
 	if {{.ModuleName}}, err = s.service.GetByID({{.ModuleName}}Id, role); err != nil {
-		logger.FErrorf("error get {{.ModuleName}} by id: %v", err)
+		logger.Errorf("error get {{.ModuleName}} by id: %v", err)
 		return fctx.ErrResponse(Err{{.StructName}}NotFound)
 	}
 

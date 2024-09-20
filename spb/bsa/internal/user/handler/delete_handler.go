@@ -26,13 +26,13 @@ func (s *Handler) Delete(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if userId, err = fctx.ParseUUID("id"); err != nil {
-		logger.FErrorf("error parse user id: %v", err)
+		logger.Errorf("error parse user id: %v", err)
 		return fctx.ErrResponse(ErrDeleteUserFailed)
 	}
 
 	err = s.service.Delete(userId)
 	if err != nil {
-		logger.FErrorf("error delete user: %v", err)
+		logger.Errorf("error delete user: %v", err)
 		return fctx.ErrResponse(ErrDeleteUserFailed)
 	}
 	return fctx.JsonResponse(fiber.StatusOK, "delete user success")

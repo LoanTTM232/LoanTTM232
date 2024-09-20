@@ -26,13 +26,13 @@ func (s *Handler) Delete(ctx fiber.Ctx) error {
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if locationId, err = fctx.ParseUUID("id"); err != nil {
-		logger.FErrorf("error parse location id: %v", err)
+		logger.Errorf("error parse location id: %v", err)
 		return fctx.ErrResponse(ErrDeleteLocationFailed)
 	}
 
 	err = s.service.Delete(locationId)
 	if err != nil {
-		logger.FErrorf("error delete location: %v", err)
+		logger.Errorf("error delete location: %v", err)
 		return fctx.ErrResponse(ErrDeleteLocationFailed)
 	}
 	return fctx.JsonResponse(fiber.StatusOK, "delete location success")

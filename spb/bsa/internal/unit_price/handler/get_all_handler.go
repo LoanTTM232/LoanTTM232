@@ -35,7 +35,7 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 
 	unit_prices, err := s.service.GetAll(reqBody)
 	if err != nil {
-		logger.FErrorf("error get unit_prices: %v", err)
+		logger.Errorf("error get unit_prices: %v", err)
 		return fctx.ErrResponse(ErrGetUnitPricesFailed)
 	}
 
