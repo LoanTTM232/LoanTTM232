@@ -3,7 +3,6 @@ package worker
 import (
 	"context"
 
-	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/queue"
 
 	"github.com/gofiber/storage/redis/v3"
@@ -13,16 +12,9 @@ type Option func(*options)
 
 type options struct {
 	runFunc     func(context.Context, queue.QueuedMessage) error
-	logger      *logger.ZapLog
 	channelName string
 	channelSize int
 	redisClient *redis.Storage
-}
-
-func WithLogger(log *logger.ZapLog) Option {
-	return func(o *options) {
-		o.logger = log
-	}
 }
 
 func WithChannelName(channelName string) Option {
@@ -52,7 +44,6 @@ func WithRunFunc(runFunc func(context.Context, queue.QueuedMessage) error) Optio
 func newOptions(opts ...Option) options {
 	options := options{
 		runFunc:     nil,
-		logger:      nil,
 		channelName: "",
 		channelSize: 1000,
 		redisClient: nil,

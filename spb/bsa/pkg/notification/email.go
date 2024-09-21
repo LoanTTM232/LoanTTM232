@@ -5,6 +5,7 @@ import (
 
 	"spb/bsa/pkg/aws/ses"
 	"spb/bsa/pkg/config"
+	"spb/bsa/pkg/entities/enum"
 	"spb/bsa/pkg/logger"
 )
 
@@ -14,33 +15,31 @@ type EmailService interface {
 	SendNotification(ctx context.Context, data interface{}, cfg *config.Config) (*ResponsePush, error)
 }
 
-func NewEmailService(sesService ses.SESService, log *logger.ZapLog) {
+func NewEmailService(sesService ses.SESService) {
 	ESInstance = &emailService{
 		sesService: sesService,
-		logger:     log,
 	}
 }
 
 type emailService struct {
 	sesService ses.SESService
-	logger     *logger.ZapLog
 }
 
 func (e *emailService) SendNotification(ctx context.Context, data interface{}, cfg *config.Config) (*ResponsePush, error) {
 	email := data.(*ses.EmailInfo)
-	e.logger.Infof("Send email to %s", email.To)
+	logger.Infof("Send email to %s", email.To)
 
 	resp := new(ResponsePush)
 	output, err := e.sesService.SendEmail(email)
 	if err != nil {
 		resp.Logs = append(resp.Logs, logPush(data.(*PushNotification),
-			NOTIFY_FAILED, config.VERIFY_USER_NT, ErrEmailSendFailed(err)))
+			string(enum.FAILURE), config.VERIFY_USER_NT, ErrEmailSendFailed(err)))
 		return resp, err
 	}
 
-	e.logger.Infof(output.String())
+	logger.Infof(output.String())
 	resp.Logs = append(resp.Logs, logPush(data.(*PushNotification),
-		NOTIFY_SUCCESS, config.VERIFY_USER_NT, nil))
+		string(enum.SUCCESS), config.VERIFY_USER_NT, nil))
 
 	return resp, nil
 }

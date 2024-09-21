@@ -6,8 +6,13 @@ import (
 
 	_ "spb/bsa/docs"
 	"spb/bsa/internal/auth"
+	"spb/bsa/internal/location"
+	"spb/bsa/internal/metadata"
+	"spb/bsa/internal/notification"
+	"spb/bsa/internal/notification_type"
 	"spb/bsa/internal/role"
 	"spb/bsa/internal/sport_type"
+	"spb/bsa/internal/unit"
 	"spb/bsa/internal/unit_price"
 	"spb/bsa/internal/unit_service"
 	"spb/bsa/internal/user"
@@ -16,7 +21,7 @@ import (
 	"spb/bsa/pkg/global"
 	zaplog "spb/bsa/pkg/logger"
 	"spb/bsa/pkg/middleware"
-	"spb/bsa/pkg/notification"
+	notify "spb/bsa/pkg/notification"
 	database "spb/bsa/pkg/postgres"
 	"spb/bsa/pkg/redis"
 	"spb/bsa/pkg/swagger"
@@ -80,9 +85,8 @@ func (f *Fiber) GetApp() {
 	}
 	global.SPB_SES = ses.NewSESService(global.SPB_AWS)
 	// initialize notification
-	global.SPB_NOTIFY = notification.NewNotification(
+	global.SPB_NOTIFY = notify.NewNotification(
 		global.SPB_CONFIG,
-		zaplog.Zlog,
 		global.SPB_REDIS,
 		ses.NewSESService(global.SPB_AWS))
 
@@ -137,7 +141,12 @@ func (f *Fiber) LoadRoutes() {
 	user.LoadModule(router, custMiddlewares)
 	unit_service.LoadModule(router, custMiddlewares)
 	unit_price.LoadModule(router, custMiddlewares)
+	unit.LoadModule(router, custMiddlewares)
 	sport_type.LoadModule(router, custMiddlewares)
+	location.LoadModule(router, custMiddlewares)
+	metadata.LoadModule(router, custMiddlewares)
+	notification_type.LoadModule(router, custMiddlewares)
+	notification.LoadModule(router, custMiddlewares)
 
 	// a custom 404 handler
 	f.App.Use(func(ctx fiber.Ctx) error {
@@ -157,7 +166,7 @@ func (f *Fiber) Start() {
 
 	defer database.CloseDB(global.SPB_DB)
 	defer redis.CloseRedisClient(global.SPB_REDIS)
-	defer notification.Shutdown(global.SPB_NOTIFY)
+	defer notify.Shutdown(global.SPB_NOTIFY)
 
 	err := f.App.Listen(fmt.Sprintf(":%s", global.SPB_CONFIG.Server.Port))
 	if err != nil {

@@ -39,12 +39,5 @@ func (h *Handler) AccountRegister(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(ErrRegisterFailed)
 	}
 
-	// TODO: send email verification
-	// notifyType, err := notification_type.NotificationTypeService.GetByName(config.VERIFY_USER_NT)
-	// if err != nil {
-	// 	logger.Errorf("get notification type failed: %v", err)
-	// 	return fctx.ErrResponse(ErrRegisterFailed)
-	// }
-
 	return fctx.JsonResponse(fiber.StatusOK, nil, "register success")
 }

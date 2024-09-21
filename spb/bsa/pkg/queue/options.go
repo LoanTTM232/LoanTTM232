@@ -3,8 +3,6 @@ package queue
 import (
 	"context"
 	"runtime"
-
-	"spb/bsa/pkg/logger"
 )
 
 var (
@@ -17,7 +15,6 @@ var (
 type Options struct {
 	workerCount int
 	queueSize   int
-	logger      *logger.ZapLog
 	worker      Worker
 	fn          func(context.Context, QueuedMessage) error
 	afterFn     func()
@@ -26,7 +23,6 @@ type Options struct {
 
 func NewOptions(opts ...Option) *Options {
 	options := &Options{
-		logger:      nil,
 		workerCount: defaultWorkerCount,
 		queueSize:   defaultCapacity,
 		worker:      nil,
@@ -64,12 +60,6 @@ func WithQueueSize(queueSize int) Option {
 func WithWorker(worker Worker) Option {
 	return OptionFunc(func(o *Options) {
 		o.worker = worker
-	})
-}
-
-func WithLogger(log *logger.ZapLog) Option {
-	return OptionFunc(func(o *Options) {
-		o.logger = log
 	})
 }
 

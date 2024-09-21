@@ -11,13 +11,11 @@ import (
 )
 
 type Notification struct {
-	queue  *queue.Queue
-	logger *logger.ZapLog
+	queue *queue.Queue
 }
 
 func NewNotification(
 	configVal *config.Config,
-	log *logger.ZapLog,
 	redisClient *redis.Storage,
 	sesService ses.SESService,
 ) *Notification {
@@ -27,34 +25,32 @@ func NewNotification(
 		redisw.WithChannelName(notifConfig.RedisQueue.ChannelName),
 		redisw.WithChannelSize(notifConfig.RedisQueue.ChannelSize),
 		redisw.WithRunFunc(Run(configVal)),
-		redisw.WithLogger(log),
 	)
 
 	redisQueue := queue.NewPool(
 		int(notifConfig.RedisQueue.WorkerNum),
 		queue.WithWorker(worker),
-		queue.WithLogger(log),
 	)
 
-	NewEmailService(sesService, log)
+	NewEmailService(sesService)
 
 	return &Notification{
-		queue:  redisQueue,
-		logger: log,
+		queue: redisQueue,
 	}
 }
 
 func Shutdown(n *Notification) {
 	n.queue.Release()
-	n.logger.Infof("Notification service shutdown")
+	logger.Infof("Notification service shutdown")
 }
 
 func (n *Notification) SendEmail(data *PushNotification) error {
-	n.logger.Infof("Send email [%s] to: %+v", data.Title, data.To)
+	logger.Infof("Send email [%s] to: %+v", data.Title, data.To)
 
+	data.Data = data.Bytes()
 	err := n.queue.Queue(data)
 	if err != nil {
-		n.logger.Errorf("Can't send notification: %v", err)
+		logger.Errorf("Can't send notification: %v", err)
 		return err
 	}
 	return nil

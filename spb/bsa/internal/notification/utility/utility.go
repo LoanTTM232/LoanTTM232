@@ -33,11 +33,11 @@ func MapCreateRequestToEntity(
 		},
 		Status:             enum.Progress(reqBody.Status),
 		NotificationTypeID: notifyType.ID,
-		Platform:           reqBody.Platform,
+		Platform:           enum.Platform(reqBody.Platform),
 		Title:              reqBody.Title,
 		Message:            reqBody.Message,
-		SenderID:           *reqBody.SenderID,
-		ReceiverID:         *reqBody.ReceiverID,
-		ReadAt:             *reqBody.ReadAt,
+		SenderID:           reqBody.SenderID,
+		ReceiverID:         reqBody.ReceiverID,
+		ReadAt:             reqBody.ReadAt,
 	}
 }

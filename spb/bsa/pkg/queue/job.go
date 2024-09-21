@@ -20,7 +20,7 @@ type Message struct {
 	RetryMin    time.Duration `json:"retry_min"`
 	RetryMax    time.Duration `json:"retry_max"`
 	Jitter      bool          `json:"jitter"`
-	Data        []byte        `json:"data"`
+	Data        []byte
 }
 
 func (m *Message) Bytes() []byte {
@@ -42,6 +42,7 @@ func NewMessage(m QueuedMessage, opts ...AllowOption) Message {
 		RetryMin:    o.retryMin,
 		RetryMax:    o.retryMax,
 		Jitter:      o.jitter,
+		Payload:     m.Bytes(),
 	}
 }
 

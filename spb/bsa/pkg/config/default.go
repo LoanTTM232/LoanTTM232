@@ -8,4 +8,7 @@ const (
 
 	// notification type
 	VERIFY_USER_NT = "VERIFY:USER"
+
+	// metadata keys
+	OPERATOR_EMAIL_KEY = "operator_email"
 )

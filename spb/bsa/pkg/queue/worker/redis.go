@@ -7,6 +7,7 @@ import (
 	"sync/atomic"
 	"time"
 
+	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/queue"
 
 	"github.com/redis/go-redis/v9"
@@ -35,7 +36,7 @@ func NewWorker(opts ...Option) *Worker {
 
 	_, err = w.rdb.Ping(context.Background()).Result()
 	if err != nil {
-		w.opts.logger.Fatalf("%v", err)
+		logger.Fatalf("%v", err)
 	}
 	ctx := context.Background()
 	switch v := w.rdb.(type) {
@@ -52,7 +53,7 @@ func NewWorker(opts ...Option) *Worker {
 
 	w.channel = w.pubsub.Channel(ropts...)
 	if err := w.pubsub.Ping(ctx); err != nil {
-		w.opts.logger.Fatalf("%v", err)
+		logger.Fatalf("%v", err)
 	}
 
 	return w

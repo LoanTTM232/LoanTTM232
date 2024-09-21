@@ -20,9 +20,8 @@ Authentication API for user (Admin, Club Owner, Member, User)
 | 3   | &#x2705;    | POST   | /auth/refresh         |            | Admin, Club Owner, Member, User can refresh             |
 | 4   | &#x274c;    | POST   | /auth/logout          |            | Admin, Club Owner, Member, User can logout              |
 | 5   | &#x274c;    | GET    | /auth/verify-email    |            | Club Owner, Member, User can verify email               |
-| 6   | &#x274c;    | POST   | /auth/resend-verify   |            | Club Owner, Member, User can resend verify email        |
-| 7   | &#x274c;    | POST   | /auth/forgot-password |            | Admin, Club Owner, Member, User can use forgot password |
-| 8   | &#x274c;    | POST   | /auth/reset-password  |            | Club Owner, Member, User can reset password             |
+| 6   | &#x274c;    | POST   | /auth/forgot-password |            | Admin, Club Owner, Member, User can use forgot password |
+| 7   | &#x274c;    | POST   | /auth/reset-password  |            | Club Owner, Member, User can reset password             |
 
 ---
 

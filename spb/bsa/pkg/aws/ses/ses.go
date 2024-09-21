@@ -2,6 +2,7 @@ package ses
 
 import (
 	aws_local "spb/bsa/pkg/aws"
+	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -58,6 +59,8 @@ func (s *sesService) SendEmail(email *EmailInfo) (*ses.SendEmailOutput, error) {
 		},
 		Source: aws.String(email.From),
 	}
+
+	logger.Debugf("sending email ..................................")
 
 	// Attempt to send the email.
 	result, err := s.sesInstance.SendEmail(input)

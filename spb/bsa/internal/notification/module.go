@@ -4,10 +4,9 @@ import (
 	handler "spb/bsa/internal/notification/handler"
 	"spb/bsa/internal/notification/service"
 	"spb/bsa/pkg/middleware"
+	_ "spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
-
-	_ "spb/bsa/pkg/utils"
 )
 
 var (
@@ -24,7 +23,7 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	NotificationService = service.NewService()
 	NotificationHandler = handler.NewHandler(NotificationService)
 
-	// notificationRoute := router.Group("/api/v1/notifications")
-	// notificationRoute.Get("/", customMiddleware.CheckAccess("notification:list"), NotificationHandler.GetAll)
-	// notificationRoute.Get("/:id", customMiddleware.CheckAccess("notification:read"), NotificationHandler.GetByID)
+	notificationRoute := router.Group("/api/v1/notifications")
+	notificationRoute.Post("/sender", NotificationHandler.GetBySender, customMiddleware.CheckAccess("notification:list"))
+	notificationRoute.Post("/receiver", NotificationHandler.GetByReceiver, customMiddleware.CheckAccess("notification:list"))
 }

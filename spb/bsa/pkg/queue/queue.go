@@ -15,7 +15,6 @@ import (
 
 type Queue struct {
 	mu          sync.Mutex
-	logger      *logger.ZapLog
 	metric      *metric
 	workerCount int
 	workerGroup *routineGroup
@@ -32,7 +31,7 @@ func NewQueue(opts ...Option) (*Queue, error) {
 	q := &Queue{
 		workerGroup: NewRoutineGroup(),
 		quit:        make(chan struct{}),
-		ready:       make(chan struct{}),
+		ready:       make(chan struct{}, 1),
 		workerCount: o.workerCount,
 		worker:      o.worker,
 		stopOnce:    sync.Once{},
@@ -68,10 +67,10 @@ func (q *Queue) Shutdown() {
 
 	q.stopOnce.Do(func() {
 		if q.metric.BusyWorkers() > 0 {
-			q.logger.Infof("shutdown all tasks: %d workers", q.metric.BusyWorkers())
+			logger.Infof("shutdown all tasks: %d workers", q.metric.BusyWorkers())
 		}
 		if err := q.worker.Shutdown(); err != nil {
-			q.logger.Errorf("failed to shutdown worker: %v", err)
+			logger.Errorf("failed to shutdown worker: %v", err)
 		}
 		close(q.quit)
 	})
@@ -131,7 +130,7 @@ func (q *Queue) work(task QueuedMessage) {
 		q.metric.DecBusyWorker()
 		e := recover()
 		if e != nil {
-			q.logger.Errorf("panic error: %v", e)
+			logger.Errorf("panic error: %v", e)
 		}
 		q.schedule()
 
@@ -146,7 +145,7 @@ func (q *Queue) work(task QueuedMessage) {
 	}()
 
 	if err = q.run(task); err != nil {
-		q.logger.Errorf("failed to run task: %v", err)
+		logger.Errorf("failed to run task: %v", err)
 	}
 }
 
@@ -201,7 +200,7 @@ func (q *Queue) handle(m *Message) error {
 
 			select {
 			case <-time.After(delay):
-				q.logger.Infof("retry remaining times: %d, delay time: %s", m.RetryCount, delay)
+				logger.Infof("retry remaining times: %d, delay time: %s", m.RetryCount, delay)
 			case <-ctx.Done():
 				err = ctx.Err()
 				break loop
@@ -268,6 +267,7 @@ func (q *Queue) start() {
 		// fetch task
 		q.workerGroup.Go(func() {
 			for {
+				logger.Debugf("fetch task .....")
 				t, err := q.worker.Request()
 				if t == nil || err != nil {
 					if err != nil {
