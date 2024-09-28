@@ -73,7 +73,7 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 	}
 
 	// Get notification template for email verify
-	oEmailTemplate, err := notifyTypeServ.NotificationTypeService.GetByName(config.VERIFY_USER_NT)
+	oEmailTemplate, err := notifyTypeServ.NotificationTypeService.GetByType(config.VERIFY_USER_NT)
 	if err != nil || oEmailTemplate.Template == "" {
 		tx.Rollback()
 		return nil, logger.RErrorf("Can't get notification template: %v", err)
@@ -90,7 +90,7 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 	notify := &notification.PushNotification{
 		ID:       uuid.New().String(),
 		Platform: enum.EMAIL,
-		Title:    oEmailTemplate.Description,
+		Title:    oEmailTemplate.Title,
 		Message:  message,
 		Charset:  "utf-8",
 		To:       []string{u.Email},

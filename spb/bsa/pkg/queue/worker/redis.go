@@ -93,6 +93,7 @@ func (w *Worker) Queue(job queue.QueuedMessage) error {
 	return nil
 }
 
+// Request task from redis pubsub queue every 5 second
 func (w *Worker) Request() (queue.QueuedMessage, error) {
 	clock := 0
 loop:

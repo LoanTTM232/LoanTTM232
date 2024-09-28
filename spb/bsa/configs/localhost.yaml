@@ -54,7 +54,6 @@ logging:
         - "console"
         # - "file"
     filename: "requests.log"
-    debug_symbol: "-"
 
 aws:
     region: "us-east-1"

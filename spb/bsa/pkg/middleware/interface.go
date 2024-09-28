@@ -9,6 +9,6 @@ import "github.com/gofiber/fiber/v3"
 // @param: ignorePaths []string
 type ICustomMiddleware interface {
 	CheckJwt(...string) fiber.Handler
-	CheckAccess(...string) fiber.Handler
+	CheckAccess(string) fiber.Handler
 	Log() fiber.Handler
 }

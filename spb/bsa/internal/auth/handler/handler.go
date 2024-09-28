@@ -98,10 +98,10 @@ func GenerateUserToken(user *entities.User, tokenType string) *jwt.Token {
 		UserID: user.ID,
 		Email:  user.Email,
 		Role:   user.Role.Name,
-		Permissions: func() []string {
-			var permissions []string
-			for _, p := range user.Role.Permissions {
-				permissions = append(permissions, p.Name)
+		Permissions: func() map[string]int {
+			permissions := make(map[string]int)
+			for id, p := range user.Role.Permissions {
+				permissions[p.Name] = id
 			}
 			return permissions
 		}(),
@@ -115,23 +115,25 @@ func GenerateUserToken(user *entities.User, tokenType string) *jwt.Token {
 
 // @author: LoanTT
 // @function: TokenNext
-// @description: set token to cookie and cache
+// @description: set access token to cookie and cache
 // @param: fctx *utils.FiberCtx
 // @param: ctx fiber.Ctx
 // @param: user *entities.User
 // @param: tokens map[string]string
 // @return: err error
 func TokenNext(fctx *utils.FiberCtx, ctx fiber.Ctx, user *entities.User, tokens map[string]string) error {
-	if prevToken, err := cache.JwtCacheApp.GetJwt(user.Email); err == nil && prevToken == "" {
+	prevToken, err := cache.JwtCacheApp.GetJwt(user.Email)
+	switch {
+	case err == nil && prevToken == "":
 		if err := cache.JwtCacheApp.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME]); err != nil {
 			return logger.RErrorf("error set token to cache: %v", err)
 		}
 		if err := SetTokenToCookie(tokens, ctx); err != nil {
 			return err
 		}
-	} else if err != nil {
+	case err != nil:
 		return logger.RErrorf("error get token to cache: %v", err)
-	} else {
+	case prevToken != "":
 		if err := cache.JwtCacheApp.SetToBlackList(prevToken, global.SPB_CONFIG.JWT.AccessTokenExp); err != nil {
 			return logger.RErrorf("error set token to cache: %v", err)
 		}
@@ -142,5 +144,6 @@ func TokenNext(fctx *utils.FiberCtx, ctx fiber.Ctx, user *entities.User, tokens 
 			return err
 		}
 	}
+
 	return nil
 }

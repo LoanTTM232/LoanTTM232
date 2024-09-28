@@ -20,7 +20,7 @@ var ErrEmailExists = errors.New("email already exists")
 func (s *Service) Create(reqBody *model.CreateNotificationRequest, tx *gorm.DB) (*tb.Notification, error) {
 	notifyType := new(tb.NotificationType)
 	if err := tx.
-		Where("name = ?", reqBody.NotificationType).
+		Where("type = ?", reqBody.NotificationType).
 		First(notifyType).Error; err != nil {
 		return nil, err
 	}

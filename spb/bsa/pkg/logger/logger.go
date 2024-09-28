@@ -30,7 +30,6 @@ type ZapLog struct {
 	Output        OutputTypes
 	Filename      *string
 	Level         int
-	DebugSymbol   *string
 }
 
 var Zlog = &ZapLog{}
@@ -52,17 +51,11 @@ func NewZlog(configVal *config.Config) {
 		Console: slices.Contains(configVal.Logging.Output, "console"),
 	}
 	Zlog.Level = configVal.Logging.Level
-	Zlog.DebugSymbol = configVal.Logging.DebugSymbol
 	Zlog.Filename = &configVal.Logging.Filename
 	Zlog.setLevel(configVal.Logging.Level)
 	logFile.Filename = fmt.Sprintf("./log/%s", *Zlog.Filename)
 
 	Zlog.ConsoleLogger = newConsoleLogger()
-}
-
-func (zl *ZapLog) SetDebugSymbol(symbol *string) *ZapLog {
-	zl.DebugSymbol = symbol
-	return zl
 }
 
 func (zl *ZapLog) getField(key string, value interface{}) zap.Field {

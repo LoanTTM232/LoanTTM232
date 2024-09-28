@@ -13,16 +13,17 @@ type TaskFunc func(context.Context) error
 type Message struct {
 	Task        TaskFunc      `json:"-"`
 	Timeout     time.Duration `json:"timeout"`
-	Payload     []byte        `json:"payload"`
+	Payload     []byte        `json:"body"`
 	RetryCount  int64         `json:"retry_count"`
 	RetryDelay  time.Duration `json:"retry_delay"`
 	RetryFactor float64       `json:"retry_factor"`
 	RetryMin    time.Duration `json:"retry_min"`
 	RetryMax    time.Duration `json:"retry_max"`
 	Jitter      bool          `json:"jitter"`
-	Data        []byte
+	Data        []byte        `json:"-"`
 }
 
+// Bytes get
 func (m *Message) Bytes() []byte {
 	return m.Data
 }

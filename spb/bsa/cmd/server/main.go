@@ -79,16 +79,15 @@ func (f *Fiber) GetApp() {
 		panic(fmt.Sprintf("failed to create validator: %v\n", err))
 	}
 	// load aws session
-	global.SPB_AWS, err = aws.NewAWSSession(global.SPB_CONFIG)
+	awsSession, err := aws.NewAWSSession(global.SPB_CONFIG)
 	if err != nil {
 		panic(fmt.Sprintf("failed to connect aws: %v\n", err))
 	}
-	global.SPB_SES = ses.NewSESService(global.SPB_AWS)
 	// initialize notification
 	global.SPB_NOTIFY = notify.NewNotification(
 		global.SPB_CONFIG,
 		global.SPB_REDIS,
-		ses.NewSESService(global.SPB_AWS))
+		ses.NewSESService(awsSession))
 
 	// create fiber app
 	f.App = fiber.New(fiber.Config{
@@ -124,7 +123,6 @@ func (f *Fiber) LoadSwagger() {
 // @description: Load all routes
 func (f *Fiber) LoadRoutes() {
 	custMiddlewares := middleware.NewCustomMiddleware()
-
 	skipJwtCheckRoutes := []string{
 		"/api/v1/auth/login",
 		"/api/v1/auth/register",

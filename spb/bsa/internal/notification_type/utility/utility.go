@@ -13,8 +13,9 @@ import (
 func MapNotificationTypeEntityToResponse(notificationType *tb.NotificationType) model.NotificationTypeResponse {
 	return model.NotificationTypeResponse{
 		NotificationTypeID: notificationType.ID,
-		Name:               notificationType.Name,
+		Type:               notificationType.Type,
 		Template:           notificationType.Template,
+		Title:              notificationType.Title,
 		Description:        notificationType.Description,
 	}
 }

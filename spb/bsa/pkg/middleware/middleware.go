@@ -27,9 +27,9 @@ func (cm *CustomMiddleware) Log() fiber.Handler {
 // @function: CheckPermissionAccess
 // @description: permission middleware
 // @return: fiber.Handler
-// @param: permissionsRequired ...string
-func (cm *CustomMiddleware) CheckAccess(permissionsRequired ...string) fiber.Handler {
-	return CheckPermissionAccess(permissionsRequired...)
+// @param: permissionsRequired string
+func (cm *CustomMiddleware) CheckAccess(permissionsRequired string) fiber.Handler {
+	return CheckPermissionAccess(permissionsRequired)
 }
 
 // @author: LoanTT

@@ -3,7 +3,6 @@ package logger
 import (
 	"fmt"
 	"os"
-	"strings"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -56,13 +55,7 @@ func Fatalf(format string, args ...interface{}) {
 func (zl *ZapLog) Debugf(format string, args ...interface{}) {
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= DebugLevel {
-		if zl.DebugSymbol != nil {
-			fmt.Printf("%s DEBUG %s\n", strings.Repeat(*zl.DebugSymbol, 20), strings.Repeat(*zl.DebugSymbol, 20))
-			sugar.Debugf(format, args...)
-			fmt.Println(strings.Repeat(*zl.DebugSymbol, 47))
-		} else {
-			sugar.Debugf(format, args...)
-		}
+		sugar.Debugf(format, args...)
 	}
 }
 

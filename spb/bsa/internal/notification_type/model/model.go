@@ -2,7 +2,8 @@ package model
 
 type NotificationTypeResponse struct {
 	NotificationTypeID string `json:"notification_type_id"`
-	Name               string `json:"name"`
+	Type               string `json:"type"`
 	Template           string `json:"template"`
+	Title              string `json:"title"`
 	Description        string `json:"description"`
 }

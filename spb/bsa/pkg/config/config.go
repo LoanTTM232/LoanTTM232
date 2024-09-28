@@ -33,10 +33,9 @@ type Redis struct {
 }
 
 type Logging struct {
-	Level       int      `mapstructure:"level"`
-	DebugSymbol *string  `mapstructure:"debug_symbol"`
-	Output      []string `mapstructure:"output"`
-	Filename    string   `mapstructure:"filename"`
+	Level    int      `mapstructure:"level"`
+	Output   []string `mapstructure:"output"`
+	Filename string   `mapstructure:"filename"`
 }
 
 type Server struct {

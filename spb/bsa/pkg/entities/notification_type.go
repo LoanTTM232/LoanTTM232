@@ -9,8 +9,9 @@ var NotificationTypeTN = "notification_type"
 
 type NotificationType struct {
 	Base
-	Name        string `gorm:"size:255;unique;not null" json:"name"`
+	Type        string `gorm:"size:255;unique;not null" json:"type"`
 	Template    string `gorm:"type:text;not null" json:"template"`
+	Title       string `gorm:"size:500;not null" json:"title"`
 	Description string `gorm:"type:text" json:"description"`
 }
 
