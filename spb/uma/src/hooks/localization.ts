@@ -27,7 +27,7 @@ const strings = new LocalizedStrings({
     termsOfService: "Terms of Service",
     language: "Language",
     theme: "Theme",
-    
+    booking: "Booking",
   },
   vi: {
     welcome: "Chào mừng đến với ứng dụng!",
@@ -55,5 +55,6 @@ const strings = new LocalizedStrings({
     termsOfService: "Điều khoản dịch vụ",
     language: "Ngôn ngữ",
     theme: "Chủ đề",
+    booking: "Đặt chỗ",
   },
 });

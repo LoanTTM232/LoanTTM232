@@ -1,44 +1,53 @@
-import { apiService } from './httpService';
+import { httpService } from './httpService'; // Assuming httpService is set up as described earlier
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
-interface User {
-  id: string;
-  username: string;
-  email: string;
-}
+// Define login request function
+export const login = async (email: string, password: string) => {
+  try {
+    const response = await httpService.post('/auth/login', { email, password });
 
-interface AuthResponse {
-  user: User;
-  token: string;
-}
-
-class AuthService {
-  private static instance: AuthService;
-
-  private constructor() {}
-
-  public static getInstance(): AuthService {
-    if (!AuthService.instance) {
-      AuthService.instance = new AuthService();
+    // If the login is successful, store the token
+    if (response.data?.data.access_token) {
+      await AsyncStorage.setItem('authToken', response.data.data.access_token);
+      return response.data;
+    } else {
+      throw new Error('Login failed: No tokens returned');
     }
-    return AuthService.instance;
-  }
-
-  public async login(email: string, password: string): Promise<User> {
-    try {
-      const response = await apiService.post<AuthResponse>('/auth/login', { email, password });
-      localStorage.setItem('token', response.token);
-      return response.user;
-    } catch (error) {
-      console.error('Login failed:', error);
-      throw error;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log('Login Error:', error.message);
+    } else {
+      console.log('An unknown error occurred during login.');
     }
+    return null;
   }
+};
 
+// Define register request function
+export const register = async (email: string, password: string) => {
+  try {
+    const response = await httpService.post('/auth/register', { email, password});
 
-
-  public isAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
+    // Handle the successful registration response
+    if (response.data.data.message) {
+      return response.data.data.message;  
+    } else {
+      throw new Error('Registration failed');
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log('Registration Error:', error.message);
+    } else {
+      console.log('An unknown error occurred during registration.');
+    }
+    return null;
   }
-}
+};
 
-export const authService = AuthService.getInstance();
+// Define logout function to remove token from AsyncStorage
+export const logout = async () => {
+    await AsyncStorage.removeItem('authToken');
+    Alert.alert('Logged out successfully');
+    return true;
+  };

@@ -1,73 +1,53 @@
-import { DefaultTheme, Theme } from "@react-navigation/native";
+import { MD3LightTheme, MD3DarkTheme } from 'react-native-paper';
+import { useColorScheme } from 'react-native';
+import { useEffect, useState } from 'react';
 
-// Define your custom theme interface
-interface CustomTheme extends Theme {
-  colors: Theme['colors'] & {
-    tabBar: string;
-    iconWhite: string;
-    iconBlack: string;
-    dynamicBackground: string;
-    shadow: string;
-    borderColorDark: string;
-    customBorderColor: string;
+export const lightTheme = {
+  ...MD3LightTheme,
+  colors: {
+    ...MD3LightTheme.colors,
+    primary: '#FF9800', // Orange for primary
+    accent: '#F57C00',  // Darker orange for accents
+    background: '#F5F5F5', // Light background
+    surface: '#FFFFFF',
+    text: '#000000',
+    placeholder: '#757575',
+    onSurface: '#000000',
+    error: '#B00020',
+    notification: '#4CAF50',            
+  },
+};
+
+export const darkTheme = {
+  ...MD3DarkTheme,
+  colors: {
+    ...MD3DarkTheme.colors,
+    primary: '#FFA726', // Lighter orange for dark mode
+    accent: '#FFB74D',  // Softer orange for accents
+    background: '#121212', // Dark background
+    surface: '#1E1E1E',
+    text: '#FFFFFF',
+    placeholder: '#BDBDBD',
+    onSurface: '#FFFFFF',
+    error: '#CF6679',
+    notification: '#66BB6A',            
+  },
+};
+
+//
+export const useThemeToggle = () => {
+  const systemScheme = useColorScheme();
+  const [isDarkTheme, setIsDarkTheme] = useState(systemScheme === 'dark');
+
+  useEffect(() => {
+    console.log('Theme updated:', isDarkTheme ? 'Dark' : 'Light');
+  }, [isDarkTheme]); // Log trạng thái theme để kiểm tra sự thay đổi
+
+  const toggleTheme = () => setIsDarkTheme((prevState) => !prevState);
+
+  return {
+    theme: isDarkTheme ? darkTheme : lightTheme,
+    toggleTheme,
+    isDarkTheme,
   };
-}
-
-export const palette = {
-  primary: "#0564d4",
-  secondary: "#ff6a00",
-  background: "#f6f8fa",
-  white: "#fff",
-  black: "#101214",
-  button: "#1c1e21",
-  shadow: "#757575",
-  text: "#30363b",
-  borderColor: "#d0d7de",
-  borderColorDark: "#333942",
-  placeholder: "#a1a1a1",
-  danger: "rgb(208, 2, 27)",
-  title: "rgb(102, 102, 102)",
-  separator: "rgb(194, 194, 195)",
-  highlight: "rgb(199, 198, 203)",
-  blackOverlay: "rgba(0,0,0,0.6)",
-  iconWhite: "#fff",
-  iconBlack: "#101214",
-  dynamicWhite: "#fff",
-  dynamicBlack: "#1c1e21",
-  dynamicBackground: "#fff",
-  transparent: "transparent",
-  calpyse: "#2b7488",
-};
-
-// Light Theme
-export const LightTheme: CustomTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    ...palette,
-    tabBar: palette.primary,
-    iconWhite: palette.white,
-    iconBlack: palette.black,
-    dynamicBackground: palette.background,
-    shadow: palette.shadow,
-    borderColorDark: palette.borderColorDark,
-    customBorderColor: palette.borderColor,
-  },
-};
-
-// Dark Theme
-export const DarkTheme: CustomTheme = {
-  ...LightTheme,
-  colors: {
-    ...LightTheme.colors,
-    background: palette.black,
-    text: palette.white,
-    tabBar: palette.black,
-    iconWhite: palette.black,
-    iconBlack: palette.white,
-    dynamicBackground: palette.dynamicBlack,
-    shadow: palette.transparent,
-    borderColorDark: palette.borderColorDark,
-    customBorderColor: palette.borderColorDark,
-  },
 };

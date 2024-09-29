@@ -1,77 +1,118 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
+import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Alert } from 'react-native'
+import { RootStackParamList } from '@/navigation'
+import { StackNavigationProp } from '@react-navigation/stack'
 
-class HttpService {
-  private axiosInstance: AxiosInstance;
+// Base URL for the API requests
+const BASE_URL = 'http://127.0.0.1:3000/api/v1'
 
-  constructor(baseURL: string) {
-    this.axiosInstance = axios.create({
-      baseURL,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      timeout: 10000, // 10 seconds timeout for requests
-    });
+// Create an Axios instance
+const api = axios.create({
+	baseURL: BASE_URL,
+	timeout: 10000,
+	headers: {
+		'Content-Type': 'application/json',
+	},
+})
 
-    // Request Interceptor
-    this.axiosInstance.interceptors.request.use(
-      (config: InternalAxiosRequestConfig) => {
-        // Attach the JWT token to the Authorization header if it exists
-        const token = localStorage.getItem('token');
-        if (token && config.headers) {
-          config.headers['Authorization'] = `Bearer ${token}`;
-        }
-        return config;
-      },
-      (error: AxiosError) => {
-        console.error('Request Error:', error);
-        return Promise.reject(error);
-      }
-    );
-
-    // Response Interceptor
-    this.axiosInstance.interceptors.response.use(
-      (response: AxiosResponse) => response,
-      (error: AxiosError) => {
-        if (error.response?.status === 401) {
-          localStorage.removeItem('token');
-          window.location.href = '/login';
-          console.log('Unauthorized, logging out...');
-        }
-        return Promise.reject(error);
-      }
-    );
-  }
-
-  // GET Request
-  public async get<T>(url: string, params?: any): Promise<T> {
-    const response = await this.axiosInstance.get<T>(url, { params });
-    return response.data;
-  }
-
-  // POST Request
-  public async post<T>(url: string, data: any): Promise<T> {
-    const response = await this.axiosInstance.post<T>(url, data);
-    return response.data;
-  }
-
-  // PUT Request
-  public async put<T>(url: string, data: any): Promise<T> {
-    const response = await this.axiosInstance.put<T>(url, data);
-    return response.data;
-  }
-
-  // DELETE Request
-  public async delete<T>(url: string): Promise<T> {
-    const response = await this.axiosInstance.delete<T>(url);
-    return response.data;
-  }
-
-  // PATCH Request
-  public async patch<T>(url: string, data: any): Promise<T> {
-    const response = await this.axiosInstance.patch<T>(url, data);
-    return response.data;
-  }
+// Function to get the access token from AsyncStorage
+const getAccessToken = async () => {
+	return await AsyncStorage.getItem('authToken')
 }
 
-// Export an instance of HttpService 
-export const apiService = new HttpService(process.env.REACT_APP_API_URL || 'http://localhost:3001/api/v1');
+// Function to set the access token in AsyncStorage
+const setAccessToken = async (token: string) => {
+	await AsyncStorage.setItem('authToken', token)
+}
+
+// Function to refresh the access token using the refresh token
+const refreshAccessToken = async () => {
+	try {
+		// Call the refresh token API.
+		const response = await api.post('/auth/refresh')
+		const newAccessToken = response.data.access_token
+		await setAccessToken(newAccessToken)
+		return newAccessToken
+	} catch (error) {
+		throw new Error('Unable to refresh token')
+	}
+}
+
+
+
+// Request interceptor to add Authorization token
+api.interceptors.request.use(
+	async (config: InternalAxiosRequestConfig) => {
+		const token = await getAccessToken()
+		if (token) {
+			config.headers['Authorization'] = `Bearer ${token}`
+		}
+		return config
+	},
+	(error) => {
+		return Promise.reject(error)
+	},
+)
+
+// Response interceptor to handle expired tokens and refresh them
+api.interceptors.response.use(
+	(response: AxiosResponse) => {
+		return response
+	},
+	async (error) => {
+		const originalRequest = error.config
+		const { response } = error
+
+		if (response && response.status === 401 && !originalRequest._retry) {
+			originalRequest._retry = true
+
+			try {
+				const newAccessToken = await refreshAccessToken()
+
+				// Retry the original request with the new access token
+				originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
+				return api(originalRequest)
+			} catch (refreshError) {
+				Alert.alert('Session Expired', 'Please log in again.')
+				await AsyncStorage.removeItem('authToken') // Clear token if refresh fails
+				// Redirect to login screen
+				// navigation.navigate('Login')
+				return Promise.reject(refreshError)
+			}
+		}
+
+		if (!response) {
+			Alert.alert('Network Error', 'Please check your internet connection.')
+		}
+
+		return Promise.reject(error)
+	},
+)
+
+// Function for GET requests
+const get = (url: string, config?: InternalAxiosRequestConfig) => {
+	return api.get(url, config)
+}
+
+// Function for POST requests
+const post = (url: string, data: any, config?: InternalAxiosRequestConfig) => {
+	return api.post(url, data, config)
+}
+
+// Function for PUT requests
+const put = (url: string, data: any, config?: InternalAxiosRequestConfig) => {
+	return api.put(url, data, config)
+}
+
+// Function for DELETE requests
+const del = (url: string, config?: InternalAxiosRequestConfig) => {
+	return api.delete(url, config)
+}
+
+export const httpService = {
+	get,
+	post,
+	put,
+	del,
+}

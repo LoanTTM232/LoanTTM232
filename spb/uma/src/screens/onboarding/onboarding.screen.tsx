@@ -1,7 +1,10 @@
 import { RootStackParamList } from '@/navigation'
 import { StackNavigationProp } from '@react-navigation/stack'
 import React from 'react'
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Image, Dimensions } from 'react-native'
+import Button from '@/components/AuthButton'
+import AppBar from '../../components/AppBarHeader'
+
 
 type OnboardingScreenNavigationProp = StackNavigationProp<
 	RootStackParamList,
@@ -12,20 +15,26 @@ type Props = {
 	navigation: OnboardingScreenNavigationProp
 }
 
+const { width, height } = Dimensions.get('window');
+const imageSource = require('../../../assets/img/onboarding.png'); 
+
 const OnboardingScreen: React.FC<Props> = ({ navigation }) => {
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>Welcome to the App!</Text>
-			<Button
-				title="Login"
-				onPress={() => navigation.navigate('Login')}
-				color="#1e90ff"
-			/>
-			<Button
-				title="Register"
-				onPress={() => navigation.navigate('Register')}
-				color="#32cd32"
-			/>
+			<AppBar navigateTo="Onboarding" />
+
+			<View style={styles.imgContainer}>
+			<Image source={imageSource} style={styles.image} resizeMode="cover" />
+			{/* <Image source={imageSource} style={styles.image} resizeMode="cover" />
+			<Image source={imageSource} style={styles.image} resizeMode="cover" /> */}
+			</View>
+
+			<View style={styles.buttonContainer}>
+				<Button
+					label="Get Started Now"
+					onPress={() => navigation.navigate('Register')}
+				></Button>
+			</View>
 		</View>
 	)
 }
@@ -33,14 +42,24 @@ const OnboardingScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
+		backgroundColor: '#F5F5F5',
+	},
+	imgContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
 		padding: 20,
 	},
-	title: {
-		fontSize: 24,
-		marginBottom: 20,
-		textAlign: 'center',
+	image: {
+		flexDirection: 'row',
+		width: (width - 40), 
+		height: height * 0.75, 
+		borderRadius: 8, 
+	  },
+	buttonContainer: {
+		padding: 20,
+		alignItems: 'center',
+		justifyContent: 'flex-end',
+		flex: 1,
 	},
 })
 
