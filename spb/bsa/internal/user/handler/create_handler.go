@@ -7,7 +7,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var ErrCreateUserFailed = fiber.NewError(fiber.StatusBadRequest, "create user failed")
@@ -23,18 +23,18 @@ var ErrCreateUserFailed = fiber.NewError(fiber.StatusBadRequest, "create user fa
 // @success 		200 {object} utils.JSONResult{data=model.UserResponse}		"Create user success"
 // @failure 		400 {object} utils.ErrorResult{message=string}        		"Create user failed"
 // @router 			/api/v1/users [post]
-func (s *Handler) Create(ctx *fiber.Ctx) error {
+func (s *Handler) Create(ctx fiber.Ctx) error {
 	var err error
 	reqBody := new(model.CreateUserRequest)
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.FErrorf("error parse json to struct: %v", err)
+		logger.Errorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(ErrCreateUserFailed)
 	}
 	userCreated, err := s.service.Create(reqBody)
 	if err != nil {
-		logger.FErrorf("error create user: %v", err)
+		logger.Errorf("error create user: %v", err)
 		return fctx.ErrResponse(ErrCreateUserFailed)
 	}
 	// TODO: send email verification

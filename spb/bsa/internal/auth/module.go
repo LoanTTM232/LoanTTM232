@@ -5,7 +5,7 @@ import (
 	"spb/bsa/internal/auth/service"
 	"spb/bsa/pkg/middleware"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var (

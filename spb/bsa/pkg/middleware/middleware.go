@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type CustomMiddleware struct{}
@@ -27,9 +27,9 @@ func (cm *CustomMiddleware) Log() fiber.Handler {
 // @function: CheckPermissionAccess
 // @description: permission middleware
 // @return: fiber.Handler
-// @param: permissionsRequired ...string
-func (cm *CustomMiddleware) CheckAccess(permissionsRequired ...string) fiber.Handler {
-	return CheckPermissionAccess(permissionsRequired...)
+// @param: permissionsRequired string
+func (cm *CustomMiddleware) CheckAccess(permissionsRequired string) fiber.Handler {
+	return CheckPermissionAccess(permissionsRequired)
 }
 
 // @author: LoanTT

@@ -4,7 +4,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var ErrDeleteUnitPriceFailed = fiber.NewError(fiber.StatusBadRequest, "delete unitPrice failed")
@@ -20,19 +20,19 @@ var ErrDeleteUnitPriceFailed = fiber.NewError(fiber.StatusBadRequest, "delete un
 // @success 		200 {object} utils.JSONResult{message=string}		"Delete unitPrice success"
 // @failure 		400 {object} utils.ErrorResult{message=string}      "Delete unitPrice failed"
 // @router 			/api/v1/unit-prices/{id} [delete]
-func (s *Handler) Delete(ctx *fiber.Ctx) error {
+func (s *Handler) Delete(ctx fiber.Ctx) error {
 	var err error
 	var unitPriceId string
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if unitPriceId, err = fctx.ParseUUID("id"); err != nil {
-		logger.FErrorf("error parse unitPrice id: %v", err)
+		logger.Errorf("error parse unitPrice id: %v", err)
 		return fctx.ErrResponse(ErrDeleteUnitPriceFailed)
 	}
 
 	err = s.service.Delete(unitPriceId)
 	if err != nil {
-		logger.FErrorf("error delete unitPrice: %v", err)
+		logger.Errorf("error delete unitPrice: %v", err)
 		return fctx.ErrResponse(ErrDeleteUnitPriceFailed)
 	}
 	return fctx.JsonResponse(fiber.StatusOK, "delete unitPrice success")

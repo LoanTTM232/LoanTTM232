@@ -7,7 +7,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var ErrUpdateLocationFailed = fiber.NewError(fiber.StatusBadRequest, "update location failed")
@@ -23,24 +23,24 @@ var ErrUpdateLocationFailed = fiber.NewError(fiber.StatusBadRequest, "update loc
 // @success 		200 {object} utils.JSONResult{data=model.LocationResponse}		"Update location by id success"
 // @failure 		400 {object} utils.ErrorResult{message=string}      "Update location by id failed"
 // @router 			/api/v1/locations/{id} [patch]
-func (s *Handler) Update(ctx *fiber.Ctx) error {
+func (s *Handler) Update(ctx fiber.Ctx) error {
 	var err error
 	var locationId string
 	reqBody := new(model.UpdateLocationRequest)
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.FErrorf("error parse json to struct: %v", err)
+		logger.Errorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(ErrUpdateLocationFailed)
 	}
 	if locationId, err = fctx.ParseUUID("id"); err != nil {
-		logger.FErrorf("error parse location id: %v", err)
+		logger.Errorf("error parse location id: %v", err)
 		return fctx.ErrResponse(ErrUpdateLocationFailed)
 	}
 
 	locationUpdated, err := s.service.Update(reqBody, locationId)
 	if err != nil {
-		logger.FErrorf("error create location: %v", err)
+		logger.Errorf("error create location: %v", err)
 		return fctx.ErrResponse(ErrUpdateLocationFailed)
 	}
 	locationResponse := utility.MapLocationEntityToResponse(locationUpdated)

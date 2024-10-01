@@ -5,7 +5,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var ErrGetLocationsFailed = fiber.NewError(fiber.StatusNotFound, "get locations failed")
@@ -24,12 +24,12 @@ var ErrGetLocationsFailed = fiber.NewError(fiber.StatusNotFound, "get locations 
 // @success 		200 {object} utils.JSONResult{data=model.LocationsResponse}	"Get all locations success"
 // @failure 		404 {object} utils.ErrorResult{message=string}        		"Get all locations failed"
 // @router 			/api/v1/locations [get]
-func (s *Handler) GetAll(ctx *fiber.Ctx) error {
+func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	locations, err := s.service.GetAll()
 	if err != nil {
-		logger.FErrorf("error get locations: %v", err)
+		logger.Errorf("error get locations: %v", err)
 		return fctx.ErrResponse(ErrGetLocationsFailed)
 	}
 

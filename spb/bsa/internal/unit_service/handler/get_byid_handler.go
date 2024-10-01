@@ -7,7 +7,7 @@ import (
 
 	tb "spb/bsa/pkg/entities"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var (
@@ -26,19 +26,19 @@ var (
 // @success 		200 {object} utils.JSONResult{message=string}		"Get unitService by id success"
 // @failure 		400 {object} utils.ErrorResult{message=string}      "Get unitService by id failed"
 // @router 			/api/v1/unit-services/{id} [delete]
-func (s *Handler) GetByID(ctx *fiber.Ctx) error {
+func (s *Handler) GetByID(ctx fiber.Ctx) error {
 	var err error
 	var unitServiceId string
 	var unitService *tb.UnitService
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if unitServiceId, err = fctx.ParseUUID("id"); err != nil {
-		logger.FErrorf("error parse unitService id: %v", err)
+		logger.Errorf("error parse unitService id: %v", err)
 		return fctx.ErrResponse(ErrGetUnitServiceFailed)
 	}
 
 	if unitService, err = s.service.GetByID(unitServiceId); err != nil {
-		logger.FErrorf("error get unitService by id: %v", err)
+		logger.Errorf("error get unitService by id: %v", err)
 		return fctx.ErrResponse(ErrUnitServiceNotFound)
 	}
 

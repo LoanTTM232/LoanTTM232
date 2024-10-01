@@ -3,6 +3,7 @@ package utils
 import (
 	"crypto/rand"
 	"fmt"
+	"math"
 	"path"
 	"path/filepath"
 	"regexp"
@@ -64,6 +65,19 @@ func ToPtr[T any](v T) *T {
 }
 
 // @author: LoanTT
+// @function: ToSlicePtr
+// @description: convert to slice pointer
+// @return: []*T
+func ToSlicePtr[T any](v []T) []*T {
+	newSlicePtr := make([]*T, len(v))
+
+	for i := 0; i < len(v); i++ {
+		newSlicePtr[i] = &v[i]
+	}
+	return newSlicePtr
+}
+
+// @author: LoanTT
 // @function: Defer
 // @description: defer
 // @return: T
@@ -82,6 +96,7 @@ func IsSubSet(subSet, setCheck []string) bool {
 		for setCID := range setCheck {
 			if subSet[subCID] == setCheck[setCID] {
 				hasSubItem = true
+				break
 			}
 		}
 
@@ -89,7 +104,7 @@ func IsSubSet(subSet, setCheck []string) bool {
 			return false
 		}
 	}
-	return false
+	return true
 }
 
 // @author: LoanTT
@@ -104,4 +119,11 @@ func CreateSlug(val string) string {
 
 	slug = strings.Trim(slug, "-")
 	return slug
+}
+
+func SafeUint64ToInt(val uint64) int {
+	if val <= math.MaxInt {
+		return int(val)
+	}
+	return 0
 }

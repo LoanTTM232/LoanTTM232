@@ -8,7 +8,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var ErrGet{{.StructNamePlural}}Failed = fiber.NewError(fiber.StatusNotFound, "get {{.ModuleNamePlural}} failed")
@@ -27,7 +27,7 @@ var ErrGet{{.StructNamePlural}}Failed = fiber.NewError(fiber.StatusNotFound, "ge
 // @Success 		200 {object} utils.JSONResult{data=model.Get{{.StructNamePlural}}Response}	"Get all {{.ModuleNamePlural}} success"
 // @Failure 		404 {object} utils.ErrorResult{message=string}        		"Get all {{.ModuleNamePlural}} failed"
 // @Router 			/api/v1/{{.RouteName}} [get]
-func (s *Handler) GetAll(ctx *fiber.Ctx) error {
+func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	var err error
 	reqBody := new(model.Get{{.StructNamePlural}}Request)
 	fctx := utils.FiberCtx{Fctx: ctx}
@@ -37,7 +37,7 @@ func (s *Handler) GetAll(ctx *fiber.Ctx) error {
 
 	claims, err := auth.GetTokenFromCookie(ctx)
 	if err != nil {
-		logger.FErrorf("error parse jwt: %v", err)
+		logger.Errorf("error parse jwt: %v", err)
 		return fctx.ErrResponse(ErrGet{{.StructNamePlural}}Failed)
 	}
 
@@ -45,7 +45,7 @@ func (s *Handler) GetAll(ctx *fiber.Ctx) error {
 
 	{{.ModuleNamePlural}}, err := s.service.GetAll(reqBody)
 	if err != nil {
-		logger.FErrorf("error get {{.ModuleNamePlural}}: %v", err)
+		logger.Errorf("error get {{.ModuleNamePlural}}: %v", err)
 		return fctx.ErrResponse(ErrGet{{.StructNamePlural}}Failed)
 	}
 

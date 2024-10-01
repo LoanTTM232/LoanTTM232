@@ -8,7 +8,7 @@ import (
 
 	tb "spb/bsa/pkg/entities"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var (
@@ -27,7 +27,7 @@ var (
 // @success 		200 {object} utils.JSONResult{message=string}		"Get unit by id success"
 // @failure 		400 {object} utils.ErrorResult{message=string}      "Get unit by id failed"
 // @router 			/api/v1/units/{id} [delete]
-func (s *Handler) GetByID(ctx *fiber.Ctx) error {
+func (s *Handler) GetByID(ctx fiber.Ctx) error {
 	var err error
 	var unitId string
 	var unit *tb.Unit
@@ -35,18 +35,18 @@ func (s *Handler) GetByID(ctx *fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	claims, err := auth.GetTokenFromCookie(ctx)
 	if err != nil {
-		logger.FErrorf("error parse jwt: %v", err)
+		logger.Errorf("error parse jwt: %v", err)
 		return fctx.ErrResponse(ErrGetUnitFailed)
 	}
 
 	if unitId, err = fctx.ParseUUID("id"); err != nil {
-		logger.FErrorf("error parse unit id: %v", err)
+		logger.Errorf("error parse unit id: %v", err)
 		return fctx.ErrResponse(ErrGetUnitFailed)
 	}
 
 	role := claims["role"].(string)
 	if unit, err = s.service.GetByID(unitId, role); err != nil {
-		logger.FErrorf("error get unit by id: %v", err)
+		logger.Errorf("error get unit by id: %v", err)
 		return fctx.ErrResponse(ErrUnitNotFound)
 	}
 

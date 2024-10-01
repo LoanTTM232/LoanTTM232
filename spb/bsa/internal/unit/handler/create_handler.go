@@ -7,7 +7,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var ErrCreateUnitFailed = fiber.NewError(fiber.StatusBadRequest, "create unit failed")
@@ -23,21 +23,20 @@ var ErrCreateUnitFailed = fiber.NewError(fiber.StatusBadRequest, "create unit fa
 // @success 		200 {object} utils.JSONResult{data=model.UnitResponse}		"Create unit success"
 // @failure 		400 {object} utils.ErrorResult{message=string}        		"Create unit failed"
 // @router 			/api/v1/units [post]
-func (s *Handler) Create(ctx *fiber.Ctx) error {
+func (s *Handler) Create(ctx fiber.Ctx) error {
 	var err error
 	reqBody := new(model.CreateUnitRequest)
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.FErrorf("error parse json to struct: %v", err)
+		logger.Errorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(ErrCreateUnitFailed)
 	}
 	unitCreated, err := s.service.Create(reqBody)
 	if err != nil {
-		logger.FErrorf("error create unit: %v", err)
+		logger.Errorf("error create unit: %v", err)
 		return fctx.ErrResponse(ErrCreateUnitFailed)
 	}
-	// TODO: send email verification
 	unitResponse := utility.MapUnitEntityToResponse(unitCreated)
 
 	return fctx.JsonResponse(fiber.StatusOK, unitResponse)

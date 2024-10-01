@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
 	"github.com/iancoleman/strcase"
 )
@@ -83,13 +83,13 @@ func GetQueryString(queryString []byte) (map[string]interface{}, error) {
 }
 
 type FiberCtx struct {
-	Fctx *fiber.Ctx
+	Fctx fiber.Ctx
 }
 
 // @author: LoanTT
 // @function: ValidateJson
 // @description: Validate json
-// @param: ctx *fiber.Ctx
+// @param: ctx fiber.Ctx
 // @return: error
 func (ctx *FiberCtx) ValidateJson() error {
 	if !json.Valid(ctx.Fctx.BodyRaw()) {
@@ -101,12 +101,12 @@ func (ctx *FiberCtx) ValidateJson() error {
 // @author: LoanTT
 // @function: ParseJsonToStruct
 // @description: Parse json to struct
-// @param: ctx *fiber.Ctx
+// @param: ctx fiber.Ctx
 // @param: dest interface{}
 // @param: validate *validator.Validate
 // @return: error
 func (ctx *FiberCtx) ParseJsonToStruct(dest interface{}, validate *validator.Validate) error {
-	if err := ctx.Fctx.BodyParser(dest); err != nil {
+	if err := ctx.Fctx.Bind().Body(dest); err != nil {
 		return err
 	}
 	if err := validate.Struct(dest); err != nil {
@@ -118,7 +118,7 @@ func (ctx *FiberCtx) ParseJsonToStruct(dest interface{}, validate *validator.Val
 // @author: LoanTT
 // @function: ParseUUID
 // @description: Parse UUID
-// @param: ctx *fiber.Ctx
+// @param: ctx fiber.Ctx
 // @param: key string
 // @return: string, error
 func (ctx *FiberCtx) ParseUUID(key string) (string, error) {
@@ -133,7 +133,7 @@ func (ctx *FiberCtx) ParseUUID(key string) (string, error) {
 // @author: LoanTT
 // @function: JsonResponse
 // @description: Json response
-// @param: ctx *fiber.Ctx
+// @param: ctx fiber.Ctx
 // @param: respCode int
 // @param: data interface{}
 // @return: error
@@ -155,7 +155,7 @@ func (ctx *FiberCtx) JsonResponse(respCode int, data interface{}, message ...str
 // @author: LoanTT
 // @function: ErrResponse
 // @description: Err response
-// @param: ctx *fiber.Ctx
+// @param: ctx fiber.Ctx
 // @param: err *fiber.Error
 // @return: error
 func (ctx *FiberCtx) ErrResponse(err *fiber.Error) error {

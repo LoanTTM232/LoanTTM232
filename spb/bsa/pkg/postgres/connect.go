@@ -17,12 +17,12 @@ import (
 // @return: string
 func GetDbUrl(configVal *config.Config) string {
 	return fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
-		configVal.DbConf.PostgresConf.Host,
-		configVal.DbConf.PostgresConf.Port,
-		configVal.DbConf.PostgresConf.User,
-		configVal.DbConf.PostgresConf.Dbname,
-		configVal.DbConf.PostgresConf.Password,
-		configVal.DbConf.PostgresConf.SSLMode,
+		configVal.DB.Postgres.Host,
+		configVal.DB.Postgres.Port,
+		configVal.DB.Postgres.User,
+		configVal.DB.Postgres.Dbname,
+		configVal.DB.Postgres.Password,
+		configVal.DB.Postgres.SSLMode,
 	)
 }
 
@@ -34,7 +34,9 @@ func GetDbUrl(configVal *config.Config) string {
 func ConnectDB(configVal *config.Config) (*gorm.DB, error) {
 	databaseURL := GetDbUrl(configVal)
 
-	db, err := gorm.Open(postgres.Open(databaseURL), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(databaseURL), &gorm.Config{
+		SkipDefaultTransaction: true,
+	})
 	if err != nil {
 		return nil, ErrConnectionFailed(err)
 	}

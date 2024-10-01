@@ -5,10 +5,10 @@ import (
 )
 
 type UserClaims struct {
-	UserID      string   `json:"user_id"`
-	Email       string   `json:"email"`
-	Role        string   `json:"role"`
-	Permissions []string `json:"permissions"`
+	UserID      string         `json:"user_id"`
+	Email       string         `json:"email"`
+	Role        string         `json:"role"`
+	Permissions map[string]int `json:"permissions"`
 	jwt.RegisteredClaims
 }
 
@@ -20,7 +20,7 @@ type UserResponse struct {
 }
 
 type LoginRequest struct {
-	Email    string `json:"email" validate:"min=6,max=32,required,email"`
+	Email    string `json:"email"    validate:"min=6,max=32,required,email"`
 	Password string `json:"password" validate:"min=6,max=32,required"`
 }
 
@@ -30,7 +30,7 @@ type LoginResponse struct {
 }
 
 type RegisterRequest struct {
-	Email    string `json:"email" validate:"min=6,max=32,required,email"`
+	Email    string `json:"email"    validate:"min=6,max=32,required,email"`
 	Password string `json:"password" validate:"min=6,max=32,required"`
 }
 

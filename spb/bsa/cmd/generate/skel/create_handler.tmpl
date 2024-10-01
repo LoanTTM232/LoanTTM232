@@ -7,7 +7,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var ErrCreate{{.StructName}}Failed = fiber.NewError(fiber.StatusBadRequest, "create {{.ModuleName}} failed")
@@ -23,18 +23,18 @@ var ErrCreate{{.StructName}}Failed = fiber.NewError(fiber.StatusBadRequest, "cre
 // @Success 		200 {object} utils.JSONResult{data=model.{{.StructName}}Response}		"Create {{.ModuleName}} success"
 // @Failure 		400 {object} utils.ErrorResult{message=string}        		"Create {{.ModuleName}} failed"
 // @Router 			/api/v1/{{.RouteName}} [post]
-func (s *Handler) Create(ctx *fiber.Ctx) error {
+func (s *Handler) Create(ctx fiber.Ctx) error {
 	var err error
 	reqBody := new(model.Create{{.StructName}}Request)
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.FErrorf("error parse json to struct: %v", err)
+		logger.Errorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(ErrCreate{{.StructName}}Failed)
 	}
 	{{.ModuleName}}Created, err := s.service.Create(reqBody)
 	if err != nil {
-		logger.FErrorf("error create {{.ModuleName}}: %v", err)
+		logger.Errorf("error create {{.ModuleName}}: %v", err)
 		return fctx.ErrResponse(ErrCreate{{.StructName}}Failed)
 	}
 	// TODO: send email verification

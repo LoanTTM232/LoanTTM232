@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"slices"
-	"sync"
 
 	"spb/bsa/pkg/config"
 
@@ -31,8 +30,6 @@ type ZapLog struct {
 	Output        OutputTypes
 	Filename      *string
 	Level         int
-	DebugSymbol   *string
-	mu            sync.Mutex
 }
 
 var Zlog = &ZapLog{}
@@ -54,16 +51,11 @@ func NewZlog(configVal *config.Config) {
 		Console: slices.Contains(configVal.Logging.Output, "console"),
 	}
 	Zlog.Level = configVal.Logging.Level
-	Zlog.DebugSymbol = configVal.Logging.DebugSymbol
-	Zlog.Filename = &configVal.Filename
+	Zlog.Filename = &configVal.Logging.Filename
 	Zlog.setLevel(configVal.Logging.Level)
-
 	logFile.Filename = fmt.Sprintf("./log/%s", *Zlog.Filename)
-}
 
-func (zl *ZapLog) SetDebugSymbol(symbol *string) *ZapLog {
-	zl.DebugSymbol = symbol
-	return zl
+	Zlog.ConsoleLogger = newConsoleLogger()
 }
 
 func (zl *ZapLog) getField(key string, value interface{}) zap.Field {
@@ -88,12 +80,11 @@ func (zl *ZapLog) SetFilename(filename string) {
 }
 
 func (zl *ZapLog) sysLog(msg string, keysAndValues ...zapcore.Field) {
-	zl.mu.Lock()
 	if !Zlog.Output.Console && !Zlog.Output.File {
 		return
 	}
 
-	logger, err := fileLogger(zl.Output)
+	logger, err := createLogger(zl.Output)
 	if err != nil {
 		fmt.Printf("failed to initialize logger: %v\n", err)
 		return
@@ -118,8 +109,6 @@ func (zl *ZapLog) sysLog(msg string, keysAndValues ...zapcore.Field) {
 	default:
 		logger.Debug(msg, keysAndValues...)
 	}
-
-	zl.mu.Unlock()
 }
 
 // @author: LoanTT
@@ -132,11 +121,11 @@ func SysLog(msg string, keysandvalues ...zapcore.Field) {
 }
 
 // @author: LoanTT
-// @function: fileLogger
+// @function: createLogger
 // @description: Create a new logger
 // @param: outputTypes OutputTypes
 // @return: *zap.Logger, error
-func fileLogger(outputTypes OutputTypes) (*zap.Logger, error) {
+func createLogger(outputTypes OutputTypes) (*zap.Logger, error) {
 	configVal := zap.NewProductionEncoderConfig()
 	configVal.EncodeTime = zapcore.RFC3339TimeEncoder
 	// Create file and console encoders

@@ -6,7 +6,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var (
@@ -25,21 +25,19 @@ var (
 // @success		200 {object} utils.JSONResult{data=nil,message=string}	"register success"
 // @failure		400 {object} utils.ErrorResult{message=string}			"register failed"
 // @router		/api/v1/auth/register [post]
-func (h *Handler) AccountRegister(ctx *fiber.Ctx) error {
+func (h *Handler) AccountRegister(ctx fiber.Ctx) error {
 	reqBody := new(model.RegisterRequest)
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.FErrorf("parse json to struct failed: %v", err)
+		logger.Errorf("parse json to struct failed: %v", err)
 		return fctx.ErrResponse(ErrRequestParseFailed)
 	}
 	_, err := h.service.AccountRegister(reqBody)
 	if err != nil {
-		logger.FErrorf("register failed: %v", err)
+		logger.Errorf("register failed: %v", err)
 		return fctx.ErrResponse(ErrRegisterFailed)
 	}
-
-	// TODO: send email verification
 
 	return fctx.JsonResponse(fiber.StatusOK, nil, "register success")
 }

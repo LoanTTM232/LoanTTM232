@@ -5,7 +5,7 @@ import (
 	"spb/bsa/internal/unit_price/service"
 	"spb/bsa/pkg/middleware"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 
 	_ "spb/bsa/pkg/utils"
 )
@@ -25,9 +25,9 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	UnitPriceHandler = handler.NewHandler(UnitPriceService)
 
 	unitPriceRoute := router.Group("/api/v1/unit-prices")
-	unitPriceRoute.Get("/", customMiddleware.CheckAccess("unit_price:list"), UnitPriceHandler.GetAll)
-	unitPriceRoute.Get("/:id", customMiddleware.CheckAccess("unit_price:read"), UnitPriceHandler.GetByID)
-	unitPriceRoute.Post("/", customMiddleware.CheckAccess("unit_price:create"), UnitPriceHandler.Create)
-	unitPriceRoute.Patch("/:id", customMiddleware.CheckAccess("unit_price:update"), UnitPriceHandler.Update)
-	unitPriceRoute.Delete("/:id", customMiddleware.CheckAccess("unit_price:delete"), UnitPriceHandler.Delete)
+	unitPriceRoute.Get("/", UnitPriceHandler.GetAll, customMiddleware.CheckAccess("unit_price:list"))
+	unitPriceRoute.Get("/:id", UnitPriceHandler.GetByID, customMiddleware.CheckAccess("unit_price:read"))
+	unitPriceRoute.Post("/", UnitPriceHandler.Create, customMiddleware.CheckAccess("unit_price:create"))
+	unitPriceRoute.Patch("/:id", UnitPriceHandler.Update, customMiddleware.CheckAccess("unit_price:update"))
+	unitPriceRoute.Delete("/:id", UnitPriceHandler.Delete, customMiddleware.CheckAccess("unit_price:delete"))
 }

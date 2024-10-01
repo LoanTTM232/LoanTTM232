@@ -4,7 +4,7 @@ import (
 	"spb/bsa/internal/sport_type/service"
 	"spb/bsa/pkg/middleware"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var SportTypeService *service.Service

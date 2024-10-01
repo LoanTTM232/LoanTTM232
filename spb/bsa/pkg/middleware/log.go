@@ -10,7 +10,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -20,7 +20,7 @@ var excludeLogRoutes = []string{}
 // @function: LogMiddleware
 // @description: Log middleware
 func LogMiddleware() fiber.Handler {
-	return func(ctx *fiber.Ctx) error {
+	return func(ctx fiber.Ctx) error {
 		for _, route := range excludeLogRoutes {
 			if strings.Contains(ctx.Request().URI().String(), route) {
 				return ctx.Next()
@@ -38,7 +38,7 @@ func LogMiddleware() fiber.Handler {
 				nonJsonMap["requestType"] = string(ctx.Request().Header.ContentType())
 				nonJsonMap["base64"] = b64Str
 				if jsonBytes, err := json.Marshal(nonJsonMap); err != nil {
-					logger.FErrorf("failed to marshal nonJsonMap, err: %s", err.Error())
+					logger.Errorf("failed to marshal nonJsonMap, err: %s", err.Error())
 				} else {
 					reqBodyJson = utils.ToPtr(string(jsonBytes))
 				}
@@ -49,7 +49,7 @@ func LogMiddleware() fiber.Handler {
 
 		var userId interface{}
 		var claims jwt.MapClaims
-		claims, _ = auth.GetTokenFromCookie(ctx)
+		claims, _ = auth.GetTokenFromHeader(ctx)
 
 		if len(claims) > 0 {
 			userId = claims["userId"]
@@ -67,7 +67,7 @@ func LogMiddleware() fiber.Handler {
 					nonJsonMap["responseType"] = string(ctx.Response().Header.ContentType())
 					nonJsonMap["base64"] = b64Str
 					if jsonBytes, err := json.Marshal(nonJsonMap); err != nil {
-						logger.FErrorf("failed to marshal nonJsonMap, err: %s", err.Error())
+						logger.Errorf("failed to marshal nonJsonMap, err: %s", err.Error())
 					} else {
 						resBodyJson = utils.ToPtr(string(jsonBytes))
 					}
@@ -75,7 +75,7 @@ func LogMiddleware() fiber.Handler {
 			}
 
 			// create log to files
-			logger.SysLog("FIBER REQ LOG",
+			logger.SysLog("SPORT BOOKING LOG",
 				logger.GetField("UserId", userId),
 				logger.GetField("IpAddress", ip),
 				logger.GetField("HttpMethod", ctx.Method()),
@@ -86,7 +86,6 @@ func LogMiddleware() fiber.Handler {
 				logger.GetField("ResponseBody", resBodyJson),
 				logger.GetField("Status", int64(ctx.Response().StatusCode())),
 				logger.GetField("Duration", time.Since(start).Milliseconds()),
-				logger.GetField("CreatedAt", &utils.CustomDatetime{Time: &start, Format: utils.ToPtr(time.RFC3339)}),
 			)
 		}()
 		return ctx.Next()

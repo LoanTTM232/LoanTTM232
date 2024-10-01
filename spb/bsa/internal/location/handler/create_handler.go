@@ -7,7 +7,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var ErrCreateLocationFailed = fiber.NewError(fiber.StatusBadRequest, "create location failed")
@@ -23,18 +23,18 @@ var ErrCreateLocationFailed = fiber.NewError(fiber.StatusBadRequest, "create loc
 // @success 		200 {object} utils.JSONResult{data=model.LocationsResponse}		"Create location success"
 // @failure 		400 {object} utils.ErrorResult{message=string}        			"Create location failed"
 // @router 			/api/v1/locations [post]
-func (s *Handler) Create(ctx *fiber.Ctx) error {
+func (s *Handler) Create(ctx fiber.Ctx) error {
 	var err error
 	reqBody := new(model.CreateLocationRequest)
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.FErrorf("error parse json to struct: %v", err)
+		logger.Errorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(ErrCreateLocationFailed)
 	}
 	locationCreated, err := s.service.Create(reqBody)
 	if err != nil {
-		logger.FErrorf("error create location: %v", err)
+		logger.Errorf("error create location: %v", err)
 		return fctx.ErrResponse(ErrCreateLocationFailed)
 	}
 	locationsResponse := utility.MapLocationEntitiesToResponse(locationCreated)

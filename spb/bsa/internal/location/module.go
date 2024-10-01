@@ -5,7 +5,7 @@ import (
 	"spb/bsa/internal/location/service"
 	"spb/bsa/pkg/middleware"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 
 	_ "spb/bsa/pkg/utils"
 )
@@ -26,7 +26,7 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 
 	locationRoute := router.Group("/api/v1/locations")
 	locationRoute.Get("/", LocationHandler.GetAll)
-	locationRoute.Post("/", customMiddleware.CheckAccess("location:create"), LocationHandler.Create)
-	locationRoute.Patch("/:id", customMiddleware.CheckAccess("location:update"), LocationHandler.Update)
-	locationRoute.Delete("/:id", customMiddleware.CheckAccess("location:delete"), LocationHandler.Delete)
+	locationRoute.Post("/", LocationHandler.Create, customMiddleware.CheckAccess("location:create"))
+	locationRoute.Patch("/:id", LocationHandler.Update, customMiddleware.CheckAccess("location:update"))
+	locationRoute.Delete("/:id", LocationHandler.Delete, customMiddleware.CheckAccess("location:delete"))
 }

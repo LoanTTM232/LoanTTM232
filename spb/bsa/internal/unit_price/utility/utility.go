@@ -31,9 +31,10 @@ func MapUnitPricesEntityToResponse(unit_prices []*tb.UnitPrice, reqBody *model.G
 		res.UnitPrices = append(res.UnitPrices, MapUnitPriceEntityToResponse(unit_prices[id]))
 	}
 
-	res.Total = uint(len(res.UnitPrices))
+	unitPriceNum := len(res.UnitPrices)
+	res.Total = uint(unitPriceNum)
 	res.Pagination = &reqBody.Pagination
-	res.Pagination.SetPagination(int(res.Total))
+	res.Pagination.SetPagination(unitPriceNum)
 	return res
 }
 

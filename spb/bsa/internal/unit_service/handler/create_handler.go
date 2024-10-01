@@ -7,7 +7,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var ErrCreateUnitServiceFailed = fiber.NewError(fiber.StatusBadRequest, "create unit_service failed")
@@ -23,18 +23,18 @@ var ErrCreateUnitServiceFailed = fiber.NewError(fiber.StatusBadRequest, "create 
 // @success 		200 {object} utils.JSONResult{data=model.UnitServiceResponse}		"Create unitPrice success"
 // @failure 		400 {object} utils.ErrorResult{message=string}        		 		"Create unitPrice failed"
 // @router 			/api/v1/unit-prices [post]
-func (s *Handler) Create(ctx *fiber.Ctx) error {
+func (s *Handler) Create(ctx fiber.Ctx) error {
 	var err error
 	reqBody := new(model.CreateUnitServiceRequest)
 
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		logger.FErrorf("error parse json to struct: %v", err)
+		logger.Errorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(ErrCreateUnitServiceFailed)
 	}
 	unitServiceCreated, err := s.service.Create(reqBody)
 	if err != nil {
-		logger.FErrorf("error create unit_service: %v", err)
+		logger.Errorf("error create unit_service: %v", err)
 		return fctx.ErrResponse(ErrCreateUnitServiceFailed)
 	}
 	unitServiceResponse := utility.MapUnitServiceEntityToResponse(unitServiceCreated)

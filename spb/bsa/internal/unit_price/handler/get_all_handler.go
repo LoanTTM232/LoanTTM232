@@ -6,7 +6,7 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 var ErrGetUnitPricesFailed = fiber.NewError(fiber.StatusNotFound, "get unit_prices failed")
@@ -25,7 +25,7 @@ var ErrGetUnitPricesFailed = fiber.NewError(fiber.StatusNotFound, "get unit_pric
 // @success 		200 {object} utils.JSONResult{data=model.UnitPricesResponse}	"Get all unit_prices success"
 // @failure 		404 {object} utils.ErrorResult{message=string}        	     	"Get all unit_prices failed"
 // @router 			/api/v1/unit-prices [get]
-func (s *Handler) GetAll(ctx *fiber.Ctx) error {
+func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	var err error
 	reqBody := new(model.GetUnitPricesRequest)
 	fctx := utils.FiberCtx{Fctx: ctx}
@@ -35,7 +35,7 @@ func (s *Handler) GetAll(ctx *fiber.Ctx) error {
 
 	unit_prices, err := s.service.GetAll(reqBody)
 	if err != nil {
-		logger.FErrorf("error get unit_prices: %v", err)
+		logger.Errorf("error get unit_prices: %v", err)
 		return fctx.ErrResponse(ErrGetUnitPricesFailed)
 	}
 
