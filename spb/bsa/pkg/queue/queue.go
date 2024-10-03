@@ -152,7 +152,6 @@ func (q *Queue) work(task QueuedMessage) {
 func (q *Queue) run(task QueuedMessage) error {
 	data := task.(*Message)
 	if data.Task == nil {
-		data = Decode(task.Bytes())
 		data.Data = data.Payload
 	}
 	return q.handle(data)

@@ -1,8 +1,8 @@
 package entities
 
 import (
-	"html/template"
-	"os"
+	"bytes"
+	"text/template"
 )
 
 var NotificationTypeTN = "notification_type"
@@ -19,10 +19,9 @@ func (NotificationType) TableName() string {
 	return NotificationTypeTN
 }
 
-func (nt *NotificationType) MapTemplate(data interface{}) error {
-	tt, err := template.ParseGlob(nt.Template)
-	if err != nil {
-		return nil
-	}
-	return tt.Execute(os.Stdout, data)
+func (nt *NotificationType) MapTemplate(data interface{}) string {
+	var buf bytes.Buffer
+	tt := template.Must(template.New("Notification").Parse(nt.Template))
+	_ = tt.Execute(&buf, data)
+	return buf.String()
 }

@@ -93,6 +93,7 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 		Title:    oEmailTemplate.Title,
 		Message:  message,
 		Charset:  "utf-8",
+		From:     oEmailMeta.Value,
 		To:       []string{u.Email},
 	}
 
@@ -132,12 +133,19 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 // @return: string, error
 func MakeMesssage(verifyToken string, oEmailTemplate *tb.NotificationType) (string, error) {
 	oEmailTemplateData := map[string]string{
-		"verifyToken": verifyToken,
+		"VerificationLink": VerificationUrl(verifyToken),
 	}
 
-	if err := oEmailTemplate.MapTemplate(oEmailTemplateData); err != nil {
-		return "", err
-	}
+	temp := oEmailTemplate.MapTemplate(oEmailTemplateData)
+	return temp, nil
+}
 
-	return oEmailTemplate.Template, nil
+// @author: LoanTT
+// @function: VerificationUrl
+// @description: Get verification url with token
+// @param: token string
+// @return: string
+func VerificationUrl(token string) string {
+	baseUrl := global.SPB_CONFIG.GetServerUrl()
+	return baseUrl + "/api/v1/auth/verify-email/" + token
 }

@@ -2,14 +2,11 @@ package utils
 
 import (
 	"encoding/json"
-	"net/url"
 	"strconv"
-	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
-	"github.com/iancoleman/strcase"
 )
 
 type FlexInt int64
@@ -48,38 +45,6 @@ type Optional[T any] struct {
 func (o *Optional[T]) UnmarshalJSON(data []byte) error {
 	o.Presented = true
 	return json.Unmarshal(data, &o.Value)
-}
-
-// @author: LoanTT
-// @function: GetQueryString
-// @description: Get query string
-// @param: queryString []byte
-// @return: map[string]interface{}, error
-func GetQueryString(queryString []byte) (map[string]interface{}, error) {
-	decodedQuerystring, err := url.QueryUnescape(string(queryString))
-	if err != nil {
-		return nil, err
-	}
-	params, err := url.ParseQuery(decodedQuerystring)
-	if err != nil {
-		return nil, err
-	}
-
-	paramsMap := make(map[string]interface{}, 0)
-	for key, value := range params {
-		snakeCase := strcase.ToSnake(key)
-		if strings.Contains(snakeCase, "date") || strings.Contains(snakeCase, "_at") {
-			paramsMap["withDateFilter"] = true
-		}
-
-		if len(value) == 1 {
-			paramsMap[snakeCase] = value[0]
-			continue
-		}
-		paramsMap[snakeCase] = value
-	}
-
-	return paramsMap, nil
 }
 
 type FiberCtx struct {
@@ -128,6 +93,26 @@ func (ctx *FiberCtx) ParseUUID(key string) (string, error) {
 		return "", err
 	}
 	return value.String(), nil
+}
+
+// @author: LoanTT
+// @function: GetQueryString
+// @description: Get query string
+// @return: map[string]interface{}, error
+func (ctx *FiberCtx) ParseQuery(keys ...string) interface{} {
+	rawQueries := ctx.Fctx.Queries()
+	if len(keys) == 0 {
+		return rawQueries
+	}
+	if len(keys) == 1 {
+		return rawQueries[keys[0]]
+	}
+
+	queries := make(map[string]string)
+	for id := range keys {
+		queries[keys[id]] = rawQueries[keys[id]]
+	}
+	return queries
 }
 
 // @author: LoanTT

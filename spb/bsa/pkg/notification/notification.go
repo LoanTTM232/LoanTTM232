@@ -25,17 +25,22 @@ type ResponsePush struct {
 }
 
 type PushNotification struct {
-	ID       string        `json:"id,omitempty"`
-	Platform enum.Platform `json:"platform,omitempty"`
+	ID       string        `json:"id"`
+	Platform enum.Platform `json:"platform"`
 	Message  string        `json:"message"`
-	Retry    int           `json:"retry,omitempty"`
+	Retry    int           `json:"retry"`
 	Error    string        `json:"error,omitempty"`
 	Charset  string        `json:"charset,omitempty"`
 	Title    string        `json:"title,omitempty"`
-	Data     []byte        `json:"data,omitempty"`
-	To       []string      `json:"to,omitempty"`
-	Cc       []string      `json:"cc,omitempty"`
-	Bcc      []string      `json:"bcc,omitempty"`
+
+	// Email
+	From string   `json:"from,omitempty"`
+	To   []string `json:"to,omitempty"`
+	Cc   []string `json:"cc,omitempty"`
+	Bcc  []string `json:"bcc,omitempty"`
+
+	// Serialized data
+	Data []byte `json:"data"`
 }
 
 func (p *PushNotification) Bytes() []byte {
@@ -53,8 +58,9 @@ func SendNotification(
 ) (resp *ResponsePush, err error) {
 	val, ok := req.(*PushNotification)
 	if !ok {
-		err = ErrInvalidRequest
-		return
+		if err := json.Unmarshal(req.Bytes(), &val); err != nil {
+			return nil, err
+		}
 	}
 
 	switch val.Platform {
