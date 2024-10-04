@@ -10,3 +10,4 @@ log/
 
 # docker volumns
 workspace/develop/database
+spb/.DS_Store
