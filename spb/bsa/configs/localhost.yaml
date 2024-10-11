@@ -4,6 +4,8 @@ server:
     env: development # development, production
     host: "127.0.0.1"
     port: 3000
+    client_addr: "http://127.0.0.1"
+    verify_email_uri: "/auth/verify-email" 
 
 cors:
     allow_origin:

@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"errors"
 	"strconv"
 
 	"github.com/go-playground/validator/v10"
@@ -10,6 +11,8 @@ import (
 )
 
 type FlexInt int64
+
+var ErrKeyNotFound = errors.New("key not found")
 
 // @author: LoanTT
 // @function: UnmarshalJSON
@@ -98,21 +101,24 @@ func (ctx *FiberCtx) ParseUUID(key string) (string, error) {
 // @author: LoanTT
 // @function: GetQueryString
 // @description: Get query string
-// @return: map[string]interface{}, error
-func (ctx *FiberCtx) ParseQuery(keys ...string) interface{} {
+// @return: map[string]string, error
+func (ctx *FiberCtx) ParseQuery(keys ...string) (map[string]string, error) {
 	rawQueries := ctx.Fctx.Queries()
 	if len(keys) == 0 {
-		return rawQueries
+		return rawQueries, nil
 	}
 	if len(keys) == 1 {
-		return rawQueries[keys[0]]
 	}
 
 	queries := make(map[string]string)
 	for id := range keys {
-		queries[keys[id]] = rawQueries[keys[id]]
+		val, ok := rawQueries[keys[id]]
+		if !ok {
+			return nil, ErrKeyNotFound
+		}
+		queries[keys[id]] = val
 	}
-	return queries
+	return queries, nil
 }
 
 // @author: LoanTT

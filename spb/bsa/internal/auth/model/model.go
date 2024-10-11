@@ -37,3 +37,7 @@ type RegisterRequest struct {
 type RefreshTokenResponse struct {
 	AccessToken string `json:"access_token"`
 }
+
+type VerifyEmailRequest struct {
+	Token string `json:"token"  validate:"required"`
+}

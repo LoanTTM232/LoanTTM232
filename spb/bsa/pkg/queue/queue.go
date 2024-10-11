@@ -266,7 +266,6 @@ func (q *Queue) start() {
 		// fetch task
 		q.workerGroup.Go(func() {
 			for {
-				logger.Debugf("fetch task .....")
 				t, err := q.worker.Request()
 				if t == nil || err != nil {
 					if err != nil {

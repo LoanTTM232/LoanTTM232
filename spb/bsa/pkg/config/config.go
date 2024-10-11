@@ -39,9 +39,11 @@ type Logging struct {
 }
 
 type Server struct {
-	Env  string `mapstructure:"env"`
-	Host string `mapstructure:"host"`
-	Port string `mapstructure:"port"`
+	Env            string `mapstructure:"env"`
+	Host           string `mapstructure:"host"`
+	Port           string `mapstructure:"port"`
+	ClientAddr     string `mapstructure:"client_addr"`
+	VerifyEmailUri string `mapstructure:"verify_email_uri"`
 }
 
 type CORS struct {
