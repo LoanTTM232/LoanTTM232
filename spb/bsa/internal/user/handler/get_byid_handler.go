@@ -3,17 +3,13 @@ package handler
 import (
 	"spb/bsa/internal/user/utility"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	tb "spb/bsa/pkg/entities"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
-)
-
-var (
-	ErrGetUserFailed = fiber.NewError(fiber.StatusBadRequest, "error get user")
-	ErrUserNotFound  = fiber.NewError(fiber.StatusNotFound, "user not found")
 )
 
 // GetByID godoc
@@ -35,16 +31,16 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if userId, err = fctx.ParseUUID("id"); err != nil {
 		logger.Errorf("error parse user id: %v", err)
-		return fctx.ErrResponse(ErrGetUserFailed)
+		return fctx.ErrResponse(msg.GET_USER_FAILED)
 	}
 
 	claims := ctx.Locals("claims").(jwt.MapClaims)
 	role := claims["role"].(string)
 	if user, err = s.service.GetByID(userId, role); err != nil {
 		logger.Errorf("error get user by id: %v", err)
-		return fctx.ErrResponse(ErrUserNotFound)
+		return fctx.ErrResponse(msg.USER_NOTFOUND)
 	}
 
 	userResponse := utility.MapUserEntityToResponse(user)
-	return fctx.JsonResponse(fiber.StatusOK, userResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_GET_USER_SUCCESS, userResponse)
 }

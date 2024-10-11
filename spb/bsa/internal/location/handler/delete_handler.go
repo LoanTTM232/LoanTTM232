@@ -2,12 +2,11 @@ package handler
 
 import (
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
 )
-
-var ErrDeleteLocationFailed = fiber.NewError(fiber.StatusBadRequest, "delete location failed")
 
 // Delete godoc
 //
@@ -27,13 +26,13 @@ func (s *Handler) Delete(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if locationId, err = fctx.ParseUUID("id"); err != nil {
 		logger.Errorf("error parse location id: %v", err)
-		return fctx.ErrResponse(ErrDeleteLocationFailed)
+		return fctx.ErrResponse(msg.DELETE_LOCATION_FAILED)
 	}
 
 	err = s.service.Delete(locationId)
 	if err != nil {
 		logger.Errorf("error delete location: %v", err)
-		return fctx.ErrResponse(ErrDeleteLocationFailed)
+		return fctx.ErrResponse(msg.DELETE_LOCATION_FAILED)
 	}
-	return fctx.JsonResponse(fiber.StatusOK, "delete location success")
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_DELETE_LOCATION_SUCCESS)
 }

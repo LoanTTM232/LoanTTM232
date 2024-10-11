@@ -3,12 +3,11 @@ package handler
 import (
 	"spb/bsa/internal/location/utility"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
 )
-
-var ErrGetLocationsFailed = fiber.NewError(fiber.StatusNotFound, "get locations failed")
 
 // GetAll godoc
 //
@@ -30,9 +29,9 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	locations, err := s.service.GetAll()
 	if err != nil {
 		logger.Errorf("error get locations: %v", err)
-		return fctx.ErrResponse(ErrGetLocationsFailed)
+		return fctx.ErrResponse(msg.SERVER_ERROR)
 	}
 
 	locationResponse := utility.MapLocationEntitiesToResponse(locations)
-	return fctx.JsonResponse(fiber.StatusOK, locationResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_GETALL_LOCATION_SUCCESS, locationResponse)
 }

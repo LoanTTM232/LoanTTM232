@@ -5,12 +5,11 @@ import (
 	"spb/bsa/internal/unit_price/utility"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
 )
-
-var ErrUpdateUnitPriceFailed = fiber.NewError(fiber.StatusBadRequest, "update unitPrice failed")
 
 // Update godoc
 //
@@ -21,7 +20,7 @@ var ErrUpdateUnitPriceFailed = fiber.NewError(fiber.StatusBadRequest, "update un
 // @produce 		json
 // @param 			unitPrice body model.UpdateUnitPriceRequest true "UnitPrice data"
 // @success 		200 {object} utils.JSONResult{data=model.UnitPriceResponse}		"Update unitPrice by id success"
-// @failure 		400 {object} utils.ErrorResult{message=string}      "Update unitPrice by id failed"
+// @failure 		400 {object} utils.ErrorResult{message=string}					"Update unitPrice by id failed"
 // @router 			/api/v1/unit-prices/{id} [patch]
 func (s *Handler) Update(ctx fiber.Ctx) error {
 	var err error
@@ -31,19 +30,20 @@ func (s *Handler) Update(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
 		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(ErrUpdateUnitPriceFailed)
+		return fctx.ErrResponse(msg.UPDATE_UNITPRICE_FAILED)
 	}
+
 	if unitPriceId, err = fctx.ParseUUID("id"); err != nil {
 		logger.Errorf("error parse unitPrice id: %v", err)
-		return fctx.ErrResponse(ErrUpdateUnitPriceFailed)
+		return fctx.ErrResponse(msg.UPDATE_UNITPRICE_FAILED)
 	}
 
 	unitPriceUpdated, err := s.service.Update(reqBody, unitPriceId)
 	if err != nil {
 		logger.Errorf("error create unitPrice: %v", err)
-		return fctx.ErrResponse(ErrUpdateUnitPriceFailed)
+		return fctx.ErrResponse(msg.UPDATE_UNITPRICE_FAILED)
 	}
-	unitPriceResponse := utility.MapUnitPriceEntityToResponse(unitPriceUpdated)
 
-	return fctx.JsonResponse(fiber.StatusOK, unitPriceResponse)
+	unitPriceResponse := utility.MapUnitPriceEntityToResponse(unitPriceUpdated)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_UPDATE_UNITPRICE_SUCCESS, unitPriceResponse)
 }

@@ -5,12 +5,11 @@ import (
 	"spb/bsa/internal/unit_service/utility"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
 )
-
-var ErrCreateUnitServiceFailed = fiber.NewError(fiber.StatusBadRequest, "create unit_service failed")
 
 // Create godoc
 //
@@ -30,14 +29,15 @@ func (s *Handler) Create(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
 		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(ErrCreateUnitServiceFailed)
+		return fctx.ErrResponse(msg.CREATE_UNIT_SERVICE_FAILED)
 	}
+
 	unitServiceCreated, err := s.service.Create(reqBody)
 	if err != nil {
 		logger.Errorf("error create unit_service: %v", err)
-		return fctx.ErrResponse(ErrCreateUnitServiceFailed)
+		return fctx.ErrResponse(msg.CREATE_UNIT_SERVICE_FAILED)
 	}
-	unitServiceResponse := utility.MapUnitServiceEntityToResponse(unitServiceCreated)
 
-	return fctx.JsonResponse(fiber.StatusOK, unitServiceResponse)
+	unitServiceResponse := utility.MapUnitServiceEntityToResponse(unitServiceCreated)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_CREATE_UNITSERVICE_SUCCESS, unitServiceResponse)
 }

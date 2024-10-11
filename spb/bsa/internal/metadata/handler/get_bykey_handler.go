@@ -3,16 +3,12 @@ package handler
 import (
 	"spb/bsa/internal/metadata/utility"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	tb "spb/bsa/pkg/entities"
 
 	"github.com/gofiber/fiber/v3"
-)
-
-var (
-	ErrGetMetadataFailed = fiber.NewError(fiber.StatusBadRequest, "error get metadata")
-	ErrMetadataNotFound  = fiber.NewError(fiber.StatusNotFound, "metadata not found")
 )
 
 // MetadataGetAll godoc
@@ -34,14 +30,14 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if metadataKey, err = fctx.ParseUUID("key"); err != nil {
 		logger.Errorf("error parse metadata key: %v", err)
-		return fctx.ErrResponse(ErrGetMetadataFailed)
+		return fctx.ErrResponse(msg.METADATA_INCORRECT)
 	}
 
 	if metadata, err = s.service.GetByKey(metadataKey); err != nil {
 		logger.Errorf("error get metadata by key: %v", err)
-		return fctx.ErrResponse(ErrMetadataNotFound)
+		return fctx.ErrResponse(msg.METADATA_NOTFOUND)
 	}
 
 	metadataResponse := utility.MapMetadataEntityToResponse(metadata)
-	return fctx.JsonResponse(fiber.StatusOK, metadataResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_GET_METADATA_SUCCESS, metadataResponse)
 }

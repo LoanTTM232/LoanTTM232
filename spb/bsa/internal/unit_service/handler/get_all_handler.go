@@ -4,12 +4,11 @@ import (
 	"spb/bsa/internal/unit_service/model"
 	"spb/bsa/internal/unit_service/utility"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
 )
-
-var ErrGetUnitServicesFailed = fiber.NewError(fiber.StatusNotFound, "get unit_services failed")
 
 // GetAll godoc
 //
@@ -36,9 +35,9 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	unitServices, err := s.service.GetAll(reqBody)
 	if err != nil {
 		logger.Errorf("error get unit_services: %v", err)
-		return fctx.ErrResponse(ErrGetUnitServicesFailed)
+		return fctx.ErrResponse(msg.GET_UNIT_SERVICE_FAILED)
 	}
 
 	unitServiceResponse := utility.MapUnitServiceEntitiesToResponse(unitServices, reqBody)
-	return fctx.JsonResponse(fiber.StatusOK, unitServiceResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_GET_UNITSERVICE_SUCCESS, unitServiceResponse)
 }

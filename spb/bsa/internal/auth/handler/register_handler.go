@@ -4,14 +4,10 @@ import (
 	"spb/bsa/internal/auth/model"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
-)
-
-var (
-	ErrRequestParseFailed = fiber.NewError(fiber.StatusBadRequest, "email or password is invalid")
-	ErrRegisterFailed     = fiber.NewError(fiber.StatusBadRequest, "register failed")
 )
 
 // Accountlogin godoc
@@ -31,13 +27,13 @@ func (h *Handler) AccountRegister(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
 		logger.Errorf("parse json to struct failed: %v", err)
-		return fctx.ErrResponse(ErrRequestParseFailed)
+		return fctx.ErrResponse(msg.REGISTER_INCORRECT)
 	}
 	_, err := h.service.AccountRegister(reqBody)
 	if err != nil {
 		logger.Errorf("register failed: %v", err)
-		return fctx.ErrResponse(ErrRegisterFailed)
+		return fctx.ErrResponse(msg.REGISTER_INCORRECT)
 	}
 
-	return fctx.JsonResponse(fiber.StatusOK, nil, "register success")
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_REGISTER_SUCCESS)
 }

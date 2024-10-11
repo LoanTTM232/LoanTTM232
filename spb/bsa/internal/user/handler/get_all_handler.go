@@ -4,13 +4,12 @@ import (
 	"spb/bsa/internal/user/model"
 	"spb/bsa/internal/user/utility"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
 )
-
-var ErrGetUsersFailed = fiber.NewError(fiber.StatusNotFound, "get users failed")
 
 // GetAll godoc
 //
@@ -40,9 +39,9 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	users, err := s.service.GetAll(reqBody)
 	if err != nil {
 		logger.Errorf("error get users: %v", err)
-		return fctx.ErrResponse(ErrGetUsersFailed)
+		return fctx.ErrResponse(msg.GET_USER_FAILED)
 	}
 
 	userResponse := utility.MapUsersEntityToResponse(users, reqBody)
-	return fctx.JsonResponse(fiber.StatusOK, userResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_GET_USER_SUCCESS, userResponse)
 }

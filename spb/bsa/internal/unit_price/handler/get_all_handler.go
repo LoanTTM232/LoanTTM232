@@ -4,12 +4,11 @@ import (
 	"spb/bsa/internal/unit_price/model"
 	"spb/bsa/internal/unit_price/utility"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
 )
-
-var ErrGetUnitPricesFailed = fiber.NewError(fiber.StatusNotFound, "get unit_prices failed")
 
 // GetAll godoc
 //
@@ -36,9 +35,9 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	unit_prices, err := s.service.GetAll(reqBody)
 	if err != nil {
 		logger.Errorf("error get unit_prices: %v", err)
-		return fctx.ErrResponse(ErrGetUnitPricesFailed)
+		return fctx.ErrResponse(msg.GET_UNITPRICE_FAILED)
 	}
 
 	unitPriceResponse := utility.MapUnitPricesEntityToResponse(unit_prices, reqBody)
-	return fctx.JsonResponse(fiber.StatusOK, unitPriceResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_GET_UNIT_PRICE_SUCCESS, unitPriceResponse)
 }

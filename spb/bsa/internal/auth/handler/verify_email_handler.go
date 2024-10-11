@@ -4,12 +4,11 @@ import (
 	"spb/bsa/internal/auth/model"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
 )
-
-var ErrTokenParseFailed = fiber.NewError(fiber.StatusBadRequest, "verify token error")
 
 // VerifyEmail godoc
 //
@@ -27,12 +26,12 @@ func (h *Handler) VerifyEmail(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
-		return fctx.ErrResponse(ErrTokenParseFailed)
+		return fctx.ErrResponse(msg.VERIFY_TOKEN_FAILED)
 	}
 
 	if err := h.service.VerifyEmail(reqBody); err != nil {
 		logger.Errorf("error verify email: %v", err)
-		return fctx.ErrResponse(ErrTokenParseFailed)
+		return fctx.ErrResponse(msg.VERIFY_TOKEN_FAILED)
 	}
-	return fctx.JsonResponse(fiber.StatusOK, "Email verification success")
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_VERIFY_TOKEN_SUCCESS)
 }

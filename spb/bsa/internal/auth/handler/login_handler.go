@@ -5,12 +5,11 @@ import (
 	"spb/bsa/internal/auth/utility"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
 )
-
-var ErrLoginFailed = fiber.NewError(fiber.StatusBadRequest, "email or password is wrong")
 
 // AccountLogin godoc
 //
@@ -30,24 +29,24 @@ func (h *Handler) AccountLogin(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
 		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(ErrLoginFailed)
+		return fctx.ErrResponse(msg.LOGIN_INCORRECT)
 	}
 	user, err := h.service.AccountLogin(reqBody)
 	if err != nil {
 		logger.Errorf("error login: %v", err)
-		return fctx.ErrResponse(ErrLoginFailed)
+		return fctx.ErrResponse(msg.LOGIN_INCORRECT)
 	}
 	tokens := GenUserTokenResponse(user)
 	if tokens == nil {
 		logger.Errorf("gen user tokens failed: %v", err)
-		return fctx.ErrResponse(ErrLoginFailed)
+		return fctx.ErrResponse(msg.SERVER_ERROR)
 	}
 	err = TokenNext(&fctx, ctx, user, tokens)
 	if err != nil {
 		logger.Errorf("set token to cookie failed: %v", err)
-		return fctx.ErrResponse(ErrLoginFailed)
+		return fctx.ErrResponse(msg.SERVER_ERROR)
 	}
 
 	loginResponse := utility.MappingLoginResponse(user, tokens)
-	return fctx.JsonResponse(fiber.StatusOK, loginResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_LOGIN_SUCCESS, loginResponse)
 }

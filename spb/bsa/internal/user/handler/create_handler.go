@@ -5,12 +5,11 @@ import (
 	"spb/bsa/internal/user/utility"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
 )
-
-var ErrCreateUserFailed = fiber.NewError(fiber.StatusBadRequest, "create user failed")
 
 // Create godoc
 //
@@ -30,15 +29,17 @@ func (s *Handler) Create(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
 		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(ErrCreateUserFailed)
+		return fctx.ErrResponse(msg.CREATE_USER_FAILED)
 	}
+
 	userCreated, err := s.service.Create(reqBody)
 	if err != nil {
 		logger.Errorf("error create user: %v", err)
-		return fctx.ErrResponse(ErrCreateUserFailed)
+		return fctx.ErrResponse(msg.CREATE_USER_FAILED)
 	}
-	// TODO: send email verification
-	userResponse := utility.MapUserEntityToResponse(userCreated)
 
-	return fctx.JsonResponse(fiber.StatusOK, userResponse)
+	// TODO: send email verification
+
+	userResponse := utility.MapUserEntityToResponse(userCreated)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_CREATE_USER_SUCCESS, userResponse)
 }

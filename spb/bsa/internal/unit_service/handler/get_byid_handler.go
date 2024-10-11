@@ -3,16 +3,12 @@ package handler
 import (
 	"spb/bsa/internal/unit_service/utility"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	tb "spb/bsa/pkg/entities"
 
 	"github.com/gofiber/fiber/v3"
-)
-
-var (
-	ErrGetUnitServiceFailed = fiber.NewError(fiber.StatusBadRequest, "error get unitService")
-	ErrUnitServiceNotFound  = fiber.NewError(fiber.StatusNotFound, "unitService not found")
 )
 
 // GetByID godoc
@@ -34,14 +30,14 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if unitServiceId, err = fctx.ParseUUID("id"); err != nil {
 		logger.Errorf("error parse unitService id: %v", err)
-		return fctx.ErrResponse(ErrGetUnitServiceFailed)
+		return fctx.ErrResponse(msg.GET_UNIT_SERVICE_FAILED)
 	}
 
 	if unitService, err = s.service.GetByID(unitServiceId); err != nil {
 		logger.Errorf("error get unitService by id: %v", err)
-		return fctx.ErrResponse(ErrUnitServiceNotFound)
+		return fctx.ErrResponse(msg.UNIT_SERVICE_NOTFOUND)
 	}
 
 	unitServiceResponse := utility.MapUnitServiceEntityToResponse(unitService)
-	return fctx.JsonResponse(fiber.StatusOK, unitServiceResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_GET_UNITSERVICE_SUCCESS, unitServiceResponse)
 }

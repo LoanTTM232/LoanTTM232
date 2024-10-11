@@ -2,12 +2,11 @@ package handler
 
 import (
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
 )
-
-var ErrDeleteUnitPriceFailed = fiber.NewError(fiber.StatusBadRequest, "delete unitPrice failed")
 
 // Delete godoc
 //
@@ -27,13 +26,14 @@ func (s *Handler) Delete(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if unitPriceId, err = fctx.ParseUUID("id"); err != nil {
 		logger.Errorf("error parse unitPrice id: %v", err)
-		return fctx.ErrResponse(ErrDeleteUnitPriceFailed)
+		return fctx.ErrResponse(msg.DELETE_UNITPRICE_FAILED)
 	}
 
 	err = s.service.Delete(unitPriceId)
 	if err != nil {
 		logger.Errorf("error delete unitPrice: %v", err)
-		return fctx.ErrResponse(ErrDeleteUnitPriceFailed)
+		return fctx.ErrResponse(msg.DELETE_UNITPRICE_FAILED)
 	}
-	return fctx.JsonResponse(fiber.StatusOK, "delete unitPrice success")
+
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_DELETE_UNIT_PRICE_SUCCESS)
 }

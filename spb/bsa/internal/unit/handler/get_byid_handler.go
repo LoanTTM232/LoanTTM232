@@ -3,17 +3,12 @@ package handler
 import (
 	"spb/bsa/internal/unit/utility"
 	"spb/bsa/pkg/auth"
+	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
-	tb "spb/bsa/pkg/entities"
-
 	"github.com/gofiber/fiber/v3"
-)
-
-var (
-	ErrGetUnitFailed = fiber.NewError(fiber.StatusBadRequest, "error get unit")
-	ErrUnitNotFound  = fiber.NewError(fiber.StatusNotFound, "unit not found")
 )
 
 // GetByID godoc
@@ -36,20 +31,20 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 	claims, err := auth.GetTokenFromCookie(ctx)
 	if err != nil {
 		logger.Errorf("error parse jwt: %v", err)
-		return fctx.ErrResponse(ErrGetUnitFailed)
+		return fctx.ErrResponse(msg.GET_UNIT_FAILED)
 	}
 
 	if unitId, err = fctx.ParseUUID("id"); err != nil {
 		logger.Errorf("error parse unit id: %v", err)
-		return fctx.ErrResponse(ErrGetUnitFailed)
+		return fctx.ErrResponse(msg.GET_UNIT_FAILED)
 	}
 
 	role := claims["role"].(string)
 	if unit, err = s.service.GetByID(unitId, role); err != nil {
 		logger.Errorf("error get unit by id: %v", err)
-		return fctx.ErrResponse(ErrUnitNotFound)
+		return fctx.ErrResponse(msg.UNIT_NOTFOUND)
 	}
 
 	unitResponse := utility.MapUnitEntityToResponse(unit)
-	return fctx.JsonResponse(fiber.StatusOK, unitResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_GET_UNIT_SUCCESS, unitResponse)
 }

@@ -5,6 +5,7 @@ import (
 	"spb/bsa/internal/metadata/utility"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
@@ -29,15 +30,15 @@ func (s *Handler) Update(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
 		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(ErrUpdateMetadataFailed)
+		return fctx.ErrResponse(msg.METADATA_INCORRECT)
 	}
 
 	metadataUpdated, err := s.service.Update(reqBody)
 	if err != nil {
 		logger.Errorf("error create metadata: %v", err)
-		return fctx.ErrResponse(ErrUpdateMetadataFailed)
+		return fctx.ErrResponse(msg.UPDATE_METADATA_FAILED)
 	}
 	metadataResponse := utility.MapMetadataEntityToResponse(metadataUpdated)
 
-	return fctx.JsonResponse(fiber.StatusOK, metadataResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_UPDATE_METADATA_SUCCESS, metadataResponse)
 }

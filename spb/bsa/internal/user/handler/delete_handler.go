@@ -2,12 +2,11 @@ package handler
 
 import (
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
 )
-
-var ErrDeleteUserFailed = fiber.NewError(fiber.StatusBadRequest, "delete user failed")
 
 // Delete godoc
 //
@@ -27,13 +26,14 @@ func (s *Handler) Delete(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if userId, err = fctx.ParseUUID("id"); err != nil {
 		logger.Errorf("error parse user id: %v", err)
-		return fctx.ErrResponse(ErrDeleteUserFailed)
+		return fctx.ErrResponse(msg.DELETE_USER_FAILED)
 	}
 
 	err = s.service.Delete(userId)
 	if err != nil {
 		logger.Errorf("error delete user: %v", err)
-		return fctx.ErrResponse(ErrDeleteUserFailed)
+		return fctx.ErrResponse(msg.DELETE_USER_FAILED)
 	}
-	return fctx.JsonResponse(fiber.StatusOK, "delete user success")
+
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_DELETE_USER_SUCCESS)
 }
