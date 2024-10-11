@@ -57,12 +57,12 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 		return nil, err
 	}
 
-	if err := cache.SetVerifyEmailToken(verifyToken, u.Email); err != nil {
+	if err := cache.SetVerifyToken(verifyToken, global.SPB_CONFIG.Cache.VerifyEmailExp); err != nil {
 		tx.Rollback()
 		return nil, err
 	}
 
-	notify, err := s.SendVerifyEmail(verifyToken, u.Email, tx)
+	notify, err := s.SendVerifyEmail(verifyToken, u.Email, config.VERIFY_USER_NT, tx)
 	if err != nil {
 		tx.Rollback()
 		return nil, err
@@ -88,30 +88,4 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 		return nil, err
 	}
 	return &user, nil
-}
-
-// @author: LoanTT
-// @function: MakeMesssage
-// @description: Make message for email template
-// @param: verifyToken string
-// @param: oEmailTemplate *tb.NotificationType
-// @return: string, error
-func MakeMesssage(verifyToken string, oEmailTemplate *tb.NotificationType) (string, error) {
-	oEmailTemplateData := map[string]string{
-		"VerificationLink": VerificationUrl(verifyToken),
-	}
-
-	temp := oEmailTemplate.MapTemplate(oEmailTemplateData)
-	return temp, nil
-}
-
-// @author: LoanTT
-// @function: VerificationUrl
-// @description: Get verification url with token
-// @param: token string
-// @return: string
-func VerificationUrl(token string) string {
-	address := global.SPB_CONFIG.Server.ClientAddr
-	verifyEmailUri := global.SPB_CONFIG.Server.VerifyEmailUri
-	return address + verifyEmailUri + token
 }

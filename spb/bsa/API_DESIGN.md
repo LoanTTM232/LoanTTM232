@@ -13,15 +13,16 @@ Group APIs: **_/api/v1_**
 
 Authentication API for user (Admin, Club Owner, Member, User)
 
-| No  | Implemented | Method | Path                  | Permission | Description                                             |
-| --- | ----------- | ------ | --------------------- | ---------- | ------------------------------------------------------- |
-| 1   | &#x2705;    | POST   | /auth/login           |            | Admin, Club Owner, Member, User can login               |
-| 2   | &#x2705;    | POST   | /auth/register        |            | User can register                                       |
-| 3   | &#x2705;    | POST   | /auth/refresh         |            | Admin, Club Owner, Member, User can refresh             |
-| 4   | &#x274c;    | POST   | /auth/logout          |            | Admin, Club Owner, Member, User can logout              |
-| 5   | &#x274c;    | POST   | /auth/verify-email    |            | Club Owner, Member, User can verify email               |
-| 6   | &#x274c;    | POST   | /auth/forgot-password |            | Admin, Club Owner, Member, User can use forgot password |
-| 7   | &#x274c;    | POST   | /auth/reset-password  |            | Club Owner, Member, User can reset password             |
+| No  | Implemented | Method | Path                     | Permission | Description                                             |
+| --- | ----------- | ------ | ------------------------ | ---------- | ------------------------------------------------------- |
+| 1   | &#x2705;    | POST   | /auth/login              |            | Admin, Club Owner, Member, User can login               |
+| 2   | &#x2705;    | POST   | /auth/register           |            | User can register                                       |
+| 3   | &#x2705;    | POST   | /auth/refresh            |            | Admin, Club Owner, Member, User can refresh             |
+| 4   | &#x274c;    | POST   | /auth/logout             |            | Admin, Club Owner, Member, User can logout              |
+| 5   | &#x2705;    | POST   | /auth/verify-email       |            | Club Owner, Member, User can verify email               |
+| 6   | &#x2705;    | POST   | /auth/forgot-password    |            | Admin, Club Owner, Member, User can use forgot password |
+| 7   | &#x2705;    | POST   | /auth/reset-password     |            | Club Owner, Member, User can reset password             |
+| 8   | &#x2705;    | POST   | /auth/verify-reset-token |            | Club Owner, Member, User can reset password             |
 
 ---
 

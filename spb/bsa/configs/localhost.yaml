@@ -5,7 +5,8 @@ server:
     host: "127.0.0.1"
     port: 3000
     client_addr: "http://127.0.0.1"
-    verify_email_uri: "/auth/verify-email" 
+    verify_email_uri: "/auth/verify-email"
+    reset_password_uri: "/auth/reset-password"
 
 cors:
     allow_origin:
@@ -20,6 +21,10 @@ cors:
         - "PATCH"
         - "DELETE"
     allow_credentials: true
+
+cache:
+    verify_email_exp: 43200 # minutes
+    reset_password_exp: 60 # minutes
 
 jwt:
     secret: "1234balhblahblah"

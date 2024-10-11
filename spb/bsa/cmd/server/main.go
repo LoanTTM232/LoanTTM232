@@ -128,7 +128,10 @@ func (f *Fiber) LoadRoutes() {
 		"/api/v1/auth/register",
 		"/api/v1/auth/refresh",
 		"/api/v1/auth/verify-email",
-		"/apt/v1/locations",
+		"/api/v1/auth/forgot-password",
+		"/api/v1/auth/verify-reset-token",
+		"/api/v1/auth/reset-password",
+		"/api/v1/locations",
 	}
 	router := f.App.Group("",
 		custMiddlewares.Log(),                           // add logging to all routes

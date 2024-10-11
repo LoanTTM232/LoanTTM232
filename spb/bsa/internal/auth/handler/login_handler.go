@@ -31,16 +31,19 @@ func (h *Handler) AccountLogin(ctx fiber.Ctx) error {
 		logger.Errorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(msg.LOGIN_INCORRECT)
 	}
+
 	user, err := h.service.AccountLogin(reqBody)
 	if err != nil {
 		logger.Errorf("error login: %v", err)
 		return fctx.ErrResponse(msg.LOGIN_INCORRECT)
 	}
+
 	tokens := GenUserTokenResponse(user)
 	if tokens == nil {
 		logger.Errorf("gen user tokens failed: %v", err)
 		return fctx.ErrResponse(msg.SERVER_ERROR)
 	}
+
 	err = TokenNext(&fctx, ctx, user, tokens)
 	if err != nil {
 		logger.Errorf("set token to cookie failed: %v", err)

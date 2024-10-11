@@ -26,6 +26,7 @@ func (h *Handler) VerifyEmail(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
+		logger.Errorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(msg.VERIFY_TOKEN_FAILED)
 	}
 

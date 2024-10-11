@@ -7,34 +7,29 @@ import (
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/entities/enum"
 	"spb/bsa/pkg/msg"
+	"spb/bsa/pkg/utils"
 )
 
 // @author: LoanTT
-// @function: VerifyEmail
-// @description: Verify email when user register
-// @param: reqBody *model.VerifyEmailRequest
+// @function: ResetPassword
+// @description: Service for reset password
+// @param: reqBody *model.ResetPasswordRequest
 // @return: error
-func (s *Service) VerifyEmail(reqBody *model.VerifyEmailRequest) error {
-	user := tb.User{}
+func (s *Service) ResetPassword(reqBody *model.ResetPasswordRequest) error {
 	if ok := cache.CheckVerifyToken(reqBody.Token); !ok {
 		return msg.ErrTokenExpired
 	}
 
 	defer cache.DelVerifyToken(reqBody.Token)
 
-	err := s.db.Where("email_verify_token = ?", reqBody.Token).First(&user).Error
+	user := new(tb.User)
+	err := s.db.Where("email = ?", reqBody.Email).First(user).Error
 	if err != nil {
 		return err
 	}
 
-	if user.IsEmailVerified {
-		return nil
-	}
-
-	user.IsEmailVerified = true
-	user.EmailVerifyToken = nil
-	// Active user
-	if err := s.db.Save(&user).Error; err != nil {
+	user.Password = utils.BcryptHash(reqBody.Password)
+	if err := s.db.Save(user).Error; err != nil {
 		return err
 	}
 
@@ -43,5 +38,6 @@ func (s *Service) VerifyEmail(reqBody *model.VerifyEmailRequest) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
