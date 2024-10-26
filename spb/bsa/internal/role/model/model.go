@@ -7,6 +7,6 @@ type RoleResponse struct {
 }
 
 type PermissionResponse struct {
-	PermissionID   uint64 `json:"permission_id"`
+	PermissionID   string `json:"permission_id"`
 	PermissionName string `json:"permission_name"`
 }
