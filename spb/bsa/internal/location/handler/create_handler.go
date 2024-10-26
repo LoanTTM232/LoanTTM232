@@ -13,14 +13,14 @@ import (
 
 // Create godoc
 //
-// @summary 		Create location
-// @sescription 	Create location
+// @summary 		Create location api
+// @description 	Create location api
 // @tags 			locations
 // @accept  		json
 // @produce 		json
-// @param 			Group body model.CreateLocationRequest true "Create location"
-// @success 		200 {object} utils.JSONResult{data=model.LocationsResponse}		"Create location success"
-// @failure 		400 {object} utils.ErrorResult{message=string}        			"Create location failed"
+// @param 			Group body model.CreateLocationRequest true 				"Create location"
+// @success 		200 {object} utils.JSONResult{data=model.LocationsResponse}	"Create location success"
+// @failure 		400 {object} utils.JSONResult{}        						"Create location failed"
 // @router 			/api/v1/locations [post]
 func (s *Handler) Create(ctx fiber.Ctx) error {
 	var err error

@@ -98,10 +98,10 @@ func GenerateUserToken(user *entities.User, tokenType string) *jwt.Token {
 		UserID: user.ID,
 		Email:  user.Email,
 		Role:   user.Role.Name,
-		Permissions: func() map[string]int {
-			permissions := make(map[string]int)
-			for id, p := range user.Role.Permissions {
-				permissions[p.Name] = id
+		Permissions: func() []string {
+			permissions := make([]string, len(user.Role.Permissions))
+			for _, p := range user.Role.Permissions {
+				permissions = append(permissions, p.Name)
 			}
 			return permissions
 		}(),

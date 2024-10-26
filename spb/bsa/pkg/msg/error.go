@@ -16,6 +16,7 @@ const (
 	CODE_FORGOT_PASSWORD_INCORRECT = "ERA005"
 	CODE_EMAIL_DOES_NOT_EXIST      = "ERA006"
 	CODE_RESET_PASSWORD_INCORRECT  = "ERA007"
+	CODE_UNAUTHORIZED              = "ERA008"
 
 	// location error code
 	CODE_LOCATION_INCORRECT     = "ERL001"
@@ -71,6 +72,7 @@ var (
 	FORGOT_PASSWORD_INCORRECT = fiber.NewError(fiber.StatusBadRequest, CODE_FORGOT_PASSWORD_INCORRECT)
 	EMAIL_DOES_NOT_EXIST      = fiber.NewError(fiber.StatusBadRequest, CODE_EMAIL_DOES_NOT_EXIST)
 	RESET_PASSWORD_INCORRECT  = fiber.NewError(fiber.StatusBadRequest, CODE_RESET_PASSWORD_INCORRECT)
+	UNAUTHORIZED              = fiber.NewError(fiber.StatusUnauthorized, CODE_UNAUTHORIZED)
 
 	// location error
 	LOCATION_INCORRECT     = fiber.NewError(fiber.StatusBadRequest, CODE_LOCATION_INCORRECT)

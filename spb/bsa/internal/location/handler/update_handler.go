@@ -11,17 +11,17 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-// LocationGetAll godoc
+// Update godoc
 //
-// @summary 		Update location by id
-// @description 	Update location by id
+// @summary 		Update location by id api
+// @description 	Update location by id api
 // @tags 			locations
 // @accept  		json
 // @produce 		json
-// @param 			location body model.UpdateLocationRequest true "Location data"
-// @success 		200 {object} utils.JSONResult{data=model.LocationResponse}		"Update location by id success"
-// @failure 		400 {object} utils.ErrorResult{message=string}					"Update location by id failed"
-// @router 			/api/v1/locations/{id} [patch]
+// @param 			location body model.UpdateLocationRequest true 				"Location data"
+// @success 		200 {object} utils.JSONResult{data=model.LocationResponse}	"Update location by id success"
+// @failure 		400 {object} utils.JSONResult{}								"Update location by id failed"
+// @router 			/api/v1/locations/{id} [put]
 func (s *Handler) Update(ctx fiber.Ctx) error {
 	var err error
 	var locationId string

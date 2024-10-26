@@ -13,15 +13,15 @@ import (
 
 // GetByID godoc
 //
-// @summary 		Get unitService by id
-// @description 	Get unitService by id
+// @summary 		Get unit service by id
+// @description 	Get unit service by id
 // @tags 			unit-services
 // @accept  		json
 // @produce 		json
-// @param 			id path string true "UnitService ID"
-// @success 		200 {object} utils.JSONResult{message=string}		"Get unitService by id success"
-// @failure 		400 {object} utils.ErrorResult{message=string}      "Get unitService by id failed"
-// @router 			/api/v1/unit-services/{id} [delete]
+// @param 			id path string true 			"Unit service id"
+// @success 		200 {object} utils.JSONResult{}	"Get unit service by id success"
+// @failure 		400 {object} utils.JSONResult{} "Get unit service by id failed"
+// @router 			/api/v1/unit-services/{id} [get]
 func (s *Handler) GetByID(ctx fiber.Ctx) error {
 	var err error
 	var unitServiceId string

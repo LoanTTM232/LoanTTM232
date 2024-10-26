@@ -15,12 +15,15 @@ import (
 // @return: fiber.Handler
 func CheckPermissionAccess(permissionsRequired string) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
+		var userPermission []string
 		fctx := utils.FiberCtx{Fctx: ctx}
 		claims := ctx.Locals("claims").(jwt.MapClaims)
-		userPermission := claims["permissions"].(map[string]int)
+		if len(claims["permissions"].([]interface{})) > 0 {
+			userPermission = claims["permissions"].([]string)
+		}
 
 		// check permission
-		if _, isExist := userPermission[permissionsRequired]; !isExist {
+		if isExist := utils.ContainsItem(userPermission, permissionsRequired); !isExist {
 			return fctx.ErrResponse(msg.FORBIDDEN)
 		}
 

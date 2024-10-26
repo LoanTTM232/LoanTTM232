@@ -12,17 +12,17 @@ import (
 
 // GetAll godoc
 //
-// @summary 		Get all unit_prices
-// @description 	Get all unit_prices
+// @summary 		Get all unit price
+// @description 	Get all unit price
 // @tags 			unit-prices
 // @accept  		json
 // @produce 		json
-// @param 			i query int false "Number items on page"
-// @param 			p query int false "Page number"
-// @param			b query string false "Order by"
-// @param			t query string false "Order type"
-// @success 		200 {object} utils.JSONResult{data=model.UnitPricesResponse}	"Get all unit_prices success"
-// @failure 		404 {object} utils.ErrorResult{message=string}        	     	"Get all unit_prices failed"
+// @param 			i query int false 											 "Number items on page"
+// @param 			p query int false 											 "Page number"
+// @param			b query string false 										 "Order by"
+// @param			t query string false 										 "Order type"
+// @success 		200 {object} utils.JSONResult{data=model.UnitPricesResponse} "Get all unit price success"
+// @failure 		404 {object} utils.JSONResult{}        	     				 "Get all unit price failed"
 // @router 			/api/v1/unit-prices [get]
 func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	var err error

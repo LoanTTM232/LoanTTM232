@@ -10,14 +10,14 @@ import (
 
 // Delete godoc
 //
-// @summary			Delete unit
-// @description		Delete unit
+// @summary			Delete unit api
+// @description		Delete unit api
 // @tags			units
 // @accept			json
 // @produce			json
-// @param			id path string true "unit id"
-// @success			200 {object} utils.JSONResult{message=string}		"Delete unit success"
-// @failure			400 {object} utils.ErrorResult{message=string}      "Delete unit failed"
+// @param			id path string true 							"unit id"
+// @success			200 {object} utils.JSONResult{message=string}	"Delete unit success"
+// @failure			400 {object} utils.JSONResult{}      			"Delete unit failed"
 // @router			/api/v1/units/{id} [delete]
 func (s *Handler) Delete(ctx fiber.Ctx) error {
 	var err error

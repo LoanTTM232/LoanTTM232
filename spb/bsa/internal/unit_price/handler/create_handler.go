@@ -13,14 +13,14 @@ import (
 
 // Create godoc
 //
-// @summary 		Create unitPrice
-// @description 	Create unitPrice
+// @summary 		Create unit price
+// @description 	Create unit price
 // @tags 			unit-prices
 // @accept  		json
 // @produce 		json
-// @param 			Group body model.CreateUnitPriceRequest true "Create unitPrice"
-// @success 		200 {object} utils.JSONResult{data=model.UnitPriceResponse}		"Create unitPrice success"
-// @failure 		400 {object} utils.ErrorResult{message=string}        		"Create unitPrice failed"
+// @param 			Group body model.CreateUnitPriceRequest true 				"Create unit price"
+// @success 		200 {object} utils.JSONResult{data=model.UnitPriceResponse}	"Create unit price success"
+// @failure 		400 {object} utils.JSONResult{}        						"Create unit price failed"
 // @router 			/api/v1/unit-prices [post]
 func (s *Handler) Create(ctx fiber.Ctx) error {
 	var err error

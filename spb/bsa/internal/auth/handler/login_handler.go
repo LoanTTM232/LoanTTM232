@@ -13,14 +13,14 @@ import (
 
 // AccountLogin godoc
 //
-// @summary		login
-// @description	login
+// @summary		Login api
+// @description	Login api
 // @tags	 	auth
 // @accept		json
 // @produce		json
-// @param		group body model.LoginRequest true "login"
-// @success		200 {object} utils.JSONResult{data=model.LoginResponse}	"login success"
-// @failure		400 {object} utils.ErrorResult{message=string}			"login failed"
+// @param		group body model.LoginRequest true 						"Login"
+// @success		200 {object} utils.JSONResult{data=model.LoginResponse}	"Login success"
+// @failure		400 {object} utils.JSONResult{}							"Login failed"
 // @router		/api/v1/auth/login [post]
 func (h *Handler) AccountLogin(ctx fiber.Ctx) error {
 	var err error

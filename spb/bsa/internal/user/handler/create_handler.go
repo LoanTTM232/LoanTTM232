@@ -18,9 +18,9 @@ import (
 // @tags 			users
 // @accept  		json
 // @produce 		json
-// @param 			Group body model.CreateUserRequest true "Create user"
-// @success 		200 {object} utils.JSONResult{data=model.UserResponse}		"Create user success"
-// @failure 		400 {object} utils.ErrorResult{message=string}        		"Create user failed"
+// @param 			Group body model.CreateUserRequest true 				"Create user"
+// @success 		200 {object} utils.JSONResult{data=model.UserResponse}	"Create user success"
+// @failure 		400 {object} utils.JSONResult{}        					"Create user failed"
 // @router 			/api/v1/users [post]
 func (s *Handler) Create(ctx fiber.Ctx) error {
 	var err error

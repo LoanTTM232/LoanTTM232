@@ -18,10 +18,10 @@ import (
 // @tags 			users
 // @accept  		json
 // @produce 		json
-// @param 			user body model.UpdateUserRequest true "User data"
-// @success 		200 {object} utils.JSONResult{data=model.UserResponse}		"Update user by id success"
-// @failure 		400 {object} utils.ErrorResult{message=string}				"Update user by id failed"
-// @router 			/api/v1/users/{id} [patch]
+// @param 			user body model.UpdateUserRequest true 					"User data"
+// @success 		200 {object} utils.JSONResult{data=model.UserResponse}	"Update user by id success"
+// @failure 		400 {object} utils.JSONResult{}							"Update user by id failed"
+// @router 			/api/v1/users/{id} [put]
 func (s *Handler) Update(ctx fiber.Ctx) error {
 	var err error
 	var userId string

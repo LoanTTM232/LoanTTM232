@@ -15,9 +15,9 @@ import (
 // @tags 			users
 // @accept  		json
 // @produce 		json
-// @param 			id path string true "user id"
-// @success 		200 {object} utils.JSONResult{message=string}		"Delete user success"
-// @failure 		400 {object} utils.ErrorResult{message=string}      "Delete user failed"
+// @param 			id path string true 			"User id"
+// @success 		200 {object} utils.JSONResult{}	"Delete user success"
+// @failure 		400 {object} utils.JSONResult{} "Delete user failed"
 // @router 			/api/v1/users/{id} [delete]
 func (s *Handler) Delete(ctx fiber.Ctx) error {
 	var err error

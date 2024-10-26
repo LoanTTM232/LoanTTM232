@@ -12,14 +12,14 @@ import (
 
 // ResetPassword godoc
 //
-// @summary		reset password
-// @description	reset password
+// @summary		Reset password api
+// @description	Reset password api
 // @tags	 	auth
 // @accept		json
 // @produce		json
-// @param		group body model.ResetPasswordRequest true "reset password"
-// @success		200 {object} utils.JSONResult{data=string}	"reset password success"
-// @failure		400 {object} utils.ErrorResult{message=string}	"reset password failed"
+// @param		group body model.ResetPasswordRequest true  "Reset password"
+// @success		200 {object} utils.JSONResult{}				"Reset password success"
+// @failure		400 {object} utils.JSONResult{}				"Reset password failed"
 // @router		/api/v1/auth/reset-password [post]
 func (h *Handler) ResetPassword(ctx fiber.Ctx) error {
 	// parse request

@@ -12,14 +12,14 @@ import (
 
 // VerifyEmail godoc
 //
-// @summary		verify email
-// @description	verify email
+// @summary		Verify email api
+// @description	Verify email api
 // @tags		auth
 // @accept		json
 // @produce		json
-// @param	  	group body model.VerifyEmailRequest true "verify email"
-// @success		200 {object} utils.JSONResult{data=string,message=string}	"Email verification success"
-// @failure		400 {object} utils.ErrorResult{message=string}				"verify token error"
+// @param	  	group body model.VerifyEmailRequest true "Verify email"
+// @success		200 {object} utils.JSONResult{}			 "Email verification success"
+// @failure		400 {object} utils.JSONResult{}			 "Verify token error"
 // @router		/api/v1/auth/verify-email [post]
 func (h *Handler) VerifyEmail(ctx fiber.Ctx) error {
 	reqBody := new(model.VerifyEmailRequest)

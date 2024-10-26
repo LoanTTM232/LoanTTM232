@@ -12,14 +12,14 @@ import (
 
 // Accountlogin godoc
 //
-// @summary		register new user
-// @description	register new user
+// @summary		Register new user api
+// @description	Register new user api
 // @tags		auth
 // @accept		json
 // @produce		json
-// @param	  	group body model.RegisterRequest true "register"
-// @success		200 {object} utils.JSONResult{data=nil,message=string}	"register success"
-// @failure		400 {object} utils.ErrorResult{message=string}			"register failed"
+// @param	  	group body model.RegisterRequest true 	"Register"
+// @success		200 {object} utils.JSONResult{}			"Register success"
+// @failure		400 {object} utils.JSONResult{}			"Register failed"
 // @router		/api/v1/auth/register [post]
 func (h *Handler) AccountRegister(ctx fiber.Ctx) error {
 	reqBody := new(model.RegisterRequest)

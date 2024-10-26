@@ -4,6 +4,9 @@ import (
 	"slices"
 
 	"spb/bsa/pkg/auth"
+	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
+	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
@@ -30,9 +33,9 @@ func JwtMiddleware(ignorePaths ...string) fiber.Handler {
 		} else {
 			errStr = err.Error()
 		}
+		logger.Errorf("error jwt middleware: %v", errStr)
 
-		return ctx.Status(fiber.StatusUnauthorized).JSON(map[string]string{
-			"message": errStr,
-		})
+		fctx := utils.FiberCtx{Fctx: ctx}
+		return fctx.ErrResponse(msg.UNAUTHORIZED)
 	}
 }

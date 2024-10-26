@@ -15,14 +15,14 @@ import (
 
 // AccountRefreshToken godoc
 //
-// @summary		refresh token
-// @description	refresh token
-// @tags			auth
-// @accept			json
+// @summary		Refresh token api
+// @description	Refresh token api
+// @tags		auth
+// @accept		json
 // @produce		json
-// @success		200 {object} utils.JSONResult{data=model.LoginResponse}	"refresh token success"
-// @failure		400 {object} utils.ErrorResult{message=string}			"refresh token failed"
-// @router			/api/v1/auth/refresh [post]
+// @success		200 {object} utils.JSONResult{data=model.LoginResponse}	"Refresh token success"
+// @failure		400 {object} utils.JSONResult{}							"Refresh token failed"
+// @router		/api/v1/auth/refresh [post]
 func (h *Handler) AccountRefreshToken(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 

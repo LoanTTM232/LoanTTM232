@@ -18,12 +18,12 @@ import (
 // @tags 			users
 // @accept  		json
 // @produce 		json
-// @param 			i query int false "Number items on page"
-// @param 			p query int false "Page number"
-// @param			b query string false "Order by"
-// @param			t query string false "Order type"
+// @param 			i query int false 											"Number items on page"
+// @param 			p query int false 											"Page number"
+// @param			b query string false 										"Order by"
+// @param			t query string false 										"Order type"
 // @success 		200 {object} utils.JSONResult{data=model.GetUsersResponse}	"Get all users success"
-// @failure 		404 {object} utils.ErrorResult{message=string}        		"Get all users failed"
+// @failure 		404 {object} utils.JSONResult{}        						"Get all users failed"
 // @router 			/api/v1/users [get]
 func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	var err error

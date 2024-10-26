@@ -10,14 +10,14 @@ import (
 
 // Delete godoc
 //
-// @summary 		Delete unitPrice
-// @description 	Delete unitPrice
+// @summary 		Delete unit price
+// @description 	Delete unit price
 // @tags 			unit-prices
 // @accept  		json
 // @produce 		json
-// @param 			id path string true "unitPrice id"
-// @success 		200 {object} utils.JSONResult{message=string}		"Delete unitPrice success"
-// @failure 		400 {object} utils.ErrorResult{message=string}      "Delete unitPrice failed"
+// @param 			id path string true 			"unit price id"
+// @success 		200 {object} utils.JSONResult{}	"Delete unit price success"
+// @failure 		400 {object} utils.JSONResult{} "Delete unit price failed"
 // @router 			/api/v1/unit-prices/{id} [delete]
 func (s *Handler) Delete(ctx fiber.Ctx) error {
 	var err error

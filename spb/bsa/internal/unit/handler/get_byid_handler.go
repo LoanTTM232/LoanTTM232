@@ -18,10 +18,10 @@ import (
 // @tags 			units
 // @accept  		json
 // @produce 		json
-// @param 			id path string true "Unit ID"
-// @success 		200 {object} utils.JSONResult{message=string}		"Get unit by id success"
-// @failure 		400 {object} utils.ErrorResult{message=string}      "Get unit by id failed"
-// @router 			/api/v1/units/{id} [delete]
+// @param 			id path string true 			"Unit ID"
+// @success 		200 {object} utils.JSONResult{} "Get unit by id success"
+// @failure 		400 {object} utils.JSONResult{} "Get unit by id failed"
+// @router 			/api/v1/units/{id} [get]
 func (s *Handler) GetByID(ctx fiber.Ctx) error {
 	var err error
 	var unitId string

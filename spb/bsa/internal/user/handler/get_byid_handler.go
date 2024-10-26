@@ -19,10 +19,10 @@ import (
 // @tags 			users
 // @accept  		json
 // @produce 		json
-// @param 			id path string true "User ID"
-// @success 		200 {object} utils.JSONResult{message=string}		"Get user by id success"
-// @failure 		400 {object} utils.ErrorResult{message=string}      "Get user by id failed"
-// @router 			/api/v1/users/{id} [delete]
+// @param 			id path string true 			"User ID"
+// @success 		200 {object} utils.JSONResult{}	"Get user by id success"
+// @failure 		400 {object} utils.JSONResult{} "Get user by id failed"
+// @router 			/api/v1/users/{id} [get]
 func (s *Handler) GetByID(ctx fiber.Ctx) error {
 	var err error
 	var userId string

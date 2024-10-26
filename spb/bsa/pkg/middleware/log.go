@@ -47,12 +47,11 @@ func LogMiddleware() fiber.Handler {
 
 		reqHeader, _ := json.Marshal(ctx.GetReqHeaders())
 
-		var userId interface{}
+		var userId string
 		var claims jwt.MapClaims
 		claims, _ = auth.GetTokenFromHeader(ctx)
-
 		if len(claims) > 0 {
-			userId = claims["userId"]
+			userId = claims["user_id"].(string)
 		}
 
 		start := time.Now()

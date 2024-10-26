@@ -11,17 +11,17 @@ import (
 
 // GetAll godoc
 //
-// @summary 		Get all locations
-// @description 	Get all locations
+// @summary 		Get all locations api
+// @description 	Get all locations api
 // @tags 			locations
 // @accept  		json
 // @produce 		json
-// @param 			i query int false "Number items on page"
-// @param 			p query int false "Page number"
-// @param			b query string false "Order by"
-// @param			t query string false "Order type"
+// @param 			i query int false 											"Number items on page"
+// @param 			p query int false 											"Page number"
+// @param			b query string false 										"Order by"
+// @param			t query string false 										"Order type"
 // @success 		200 {object} utils.JSONResult{data=model.LocationsResponse}	"Get all locations success"
-// @failure 		404 {object} utils.ErrorResult{message=string}        		"Get all locations failed"
+// @failure 		404 {object} utils.JSONResult{}        						"Get all locations failed"
 // @router 			/api/v1/locations [get]
 func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}

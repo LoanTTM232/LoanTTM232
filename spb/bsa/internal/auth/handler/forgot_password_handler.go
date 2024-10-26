@@ -12,14 +12,14 @@ import (
 
 // ForgotPasswordHandler godoc
 //
-// @summary		forgot password
-// @description	forgot password
+// @summary		Forgot password api
+// @description	Forgot password api
 // @tags	 	auth
 // @accept		json
 // @produce		json
-// @param		group body model.ForgotPasswordRequest true "forgot password"
-// @success		200 {object} utils.JSONResult{data=string}	"forgot password success"
-// @failure		400 {object} utils.ErrorResult{message=string}	"forgot password failed"
+// @param		group body model.ForgotPasswordRequest true "Forgot password"
+// @success		200 {object} utils.JSONResult{} 			"Forgot password success"
+// @failure		400 {object} utils.JSONResult{}				"Forgot password failed"
 // @router		/api/v1/auth/forgot-password [post]
 func (h *Handler) ForgotPasswordHandler(ctx fiber.Ctx) error {
 	// parse request

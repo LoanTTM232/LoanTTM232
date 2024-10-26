@@ -11,14 +11,14 @@ import (
 
 // VerifyResetToken godoc
 //
-// @summary		verify reset token
-// @description	verify reset token
+// @summary		Verify reset token api
+// @description	Verify reset token api
 // @tags	 	auth
 // @accept		json
 // @produce		json
-// @param		group body model.VerifyTokenRequest true "verify reset token"
-// @success		200 {object} utils.JSONResult{data=string}	"verify reset token success"
-// @failure		400 {object} utils.ErrorResult{message=string}	"verify reset token failed"
+// @param		group body model.VerifyTokenRequest true "Verify reset token"
+// @success		200 {object} utils.JSONResult{}			 "Verify reset token success"
+// @failure		400 {object} utils.JSONResult{}			 "Verify reset token failed"
 // @router		/api/v1/auth/verify-reset-token [post]
 func (h *Handler) VerifyResetToken(ctx fiber.Ctx) error {
 	// parse request

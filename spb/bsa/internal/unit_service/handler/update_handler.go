@@ -13,15 +13,15 @@ import (
 
 // Update godoc
 //
-// @summary 		Update unitService by id
-// @description 	Update unitService by id
+// @summary 		Update unit service by id
+// @description 	Update unit service by id
 // @tags 			unit-services
 // @accept  		json
 // @produce 		json
-// @param 			unitService body model.UpdateUnitServiceRequest true "UnitService data"
-// @success 		200 {object} utils.JSONResult{data=model.UnitServiceResponse}		"Update unitService by id success"
-// @failure 		400 {object} utils.ErrorResult{message=string}     					"Update unitService by id failed"
-// @router 			/api/v1/unit-services/{id} [patch]
+// @param 			unitService body model.UpdateUnitServiceRequest true 		  "Unit service data"
+// @success 		200 {object} utils.JSONResult{data=model.UnitServiceResponse} "Update unit service by id success"
+// @failure 		400 {object} utils.JSONResult{}     						  "Update unit service by id failed"
+// @router 			/api/v1/unit-services/{id} [put]
 func (s *Handler) Update(ctx fiber.Ctx) error {
 	var err error
 	var unitServiceId string
