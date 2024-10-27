@@ -4,6 +4,7 @@ import (
 	"strings"
 	"time"
 
+	"spb/bsa/internal/auth/model"
 	"spb/bsa/pkg/config"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/msg"
@@ -14,10 +15,10 @@ import (
 
 // @author: LoanTT
 // @function: ParseJwt
-// @description: Parse token to jwt.MapClaims
+// @description: Parse token to *model.UserClaims
 // @param: token string
-// @return: *jwt.Token, error
-func ParseJwt(token string) (jwt.MapClaims, error) {
+// @return: *model.UserClaims, error
+func ParseJwt(token string) (*model.UserClaims, error) {
 	tokenPaths := strings.Split(token, config.JWT_PREFIX)
 
 	if len(tokenPaths) != 2 {
@@ -25,7 +26,7 @@ func ParseJwt(token string) (jwt.MapClaims, error) {
 	}
 
 	tokenValue := tokenPaths[1]
-	jwtToken, err := jwt.Parse(tokenValue, func(token *jwt.Token) (interface{}, error) {
+	jwtToken, err := jwt.ParseWithClaims(tokenValue, &model.UserClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, msg.ErrUnexpectedSignMethod(token.Header["alg"])
 		}
@@ -36,8 +37,8 @@ func ParseJwt(token string) (jwt.MapClaims, error) {
 		return nil, err
 	}
 
-	claims, ok := jwtToken.Claims.(jwt.MapClaims)
-	if int64(claims["exp"].(float64)) < time.Now().Local().Unix() {
+	claims, ok := jwtToken.Claims.(*model.UserClaims)
+	if claims.ExpiresAt.Compare(time.Now()) == -1 {
 		return claims, msg.ErrTokenExpired
 	}
 
@@ -62,8 +63,8 @@ func GetToken(claims jwt.Claims) *jwt.Token {
 // @function: GetTokenFromCookie
 // @description: Get token from cookie
 // @param: ctx fiber.Ctx
-// @return: jwt.MapClaims, error
-func GetTokenFromCookie(ctx fiber.Ctx) (jwt.MapClaims, error) {
+// @return: *model.UserClaims, error
+func GetTokenFromCookie(ctx fiber.Ctx) (*model.UserClaims, error) {
 	jwtCookie := ctx.Cookies(config.ACCESS_TOKEN_NAME)
 	if jwtCookie == "" {
 		return nil, msg.ErrAccessKeyNotFound
@@ -82,8 +83,8 @@ func GetTokenFromCookie(ctx fiber.Ctx) (jwt.MapClaims, error) {
 // @function: GetTokenFromHeader
 // @description: Get token from header
 // @param: ctx fiber.Ctx
-// @return: jwt.MapClaims, error
-func GetTokenFromHeader(ctx fiber.Ctx) (jwt.MapClaims, error) {
+// @return: *model.UserClaims, error
+func GetTokenFromHeader(ctx fiber.Ctx) (*model.UserClaims, error) {
 	jwtHeader := ctx.Get("Authorization")
 	if jwtHeader == "" {
 		return nil, msg.ErrAccessKeyNotFound

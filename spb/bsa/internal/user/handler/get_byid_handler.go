@@ -6,10 +6,10 @@ import (
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
+	authModel "spb/bsa/internal/auth/model"
 	tb "spb/bsa/pkg/entities"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/golang-jwt/jwt/v5"
 )
 
 // GetByID godoc
@@ -34,8 +34,8 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.GET_USER_FAILED)
 	}
 
-	claims := ctx.Locals("claims").(jwt.MapClaims)
-	role := claims["role"].(string)
+	claims := ctx.Locals("claims").(authModel.UserClaims)
+	role := claims.Role
 	if user, err = s.service.GetByID(userId, role); err != nil {
 		logger.Errorf("error get user by id: %v", err)
 		return fctx.ErrResponse(msg.USER_NOTFOUND)

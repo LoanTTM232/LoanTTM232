@@ -1,331 +1,80 @@
 INSERT INTO
 	"permission" (id, "name", created_at, updated_at)
 VALUES
-	(
-		'afb5c6c7-4720-4e1c-8396-c9ada7b9c411' :: uuid,
-		'user:list',
-		NOW(),
-		NOW()
-	),
-	(
-		'f15f644d-07b7-4aa1-a2d5-c8d09c75de64' :: uuid,
-		'user:read',
-		NOW(),
-		NOW()
-	),
-	(
-		'48f78a0c-0ef7-4421-89f6-57f327f93b87' :: uuid,
-		'user:create',
-		NOW(),
-		NOW()
-	),
-	(
-		'ff141b2b-19df-4eed-b72c-b4befcf210f0' :: uuid,
-		'user:update',
-		NOW(),
-		NOW()
-	),
-	(
-		'd11b8ea5-11bc-44cb-9e82-26785c1b420b' :: uuid,
-		'user:delete',
-		NOW(),
-		NOW()
-	),
-	(
-		'd7fe40c7-3961-4bf6-970a-08fb33209870' :: uuid,
-		'unit_service:create',
-		NOW(),
-		NOW()
-	),
-	(
-		'72cdcd72-e94c-4c03-92ce-462c4c719699' :: uuid,
-		'unit_service:update',
-		NOW(),
-		NOW()
-	),
-	(
-		'c397fa8a-20d7-4ec4-9d0e-ba164710fb03' :: uuid,
-		'unit_service:delete',
-		NOW(),
-		NOW()
-	),
-	(
-		'91364a8e-0734-4a5c-81cb-58f4b02c9b23' :: uuid,
-		'club:create',
-		NOW(),
-		NOW()
-	),
-	(
-		'6a30974f-29fa-4f53-9d93-29de1ce1bd5c' :: uuid,
-		'club:update',
-		NOW(),
-		NOW()
-	),
-	(
-		'ccdac793-c1e7-4756-ae01-719283ef5089' :: uuid,
-		'club:delete',
-		NOW(),
-		NOW()
-	),
-	(
-		'06ce821d-5db8-4993-b088-79c4b78110ff' :: uuid,
-		'unit:create',
-		NOW(),
-		NOW()
-	),
-	(
-		'cf5a936d-3e9d-4175-925f-728a8b113c81' :: uuid,
-		'unit:update',
-		NOW(),
-		NOW()
-	),
-	(
-		'9cbdef70-fc8a-484a-88e4-0e4781b7a1b0' :: uuid,
-		'unit:delete',
-		NOW(),
-		NOW()
-	),
-	(
-		'c392852d-281b-4b17-94dd-ebb67d0b452b' :: uuid,
-		'location:create',
-		NOW(),
-		NOW()
-	),
-	(
-		'da137b1e-1f5f-451f-a426-4a55e952e34d' :: uuid,
-		'metadata:create',
-		NOW(),
-		NOW()
-	),
-	(
-		'15f98766-be1c-4247-bb97-d494b9533c03' :: uuid,
-		'metadata:read',
-		NOW(),
-		NOW()
-	),
-	(
-		'faba17b0-3688-4ea3-83b3-037fb7931fd8' :: uuid,
-		'order:list',
-		NOW(),
-		NOW()
-	),
-	(
-		'6b2b754c-c474-424a-a835-131ce5e7d1f9' :: uuid,
-		'order:read',
-		NOW(),
-		NOW()
-	),
-	(
-		'0caff751-b8f0-42f8-87b7-6195d5f8659b' :: uuid,
-		'order:create',
-		NOW(),
-		NOW()
-	),
-	(
-		'cb804a5d-22eb-4250-9c1b-662cdea5e1f9' :: uuid,
-		'order:approve_request',
-		NOW(),
-		NOW()
-	),
-	(
-		'e3851eca-e550-4857-915d-f7ea19eb2f1f' :: uuid,
-		'order:approve_payment',
-		NOW(),
-		NOW()
-	);
+	(1, 'user:list', NOW(), NOW()),
+	(2, 'user:read', NOW(), NOW()),
+	(4, 'user:create', NOW(), NOW()),
+	(8, 'user:update', NOW(), NOW()),
+	(16, 'user:delete', NOW(), NOW()),
+	(32, 'unit_service:create', NOW(), NOW()),
+	(64, 'unit_service:update', NOW(), NOW()),
+	(128, 'unit_service:delete', NOW(), NOW()),
+	(256, 'club:create', NOW(), NOW()),
+	(512, 'club:update', NOW(), NOW()),
+	(1024, 'club:delete', NOW(), NOW()),
+	(2048, 'unit:create', NOW(), NOW()),
+	(4096, 'unit:update', NOW(), NOW()),
+	(8192, 'unit:delete', NOW(), NOW()),
+	(16384, 'location:create', NOW(), NOW()),
+	(32768, 'metadata:create', NOW(), NOW()),
+	(65536, 'metadata:read', NOW(), NOW()),
+	(131072, 'order:list', NOW(), NOW()),
+	(262144, 'order:read', NOW(), NOW()),
+	(524288, 'order:create', NOW(), NOW()),
+	(1048576, 'order:approve_request', NOW(), NOW()),
+	(2097152, 'order:approve_payment', NOW(), NOW());
 
 INSERT INTO
-	"role" (id, "name", parent_id, created_at, updated_at)
+	"role" (id, "name", parent_id, permission_bit, created_at, updated_at)
 VALUES
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'admin',
-		null,
-		NOW (),
-		NOW ()
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		'client',
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		NOW (),
-		NOW ()
-	),
-	(
-		'9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid,
-		'user',
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		NOW (),
-		NOW ()
-	);
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 'admin', 4194303, null, NOW (), NOW ()),
+	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 'client', 3555303, 'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, NOW (), NOW ()),
+	('9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid, 'user', 917504, '6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, NOW (), NOW ());
 
 INSERT INTO
 	role_permissions (role_id, permission_id)
 VALUES
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'afb5c6c7-4720-4e1c-8396-c9ada7b9c411' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'f15f644d-07b7-4aa1-a2d5-c8d09c75de64' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'48f78a0c-0ef7-4421-89f6-57f327f93b87' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'ff141b2b-19df-4eed-b72c-b4befcf210f0' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'd11b8ea5-11bc-44cb-9e82-26785c1b420b' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'd7fe40c7-3961-4bf6-970a-08fb33209870' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'72cdcd72-e94c-4c03-92ce-462c4c719699' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'c397fa8a-20d7-4ec4-9d0e-ba164710fb03' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'91364a8e-0734-4a5c-81cb-58f4b02c9b23' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'6a30974f-29fa-4f53-9d93-29de1ce1bd5c' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'ccdac793-c1e7-4756-ae01-719283ef5089' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'06ce821d-5db8-4993-b088-79c4b78110ff' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'cf5a936d-3e9d-4175-925f-728a8b113c81' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'9cbdef70-fc8a-484a-88e4-0e4781b7a1b0' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'c392852d-281b-4b17-94dd-ebb67d0b452b' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'da137b1e-1f5f-451f-a426-4a55e952e34d' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'15f98766-be1c-4247-bb97-d494b9533c03' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'faba17b0-3688-4ea3-83b3-037fb7931fd8' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'6b2b754c-c474-424a-a835-131ce5e7d1f9' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'0caff751-b8f0-42f8-87b7-6195d5f8659b' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'cb804a5d-22eb-4250-9c1b-662cdea5e1f9' :: uuid
-	),
-	(
-		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
-		'e3851eca-e550-4857-915d-f7ea19eb2f1f' :: uuid
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		'afb5c6c7-4720-4e1c-8396-c9ada7b9c411' :: uuid
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		'f15f644d-07b7-4aa1-a2d5-c8d09c75de64' :: uuid
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		'48f78a0c-0ef7-4421-89f6-57f327f93b87' :: uuid
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		'd7fe40c7-3961-4bf6-970a-08fb33209870' :: uuid
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		'72cdcd72-e94c-4c03-92ce-462c4c719699' :: uuid
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		'c397fa8a-20d7-4ec4-9d0e-ba164710fb03' :: uuid
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		'91364a8e-0734-4a5c-81cb-58f4b02c9b23' :: uuid
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		'6a30974f-29fa-4f53-9d93-29de1ce1bd5c' :: uuid
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		'ccdac793-c1e7-4756-ae01-719283ef5089' :: uuid
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		'06ce821d-5db8-4993-b088-79c4b78110ff' :: uuid
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		'cf5a936d-3e9d-4175-925f-728a8b113c81' :: uuid
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		'9cbdef70-fc8a-484a-88e4-0e4781b7a1b0' :: uuid
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		'faba17b0-3688-4ea3-83b3-037fb7931fd8' :: uuid
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		'6b2b754c-c474-424a-a835-131ce5e7d1f9' :: uuid
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		'cb804a5d-22eb-4250-9c1b-662cdea5e1f9' :: uuid
-	),
-	(
-		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
-		'e3851eca-e550-4857-915d-f7ea19eb2f1f' :: uuid
-	),
-	(
-		'9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid,
-		'faba17b0-3688-4ea3-83b3-037fb7931fd8' :: uuid
-	),
-	(
-		'9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid,
-		'6b2b754c-c474-424a-a835-131ce5e7d1f9' :: uuid
-	),
-	(
-		'9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid,
-		'0caff751-b8f0-42f8-87b7-6195d5f8659b' :: uuid
-	);
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 1),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 2),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 4),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 8),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 16),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 32),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 64),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 128),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 256),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 512),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 1024),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 2048),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 4096),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 8192),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 16384),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 32768),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 65536),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 131072),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 262144),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 524288),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 1048576),
+	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 2097152),
+	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 1),
+	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 2),
+	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 4),
+	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 32),
+	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 64),
+	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 128),
+	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 256),
+	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 512),
+	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 1024),
+	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 2048),
+	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 4096),
+	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 8192),
+	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 131072),
+	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 262144),
+	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 1048576),
+	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 2097152),
+	('9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid, 131072),
+	('9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid, 262144),
+	('9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid, 524288);
 
 INSERT INTO
 	public."user" (

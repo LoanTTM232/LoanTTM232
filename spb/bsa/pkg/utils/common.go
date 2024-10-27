@@ -123,6 +123,16 @@ func ContainsItem[T string | int](arr []T, val T) bool {
 }
 
 // @author: LoanTT
+// @function: ContainBit
+// @description: check if bit contain val
+// @param: bit uint64
+// @param: val uint64
+// @return: bool
+func ContainBit(bit, val uint64) bool {
+	return bit&val == val
+}
+
+// @author: LoanTT
 // @function: CreateSlug
 // @description: create slug
 // @param: val string

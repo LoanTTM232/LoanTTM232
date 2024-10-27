@@ -39,7 +39,7 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.GET_UNIT_FAILED)
 	}
 
-	role := claims["role"].(string)
+	role := claims.Role
 	if unit, err = s.service.GetByID(unitId, role); err != nil {
 		logger.Errorf("error get unit by id: %v", err)
 		return fctx.ErrResponse(msg.UNIT_NOTFOUND)

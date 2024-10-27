@@ -95,16 +95,10 @@ func GenerateUserToken(user *entities.User, tokenType string) *jwt.Token {
 	expireTime := &jwt.NumericDate{Time: time.Now().Add(duration)}
 
 	claims := &model.UserClaims{
-		UserID: user.ID,
-		Email:  user.Email,
-		Role:   user.Role.Name,
-		Permissions: func() []string {
-			permissions := make([]string, len(user.Role.Permissions))
-			for _, p := range user.Role.Permissions {
-				permissions = append(permissions, p.Name)
-			}
-			return permissions
-		}(),
+		UserID:     user.ID,
+		Email:      user.Email,
+		Role:       user.Role.Name,
+		Permission: user.Role.PermissionBit,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    user.ID,
 			ExpiresAt: expireTime,

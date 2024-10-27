@@ -3,13 +3,13 @@ package middleware
 import (
 	"slices"
 
+	"spb/bsa/internal/auth/model"
 	"spb/bsa/pkg/auth"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/golang-jwt/jwt/v5"
 )
 
 // @author: LoanTT
@@ -24,11 +24,11 @@ func JwtMiddleware(ignorePaths ...string) fiber.Handler {
 			return ctx.Next()
 		}
 
-		var claims jwt.MapClaims
+		var claims *model.UserClaims
 		var errStr string
 		claims, err := auth.GetTokenFromHeader(ctx)
 		if claims != nil && err == nil {
-			ctx.Locals("claims", claims)
+			ctx.Locals("claims", *claims)
 			return ctx.Next()
 		} else {
 			errStr = err.Error()

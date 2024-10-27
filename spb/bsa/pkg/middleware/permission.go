@@ -1,11 +1,12 @@
 package middleware
 
 import (
+	"spb/bsa/internal/auth/model"
+	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/golang-jwt/jwt/v5"
 )
 
 // @author: LoanTT
@@ -15,15 +16,12 @@ import (
 // @return: fiber.Handler
 func CheckPermissionAccess(permissionsRequired string) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
-		var userPermission []string
 		fctx := utils.FiberCtx{Fctx: ctx}
-		claims := ctx.Locals("claims").(jwt.MapClaims)
-		if len(claims["permissions"].([]interface{})) > 0 {
-			userPermission = claims["permissions"].([]string)
-		}
+		claims := ctx.Locals("claims").(model.UserClaims)
+		userPermission := claims.Permission
 
 		// check permission
-		if isExist := utils.ContainsItem(userPermission, permissionsRequired); !isExist {
+		if isExist := utils.ContainBit(userPermission, global.SPB_PERMISSIONS[permissionsRequired]); !isExist {
 			return fctx.ErrResponse(msg.FORBIDDEN)
 		}
 

@@ -20,8 +20,6 @@ func (s *Service) ResetPassword(reqBody *model.ResetPasswordRequest) error {
 		return msg.ErrTokenExpired
 	}
 
-	defer cache.DelVerifyToken(reqBody.Token)
-
 	user := new(tb.User)
 	err := s.db.Where("email = ?", reqBody.Email).First(user).Error
 	if err != nil {
@@ -39,5 +37,6 @@ func (s *Service) ResetPassword(reqBody *model.ResetPasswordRequest) error {
 		return err
 	}
 
+	cache.DelVerifyToken(reqBody.Token)
 	return nil
 }

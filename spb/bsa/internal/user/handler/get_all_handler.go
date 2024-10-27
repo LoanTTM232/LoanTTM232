@@ -1,6 +1,7 @@
 package handler
 
 import (
+	authModel "spb/bsa/internal/auth/model"
 	"spb/bsa/internal/user/model"
 	"spb/bsa/internal/user/utility"
 	"spb/bsa/pkg/logger"
@@ -8,7 +9,6 @@ import (
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
-	"github.com/golang-jwt/jwt/v5"
 )
 
 // GetAll godoc
@@ -33,8 +33,8 @@ func (s *Handler) GetAll(ctx fiber.Ctx) error {
 	pagination := utils.GetPagination(ctx.Queries())
 	reqBody.Pagination = pagination
 
-	claims := ctx.Locals("claims").(jwt.MapClaims)
-	reqBody.Role = claims["role"].(string)
+	claims := ctx.Locals("claims").(authModel.UserClaims)
+	reqBody.Role = claims.Role
 
 	users, err := s.service.GetAll(reqBody)
 	if err != nil {
