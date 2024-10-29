@@ -23,7 +23,7 @@ var ErrUpdateMetadataFailed = fiber.NewError(fiber.StatusBadRequest, "update met
 // @param 			metadata body model.UpdateMetadataRequest true 				"Metadata data"
 // @success 		200 {object} utils.JSONResult{data=model.MetadataResponse}	"Update metadata by key success"
 // @failure 		400 {object} utils.JSONResult{}      						"Update metadata by key failed"
-// @router 			/api/v1/metadatas [put]
+// @router 			/api/v1/metadatas/{key} [put]
 func (s *Handler) Update(ctx fiber.Ctx) error {
 	reqBody := new(model.UpdateMetadataRequest)
 
@@ -33,7 +33,13 @@ func (s *Handler) Update(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.METADATA_INCORRECT)
 	}
 
-	metadataUpdated, err := s.service.Update(reqBody)
+	key, err := fctx.ParseUUID("key")
+	if err != nil {
+		logger.Errorf("error parse metadata key: %v", err)
+		return fctx.ErrResponse(msg.METADATA_INCORRECT)
+	}
+
+	metadataUpdated, err := s.service.Update(key, reqBody)
 	if err != nil {
 		logger.Errorf("error create metadata: %v", err)
 		return fctx.ErrResponse(msg.UPDATE_METADATA_FAILED)

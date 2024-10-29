@@ -22,7 +22,7 @@ import (
 // @success 		200 {object} utils.JSONResult{}	"Get metadata by key success"
 // @failure 		400 {object} utils.JSONResult{} "Get metadata by key failed"
 // @router 			/api/v1/metadatas/{key}  [get]
-func (s *Handler) GetByID(ctx fiber.Ctx) error {
+func (s *Handler) GetByKey(ctx fiber.Ctx) error {
 	var err error
 	var metadataKey string
 	var metadata *tb.Metadata
