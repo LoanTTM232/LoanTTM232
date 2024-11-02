@@ -1,8 +1,10 @@
 node_modules
-ios
-android
+__tests__/
+.vscode/
+android/
+coverage/
+ios/
 .expo
-.vscode
-ignite/ignite.json
-package.json
-.eslintignore
+.expo-shared
+docs/
+cli/
