@@ -1,12 +1,11 @@
 const path = require('path');
 
 module.exports = {
-  extends: ['expo', 'plugin:tailwindcss/recommended', 'prettier'],
+  extends: ['expo', 'prettier'],
   plugins: [
     'unicorn',
     '@typescript-eslint',
     'unused-imports',
-    'tailwindcss',
     'simple-import-sort',
   ],
   parserOptions: {
@@ -20,13 +19,13 @@ module.exports = {
         ignore: ['/android', '/ios'],
       },
     ],
-    'max-params': ['error', 3], // Limit the number of parameters in a function to use object instead
+    'max-params': ['error', 3],
     'max-lines-per-function': ['error', 70],
     'react/display-name': 'off',
     'react/no-inline-styles': 'off',
-    'react/destructuring-assignment': 'off', // Vscode doesn't support automatically destructuring, it's a pain to add a new variable
-    'react/require-default-props': 'off', // Allow non-defined react props as undefined
-    '@typescript-eslint/comma-dangle': 'off', // Avoid conflict rule between Eslint and Prettier
+    'react/destructuring-assignment': 'off',
+    'react/require-default-props': 'off',
+    '@typescript-eslint/comma-dangle': 'off',
     '@typescript-eslint/consistent-type-imports': [
       'warn',
       {
@@ -35,18 +34,12 @@ module.exports = {
         disallowTypeAnnotations: true,
       },
     ], // Ensure `import type` is used when it's necessary
-    'import/prefer-default-export': 'off', // Named export is easier to refactor automatically
+    'import/prefer-default-export': 'off',
     'import/no-cycle': ['error', { maxDepth: '∞' }],
-    'tailwindcss/classnames-order': [
-      'warn',
-      {
-        officialSorting: true,
-      },
-    ], // Follow the same ordering as the official plugin `prettier-plugin-tailwindcss`
-    'simple-import-sort/imports': 'error', // Import configuration for `eslint-plugin-simple-import-sort`
-    'simple-import-sort/exports': 'error', // Export configuration for `eslint-plugin-simple-import-sort`
+
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
     '@typescript-eslint/no-unused-vars': 'off',
-    'tailwindcss/no-custom-classname': 'off',
     'unused-imports/no-unused-imports': 'error',
     'unused-imports/no-unused-vars': [
       'error',

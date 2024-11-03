@@ -4,24 +4,30 @@ import { createSelectors } from '../utils';
 import type { TokenType } from './utils';
 import { getToken, removeToken, setToken } from './utils';
 
+enum AuthStatus {
+  Idle = 'idle',
+  SignOut = 'signOut',
+  SignIn = 'signIn',
+}
+
 interface AuthState {
   token: TokenType | null;
-  status: 'idle' | 'signOut' | 'signIn';
+  status: AuthStatus;
   signIn: (data: TokenType) => void;
   signOut: () => void;
   hydrate: () => void;
 }
 
 const _useAuth = create<AuthState>((set, get) => ({
-  status: 'idle',
+  status: AuthStatus.Idle,
   token: null,
   signIn: (token) => {
     setToken(token);
-    set({ status: 'signIn', token });
+    set({ status: AuthStatus.SignIn, token });
   },
   signOut: () => {
     removeToken();
-    set({ status: 'signOut', token: null });
+    set({ status: AuthStatus.SignOut, token: null });
   },
   hydrate: () => {
     try {
@@ -32,8 +38,8 @@ const _useAuth = create<AuthState>((set, get) => ({
         get().signOut();
       }
     } catch (e) {
-      // catch error here
-      // Maybe sign_out user!
+      // sign out user
+      get().signOut();
     }
   },
 }));

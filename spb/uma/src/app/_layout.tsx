@@ -1,6 +1,3 @@
-// Import  global CSS file
-import '../../global.css';
-
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { ThemeProvider } from '@react-navigation/native';
 import { SplashScreen, Stack } from 'expo-router';
@@ -22,7 +19,6 @@ export const unstable_settings = {
 
 hydrateAuth();
 loadSelectedTheme();
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -40,10 +36,7 @@ export default function RootLayout() {
 function Providers({ children }: { children: React.ReactNode }) {
   const theme = useThemeConfig();
   return (
-    <GestureHandlerRootView
-      style={styles.container}
-      className={theme.dark ? `dark` : undefined}
-    >
+    <GestureHandlerRootView style={styles.container}>
       <KeyboardProvider>
         <ThemeProvider value={theme}>
           <APIProvider>
