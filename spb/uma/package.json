@@ -36,9 +36,7 @@
     "test": "jest",
     "check-all": "pnpm run lint && pnpm run type-check && pnpm run lint:translations && pnpm run test",
     "test:ci": "pnpm run test --coverage",
-    "test:watch": "pnpm run test --watch",
-    "install-maestro": "curl -Ls 'https://get.maestro.mobile.dev' | bash",
-    "e2e-test": "maestro test .maestro/ -e APP_ID=com.sportbooking.development"
+    "test:watch": "pnpm run test --watch"
   },
   "dependencies": {
     "@expo/metro-runtime": "^3.2.3",

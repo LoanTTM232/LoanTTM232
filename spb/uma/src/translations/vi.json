@@ -1,33 +1,33 @@
 {
   "onboarding": {
-    "message": "مرحبا بكم في موقع تطبيق sport booking"
+    "message": "Welcome to sport booking app site"
   },
   "settings": {
-    "about": "حول التطبيق ",
-    "app_name": "اسم التطبيق",
+    "about": "About",
+    "app_name": "Sport Booking",
     "vietnamese": "Việt Nam",
-    "english": "إنجليزي",
-    "generale": "عام",
-    "github": "جيثب",
-    "language": "لغة",
-    "links": "الروابط",
-    "logout": "تسجيل خروج",
-    "more": "أكثر",
-    "privacy": "سياسة الخصوصية",
-    "rate": "تقييم",
-    "share": "شارك",
-    "support": "الدعم",
-    "support_us": "ادعمنا",
-    "terms": "شروط الخدمة",
+    "english": "Tiếng Anh",
+    "generale": "Tổng quan",
+    "github": "Github",
+    "language": "Ngôn ngữ",
+    "links": "Liên kết",
+    "logout": "Đăng xuất",
+    "more": "Thêm",
+    "privacy": "Chính sách bảo mật",
+    "rate": "Đánh giá",
+    "share": "Chia sẻ",
+    "support": "Hỗ trợ",
+    "support_us": "Hỗ trợ chúng tôi",
+    "terms": "Điều khoản dịch vụ",
     "theme": {
-      "dark": "مظلم",
-      "light": "خفيفة",
-      "system": "System",
-      "title": "سمة"
+      "dark": "Tối",
+      "light": "Sáng",
+      "system": "Hệ thống",
+      "title": "Chủ đề"
     },
-    "title": "إعدادات",
-    "version": "إصدار",
-    "website": "موقع الكتروني"
+    "title": "Cài đặt",
+    "version": "Phiên bản",
+    "website": "Trang web"
   },
-  "welcome": "test arabic"
+  "welcome": "Welcome to sport booking app site"
 }

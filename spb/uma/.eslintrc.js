@@ -33,7 +33,7 @@ module.exports = {
         fixStyle: 'inline-type-imports',
         disallowTypeAnnotations: true,
       },
-    ], // Ensure `import type` is used when it's necessary
+    ],
     'import/prefer-default-export': 'off',
     'import/no-cycle': ['error', { maxDepth: '∞' }],
 
@@ -51,7 +51,6 @@ module.exports = {
     ],
   },
   overrides: [
-    // Configuration for  translations files (i18next)
     {
       files: ['src/translations/*.json'],
       extends: ['plugin:i18n-json/recommended'],
@@ -86,7 +85,6 @@ module.exports = {
       },
     },
     {
-      // Configuration for testing files
       files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
       extends: ['plugin:testing-library/react'],
     },

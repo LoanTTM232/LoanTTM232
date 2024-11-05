@@ -8,17 +8,12 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 import { APIProvider } from '@/api';
-import { hydrateAuth, loadSelectedTheme } from '@/core';
-import { useThemeConfig } from '@/core/use-theme-config';
+import { hydrateAuth } from '@/core';
+import { useThemeConfig } from '@/core/theme';
 
 export { ErrorBoundary } from 'expo-router';
 
-export const unstable_settings = {
-  initialRouteName: '(app)',
-};
-
 hydrateAuth();
-loadSelectedTheme();
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -28,6 +23,7 @@ export default function RootLayout() {
         <Stack.Screen name="(app)" options={{ headerShown: false }} />
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
         <Stack.Screen name="login" options={{ headerShown: false }} />
+        <Stack.Screen name="register" options={{ headerShown: false }} />
       </Stack>
     </Providers>
   );
