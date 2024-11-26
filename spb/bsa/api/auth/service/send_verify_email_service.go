@@ -62,7 +62,7 @@ func (s *Service) SendVerifyEmail(token, email, notifyType string, tx *gorm.DB) 
 	}
 
 	// Send notification
-	if err := global.SPB_NOTIFY.SendEmail(notify); err != nil {
+	if err := global.SPB_NOTIFY.Notify(notify); err != nil {
 		tx.Rollback()
 		return nil, logger.RErrorf("Can't send notification: %v", err)
 	}

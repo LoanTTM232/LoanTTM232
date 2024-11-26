@@ -19,6 +19,7 @@ import (
 	_ "spb/bsa/docs"
 	"spb/bsa/pkg/aws"
 	"spb/bsa/pkg/aws/ses"
+	"spb/bsa/pkg/cache"
 	"spb/bsa/pkg/global"
 	zaplog "spb/bsa/pkg/logger"
 	"spb/bsa/pkg/middleware"
@@ -89,6 +90,8 @@ func (f *Fiber) GetApp() {
 		global.SPB_CONFIG,
 		global.SPB_REDIS,
 		ses.NewSESService(awsSession))
+
+	cache.NewCache(global.SPB_REDIS)
 
 	f.App = fiber.New(fiber.Config{
 		CaseSensitive:                true,

@@ -23,7 +23,8 @@ func (s *Service) ForgotPassword(email string) error {
 
 	// generate token
 	verifyToken := uuid.New().String()
-	if err := cache.SetVerifyToken(verifyToken, global.SPB_CONFIG.Cache.ResetPasswordExp); err != nil {
+	verifyTokenToCache := config.VERIFY_TOKEN_CACHE + verifyToken
+	if err := cache.VerifyToken.SetVerifyToken(verifyTokenToCache, global.SPB_CONFIG.Cache.ResetPasswordExp); err != nil {
 		tx.Rollback()
 		return err
 	}

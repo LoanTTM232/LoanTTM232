@@ -9,6 +9,7 @@ var (
 	ErrIncorrectPassword    = NewError("incorrect password")
 	ErrLocationNotFound     = NewError("location not found")
 	ErrEmailExists          = NewError("email already exists")
+	ErrEmailVerifying       = NewError("email already verifying")
 	ErrSportTypeExists      = NewError("sport type already exists")
 	ErrSportTypeNotFound    = NewError("sport type not found")
 	ErrPermission           = NewError("unit price does not have permission")

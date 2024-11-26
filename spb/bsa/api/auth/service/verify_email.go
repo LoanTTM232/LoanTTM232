@@ -4,6 +4,7 @@ import (
 	"spb/bsa/api/auth/model"
 	notifyServ "spb/bsa/api/notification"
 	"spb/bsa/pkg/cache"
+	"spb/bsa/pkg/config"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/entities/enum"
 	"spb/bsa/pkg/msg"
@@ -16,11 +17,12 @@ import (
 // @return: error
 func (s *Service) VerifyEmail(reqBody *model.VerifyEmailRequest) error {
 	user := tb.User{}
-	if ok := cache.CheckVerifyToken(reqBody.Token); !ok {
+	verifyTokenCached := config.VERIFY_TOKEN_CACHE + reqBody.Token
+	if ok := cache.VerifyToken.CheckVerifyToken(verifyTokenCached); !ok {
 		return msg.ErrTokenExpired
 	}
 
-	defer cache.DelVerifyToken(reqBody.Token)
+	defer cache.VerifyToken.DelVerifyToken(verifyTokenCached)
 
 	err := s.db.Where("email_verify_token = ?", reqBody.Token).First(&user).Error
 	if err != nil {

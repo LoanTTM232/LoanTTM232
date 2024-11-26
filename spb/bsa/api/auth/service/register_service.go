@@ -1,8 +1,6 @@
 package service
 
 import (
-	"errors"
-
 	"spb/bsa/api/auth/model"
 	notifyServ "spb/bsa/api/notification"
 	notifyModel "spb/bsa/api/notification/model"
@@ -12,12 +10,11 @@ import (
 	"spb/bsa/pkg/entities/enum"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/google/uuid"
 )
-
-var ErrEmailExists = errors.New("email already exists")
 
 // @author: LoanTT
 // @function: AccountLogin
@@ -25,20 +22,25 @@ var ErrEmailExists = errors.New("email already exists")
 // @param: user model.UserDTO
 // @return: user entities.User, error
 func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
-	var count int64
+	var existedUser tb.User
 	var err error
 
-	tx := s.db.Begin()
-	s.db.Model(&tb.User{}).Where("email = ?", u.Email).Count(&count)
-	if count > 0 {
-		tx.Rollback()
-		return nil, ErrEmailExists
+	err = s.db.Model(&tb.User{}).Where("email = ?", u.Email).Find(&existedUser).Error
+	if err != nil {
+		return nil, err
+	}
+
+	if existedUser.ID != "" && existedUser.IsEmailVerified {
+		return nil, msg.ErrEmailExists
+	}
+
+	if existedUser.ID != "" && !existedUser.IsEmailVerified {
+		return nil, msg.ErrEmailVerifying
 	}
 
 	var role tb.Role
-	err = tx.Where("name = ?", tb.ROLE_USER).Preload("Permissions").First(&role).Error
+	err = s.db.Where("name = ?", tb.ROLE_USER).Preload("Permissions").First(&role).Error
 	if err != nil {
-		tx.Rollback()
 		return nil, err
 	}
 
@@ -52,12 +54,13 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 		EmailVerifyToken: &verifyToken,
 	}
 
+	tx := s.db.Begin()
 	if err := tx.Create(&user).Error; err != nil {
 		tx.Rollback()
 		return nil, err
 	}
 
-	if err := cache.SetVerifyToken(verifyToken, global.SPB_CONFIG.Cache.VerifyEmailExp); err != nil {
+	if err := cache.VerifyToken.SetVerifyToken(verifyToken, global.SPB_CONFIG.Cache.VerifyEmailExp); err != nil {
 		tx.Rollback()
 		return nil, err
 	}

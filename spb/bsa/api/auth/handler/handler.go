@@ -116,10 +116,11 @@ func GenerateUserToken(user *entities.User, tokenType string) *jwt.Token {
 // @param: tokens map[string]string
 // @return: err error
 func TokenNext(fctx *utils.FiberCtx, ctx fiber.Ctx, user *entities.User, tokens map[string]string) error {
-	prevToken, err := cache.JwtCacheApp.GetJwt(user.Email)
+	prevToken, err := cache.Jwt.GetJwt(user.Email)
+	jwtExpire := global.SPB_CONFIG.JWT.ExpireCache
 	switch {
 	case err == nil && prevToken == "":
-		if err := cache.JwtCacheApp.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME]); err != nil {
+		if err := cache.Jwt.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME], jwtExpire); err != nil {
 			return logger.RErrorf("error set token to cache: %v", err)
 		}
 		if err := SetTokenToCookie(tokens, ctx); err != nil {
@@ -128,10 +129,11 @@ func TokenNext(fctx *utils.FiberCtx, ctx fiber.Ctx, user *entities.User, tokens 
 	case err != nil:
 		return logger.RErrorf("error get token to cache: %v", err)
 	case prevToken != "":
-		if err := cache.JwtCacheApp.SetToBlackList(prevToken, global.SPB_CONFIG.JWT.AccessTokenExp); err != nil {
+		blPrevToken := config.BLACKLIST_PREFIX + prevToken
+		if err := cache.Jwt.SetToBlackList(blPrevToken, global.SPB_CONFIG.JWT.AccessTokenExp); err != nil {
 			return logger.RErrorf("error set token to cache: %v", err)
 		}
-		if err := cache.JwtCacheApp.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME]); err != nil {
+		if err := cache.Jwt.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME], jwtExpire); err != nil {
 			return logger.RErrorf("error set token to cache: %v", err)
 		}
 		if err := SetTokenToCookie(tokens, ctx); err != nil {

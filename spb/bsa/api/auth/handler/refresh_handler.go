@@ -29,12 +29,14 @@ func (h *Handler) AccountRefreshToken(ctx fiber.Ctx) error {
 	prevRefreshToken := ctx.Cookies(config.REFRESH_TOKEN_NAME)
 	refreshTokenFull := config.JWT_PREFIX + prevRefreshToken
 
+	blRefreshToken := config.BLACKLIST_PREFIX + prevRefreshToken
+
 	claims, err := auth.ParseJwt(refreshTokenFull)
 	if err != nil {
 		logger.Errorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(msg.REFRESH_TOKEN_FAILED)
 	}
-	if cache.JwtCacheApp.IsBlackListed(prevRefreshToken) {
+	if cache.Jwt.IsBlackListed(blRefreshToken) {
 		logger.Errorf("refresh token is blacklisted: %v", prevRefreshToken)
 		return fctx.ErrResponse(msg.REFRESH_TOKEN_FAILED)
 	}
@@ -53,7 +55,7 @@ func (h *Handler) AccountRefreshToken(ctx fiber.Ctx) error {
 		logger.Errorf("set token to cookie failed: %v", err)
 		return fctx.ErrResponse(msg.SERVER_ERROR)
 	}
-	err = cache.JwtCacheApp.SetToBlackList(prevRefreshToken, global.SPB_CONFIG.JWT.ExpireCache)
+	err = cache.Jwt.SetToBlackList(blRefreshToken, global.SPB_CONFIG.JWT.ExpireCache)
 	if err != nil {
 		logger.Errorf("set prev refresh token to black list failed: %v", err)
 		return fctx.ErrResponse(msg.SERVER_ERROR)

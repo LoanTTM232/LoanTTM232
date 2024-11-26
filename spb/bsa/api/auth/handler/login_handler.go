@@ -29,13 +29,13 @@ func (h *Handler) AccountLogin(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
 		logger.Errorf("error parse json to struct: %v", err)
-		return fctx.ErrResponse(msg.LOGIN_INCORRECT)
+		return fctx.ErrResponse(msg.LOGIN_FAILURE)
 	}
 
 	user, err := h.service.AccountLogin(reqBody)
 	if err != nil {
 		logger.Errorf("error login: %v", err)
-		return fctx.ErrResponse(msg.LOGIN_INCORRECT)
+		return fctx.ErrResponse(msg.LOGIN_FAILURE)
 	}
 
 	tokens := GenUserTokenResponse(user)

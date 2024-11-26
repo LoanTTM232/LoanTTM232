@@ -16,7 +16,7 @@ import (
 // @param: reqBody *model.ResetPasswordRequest
 // @return: error
 func (s *Service) ResetPassword(reqBody *model.ResetPasswordRequest) error {
-	if ok := cache.CheckVerifyToken(reqBody.Token); !ok {
+	if ok := cache.VerifyToken.CheckVerifyToken(reqBody.Token); !ok {
 		return msg.ErrTokenExpired
 	}
 
@@ -37,6 +37,6 @@ func (s *Service) ResetPassword(reqBody *model.ResetPasswordRequest) error {
 		return err
 	}
 
-	cache.DelVerifyToken(reqBody.Token)
+	cache.VerifyToken.DelVerifyToken(reqBody.Token)
 	return nil
 }
