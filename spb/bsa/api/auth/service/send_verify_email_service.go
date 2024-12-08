@@ -38,10 +38,10 @@ func (s *Service) SendVerifyEmail(token, email, notifyType string, tx *gorm.DB) 
 
 	var message string
 	switch notifyType {
-	case config.RESET_PASSWORD_NT:
+	case config.AUTH_RESET_PASSWORD:
 		message, err = ResetPasswordMessage(token, email, oEmailTemplate)
-	case config.VERIFY_USER_NT:
-		message, err = RegisterMesssage(token, email, oEmailTemplate)
+	case config.AUTH_VERIFY_EMAIL:
+		message, err = RegisterMessage(token, email, oEmailTemplate)
 	default:
 		panic("Invalid notify type")
 	}
@@ -54,6 +54,7 @@ func (s *Service) SendVerifyEmail(token, email, notifyType string, tx *gorm.DB) 
 	notify := &notification.PushNotification{
 		ID:       token,
 		Platform: enum.EMAIL,
+		Type:     notifyType,
 		Title:    oEmailTemplate.Title,
 		Message:  message,
 		Charset:  "UTF-8",
@@ -89,13 +90,13 @@ func ResetPasswordMessage(verifyToken, email string, oEmailTemplate *tb.Notifica
 }
 
 // @author: LoanTT
-// @function: RegisterMesssage
+// @function: RegisterMessage
 // @description: Make message for email template
 // @param: verifyToken string
 // @param: email string
 // @param: oEmailTemplate *tb.NotificationType
 // @return: string, error
-func RegisterMesssage(verifyToken, email string, oEmailTemplate *tb.NotificationType) (string, error) {
+func RegisterMessage(verifyToken, email string, oEmailTemplate *tb.NotificationType) (string, error) {
 	oEmailTemplateData := map[string]string{
 		"VerificationLink": VerificationUrl(verifyToken, global.SPB_CONFIG.Server.VerifyEmailUri),
 		"Name":             email,

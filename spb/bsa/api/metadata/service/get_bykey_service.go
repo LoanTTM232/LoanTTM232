@@ -1,6 +1,9 @@
 package service
 
-import tb "spb/bsa/pkg/entities"
+import (
+	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/msg"
+)
 
 // @author: LoanTT
 // @function: GetByKey
@@ -16,7 +19,7 @@ func (s *Service) GetByKey(key string) (*tb.Metadata, error) {
 	if err = s.db.Model(tb.Metadata{}).
 		Where("key = ?", key).
 		Count(&count).Error; err == nil && count == 0 {
-		return nil, ErrMetadataNotFound
+		return nil, msg.ErrMetadataNotFound
 	} else if err != nil {
 		return nil, err
 	}

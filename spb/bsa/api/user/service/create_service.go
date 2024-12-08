@@ -1,15 +1,12 @@
 package service
 
 import (
-	"errors"
-
 	"spb/bsa/api/user/model"
 	"spb/bsa/api/user/utility"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 )
-
-var ErrEmailExists = errors.New("email already exists")
 
 // @author: LoanTT
 // @function: Create
@@ -21,7 +18,7 @@ func (s *Service) Create(reqBody *model.CreateUserRequest) (*tb.User, error) {
 
 	err := s.db.Model(&tb.User{}).Scopes(utility.EmailIsVerity).Where("email = ?", reqBody.Email).Count(&count).Error
 	if count > 0 || err != nil {
-		return nil, ErrEmailExists
+		return nil, msg.ErrEmailExists
 	}
 
 	var role *tb.Role

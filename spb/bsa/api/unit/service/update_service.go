@@ -1,18 +1,12 @@
 package service
 
 import (
-	"errors"
-
 	"spb/bsa/api/unit/model"
 	"spb/bsa/api/unit/utility"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/msg"
 
 	"gorm.io/gorm/clause"
-)
-
-var (
-	ErrUnitNotFound     = errors.New("unit not found")
-	ErrUpdateUnitFailed = errors.New("update unit failed")
 )
 
 // @author: LoanTT
@@ -30,7 +24,7 @@ func (s *Service) Update(reqBody *model.UpdateUnitRequest, unitId string) (*tb.U
 	if err = s.db.Model(tb.Unit{}).
 		Where("id = ?", unitId).
 		Count(&count).Error; err == nil && count == 0 {
-		return nil, ErrUnitNotFound
+		return nil, msg.ErrUnitNotFound
 	} else if err != nil {
 		return nil, err
 	}
@@ -45,7 +39,7 @@ func (s *Service) Update(reqBody *model.UpdateUnitRequest, unitId string) (*tb.U
 		return nil, err
 	}
 	if len(units) == 0 {
-		return nil, ErrUpdateUnitFailed
+		return nil, msg.ErrUpdateUnitFailed
 	}
 
 	return &units[0], nil

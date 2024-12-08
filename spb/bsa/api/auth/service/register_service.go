@@ -30,11 +30,10 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 		return nil, err
 	}
 
-	if existedUser.ID != "" && existedUser.IsEmailVerified {
-		return nil, msg.ErrEmailExists
-	}
-
-	if existedUser.ID != "" && !existedUser.IsEmailVerified {
+	if existedUser.ID != "" {
+		if existedUser.IsEmailVerified {
+			return nil, msg.ErrEmailExists
+		}
 		return nil, msg.ErrEmailVerifying
 	}
 
@@ -65,7 +64,7 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 		return nil, err
 	}
 
-	notify, err := s.SendVerifyEmail(verifyToken, u.Email, config.VERIFY_USER_NT, tx)
+	notify, err := s.SendVerifyEmail(verifyToken, u.Email, config.AUTH_VERIFY_EMAIL, tx)
 	if err != nil {
 		tx.Rollback()
 		return nil, err
@@ -73,12 +72,12 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 
 	// Save notification with status inprogress
 	notifyRequest := &notifyModel.CreateNotificationRequest{
-		ID:               verifyToken, // Use token as notification ID
+		ID:               verifyToken,
 		Status:           enum.Progress(enum.INPROGRESS),
 		Platform:         enum.Platform(enum.EMAIL),
 		Title:            notify.Title,
 		Message:          notify.Message,
-		NotificationType: config.VERIFY_USER_NT,
+		NotificationType: config.AUTH_VERIFY_EMAIL,
 	}
 
 	// Create notification
@@ -86,6 +85,7 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 		tx.Rollback()
 		return nil, logger.RErrorf("Can't create notification: %v", err)
 	}
+
 	if err := tx.Commit().Error; err != nil {
 		tx.Rollback()
 		return nil, err

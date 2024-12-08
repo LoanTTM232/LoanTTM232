@@ -1,16 +1,13 @@
 package service
 
 import (
-	"errors"
-
 	"spb/bsa/api/user/model"
 	"spb/bsa/api/user/utility"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/msg"
 
 	"gorm.io/gorm/clause"
 )
-
-var ErrUserNotFound = errors.New("user not found")
 
 // @author: LoanTT
 // @function: Update
@@ -28,7 +25,7 @@ func (s *Service) Update(reqBody *model.UpdateUserRequest, userId string) (*tb.U
 		Scopes(utility.EmailIsVerity).
 		Where("id = ?", userId).
 		Count(&count).Error; err == nil && count == 0 {
-		return nil, ErrUserNotFound
+		return nil, msg.ErrUserNotFound
 	} else if err != nil {
 		return nil, err
 	}
@@ -44,7 +41,7 @@ func (s *Service) Update(reqBody *model.UpdateUserRequest, userId string) (*tb.U
 		return nil, err
 	}
 	if len(users) == 0 {
-		return nil, ErrUserNotFound
+		return nil, msg.ErrUserNotFound
 	}
 
 	return &users[0], nil

@@ -12,6 +12,7 @@ import (
 	"spb/bsa/pkg/entities"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
+	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
@@ -34,16 +35,16 @@ func NewHandler(service *serv.Service) *Handler {
 }
 
 // @author: LoanTT
-// @function: SetTokenToCookie
+// @function: SetRefreshTokenToCookie
 // @description: set token to cookie
 // @param: user model.LoginResponse
 // @param: ctx fiber.Ctx
 // @return: err error
-func SetTokenToCookie(tokens map[string]string, ctx fiber.Ctx) error {
+func SetRefreshTokenToCookie(tokens map[string]string, ctx fiber.Ctx) error {
 	if tokens[config.ACCESS_TOKEN_NAME] == "" || tokens[config.REFRESH_TOKEN_NAME] == "" {
-		return logger.RErrorf("missing access token or refresh token")
+		return msg.ErrMissingToken
 	}
-	expires := time.Now().Add(time.Minute * time.Duration(global.SPB_CONFIG.JWT.ExpireCache))
+	expires := time.Now().Add(time.Minute * time.Duration(global.SPB_CONFIG.JWT.RefreshTokenExp))
 	cookie := &fiber.Cookie{
 		Name:     config.REFRESH_TOKEN_NAME,
 		Value:    tokens[config.REFRESH_TOKEN_NAME],
@@ -68,7 +69,7 @@ func GenUserTokenResponse(user *entities.User) map[string]string {
 	accessToken, accessErr := accessClaims.SignedString([]byte(global.SPB_CONFIG.JWT.Secret))
 	refreshToken, refreshErr := refreshClaims.SignedString([]byte(global.SPB_CONFIG.JWT.Secret))
 	if accessErr != nil || refreshErr != nil {
-		logger.Errorf("failed to make jwt: %+v", errors.Join(accessErr, refreshErr).Error())
+		logger.Errorf(msg.ErrGenerateToken(errors.Join(accessErr, refreshErr).Error()).Error())
 		return nil
 	}
 
@@ -109,34 +110,38 @@ func GenerateUserToken(user *entities.User, tokenType string) *jwt.Token {
 
 // @author: LoanTT
 // @function: TokenNext
-// @description: set access token to cookie and cache
+// @description: set refresh token to cookie and cache
 // @param: fctx *utils.FiberCtx
 // @param: ctx fiber.Ctx
 // @param: user *entities.User
 // @param: tokens map[string]string
 // @return: err error
 func TokenNext(fctx *utils.FiberCtx, ctx fiber.Ctx, user *entities.User, tokens map[string]string) error {
-	prevToken, err := cache.Jwt.GetJwt(user.Email)
-	jwtExpire := global.SPB_CONFIG.JWT.ExpireCache
+	cacheKey := config.AUTH_REFRESH_TOKEN + user.Email
+	prevToken, err := cache.Jwt.GetJwt(cacheKey)
+	jwtExpire := global.SPB_CONFIG.JWT.RefreshTokenExp
+
 	switch {
 	case err == nil && prevToken == "":
-		if err := cache.Jwt.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME], jwtExpire); err != nil {
+		if err := cache.Jwt.SetJwt(cacheKey, tokens[config.REFRESH_TOKEN_NAME], jwtExpire); err != nil {
 			return logger.RErrorf("error set token to cache: %v", err)
 		}
-		if err := SetTokenToCookie(tokens, ctx); err != nil {
+		if err := SetRefreshTokenToCookie(tokens, ctx); err != nil {
 			return err
 		}
+
 	case err != nil:
 		return logger.RErrorf("error get token to cache: %v", err)
+
 	case prevToken != "":
-		blPrevToken := config.BLACKLIST_PREFIX + prevToken
-		if err := cache.Jwt.SetToBlackList(blPrevToken, global.SPB_CONFIG.JWT.AccessTokenExp); err != nil {
+		blPrevToken := config.AUTH_REFRESH_TOKEN_BLACKLIST + prevToken
+		if err := cache.Jwt.SetToBlackList(blPrevToken, global.SPB_CONFIG.JWT.RefreshTokenExp); err != nil {
 			return logger.RErrorf("error set token to cache: %v", err)
 		}
-		if err := cache.Jwt.SetJwt(user.Email, tokens[config.ACCESS_TOKEN_NAME], jwtExpire); err != nil {
+		if err := cache.Jwt.SetJwt(cacheKey, tokens[config.REFRESH_TOKEN_NAME], jwtExpire); err != nil {
 			return logger.RErrorf("error set token to cache: %v", err)
 		}
-		if err := SetTokenToCookie(tokens, ctx); err != nil {
+		if err := SetRefreshTokenToCookie(tokens, ctx); err != nil {
 			return err
 		}
 	}

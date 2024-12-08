@@ -1,14 +1,11 @@
 package service
 
 import (
-	"errors"
-
 	"spb/bsa/api/unit/model"
 	"spb/bsa/api/unit/utility"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/msg"
 )
-
-var ErrUnitNameExists = errors.New("unit name already exists")
 
 // @author: LoanTT
 // @function: Create
@@ -23,7 +20,7 @@ func (s *Service) Create(reqBody *model.CreateUnitRequest) (*tb.Unit, error) {
 		Where("name = ?", reqBody.Name).
 		Count(&count).Error
 	if count > 0 || err != nil {
-		return nil, ErrUnitNameExists
+		return nil, msg.ErrUnitNameExists
 	}
 
 	unit := utility.MapCreateRequestToEntity(reqBody)

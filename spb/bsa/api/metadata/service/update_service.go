@@ -1,17 +1,14 @@
 package service
 
 import (
-	"errors"
-
 	"spb/bsa/api/metadata/model"
 	"spb/bsa/api/metadata/utility"
 
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/msg"
 
 	"gorm.io/gorm/clause"
 )
-
-var ErrMetadataNotFound = errors.New("metadata not found")
 
 // @author: LoanTT
 // @function: Update
@@ -28,7 +25,7 @@ func (s *Service) Update(key string, reqBody *model.UpdateMetadataRequest) (*tb.
 	if err = s.db.Model(tb.Metadata{}).
 		Where("key = ?", key).
 		Count(&count).Error; err == nil && count == 0 {
-		return nil, ErrMetadataNotFound
+		return nil, msg.ErrMetadataNotFound
 	} else if err != nil {
 		return nil, err
 	}
@@ -43,7 +40,7 @@ func (s *Service) Update(key string, reqBody *model.UpdateMetadataRequest) (*tb.
 		return nil, err
 	}
 	if len(metadatas) == 0 {
-		return nil, ErrMetadataNotFound
+		return nil, msg.ErrUpdateMetadataFailed
 	}
 
 	return &metadatas[0], nil

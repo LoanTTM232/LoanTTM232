@@ -28,34 +28,38 @@ func (h *Handler) AccountRefreshToken(ctx fiber.Ctx) error {
 
 	prevRefreshToken := ctx.Cookies(config.REFRESH_TOKEN_NAME)
 	refreshTokenFull := config.JWT_PREFIX + prevRefreshToken
-
-	blRefreshToken := config.BLACKLIST_PREFIX + prevRefreshToken
+	blRefreshToken := config.AUTH_REFRESH_TOKEN_BLACKLIST + prevRefreshToken
 
 	claims, err := auth.ParseJwt(refreshTokenFull)
 	if err != nil {
 		logger.Errorf("error parse json to struct: %v", err)
 		return fctx.ErrResponse(msg.REFRESH_TOKEN_FAILED)
 	}
+
 	if cache.Jwt.IsBlackListed(blRefreshToken) {
 		logger.Errorf("refresh token is blacklisted: %v", prevRefreshToken)
 		return fctx.ErrResponse(msg.REFRESH_TOKEN_FAILED)
 	}
+
 	user, err := h.service.RefreshToken(refreshTokenFull, claims)
 	if err != nil {
 		logger.Errorf("get user failed: %v", err)
 		return fctx.ErrResponse(msg.REFRESH_TOKEN_FAILED)
 	}
+
 	tokens := GenUserTokenResponse(user)
 	if tokens == nil {
 		logger.Errorf("gen user tokens failed: %v", err)
 		return fctx.ErrResponse(msg.SERVER_ERROR)
 	}
+
 	err = TokenNext(&fctx, ctx, user, tokens)
 	if err != nil {
 		logger.Errorf("set token to cookie failed: %v", err)
 		return fctx.ErrResponse(msg.SERVER_ERROR)
 	}
-	err = cache.Jwt.SetToBlackList(blRefreshToken, global.SPB_CONFIG.JWT.ExpireCache)
+
+	err = cache.Jwt.SetToBlackList(blRefreshToken, global.SPB_CONFIG.JWT.RefreshTokenExp)
 	if err != nil {
 		logger.Errorf("set prev refresh token to black list failed: %v", err)
 		return fctx.ErrResponse(msg.SERVER_ERROR)

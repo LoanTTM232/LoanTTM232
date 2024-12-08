@@ -23,14 +23,13 @@ func (s *Service) ForgotPassword(email string) error {
 
 	// generate token
 	verifyToken := uuid.New().String()
-	verifyTokenToCache := config.VERIFY_TOKEN_CACHE + verifyToken
-	if err := cache.VerifyToken.SetVerifyToken(verifyTokenToCache, global.SPB_CONFIG.Cache.ResetPasswordExp); err != nil {
+	if err := cache.VerifyToken.SetVerifyToken(verifyToken, global.SPB_CONFIG.Cache.ResetPasswordExp); err != nil {
 		tx.Rollback()
 		return err
 	}
 
 	// send email
-	notify, err := s.SendVerifyEmail(verifyToken, email, config.RESET_PASSWORD_NT, tx)
+	notify, err := s.SendVerifyEmail(verifyToken, email, config.AUTH_RESET_PASSWORD, tx)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -43,7 +42,7 @@ func (s *Service) ForgotPassword(email string) error {
 		Platform:         enum.Platform(enum.EMAIL),
 		Title:            notify.Title,
 		Message:          notify.Message,
-		NotificationType: config.RESET_PASSWORD_NT,
+		NotificationType: config.AUTH_RESET_PASSWORD,
 	}
 
 	// Create notification
