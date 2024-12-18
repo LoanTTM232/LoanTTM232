@@ -25,6 +25,7 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	authRoute := router.Group("/api/v1/auth")
 	authRoute.Post("/login", AuthHandler.AccountLogin)
 	authRoute.Post("/register", AuthHandler.AccountRegister)
+	authRoute.Post("/logout", AuthHandler.AccountLogout)
 	authRoute.Post("/refresh", AuthHandler.AccountRefreshToken)
 	authRoute.Post("/verify-email", AuthHandler.VerifyEmail)
 	authRoute.Post("/forgot-password", AuthHandler.ForgotPasswordHandler)
