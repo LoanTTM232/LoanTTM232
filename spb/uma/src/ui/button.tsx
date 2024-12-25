@@ -18,7 +18,7 @@ interface ButtonProps {
   children?: React.ReactNode;
   disable?: boolean;
   shadow?: boolean;
-  onPress?: () => void;
+  onPress?: (e: any) => void;
 }
 
 function Button({
@@ -57,7 +57,7 @@ const createStyle = function (color: IColorScheme) {
       justifyContent: 'center',
       alignItems: 'center',
       borderCurve: 'continuous',
-      borderRadius: Radius.xs,
+      borderRadius: 8,
     },
     text: {
       color: color.secondary,

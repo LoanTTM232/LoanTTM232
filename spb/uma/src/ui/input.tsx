@@ -19,6 +19,8 @@ interface IInputProps {
   placeholder?: string;
   value?: string;
   onChangeText?: (text: string) => void;
+  keyboardType?: 'default' | 'numeric' | 'email-address' | 'phone-pad';
+  onBlur?: (e: any) => void;
 }
 
 function Input({
@@ -27,6 +29,7 @@ function Input({
   placeholder,
   value,
   onChangeText,
+  ...props
 }: IInputProps) {
   const { theme } = useContext(ThemeContext);
   const [showPassword, setShowPassword] = useState(false);
@@ -42,13 +45,14 @@ function Input({
           placeholder={placeholder}
           onChangeText={onChangeText}
           secureTextEntry={type === 'password' && !showPassword}
+          {...props}
         />
         {type === 'password' && (
           <TouchableOpacity
             style={styles.rightButton}
             onPress={() => setShowPassword(!showPassword)}
           >
-            {!showPassword ? (
+            {showPassword ? (
               <Icon icon="eye" color={theme.icon} strokeWidth={1.5} />
             ) : (
               <Icon icon="eyeHide" color={theme.icon} strokeWidth={1.5} />
@@ -68,11 +72,12 @@ const createStyles = (theme: IColorScheme) => {
     title: {
       fontFamily: Font.family.ralewayMedium,
       fontSize: Font.size.lg,
+      color: theme.icon,
     },
     inputContainer: {
       flex: 1,
       flexDirection: 'row',
-      borderRadius: Radius.sm,
+      borderRadius: Radius.xs,
       backgroundColor: theme.secondary,
       alignItems: 'center',
     },

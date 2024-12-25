@@ -24,11 +24,11 @@ function OnBoardingScreen() {
         <View style={styles.footer}>
           <Button
             title="Get Start Now"
-            onPress={() => router.push('/(auth)/register')}
+            onPress={() => router.push('/register')}
           />
           <View style={styles.bottomText}>
             <Text style={styles.loginText}>Already have an account!</Text>
-            <Link title="Login" href={'/(auth)/login'} />
+            <Link title="Login" href={'/login'} />
           </View>
         </View>
       </View>
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     height: hp(45),
   },
   footer: {
-    gap: 30,
+    gap: hp(2),
     width: '100%',
   },
   bottomText: {

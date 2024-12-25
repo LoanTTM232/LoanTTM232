@@ -1,3 +1,4 @@
+import { Formik } from 'formik';
 import React, { useContext } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -6,8 +7,10 @@ import ScreenWrapper from '@/components/ScreenWrapper';
 import { Font, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/themeContext';
 import { hp } from '@/helpers/dimensions';
+import { loginValidation } from '@/helpers/validate';
 import Button from '@/ui/button';
 import Input from '@/ui/input';
+import Link from '@/ui/link';
 
 function LoginScreen() {
   const { theme } = useContext(ThemeContext);
@@ -19,16 +22,61 @@ function LoginScreen() {
         <View style={styles.container}>
           <BackButton />
           <Text style={styles.title}>Welcome Back</Text>
-          <View style={styles.form}>
-            <Input
-              title="Email Address"
-              type="text"
-              placeholder="xyz@gmail.com"
-            />
-            <Input title="Password" type="password" placeholder="••••••••" />
-            <View>
-              <Button title="Sign In" />
-            </View>
+          <Formik
+            initialValues={{ email: '', password: '' }}
+            validationSchema={loginValidation}
+            onSubmit={(values, { setSubmitting }) => {
+              console.log('alo');
+            }}
+          >
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+            }) => (
+              <View style={styles.form}>
+                <View>
+                  <Input
+                    title="Email Address"
+                    type="text"
+                    value={values.email}
+                    onChangeText={handleChange('email')}
+                    onBlur={handleBlur('email')}
+                    placeholder="xyz@gmail.com"
+                    keyboardType="email-address"
+                  />
+                  {errors.email && touched.email && (
+                    <Text style={styles.errorMsg}>{errors.email}</Text>
+                  )}
+                </View>
+                <View>
+                  <Input
+                    title="Password"
+                    type="password"
+                    value={values.password}
+                    onChangeText={handleChange('password')}
+                    onBlur={handleBlur('password')}
+                    placeholder="••••••••"
+                  />
+                  {errors.password && touched.password && (
+                    <Text style={styles.errorMsg}>{errors.password}</Text>
+                  )}
+                </View>
+
+                <Button
+                  buttonStyle={{ marginTop: 10 }}
+                  title="Sign In"
+                  onPress={handleSubmit}
+                />
+              </View>
+            )}
+          </Formik>
+          <View style={styles.bottomText}>
+            <Text style={styles.signupText}>Don't have an account?</Text>
+            <Link href={'/register'} title="Signup" />
           </View>
         </View>
       </ScrollView>
@@ -39,8 +87,8 @@ function LoginScreen() {
 const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
     container: {
-      flex: 1,
       padding: hp(2),
+      width: '100%',
     },
     title: {
       fontFamily: Font.family.bold,
@@ -50,6 +98,24 @@ const createStyles = (theme: IColorScheme) => {
     form: {
       marginTop: hp(4),
       gap: hp(4),
+    },
+    errorMsg: {
+      color: 'red',
+      position: 'absolute',
+      bottom: -18,
+      left: 5,
+      fontSize: Font.size.sm,
+    },
+    bottomText: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 5,
+      marginTop: hp(2),
+      fontSize: Font.size.md,
+    },
+    signupText: {
+      textAlign: 'center',
     },
   });
 };

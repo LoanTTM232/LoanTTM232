@@ -37,11 +37,7 @@ function RootLayout() {
             options={{ animation: 'slide_from_right' }}
           />
           <Stack.Screen
-            name="(auth)/login"
-            options={{ animation: 'slide_from_right' }}
-          />
-          <Stack.Screen
-            name="(auth)/register"
+            name="(auth)"
             options={{ animation: 'slide_from_right' }}
           />
           <Stack.Screen name="(tabs)" />

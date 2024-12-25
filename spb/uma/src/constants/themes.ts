@@ -4,6 +4,7 @@ export interface IColorScheme {
   secondary: string;
   shadow: string;
   icon: string;
+  text: string;
 }
 export interface IColor {
   light: IColorScheme;
@@ -17,6 +18,7 @@ export const Color: IColor = {
     secondary: '#F7F7F9',
     shadow: '#000000',
     icon: '#6A6A6A',
+    text: '#6A6A6A',
   },
   dark: {
     background: 'black',
@@ -24,11 +26,12 @@ export const Color: IColor = {
     secondary: 'black',
     shadow: '#000000',
     icon: '#6A6A6A',
+    text: '#6A6A6A',
   },
 };
 
 export const Radius = {
-  xs: 10,
+  xs: 8,
   sm: 12,
   md: 14,
   lg: 16,
