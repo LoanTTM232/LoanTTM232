@@ -56,3 +56,7 @@ type ResetPasswordRequest struct {
 	Email    string `json:"email"    validate:"min=6,max=256,required,email"`
 	Password string `json:"password" validate:"min=6,max=256,required"`
 }
+
+type SendVerificationRequest struct {
+	Email string `json:"email" validate:"required,email"`
+}

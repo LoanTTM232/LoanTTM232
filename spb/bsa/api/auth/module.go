@@ -31,4 +31,6 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	authRoute.Post("/forgot-password", AuthHandler.ForgotPasswordHandler)
 	authRoute.Post("/verify-reset-token", AuthHandler.VerifyResetToken)
 	authRoute.Post("/reset-password", AuthHandler.ResetPassword)
+
+	authRoute.Get(("/ses-verify"), AuthHandler.SendVerification)
 }

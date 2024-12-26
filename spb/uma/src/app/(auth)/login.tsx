@@ -1,27 +1,46 @@
 import { Formik } from 'formik';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import BackButton from '@/components/button/Back';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import { Font, IColorScheme } from '@/constants';
+import { WEB_CLIENT_ID } from '@/constants/env';
 import { ThemeContext } from '@/contexts/themeContext';
 import { hp } from '@/helpers/dimensions';
 import { loginValidation } from '@/helpers/validate';
 import Button from '@/ui/button';
 import Input from '@/ui/input';
 import Link from '@/ui/link';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+} from '@react-native-google-signin/google-signin';
 
 function LoginScreen() {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
+
+  useEffect(() => {
+    async function init() {
+      const has = await GoogleSignin.hasPlayServices();
+      if (has) {
+        GoogleSignin.configure({
+          webClientId: WEB_CLIENT_ID,
+        });
+      }
+    }
+    init();
+  }, []);
+
+  const onGoogleButtonPress = async () => {};
 
   return (
     <ScreenWrapper>
       <ScrollView>
         <View style={styles.container}>
           <BackButton />
-          <Text style={styles.title}>Welcome Back</Text>
+          <Text style={styles.title}>Welcome back</Text>
           <Formik
             initialValues={{ email: '', password: '' }}
             validationSchema={loginValidation}
@@ -71,6 +90,7 @@ function LoginScreen() {
                   title="Sign In"
                   onPress={handleSubmit}
                 />
+                <GoogleSigninButton onPress={() => onGoogleButtonPress()} />
               </View>
             )}
           </Formik>

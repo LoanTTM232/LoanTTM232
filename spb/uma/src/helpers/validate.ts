@@ -13,7 +13,18 @@ export const passwordValidate = Yup.string()
   .required('Password is required')
   .label('Password');
 
+export const confirmPasswordValidate = Yup.string().oneOf(
+  [Yup.ref('password')],
+  'Passwords must match'
+);
+
 export const loginValidation = Yup.object().shape({
   email: emailValidate,
   password: passwordValidate,
+});
+
+export const registerValidation = Yup.object().shape({
+  email: emailValidate,
+  password: passwordValidate,
+  confirmPassword: confirmPasswordValidate,
 });
