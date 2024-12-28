@@ -57,7 +57,7 @@ func MapCreateRequestToEntity(reqBody *model.CreateUnitPriceRequest) *tb.UnitPri
 // @param: reqBody []model.CreateUnitPriceRequest
 // @return: []tb.UnitPrice
 func MapCreateRequestToEntities(reqBody []model.CreateUnitPriceRequest) []tb.UnitPrice {
-	unitPrices := make([]tb.UnitPrice, len(reqBody))
+	unitPrices := make([]tb.UnitPrice, 0)
 
 	for id := range reqBody {
 		unitPrices[id] = *MapCreateRequestToEntity(&reqBody[id])
@@ -91,7 +91,7 @@ func MapUpdateRequestToEntity(reqBody *model.UpdateUnitPriceRequest) tb.UnitPric
 // @param: reqBody []model.UpdateUnitPriceRequest
 // @return: []tb.UnitPrice
 func MapUpdateRequestToEntities(reqBody []model.UpdateUnitPriceRequest) []tb.UnitPrice {
-	unitPrices := make([]tb.UnitPrice, len(reqBody))
+	unitPrices := make([]tb.UnitPrice, 0)
 	for id := range reqBody {
 		unitPrices[id] = MapUpdateRequestToEntity(&reqBody[id])
 	}

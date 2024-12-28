@@ -47,7 +47,7 @@ func MapLocationEntityToResponse(location *tb.Location) *model.LocationResponse 
 // @param: reqBody model.CreateLocationRequest
 // @return: []*tb.Location
 func MapCreateRequestToEntities(reqBody *model.CreateLocationRequest) []*tb.Location {
-	locations := make([]*tb.Location, len(reqBody.Locations))
+	locations := make([]*tb.Location, 0)
 
 	for _, location := range reqBody.Locations {
 		locations = append(locations, &tb.Location{

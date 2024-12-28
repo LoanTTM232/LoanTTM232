@@ -65,7 +65,7 @@ func GetToken(claims jwt.Claims) *jwt.Token {
 // @param: ctx fiber.Ctx
 // @return: *model.UserClaims, error
 func GetTokenFromCookie(ctx fiber.Ctx) (*model.UserClaims, error) {
-	jwtCookie := ctx.Cookies(config.ACCESS_TOKEN_NAME)
+	jwtCookie := ctx.Cookies(config.REFRESH_TOKEN_NAME)
 	if jwtCookie == "" {
 		return nil, msg.ErrAccessKeyNotFound
 	}

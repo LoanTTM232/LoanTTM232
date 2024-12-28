@@ -33,7 +33,7 @@ func MapCreateRequestToEntity(reqBody *model.CreateSportTypeRequest) *tb.SportTy
 // @param: reqBody []model.CreateSportTypeRequest
 // @return: []tb.SportType
 func MapCreateRequestToEntities(reqBody []model.CreateSportTypeRequest) []tb.SportType {
-	sportTypes := make([]tb.SportType, len(reqBody))
+	sportTypes := make([]tb.SportType, 0)
 	for _, sportType := range reqBody {
 		sportTypes = append(sportTypes, *MapCreateRequestToEntity(&sportType))
 	}
@@ -58,7 +58,7 @@ func MapUpdateRequestToEntity(reqBody *model.UpdateSportTypeRequest) tb.SportTyp
 // @param: reqBody []model.UpdateSportTypeRequest
 // @return: []tb.SportType
 func MapUpdateRequestToEntities(reqBody []model.UpdateSportTypeRequest) []tb.SportType {
-	sportTypes := make([]tb.SportType, len(reqBody))
+	sportTypes := make([]tb.SportType, 0)
 	for _, sportType := range reqBody {
 		sportTypes = append(sportTypes, MapUpdateRequestToEntity(&sportType))
 	}

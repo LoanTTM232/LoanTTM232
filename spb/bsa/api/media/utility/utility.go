@@ -40,7 +40,7 @@ func MapCreateRequestToEntity(reqBody *model.CreateMediaRequest) *tb.Media {
 // @param: reqBody []model.CreateMediaRequest
 // @return: []tb.Media
 func MapCreateRequestToEntities(reqBody []model.CreateMediaRequest) []tb.Media {
-	medias := make([]tb.Media, len(reqBody))
+	medias := make([]tb.Media, 0)
 	for _, media := range reqBody {
 		medias = append(medias, *MapCreateRequestToEntity(&media))
 	}
@@ -67,7 +67,7 @@ func MapUpdateRequestToEntity(reqBody *model.UpdateMediaRequest) tb.Media {
 // @param: reqBody []model.UpdateMediaRequest
 // @return: []tb.Media
 func MapUpdateRequestToEntities(reqBody []model.UpdateMediaRequest) []tb.Media {
-	medias := make([]tb.Media, len(reqBody))
+	medias := make([]tb.Media, 0)
 	for _, media := range reqBody {
 		medias = append(medias, MapUpdateRequestToEntity(&media))
 	}

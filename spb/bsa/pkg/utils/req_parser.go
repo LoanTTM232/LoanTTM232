@@ -101,6 +101,17 @@ func (ctx *FiberCtx) ParseUUID(key string) (string, error) {
 }
 
 // @author: LoanTT
+// @function: ParseParam
+// @description: Parse param
+// @param: ctx fiber.Ctx
+// @param: key string
+// @return: string
+func (ctx *FiberCtx) ParseParam(key string) string {
+	value := ctx.Fctx.Params(key)
+	return value
+}
+
+// @author: LoanTT
 // @function: GetQueryString
 // @description: Get query string
 // @return: map[string]string, error
