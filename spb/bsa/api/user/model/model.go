@@ -5,6 +5,13 @@ import (
 	"spb/bsa/pkg/utils"
 )
 
+var ORDER_BY = []string{
+	"email",
+	"full_name",
+	"created_at",
+	"updated_at",
+}
+
 type GetUsersRequest struct {
 	Pagination utils.Pagination
 	Role       string

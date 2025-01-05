@@ -179,3 +179,27 @@ func SafeUint64ToInt(val uint64) int {
 	}
 	return 0
 }
+
+func SafeInt64ToUint(val int64) uint {
+	if val <= math.MaxInt {
+		return uint(val)
+	}
+	return 0
+}
+
+func SafeInt64ToInt(val int64) int {
+	if val <= math.MaxInt {
+		return int(val)
+	} else if val >= math.MinInt {
+		return int(val)
+	}
+	return 0
+}
+
+func FloorFloatToInt(val float64) int {
+	return int(math.Floor(val))
+}
+
+func CeilFloatToInt(val float64) int {
+	return int(math.Ceil(val))
+}
