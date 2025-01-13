@@ -60,11 +60,12 @@ Manage clubs by Admin, Club Owner
 
 | No  | Implemented | Method | Path                                                                                                            | Permission  | Description                                          |
 | --- | ----------- | ------ | --------------------------------------------------------------------------------------------------------------- | ----------- | ---------------------------------------------------- |
-| 1   | &#x274c;    | GET    | /clubs?i={items}&p={page}&b={order by}&t={order type}&c={club name}&lg={longitude}&lt={latitude}&s={sport type} | club:read   | Get all clubs with pagination and sorting and filter |
-| 2   | &#x274c;    | GET    | /clubs/:id                                                                                                      | club:read   | Get club by id                                       |
+| 1   | &#x274c;    | GET    | /clubs?i={items}&p={page}&b={order by}&t={order type}&c={club name}&lg={longitude}&lt={latitude}&s={sport type} |             | Get all clubs with pagination and sorting and filter |
+| 2   | &#x274c;    | GET    | /clubs/:id                                                                                                      |             | Get club by id                                       |
 | 3   | &#x274c;    | POST   | /clubs/                                                                                                         | club:create | Create new club                                      |
 | 4   | &#x274c;    | PUT    | /clubs/:id                                                                                                      | club:update | Update club info                                     |
 | 5   | &#x274c;    | DELETE | /clubs/:id                                                                                                      | club:delete | Delete club                                          |
+| 6   | &#x274c;    | GET    | /clubs/:id/payment_info                                                                                         |             | Get club's payment info                              |
 
 ---
 
