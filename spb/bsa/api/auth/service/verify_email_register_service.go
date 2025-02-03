@@ -1,6 +1,8 @@
 package service
 
 import (
+	"strconv"
+
 	"spb/bsa/api/auth/model"
 	notifyServ "spb/bsa/api/notification"
 	"spb/bsa/pkg/cache"
@@ -16,13 +18,14 @@ import (
 // @return: error
 func (s *Service) VerifyEmail(reqBody *model.VerifyEmailRequest) error {
 	user := tb.User{}
-	if ok := cache.VerifyToken.CheckVerifyToken(reqBody.Token); !ok {
+	otpCodeStr := strconv.Itoa(reqBody.Token)
+	if ok := cache.OTP.CheckOTP(otpCodeStr); !ok {
 		return msg.ErrTokenExpired
 	}
 
-	defer cache.VerifyToken.DelVerifyToken(reqBody.Token)
+	defer cache.OTP.DelOTP(otpCodeStr)
 
-	err := s.db.Where("email_verify_token = ?", reqBody.Token).First(&user).Error
+	err := s.db.Where("email_verify_token = ?", otpCodeStr).First(&user).Error
 	if err != nil {
 		return err
 	}
@@ -39,7 +42,7 @@ func (s *Service) VerifyEmail(reqBody *model.VerifyEmailRequest) error {
 	}
 
 	// Update notification status
-	err = notifyServ.NotificationService.UpdateStatus(reqBody.Token, enum.Progress(enum.SUCCESS))
+	err = notifyServ.NotificationService.UpdateStatus(user.ID, enum.Progress(enum.SUCCESS))
 	if err != nil {
 		return err
 	}

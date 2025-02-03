@@ -1,6 +1,8 @@
 package service
 
 import (
+	"strconv"
+
 	"spb/bsa/api/auth/model"
 	notifyServ "spb/bsa/api/notification"
 	"spb/bsa/pkg/cache"
@@ -16,7 +18,8 @@ import (
 // @param: reqBody *model.ResetPasswordRequest
 // @return: error
 func (s *Service) ResetPassword(reqBody *model.ResetPasswordRequest) error {
-	if ok := cache.VerifyToken.CheckVerifyToken(reqBody.Token); !ok {
+	otpCodeStr := strconv.Itoa(reqBody.Token)
+	if ok := cache.OTP.CheckOTP(otpCodeStr); !ok {
 		return msg.ErrTokenExpired
 	}
 
@@ -32,11 +35,11 @@ func (s *Service) ResetPassword(reqBody *model.ResetPasswordRequest) error {
 	}
 
 	// Update notification status
-	err = notifyServ.NotificationService.UpdateStatus(reqBody.Token, enum.Progress(enum.SUCCESS))
+	err = notifyServ.NotificationService.UpdateStatus(user.ID, enum.Progress(enum.SUCCESS))
 	if err != nil {
 		return err
 	}
 
-	cache.VerifyToken.DelVerifyToken(reqBody.Token)
+	cache.OTP.DelOTP(otpCodeStr)
 	return nil
 }

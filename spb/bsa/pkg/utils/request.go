@@ -12,6 +12,12 @@ import (
 	"github.com/google/uuid"
 )
 
+type JSONResult struct {
+	Status string      `json:"status"`
+	Code   string      `json:"code"`
+	Data   interface{} `json:"data"`
+}
+
 type FlexInt int64
 
 var ErrKeyNotFound = errors.New("key not found")

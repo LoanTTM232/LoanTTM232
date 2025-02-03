@@ -9,7 +9,7 @@ type User struct {
 	FullName         *string `gorm:"size:255" json:"full_name"`
 	Phone            *string `gorm:"size:25" json:"phone"`
 	IsEmailVerified  bool    `gorm:"not null" json:"is_email_verified"`
-	EmailVerifyToken *string `gorm:"size:255" json:"email_verify_token"`
+	EmailVerifyToken *string `gorm:"size:10" json:"email_verify_token"`
 	RoleID           string  `gorm:"type:uuid;not null" json:"role_id"`
 	Role             Role    `gorm:"foreignKey:RoleID" json:"role"`
 }

@@ -75,3 +75,7 @@ notification:
         channel_name: "notification"
         channel_size: 10
         worker_num: 4
+
+otp:
+    length: 6
+    expire: 5 # minutes

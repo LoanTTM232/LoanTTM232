@@ -73,16 +73,16 @@ func (s *Service) SendVerifyEmail(token, email, notifyType string, tx *gorm.DB) 
 // @author: LoanTT
 // @function: ResetPasswordMessage
 // @description: Make message for email template
-// @param: verifyToken string
+// @param: otpCode string
 // @param: email string
 // @param: oEmailTemplate *tb.NotificationType
 // @return: string, error
-func ResetPasswordMessage(verifyToken, email string, oEmailTemplate *tb.NotificationType) (string, error) {
+func ResetPasswordMessage(otpCode, email string, oEmailTemplate *tb.NotificationType) (string, error) {
 	oEmailTemplateData := map[string]string{
-		"VerificationLink": VerificationUrl(verifyToken, global.SPB_CONFIG.Server.ResetPasswordUri),
-		"Name":             email,
-		"CompanyName":      global.SPB_CONFIG.ProjectName,
-		"Expire":           fmt.Sprintf("%d minutes", global.SPB_CONFIG.Cache.ResetPasswordExp),
+		"OTPCode":     otpCode,
+		"Name":        email,
+		"CompanyName": global.SPB_CONFIG.ProjectName,
+		"Expire":      fmt.Sprintf("%d minutes", global.SPB_CONFIG.Cache.ResetPasswordExp),
 	}
 
 	temp := oEmailTemplate.MapTemplate(oEmailTemplateData)
@@ -92,15 +92,16 @@ func ResetPasswordMessage(verifyToken, email string, oEmailTemplate *tb.Notifica
 // @author: LoanTT
 // @function: RegisterMessage
 // @description: Make message for email template
-// @param: verifyToken string
+// @param: otpCode string
 // @param: email string
 // @param: oEmailTemplate *tb.NotificationType
 // @return: string, error
-func RegisterMessage(verifyToken, email string, oEmailTemplate *tb.NotificationType) (string, error) {
+func RegisterMessage(otpCode, email string, oEmailTemplate *tb.NotificationType) (string, error) {
 	oEmailTemplateData := map[string]string{
-		"VerificationLink": VerificationUrl(verifyToken, global.SPB_CONFIG.Server.VerifyEmailUri),
-		"Name":             email,
-		"CompanyName":      global.SPB_CONFIG.ProjectName,
+		"OTPCode":     otpCode,
+		"Name":        email,
+		"CompanyName": global.SPB_CONFIG.ProjectName,
+		"Expire":      fmt.Sprintf("%d minutes", global.SPB_CONFIG.OTP.OTPExp),
 	}
 
 	temp := oEmailTemplate.MapTemplate(oEmailTemplateData)

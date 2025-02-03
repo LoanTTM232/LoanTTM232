@@ -12,8 +12,6 @@ import (
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
-
-	"github.com/google/uuid"
 )
 
 // @author: LoanTT
@@ -43,14 +41,14 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 		return nil, err
 	}
 
-	verifyToken := uuid.New().String()
+	otpToken := utils.GenerateOTPCode(global.SPB_CONFIG.OTP.OTPLength)
 	user := tb.User{
 		Email:            u.Email,
 		Password:         utils.BcryptHash(u.Password),
 		Role:             role,
 		RoleID:           role.ID,
 		IsEmailVerified:  false,
-		EmailVerifyToken: &verifyToken,
+		EmailVerifyToken: &otpToken,
 	}
 
 	tx := s.db.Begin()
@@ -59,12 +57,12 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 		return nil, err
 	}
 
-	if err := cache.VerifyToken.SetVerifyToken(verifyToken, global.SPB_CONFIG.Cache.VerifyEmailExp); err != nil {
+	if err := cache.OTP.SetOTP(otpToken, global.SPB_CONFIG.Cache.VerifyEmailExp); err != nil {
 		tx.Rollback()
 		return nil, err
 	}
 
-	notify, err := s.SendVerifyEmail(verifyToken, u.Email, config.AUTH_VERIFY_EMAIL, tx)
+	notify, err := s.SendVerifyEmail(otpToken, u.Email, config.AUTH_VERIFY_EMAIL, tx)
 	if err != nil {
 		tx.Rollback()
 		return nil, err
@@ -72,7 +70,7 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 
 	// Save notification with status inprogress
 	notifyRequest := &notifyModel.CreateNotificationRequest{
-		ID:               verifyToken,
+		SenderID:         &user.ID,
 		Status:           enum.Progress(enum.INPROGRESS),
 		Platform:         enum.Platform(enum.EMAIL),
 		Title:            notify.Title,

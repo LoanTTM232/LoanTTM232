@@ -1,6 +1,8 @@
 package service
 
 import (
+	"strconv"
+
 	"spb/bsa/api/auth/model"
 	"spb/bsa/pkg/cache"
 	"spb/bsa/pkg/msg"
@@ -12,7 +14,7 @@ import (
 // @param: reqBody *model.VerifyTokenRequest
 // @return: error
 func (s *Service) VerifyResetToken(reqBody *model.VerifyTokenRequest) error {
-	if ok := cache.VerifyToken.CheckVerifyToken(reqBody.Token); !ok {
+	if ok := cache.OTP.CheckOTP(strconv.Itoa(reqBody.Token)); !ok {
 		return msg.ErrTokenExpired
 	}
 

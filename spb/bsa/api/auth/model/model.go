@@ -39,7 +39,7 @@ type RefreshTokenResponse struct {
 }
 
 type VerifyEmailRequest struct {
-	Token string `json:"token"  validate:"uuid,required"`
+	Token int `json:"token"  validate:"gte=999,lte=1000000"`
 }
 
 type ForgotPasswordRequest struct {
@@ -47,12 +47,12 @@ type ForgotPasswordRequest struct {
 }
 
 type VerifyTokenRequest struct {
-	Token string `json:"token"  validate:"uuid,required"`
+	Token int    `json:"token"  validate:"gte=999,lte=1000000"`
 	Email string `json:"email"  validate:"min=6,max=256,required,email"`
 }
 
 type ResetPasswordRequest struct {
-	Token    string `json:"token"    validate:"uuid,required"`
+	Token    int    `json:"token"    validate:"gte=999,lte=1000000"`
 	Email    string `json:"email"    validate:"min=6,max=256,required,email"`
 	Password string `json:"password" validate:"min=6,max=256,required"`
 }

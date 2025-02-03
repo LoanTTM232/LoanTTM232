@@ -95,6 +95,11 @@ type AWS struct {
 	MaxRetries int    `mapstructure:"max_retries"`
 }
 
+type OTP struct {
+	OTPLength int `mapstructure:"length"`
+	OTPExp    int `mapstructure:"expire"`
+}
+
 type Config struct {
 	ProjectName  string        `mapstructure:"project_name"`
 	Server       *Server       `mapstructure:"server"`
@@ -106,6 +111,7 @@ type Config struct {
 	Logging      *Logging      `mapstructure:"logging"`
 	Notification *Notification `mapstructure:"notification"`
 	AWS          *AWS          `mapstructure:"aws"`
+	OTP          *OTP          `mapstructure:"otp"`
 	Vpr          *viper.Viper
 }
 

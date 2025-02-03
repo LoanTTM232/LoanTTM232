@@ -1,14 +1,16 @@
 package utils
 
 import (
-	"crypto/rand"
 	"fmt"
 	"math"
+	"math/rand"
 	"path"
 	"path/filepath"
 	"regexp"
 	"runtime"
+	"strconv"
 	"strings"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -202,4 +204,14 @@ func FloorFloatToInt(val float64) int {
 
 func CeilFloatToInt(val float64) int {
 	return int(math.Ceil(val))
+}
+
+func GenerateOTPCode(length int) string {
+	rng := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	min := int(math.Pow10(length - 1))
+	max := int(math.Pow10(length)) - 1
+
+	randomNum := rng.Intn(max-min+1) + min
+	return strconv.Itoa(randomNum)
 }

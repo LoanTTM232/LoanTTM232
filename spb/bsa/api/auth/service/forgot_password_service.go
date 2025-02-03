@@ -9,27 +9,26 @@ import (
 	"spb/bsa/pkg/entities/enum"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
-
-	"github.com/google/uuid"
+	"spb/bsa/pkg/utils"
 )
 
 func (s *Service) ForgotPassword(email string) error {
 	// check email exist
-	_, err := userServ.UserService.GetByEmail(email)
+	user, err := userServ.UserService.GetByEmail(email)
 	if err != nil {
 		return err
 	}
 	tx := s.db.Begin()
 
 	// generate token
-	verifyToken := uuid.New().String()
-	if err := cache.VerifyToken.SetVerifyToken(verifyToken, global.SPB_CONFIG.Cache.ResetPasswordExp); err != nil {
+	optCode := utils.GenerateOTPCode(global.SPB_CONFIG.OTP.OTPLength)
+	if err := cache.OTP.SetOTP(optCode, global.SPB_CONFIG.Cache.ResetPasswordExp); err != nil {
 		tx.Rollback()
 		return err
 	}
 
 	// send email
-	notify, err := s.SendVerifyEmail(verifyToken, email, config.AUTH_RESET_PASSWORD, tx)
+	notify, err := s.SendVerifyEmail(optCode, email, config.AUTH_RESET_PASSWORD, tx)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -37,7 +36,7 @@ func (s *Service) ForgotPassword(email string) error {
 
 	// Save notification with status inprogress
 	notifyRequest := &notifyModel.CreateNotificationRequest{
-		ID:               verifyToken, // Use token as notification ID
+		SenderID:         &user.ID,
 		Status:           enum.Progress(enum.INPROGRESS),
 		Platform:         enum.Platform(enum.EMAIL),
 		Title:            notify.Title,
