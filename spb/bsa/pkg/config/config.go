@@ -65,11 +65,6 @@ type JWT struct {
 	RefreshTokenExp int    `mapstructure:"refresh_token_exp"`
 }
 
-type OAuth struct {
-	GoogleClientId     string `mapstructure:"google_client_id"`
-	GoogleClientSecret string `mapstructure:"google_client_secret"`
-}
-
 type RedisQueue struct {
 	ChannelName string `mapstructure:"channel_name"`
 	ChannelSize int    `mapstructure:"channel_size"`
@@ -100,6 +95,16 @@ type OTP struct {
 	OTPExp    int `mapstructure:"expire"`
 }
 
+type Google struct {
+	ClientID     string `mapstructure:"client_id"`
+	ClientSecret string `mapstructure:"client_secret"`
+	Callback     string `mapstructure:"client_callback"`
+}
+
+type OAuth struct {
+	Google Google `mapstructure:"google"`
+}
+
 type Config struct {
 	ProjectName  string        `mapstructure:"project_name"`
 	Server       *Server       `mapstructure:"server"`
@@ -112,6 +117,7 @@ type Config struct {
 	Notification *Notification `mapstructure:"notification"`
 	AWS          *AWS          `mapstructure:"aws"`
 	OTP          *OTP          `mapstructure:"otp"`
+	OAuth        *OAuth        `mapstructure:"oauth"`
 	Vpr          *viper.Viper
 }
 

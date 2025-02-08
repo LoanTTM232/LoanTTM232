@@ -3,6 +3,7 @@ package auth
 import (
 	handler "spb/bsa/api/auth/handler"
 	"spb/bsa/api/auth/service"
+	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/middleware"
 
 	"github.com/gofiber/fiber/v3"
@@ -32,5 +33,9 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	authRoute.Post("/verify-reset-token", AuthHandler.VerifyResetToken)
 	authRoute.Post("/reset-password", AuthHandler.ResetPassword)
 
+	// aws ses verify
 	authRoute.Get(("/ses-verify"), AuthHandler.SendVerification)
+
+	// google oauth callback
+	router.Post(global.SPB_CONFIG.OAuth.Google.Callback, AuthHandler.GoogleCallback)
 }

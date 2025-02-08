@@ -165,7 +165,7 @@ func (f *Fiber) LoadRoutes() {
 	// a custom 404 handler
 	f.App.Use(func(ctx fiber.Ctx) error {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "resource Not Found",
+			"message": "resource not found",
 		})
 	})
 }

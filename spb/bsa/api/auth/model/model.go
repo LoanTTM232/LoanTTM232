@@ -60,3 +60,7 @@ type ResetPasswordRequest struct {
 type SendVerificationRequest struct {
 	Email string `json:"email" validate:"required,email"`
 }
+
+type GoogleCallbackRequest struct {
+	Code string `json:"code" validate:"required"`
+}
