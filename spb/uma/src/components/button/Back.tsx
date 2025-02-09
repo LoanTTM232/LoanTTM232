@@ -1,22 +1,23 @@
-import { useRouter } from 'expo-router';
 import React, { useContext } from 'react';
 import { Pressable, StyleSheet, ViewStyle } from 'react-native';
 
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/themeContext';
 import Icon from '@/ui/icon';
+import { useNavigation } from '@react-navigation/native';
 
-interface IBackButtonProps {
+export type BackButtonProps = {
   styles?: ViewStyle;
   onPress?: () => void;
-}
+};
 
-function BackButton(props: IBackButtonProps) {
+function BackButton(props: BackButtonProps) {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
-  const router = useRouter();
+  const navigation = useNavigation();
+
   const defaultOnPress = () => {
-    router.back();
+    navigation.goBack();
   };
 
   return (

@@ -13,6 +13,16 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
+// GoogleCallback godoc
+//
+// @summary 		Google callback api
+// @description 	Google callback api
+// @tags 			auth
+// @accept  		json
+// @produce 		json
+// @param 			Group body model.GoogleCallbackRequest true 	"Google callback"
+// @success 		200 {object} utils.JSONResult{}				"Google callback success"
+// @failure 		400 {object} utils.JSONResult{}        		"Google callback failed"
 func (h *Handler) GoogleCallback(ctx fiber.Ctx) error {
 	var err error
 	reqBody := new(model.GoogleCallbackRequest)

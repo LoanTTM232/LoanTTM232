@@ -46,6 +46,6 @@ func JwtMiddleware(ignorePaths ...string) fiber.Handler {
 		}
 		logger.Errorf("error jwt middleware: %v", errStr)
 
-		return fctx.ErrResponse(msg.UNAUTHORIZED)
+		return fctx.ErrResponse(msg.NOT_ACCEPTABLE)
 	}
 }

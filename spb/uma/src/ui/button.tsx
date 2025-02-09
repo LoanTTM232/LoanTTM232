@@ -7,7 +7,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { Font, IColorScheme, Radius } from '@/constants';
+import { Font, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/themeContext';
 import { hp } from '@/helpers/dimensions';
 
@@ -49,23 +49,23 @@ function Button({
   );
 }
 
-const createStyle = function (color: IColorScheme) {
+const createStyle = function (theme: IColorScheme) {
   return StyleSheet.create({
     button: {
-      backgroundColor: color.primary,
+      backgroundColor: theme.primary,
       height: hp(6.6),
       justifyContent: 'center',
       alignItems: 'center',
       borderCurve: 'continuous',
-      borderRadius: 8,
+      borderRadius: 12,
     },
     text: {
-      color: color.secondary,
-      fontSize: hp(2.2),
+      color: theme.secondary,
+      fontSize: hp(1.8),
       fontFamily: Font.family.medium,
     },
     shadow: {
-      shadowColor: color.shadow,
+      shadowColor: theme.shadow,
       shadowOffset: { width: 0, height: 10 },
       shadowOpacity: 0.2,
       shadowRadius: 8,
