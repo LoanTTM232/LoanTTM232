@@ -96,9 +96,8 @@ type OTP struct {
 }
 
 type Google struct {
-	ClientID     string `mapstructure:"client_id"`
-	ClientSecret string `mapstructure:"client_secret"`
-	Callback     string `mapstructure:"client_callback"`
+	ClientID string `mapstructure:"client_id"`
+	Callback string `mapstructure:"client_callback"`
 }
 
 type OAuth struct {

@@ -1,10 +1,8 @@
 package handler
 
 import (
-	"context"
-
 	"spb/bsa/api/auth/model"
-	"spb/bsa/pkg/auth"
+	"spb/bsa/api/auth/utility"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
@@ -33,14 +31,24 @@ func (h *Handler) GoogleCallback(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.LOGIN_FAILURE)
 	}
 
-	c := context.Background()
-	googleOAuth := auth.NewOAuth2Google(global.SPB_CONFIG)
-	token, err := googleOAuth.Exchange(c, reqBody.Code)
+	user, err := h.service.GoogleLogin(*reqBody)
 	if err != nil {
-		logger.Errorf("error exchange google oauth: %v", err)
+		logger.Errorf("google login failed: %v", err)
 		return fctx.ErrResponse(msg.LOGIN_FAILURE)
 	}
-	logger.Infof("token: %v", token)
 
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_LOGIN_SUCCESS)
+	tokens := GenUserTokenResponse(user)
+	if tokens == nil {
+		logger.Errorf("gen user tokens failed: %v", err)
+		return fctx.ErrResponse(msg.SERVER_ERROR)
+	}
+
+	err = TokenNext(&fctx, ctx, user, tokens)
+	if err != nil {
+		logger.Errorf("set token to cookie failed: %v", err)
+		return fctx.ErrResponse(msg.SERVER_ERROR)
+	}
+
+	loginResponse := utility.MappingLoginResponse(user, tokens)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_LOGIN_SUCCESS, loginResponse)
 }

@@ -1,5 +1,5 @@
 import { Formik } from 'formik';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import BackButton from '@/components/button/Back';
@@ -8,22 +8,58 @@ import ScreenWrapper from '@/components/ScreenWrapper';
 import { Font, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/themeContext';
 import { hp } from '@/helpers/dimensions';
+import i18next from '@/helpers/i18n';
+import { logError } from '@/helpers/logger';
+import { toastError, toastSuccess } from '@/helpers/toast';
 import { loginValidation } from '@/helpers/validate';
-import { RootStackParamList } from '@/screens';
+import { ParamList } from '@/screens';
+import authService from '@/services/auth.service';
 import Button from '@/ui/button';
 import Input from '@/ui/input';
 import Link from '@/ui/link';
+import { useAuthStore } from '@/zustand';
+import { WEB_CLIENT_ID } from '@env';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-const Login: React.FC = () => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+const LoginScreen: React.FC = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<ParamList>>();
+  const login = useAuthStore.use.login();
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
-  const onGoogleButtonPress = async () => {
-    console.log('alo');
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: WEB_CLIENT_ID,
+      scopes: ['email', 'profile'],
+    });
+  }, []);
+
+  const onGoogleButtonHandler = async () => {
+    try {
+      const { data } = await GoogleSignin.signIn();
+      const idToken = data?.idToken as string;
+
+      const response = await authService.googleCallback({ code: idToken });
+      if (response instanceof Error) {
+        logError(response);
+        toastError({ message: i18next.t('notification.login_failed') });
+        return;
+      }
+
+      login(
+        response.data.access_token,
+        response.data.user.user_id,
+        response.data.user.email,
+        response.data.user.full_name
+      );
+      navigation.navigate('Tabs');
+      toastSuccess({ message: i18next.t('notification.login_success') });
+    } catch (error) {
+      logError(error as Error);
+      toastError({ message: i18next.t('notification.login_failed') });
+    }
   };
 
   return (
@@ -81,7 +117,7 @@ const Login: React.FC = () => {
                   title="Sign In"
                   onPress={handleSubmit}
                 />
-                <GoogleSignIn onPress={onGoogleButtonPress} />
+                <GoogleSignIn onPress={onGoogleButtonHandler} />
               </View>
             )}
           </Formik>
@@ -137,4 +173,4 @@ const createStyles = (_: IColorScheme) => {
   });
 };
 
-export default Login;
+export default LoginScreen;

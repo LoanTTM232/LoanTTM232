@@ -14,9 +14,9 @@ const icons = {
 
 interface IIconProps {
   icon: keyof typeof icons;
-  size?: number;
+  size?: string;
   color?: string;
-  strokeWidth?: number;
+  strokeWidth?: string;
 }
 
 function Icon({ icon, ...props }: IIconProps) {
@@ -24,9 +24,9 @@ function Icon({ icon, ...props }: IIconProps) {
 
   return (
     <IconComponent
-      height={props.size || 24}
-      width={props.size || 24}
-      strokeWidth={props.strokeWidth || 1.9}
+      height={props.size || '24'}
+      width={props.size || '24'}
+      strokeWidth={props.strokeWidth || '1.9'}
       {...props}
     />
   );

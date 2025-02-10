@@ -64,3 +64,9 @@ type SendVerificationRequest struct {
 type GoogleCallbackRequest struct {
 	Code string `json:"code" validate:"required"`
 }
+
+type GooglePayload struct {
+	Email string `json:"email"`
+	Name  string `json:"name"`
+	Sub   string `json:"sub"`
+}

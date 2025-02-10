@@ -1,12 +1,12 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-function explore() {
+function RegisterScreen() {
   return (
     <View>
-      <Text>explore</Text>
+      <Text>register</Text>
     </View>
   );
 }
 
-export default explore;
+export default RegisterScreen;

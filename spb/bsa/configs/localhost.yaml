@@ -34,9 +34,8 @@ jwt:
 
 oauth:
     google:
-        client_id: "xxxx"
-        client_secret: "xxxx"
-        client_callback: "/api/v1/auth/google/callback"
+        client_id: "731041887361-83b8ofte1dcsknk0gbahlpikos2137gq.apps.googleusercontent.com"
+        client_callback: "/api/auth/google/callback"
 
 database:
     engine: "postgres"

@@ -135,6 +135,7 @@ func (f *Fiber) LoadRoutes() {
 		"/api/v1/auth/forgot-password",
 		"/api/v1/auth/verify-reset-token",
 		"/api/v1/auth/reset-password",
+		global.SPB_CONFIG.OAuth.Google.Callback,
 		// testing
 		"/api/v1/auth/ses-verify",
 	}

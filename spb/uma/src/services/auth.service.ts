@@ -5,7 +5,7 @@ import {
   REGISTER_PATH,
 } from '@/constants';
 import { ResponseError } from '@/helpers/error';
-import { getData, removeData, storeData } from '@/helpers/storage';
+import { removeData, storeData } from '@/helpers/storage';
 import { apiFactory, ApiResponse } from '@/services/http';
 
 export type LoginRequest = {
@@ -18,6 +18,7 @@ export type LoginResponse = {
   user: {
     user_id: string;
     email: string;
+    full_name: string;
   };
 };
 
@@ -30,21 +31,25 @@ export type RefreshTokenResponse = {
   access_token: string;
 };
 
+export type GoogleCallbackRequest = {
+  code: string;
+};
+
 class AuthService {
   public async login(
     data: LoginRequest
   ): Promise<ApiResponse<LoginResponse> | ResponseError> {
     const api = apiFactory<LoginResponse>(LOGIN_PATH, false);
-    return await api.post(data);
+    const response = await api.post(data);
+
+    if ('data' in response) {
+      await storeData('accessToken', response.data.access_token);
+    }
+    return response;
   }
 
   public async logout(): Promise<void> {
     removeData('accessToken');
-  }
-
-  public async isLoggedIn(): Promise<boolean> {
-    const token = await getData('accessToken');
-    return token !== '';
   }
 
   public async register(
@@ -54,22 +59,28 @@ class AuthService {
     return await api.post(data);
   }
 
-  public async refreshToken(): Promise<void> {
+  public async refreshToken(): Promise<
+    ApiResponse<RefreshTokenResponse> | ResponseError
+  > {
     const api = apiFactory<RefreshTokenResponse>(REFRESH_TOKEN_PATH);
     const response = await api.post();
 
     if ('data' in response) {
       await storeData('accessToken', response.data.access_token);
     }
+    return response;
   }
 
-  public async googleCallback(): Promise<void> {
+  public async googleCallback(
+    data: GoogleCallbackRequest
+  ): Promise<ApiResponse<LoginResponse> | ResponseError> {
     const api = apiFactory<LoginResponse>(GOOGLE_SIGNIN_CALLBACK_PATH, false);
-    const response = await api.get();
+    const response = await api.post(data);
 
     if ('data' in response) {
       await storeData('accessToken', response.data.access_token);
     }
+    return response;
   }
 }
 

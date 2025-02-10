@@ -1,14 +1,10 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { Font, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/themeContext';
 import { hp } from '@/helpers/dimensions';
-import env from '@/helpers/env';
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-} from '@react-native-google-signin/google-signin';
+import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 
 export type GoogleSignInProps = {
   onPress: () => void;
@@ -17,18 +13,6 @@ export type GoogleSignInProps = {
 const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onPress }) => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
-
-  useEffect(() => {
-    async function init() {
-      const has = await GoogleSignin.hasPlayServices();
-      if (has) {
-        GoogleSignin.configure({
-          webClientId: env.WEB_CLIENT_ID,
-        });
-      }
-    }
-    init();
-  }, []);
 
   return <GoogleSigninButton style={styles.button} onPress={onPress} />;
 };

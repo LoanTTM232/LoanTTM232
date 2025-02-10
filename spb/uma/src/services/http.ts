@@ -8,12 +8,12 @@ import axios, {
 } from 'axios';
 
 import ConcurrencyHandler from '@/helpers/concurrency';
-import env from '@/helpers/env';
 import { ResponseError } from '@/helpers/error';
 import i18next from '@/helpers/i18n';
+import { logError, logInfo } from '@/helpers/logger';
 import { getData } from '@/helpers/storage';
-
-import authService from './auth.service';
+import authService from '@/services/auth.service';
+import { API_URL } from '@env';
 
 class AxiosConfig {
   private axiosInstance: Axios;
@@ -21,7 +21,7 @@ class AxiosConfig {
 
   constructor() {
     this.axiosInstance = axios.create({
-      baseURL: env.API_URL,
+      baseURL: API_URL,
       headers: this.defaultHeaders(),
     });
 
@@ -69,9 +69,12 @@ class AxiosConfig {
           authService.logout();
           break;
         case HttpStatusCode.Unauthorized:
+          // Use the concurrency handler to prevent multiple requests
+          // from refreshing the token at the same time
           return await this.concurrencyHandler
             .execute(authService.refreshToken)
             .then(() => {
+              // Retry the original request
               return this.axiosInstance.request(
                 config as InternalAxiosRequestConfig
               );
@@ -146,6 +149,7 @@ export interface ApiResponse<K> {
 const responseParse = <K, T extends ApiResponse<K> = ApiResponse<K>>(
   response: Promise<AxiosResponse<T, any>>
 ): Promise<ResponseError | T> => {
+  logInfo('responseParse');
   return response
     .then((res) => {
       if (res.status >= 200 && res.status < 300) {
@@ -157,8 +161,9 @@ const responseParse = <K, T extends ApiResponse<K> = ApiResponse<K>>(
 
       return new ResponseError(i18next.t(res.data.code));
     })
-    .catch(() => {
-      return new ResponseError(i18next.t('ERS001'));
+    .catch((error) => {
+      logError(error);
+      return new ResponseError(i18next.t('error.ERS001'));
     });
 };
 

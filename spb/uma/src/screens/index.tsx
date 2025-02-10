@@ -1,15 +1,16 @@
 import React from 'react';
 
-import Login from '@/screens/auth/login';
-import Register from '@/screens/auth/register';
-import OnBoarding from '@/screens/onboarding';
+import Login from '@/screens/auth/Login';
+import Register from '@/screens/auth/Register';
+import OnBoarding from '@/screens/OnBoarding';
 import TabStack from '@/screens/tabs';
+import { useAuthStore } from '@/zustand';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
 
-export type RootStackParamList = {
+export type ParamList = {
   Onboarding: undefined;
   Login: undefined;
   Register: undefined;
@@ -17,25 +18,33 @@ export type RootStackParamList = {
 };
 
 function RootStack(): React.JSX.Element {
+  const isLoggedIn = useAuthStore.use.isLoggedIn();
+  console.log(isLoggedIn);
+
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Onboarding"
-          component={OnBoarding}
-          options={{ headerShown: false, animation: 'slide_from_right' }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ headerShown: false, animation: 'slide_from_right' }}
-        />
-        <Stack.Screen
-          name="Register"
-          component={Register}
-          options={{ headerShown: false, animation: 'slide_from_right' }}
-        />
-        <Stack.Screen name="Tabs" component={TabStack} />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {isLoggedIn ? (
+          <Stack.Screen name="Tabs" component={TabStack} />
+        ) : (
+          <>
+            <Stack.Screen
+              name="Onboarding"
+              component={OnBoarding}
+              options={{ animation: 'slide_from_right' }}
+            />
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ animation: 'slide_from_right' }}
+            />
+            <Stack.Screen
+              name="Register"
+              component={Register}
+              options={{ animation: 'slide_from_right' }}
+            />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

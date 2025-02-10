@@ -4,15 +4,13 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import { Color } from '@/constants';
 import { hp, wp } from '@/helpers/dimensions';
+import { ParamList } from '@/screens';
 import Link from '@/ui/link';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { RootStackParamList } from './';
-
 const OnBoarding: React.FC = () => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<ParamList>>();
 
   return (
     <ScreenWrapper>
