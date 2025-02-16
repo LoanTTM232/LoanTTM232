@@ -8,10 +8,10 @@ import {
 } from 'react-native';
 
 import { Font, IColorScheme, Radius } from '@/constants';
-import { ThemeContext } from '@/contexts/themeContext';
-import { wp } from '@/helpers/dimensions';
-
-import Icon from './icon';
+import { ThemeContext } from '@/contexts/theme.context';
+import { hp, wp } from '@/helpers/dimensions';
+import EyeIcon from '@/ui/icon/eye';
+import EyeOffIcon from '@/ui/icon/eye-off';
 
 interface IInputProps {
   title: string;
@@ -53,9 +53,9 @@ function Input({
             onPress={() => setShowPassword(!showPassword)}
           >
             {showPassword ? (
-              <Icon icon="eye" color={theme.icon} strokeWidth={1.5} />
+              <EyeIcon color={theme.icon} size={20} />
             ) : (
-              <Icon icon="eyeHide" color={theme.icon} strokeWidth={1.5} />
+              <EyeOffIcon color={theme.icon} size={20} />
             )}
           </TouchableOpacity>
         )}
@@ -70,7 +70,7 @@ const createStyles = (theme: IColorScheme) => {
       gap: 5,
     },
     title: {
-      fontFamily: Font.family.ralewayMedium,
+      fontFamily: Font.family.regular,
       fontSize: Font.size.lg,
       color: theme.icon,
     },
@@ -87,7 +87,7 @@ const createStyles = (theme: IColorScheme) => {
       borderCurve: 'continuous',
       paddingHorizontal: wp(4),
       width: wp(82),
-      height: 50,
+      height: hp(6.6),
     },
     rightButton: {},
   });

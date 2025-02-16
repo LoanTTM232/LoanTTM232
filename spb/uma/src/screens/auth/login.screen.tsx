@@ -2,18 +2,17 @@ import { Formik } from 'formik';
 import React, { useContext, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import BackButton from '@/components/button/Back';
-import GoogleSignIn from '@/components/button/GoogleSignIn';
-import ScreenWrapper from '@/components/ScreenWrapper';
+import BackButton from '@/components/button/back';
+import GoogleSignIn from '@/components/button/google-signin';
+import ScreenWrapper from '@/components/screen-wrapper';
 import { Font, IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/themeContext';
+import { ThemeContext } from '@/contexts/theme.context';
 import { hp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
-import { logError } from '@/helpers/logger';
+import { logDebug, logError } from '@/helpers/logger';
 import { toastError, toastSuccess } from '@/helpers/toast';
 import { loginValidation } from '@/helpers/validate';
 import { ParamList } from '@/screens';
-import authService from '@/services/auth.service';
 import Button from '@/ui/button';
 import Input from '@/ui/input';
 import Link from '@/ui/link';
@@ -25,7 +24,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const LoginScreen: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamList>>();
-  const login = useAuthStore.use.login();
+  const googleCallback = useAuthStore.use.googleCallback();
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
@@ -41,19 +40,8 @@ const LoginScreen: React.FC = () => {
       const { data } = await GoogleSignin.signIn();
       const idToken = data?.idToken as string;
 
-      const response = await authService.googleCallback({ code: idToken });
-      if (response instanceof Error) {
-        logError(response);
-        toastError({ message: i18next.t('notification.login_failed') });
-        return;
-      }
+      await googleCallback({ code: idToken });
 
-      login(
-        response.data.access_token,
-        response.data.user.user_id,
-        response.data.user.email,
-        response.data.user.full_name
-      );
       navigation.navigate('Tabs');
       toastSuccess({ message: i18next.t('notification.login_success') });
     } catch (error) {
@@ -62,31 +50,35 @@ const LoginScreen: React.FC = () => {
     }
   };
 
+  const onForgotPasswordHandler = () => {
+    logDebug('Forgot password');
+  };
+
   return (
     <ScreenWrapper>
-      <ScrollView>
-        <View style={styles.container}>
-          <BackButton />
-          <Text style={styles.title}>Welcome back</Text>
-          <Formik
-            initialValues={{ email: '', password: '' }}
-            validationSchema={loginValidation}
-            onSubmit={() => {
-              console.log('alo');
-            }}
-          >
-            {({
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              values,
-              errors,
-              touched,
-            }) => (
-              <View style={styles.form}>
+      <ScrollView style={styles.container}>
+        <BackButton />
+        <Text style={styles.title}>Welcome back</Text>
+        <Formik
+          initialValues={{ email: '', password: '' }}
+          validationSchema={loginValidation}
+          onSubmit={() => {
+            console.log('alo');
+          }}
+        >
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+          }) => (
+            <View style={styles.form}>
+              <View style={styles.controlGroup}>
                 <View>
                   <Input
-                    title="Email Address"
+                    title={i18next.t('login.email')}
                     type="text"
                     value={values.email}
                     onChangeText={handleChange('email')}
@@ -100,7 +92,7 @@ const LoginScreen: React.FC = () => {
                 </View>
                 <View>
                   <Input
-                    title="Password"
+                    title={i18next.t('login.password')}
                     type="password"
                     value={values.password}
                     onChangeText={handleChange('password')}
@@ -111,43 +103,59 @@ const LoginScreen: React.FC = () => {
                     <Text style={styles.errorMsg}>{errors.password}</Text>
                   )}
                 </View>
-
+              </View>
+              <Link
+                style={styles.forgotPassword}
+                title={i18next.t('login.forgot')}
+                onPress={onForgotPasswordHandler}
+              />
+              <View style={styles.buttonGroup}>
                 <Button
                   buttonStyle={styles.button}
-                  title="Sign In"
+                  textStyles={styles.buttonText}
+                  title={i18next.t('login.submit')}
                   onPress={handleSubmit}
                 />
                 <GoogleSignIn onPress={onGoogleButtonHandler} />
               </View>
-            )}
-          </Formik>
-          <View style={styles.bottomText}>
-            <Text style={styles.signupText}>Don't have an account?</Text>
-            <Link
-              title="Signup"
-              onPress={() => navigation.navigate('Register')}
-            />
-          </View>
+            </View>
+          )}
+        </Formik>
+        <View style={styles.bottomText}>
+          <Text style={styles.signupText}>Don't have an account?</Text>
+          <Link
+            style={styles.signupTextLink}
+            title="Signup"
+            onPress={() => navigation.navigate('Register')}
+          />
         </View>
       </ScrollView>
     </ScreenWrapper>
   );
 };
 
-const createStyles = (_: IColorScheme) => {
+const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
     container: {
       padding: hp(2),
-      width: '100%',
+      backgroundColor: theme.background,
     },
     title: {
-      fontFamily: Font.family.bold,
+      fontFamily: Font.family.ralewayMedium,
       fontSize: Font.size.xxl,
       padding: hp(2),
     },
     form: {
       marginTop: hp(4),
+    },
+    controlGroup: {
       gap: hp(4),
+    },
+    forgotPassword: {
+      paddingTop: hp(1),
+      paddingBottom: hp(1),
+      textAlign: 'right',
+      color: theme.text,
     },
     errorMsg: {
       color: 'red',
@@ -156,19 +164,31 @@ const createStyles = (_: IColorScheme) => {
       left: 5,
       fontSize: Font.size.sm,
     },
-    bottomText: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      gap: 5,
-      marginTop: hp(2),
-      fontSize: Font.size.md,
+    buttonGroup: {
+      paddingTop: hp(2),
+      gap: hp(3),
     },
     button: {
       marginTop: 10,
     },
+    buttonText: {
+      fontSize: Font.size.lg,
+      fontFamily: Font.family.regular,
+    },
+    bottomText: {
+      top: hp(2),
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'flex-end',
+      gap: 5,
+      fontFamily: Font.family.italic,
+      fontSize: Font.size.md,
+    },
     signupText: {
       textAlign: 'center',
+    },
+    signupTextLink: {
+      color: theme.primary,
     },
   });
 };

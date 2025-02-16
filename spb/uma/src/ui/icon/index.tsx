@@ -1,35 +1,14 @@
 import React from 'react';
+import VectorIcon from 'react-native-vector-icons/FontAwesome';
 
-import ArrowLeft from '@/ui/icon/arrowLeft';
-import Eye from '@/ui/icon/eye';
-import EyeHide from '@/ui/icon/eyeHide';
-import Home from '@/ui/icon/home';
-
-const icons = {
-  home: Home,
-  arrowLeft: ArrowLeft,
-  eye: Eye,
-  eyeHide: EyeHide,
-};
-
-interface IIconProps {
-  icon: keyof typeof icons;
-  size?: string;
+export interface IIconProps {
+  name: string;
+  size?: number;
   color?: string;
-  strokeWidth?: string;
 }
 
-function Icon({ icon, ...props }: IIconProps) {
-  const IconComponent = icons[icon];
-
-  return (
-    <IconComponent
-      height={props.size || '24'}
-      width={props.size || '24'}
-      strokeWidth={props.strokeWidth || '1.9'}
-      {...props}
-    />
-  );
-}
+const Icon: React.FC<IIconProps> = ({ name, size, color }) => {
+  return <VectorIcon name={name} size={size} color={color} />;
+};
 
 export default Icon;

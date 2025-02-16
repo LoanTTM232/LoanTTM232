@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/themeContext';
+import { ThemeContext } from '@/contexts/theme.context';
 
-const Notify: React.FC = () => {
+const Booking: React.FC = () => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
@@ -20,9 +20,9 @@ const createStyles = (_: IColorScheme) => {
     container: {
       width: '100%',
       height: '100%',
-      backgroundColor: 'yellow',
+      backgroundColor: 'red',
     },
   });
 };
 
-export default Notify;
+export default Booking;

@@ -1,2 +1,2 @@
-export * from '@/constants/themes';
+export * from '@/constants/theme';
 export * from '@/constants/api';

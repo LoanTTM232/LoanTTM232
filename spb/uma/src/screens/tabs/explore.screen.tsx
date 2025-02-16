@@ -2,9 +2,9 @@ import React, { useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/themeContext';
+import { ThemeContext } from '@/contexts/theme.context';
 
-const Profile: React.FC = () => {
+const ExploreScreen: React.FC = () => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
@@ -20,9 +20,9 @@ const createStyles = (_: IColorScheme) => {
     container: {
       width: '100%',
       height: '100%',
-      backgroundColor: 'cyan',
+      backgroundColor: 'green',
     },
   });
 };
 
-export default Profile;
+export default ExploreScreen;

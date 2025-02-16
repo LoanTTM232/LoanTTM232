@@ -2,7 +2,7 @@ import React from 'react';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { ThemeProvider } from '@/contexts/themeContext';
+import { ThemeProvider } from '@/contexts/theme.context';
 
 export type ProviderProps = {
   children: React.ReactNode;

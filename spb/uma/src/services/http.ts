@@ -10,7 +10,7 @@ import axios, {
 import ConcurrencyHandler from '@/helpers/concurrency';
 import { ResponseError } from '@/helpers/error';
 import i18next from '@/helpers/i18n';
-import { logError, logInfo } from '@/helpers/logger';
+import { logDebug } from '@/helpers/logger';
 import { getData } from '@/helpers/storage';
 import authService from '@/services/auth.service';
 import { API_URL } from '@env';
@@ -20,6 +20,7 @@ class AxiosConfig {
   private concurrencyHandler: ConcurrencyHandler;
 
   constructor() {
+    logDebug(API_URL);
     this.axiosInstance = axios.create({
       baseURL: API_URL,
       headers: this.defaultHeaders(),
@@ -149,7 +150,6 @@ export interface ApiResponse<K> {
 const responseParse = <K, T extends ApiResponse<K> = ApiResponse<K>>(
   response: Promise<AxiosResponse<T, any>>
 ): Promise<ResponseError | T> => {
-  logInfo('responseParse');
   return response
     .then((res) => {
       if (res.status >= 200 && res.status < 300) {
@@ -161,8 +161,7 @@ const responseParse = <K, T extends ApiResponse<K> = ApiResponse<K>>(
 
       return new ResponseError(i18next.t(res.data.code));
     })
-    .catch((error) => {
-      logError(error);
+    .catch(() => {
       return new ResponseError(i18next.t('error.ERS001'));
     });
 };

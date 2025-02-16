@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import { Pressable, StyleSheet, ViewStyle } from 'react-native';
 
 import { IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/themeContext';
-import Icon from '@/ui/icon';
+import { ThemeContext } from '@/contexts/theme.context';
+import ArrowLeft from '@/ui/icon/arrow-left';
 import { useNavigation } from '@react-navigation/native';
 
 export type BackButtonProps = {
@@ -25,7 +25,7 @@ function BackButton(props: BackButtonProps) {
       style={styles.container}
       onPress={props.onPress || defaultOnPress}
     >
-      <Icon icon="arrowLeft" color={theme.icon} />
+      <ArrowLeft color={theme.icon} size={20} />
     </Pressable>
   );
 }

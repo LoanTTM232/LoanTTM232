@@ -6,10 +6,11 @@
     "login": {
         "title": "Welcome back",
         "forgot": "Forgot password?",
-        "submit": "Login",
+        "submit": "Sign in",
         "email": "Email Address",
         "password": "Password",
-        "redirect": "Don't have an account?"
+        "redirect": "Don't have an account?",
+        "google": "Sign in with Google"
     },
     "register": {
         "title": "Get started",

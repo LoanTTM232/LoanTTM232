@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Login from '@/screens/auth/Login';
-import Register from '@/screens/auth/Register';
-import OnBoarding from '@/screens/OnBoarding';
+import Login from '@/screens/auth/login.screen';
+import Register from '@/screens/auth/register.screen';
+import OnBoarding from '@/screens/onboarding.screen';
 import TabStack from '@/screens/tabs';
 import { useAuthStore } from '@/zustand';
 import { NavigationContainer } from '@react-navigation/native';

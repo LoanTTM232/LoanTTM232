@@ -7,44 +7,48 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { Font, IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/themeContext';
+import { IColorScheme, Radius } from '@/constants';
+import { ThemeContext } from '@/contexts/theme.context';
 import { hp } from '@/helpers/dimensions';
 
 interface ButtonProps {
   title: string;
   buttonStyle?: ViewStyle;
   textStyles?: TextStyle;
-  children?: React.ReactNode;
   disable?: boolean;
   shadow?: boolean;
   onPress?: (e: any) => void;
+  before?: React.ReactNode;
+  after?: React.ReactNode;
 }
 
 function Button({
   title,
   buttonStyle,
   textStyles,
-  children,
   disable = false,
   shadow = true,
   onPress,
+  before,
+  after,
 }: ButtonProps) {
   const { theme } = useContext(ThemeContext);
   const defaultStyles = createStyle(theme);
 
   return (
     <Pressable
-      style={[
+      style={({ pressed }) => [
         defaultStyles.button,
         buttonStyle,
         shadow && defaultStyles.shadow,
+        pressed && defaultStyles.pressed,
       ]}
       onPress={onPress}
       disabled={disable}
     >
+      {before}
       {title && <Text style={[defaultStyles.text, textStyles]}>{title}</Text>}
-      {children}
+      {after}
     </Pressable>
   );
 }
@@ -54,22 +58,25 @@ const createStyle = function (theme: IColorScheme) {
     button: {
       backgroundColor: theme.primary,
       height: hp(6.6),
-      justifyContent: 'center',
       alignItems: 'center',
-      borderCurve: 'continuous',
-      borderRadius: 12,
+      borderRadius: Radius.xs,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      gap: 10,
     },
     text: {
       color: theme.secondary,
-      fontSize: hp(1.8),
-      fontFamily: Font.family.medium,
     },
     shadow: {
       shadowColor: theme.shadow,
-      shadowOffset: { width: 0, height: 10 },
-      shadowOpacity: 0.2,
-      shadowRadius: 8,
-      elevation: 4,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 6,
+      elevation: 5,
+    },
+    pressed: {
+      opacity: 0.85,
+      transform: [{ scale: 0.98 }],
     },
   });
 };

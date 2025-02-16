@@ -2,15 +2,15 @@ import React, { useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/themeContext';
+import { ThemeContext } from '@/contexts/theme.context';
 
-const Explore: React.FC = () => {
+const NotifyScreen: React.FC = () => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
   return (
     <View style={styles.container}>
-      <Text>bookinbg</Text>
+      <Text>notify</Text>
     </View>
   );
 };
@@ -20,9 +20,9 @@ const createStyles = (_: IColorScheme) => {
     container: {
       width: '100%',
       height: '100%',
-      backgroundColor: 'green',
+      backgroundColor: 'yellow',
     },
   });
 };
 
-export default Explore;
+export default NotifyScreen;

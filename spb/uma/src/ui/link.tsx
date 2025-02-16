@@ -4,30 +4,29 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  TextStyle,
 } from 'react-native';
 
-import { Color, Font } from '@/constants';
-import { hp } from '@/helpers/dimensions';
+import { Font } from '@/constants';
 
 export type LinkProps = {
   title: string;
+  style: TextStyle;
   onPress: (event: GestureResponderEvent) => void;
 };
 
-const Link: React.FC<LinkProps> = ({ title, onPress }) => {
+const Link: React.FC<LinkProps> = ({ title, style, onPress }) => {
   return (
     <Pressable onPress={onPress}>
-      <Text style={styles.link}> {title}</Text>
+      <Text style={[styles.link, style]}> {title}</Text>
     </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
   link: {
-    color: Color.light.primary,
-    textAlign: 'center',
-    fontSize: hp(1.5),
     fontFamily: Font.family.medium,
+    textDecorationLine: 'underline',
   },
 });
 

@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 
 import { getData } from '@/helpers/storage';
+import authService, {
+  LoginRequest,
+  RegisterRequest,
+} from '@/services/auth.service';
 import { createSelectors } from '@/zustand/selectors';
 
 interface AuthState {
@@ -10,19 +14,10 @@ interface AuthState {
   fullName: string;
 
   checkIsLoggedIn: () => void;
-  login: (
-    accessToken: string,
-    userId: AuthState['userId'],
-    email: AuthState['email'],
-    fullName: AuthState['fullName']
-  ) => void;
+  login: (data: LoginRequest) => void;
   logout: () => void;
-  register: (
-    accessToken: string,
-    userId: AuthState['userId'],
-    email: AuthState['email'],
-    fullName: AuthState['fullName']
-  ) => void;
+  register: (data: RegisterRequest) => void;
+  googleCallback: (data: { code: string }) => void;
 }
 
 const useAuthStoreBase = create<AuthState>((set) => ({
@@ -34,26 +29,27 @@ const useAuthStoreBase = create<AuthState>((set) => ({
   checkIsLoggedIn: async () => {
     const accessToken = await getData('accessToken');
     if (accessToken) {
-      set(() => ({ isLoggedIn: true, accessToken }));
+      set(() => ({ isLoggedIn: true }));
     }
   },
 
-  login: async (
-    accessToken: string,
-    userId: AuthState['userId'],
-    email: AuthState['email'],
-    fullName: AuthState['fullName']
-  ) => {
+  login: async (data: LoginRequest) => {
+    const res = await authService.login(data);
+    if (res instanceof Error) {
+      throw res;
+    }
+
     set(() => ({
       isLoggedIn: true,
-      accessToken,
-      userId,
-      email,
-      fullName,
+      userId: res.data.user.user_id,
+      email: res.data.user.email,
+      fullName: res.data.user.full_name,
     }));
   },
 
   logout: async () => {
+    await authService.logout();
+
     set(() => ({
       isLoggedIn: false,
       accessToken: '',
@@ -63,18 +59,24 @@ const useAuthStoreBase = create<AuthState>((set) => ({
     }));
   },
 
-  register: async (
-    accessToken: string,
-    userId: AuthState['userId'],
-    email: AuthState['email'],
-    fullName: AuthState['fullName']
-  ) => {
+  register: async (data: RegisterRequest) => {
+    const res = await authService.register(data);
+    if (res instanceof Error) {
+      throw res;
+    }
+  },
+
+  googleCallback: async (data: { code: string }) => {
+    const res = await authService.googleCallback(data);
+    if (res instanceof Error) {
+      throw res;
+    }
+
     set(() => ({
       isLoggedIn: true,
-      accessToken,
-      userId,
-      email,
-      fullName,
+      userId: res.data.user.user_id,
+      email: res.data.user.email,
+      fullName: res.data.user.full_name,
     }));
   },
 }));
