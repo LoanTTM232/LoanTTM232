@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
@@ -9,18 +10,22 @@ const HomeScreen: React.FC = () => {
   const styles = createStyles(theme);
 
   return (
-    <View style={styles.container}>
-      <Text>Home Screen</Text>
-    </View>
+    <SafeAreaView style={styles.safeView}>
+      <View style={styles.container}>
+        <Text>Home Screen</Text>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
+    safeView: {
+      flex: 1,
+    },
     container: {
-      width: '100%',
-      height: '100%',
-      backgroundColor: theme.backgroundHard,
+      flex: 1,
+      backgroundColor: theme.backgroundDark,
     },
   });
 };

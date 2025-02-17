@@ -1,11 +1,16 @@
 export interface IColorScheme {
-  backgroundSoft: string;
-  backgroundHard: string;
+  backgroundLight: string;
+  backgroundDark: string;
+  backgroundContent: string;
   primary: string;
   secondary: string;
   shadow: string;
   icon: string;
-  text: string;
+  textLight: string;
+  textDark: string;
+  success: string;
+  error: string;
+  warning: string;
 }
 export interface IColor {
   light: IColorScheme;
@@ -14,22 +19,32 @@ export interface IColor {
 
 export const Color: IColor = {
   light: {
-    backgroundSoft: '#FFFFFF',
-    backgroundHard: '#F2F2F2',
+    backgroundLight: '#FFFFFF',
+    backgroundDark: '#F2F2F2',
+    backgroundContent: '#F7F7F9',
     primary: '#E86F00',
     secondary: '#F7F7F9',
     shadow: '#000000',
     icon: '#6A6A6A',
-    text: '#6A6A6A',
+    textLight: '#6A6A6A',
+    textDark: '#000000',
+    success: '#4CAF50',
+    error: '#F44336',
+    warning: '#FFFF00',
   },
   dark: {
-    backgroundSoft: '#FFFFFF',
-    backgroundHard: '#F2F2F2',
+    backgroundLight: '#FFFFFF',
+    backgroundDark: '#F2F2F2',
+    backgroundContent: '#F7F7F9',
     primary: '#E86F00',
     secondary: '#F7F7F9',
     shadow: '#000000',
     icon: '#6A6A6A',
-    text: '#6A6A6A',
+    textLight: '#6A6A6A',
+    textDark: '#000000',
+    success: '#008000',
+    error: '#FF0000',
+    warning: '#FFFF00',
   },
 };
 
@@ -40,24 +55,4 @@ export const Radius = {
   lg: 16,
   xl: 18,
   xxl: 22,
-};
-
-export const Font = {
-  size: {
-    xs: 10,
-    sm: 12,
-    md: 14,
-    lg: 16,
-    xl: 18,
-    xxl: 32,
-  },
-  family: {
-    italic: 'Roboto-Italic',
-    thin: 'Roboto-Thin',
-    regular: 'Roboto-Regular',
-    medium: 'Roboto-Medium',
-    bold: 'Roboto-Bold',
-    raleway: 'Raleway-Regular',
-    ralewayMedium: 'Raleway-Medium',
-  },
 };

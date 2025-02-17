@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import BackButton from '@/components/button/back';
 import GoogleSignIn from '@/components/button/google-signin';
-import { Font, IColorScheme } from '@/constants';
+import { fontFamily, fontSize, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { hp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
@@ -39,14 +39,13 @@ const LoginScreen: React.FC = () => {
     try {
       const { data } = await GoogleSignin.signIn();
       const idToken = data?.idToken as string;
-
       await googleCallback({ code: idToken });
 
       navigation.navigate('Tabs');
-      toastSuccess({ message: i18next.t('notification.login_success') });
+      toastSuccess(i18next.t('notification.login_success'));
     } catch (error) {
       logError(error as Error);
-      toastError({ message: i18next.t('notification.login_failed') });
+      toastError(i18next.t('notification.login_failed'));
     }
   };
 
@@ -54,101 +53,127 @@ const LoginScreen: React.FC = () => {
     logDebug('Forgot password');
   };
 
+  const onRegisterHandler = () => {
+    navigation.navigate('Register');
+  };
+
   return (
-    <SafeAreaView>
-      <ScrollView style={styles.container}>
-        <BackButton />
-        <Text style={styles.title}>Welcome back</Text>
-        <Formik
-          initialValues={{ email: '', password: '' }}
-          validationSchema={loginValidation}
-          onSubmit={() => {
-            console.log('alo');
-          }}
+    <SafeAreaView style={styles.safeView}>
+      <View style={styles.wrapper}>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.scrollContent}
         >
-          {({
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            values,
-            errors,
-            touched,
-          }) => (
-            <View style={styles.form}>
-              <View style={styles.controlGroup}>
-                <View>
-                  <Input
-                    title={i18next.t('login.email')}
-                    type="text"
-                    value={values.email}
-                    onChangeText={handleChange('email')}
-                    onBlur={handleBlur('email')}
-                    placeholder="xyz@gmail.com"
-                    keyboardType="email-address"
+          <View style={styles.mainContent}>
+            <BackButton />
+            <Text style={styles.title}>Welcome back</Text>
+            <Formik
+              initialValues={{ email: '', password: '' }}
+              validationSchema={loginValidation}
+              onSubmit={() => {
+                console.log('alo');
+              }}
+            >
+              {({
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                values,
+                errors,
+                touched,
+              }) => (
+                <View style={styles.form}>
+                  <View style={styles.controlGroup}>
+                    <View>
+                      <Input
+                        title={i18next.t('login.email')}
+                        type="text"
+                        value={values.email}
+                        onChangeText={handleChange('email')}
+                        onBlur={handleBlur('email')}
+                        placeholder="xyz@gmail.com"
+                        keyboardType="email-address"
+                      />
+                      {errors.email && touched.email && (
+                        <Text style={styles.errorMsg}>{errors.email}</Text>
+                      )}
+                    </View>
+                    <View>
+                      <Input
+                        title={i18next.t('login.password')}
+                        type="password"
+                        value={values.password}
+                        onChangeText={handleChange('password')}
+                        onBlur={handleBlur('password')}
+                        placeholder="••••••••"
+                      />
+                      {errors.password && touched.password && (
+                        <Text style={styles.errorMsg}>{errors.password}</Text>
+                      )}
+                    </View>
+                  </View>
+                  <Link
+                    style={styles.forgotPassword}
+                    title={i18next.t('login.forgot')}
+                    onPress={onForgotPasswordHandler}
                   />
-                  {errors.email && touched.email && (
-                    <Text style={styles.errorMsg}>{errors.email}</Text>
-                  )}
+                  <View style={styles.buttonGroup}>
+                    <Button
+                      buttonStyle={styles.button}
+                      textStyles={styles.buttonText}
+                      title={i18next.t('login.submit')}
+                      onPress={handleSubmit}
+                    />
+                    <GoogleSignIn onPress={onGoogleButtonHandler} />
+                  </View>
                 </View>
-                <View>
-                  <Input
-                    title={i18next.t('login.password')}
-                    type="password"
-                    value={values.password}
-                    onChangeText={handleChange('password')}
-                    onBlur={handleBlur('password')}
-                    placeholder="••••••••"
-                  />
-                  {errors.password && touched.password && (
-                    <Text style={styles.errorMsg}>{errors.password}</Text>
-                  )}
-                </View>
-              </View>
-              <Link
-                style={styles.forgotPassword}
-                title={i18next.t('login.forgot')}
-                onPress={onForgotPasswordHandler}
-              />
-              <View style={styles.buttonGroup}>
-                <Button
-                  buttonStyle={styles.button}
-                  textStyles={styles.buttonText}
-                  title={i18next.t('login.submit')}
-                  onPress={handleSubmit}
-                />
-                <GoogleSignIn onPress={onGoogleButtonHandler} />
-              </View>
-            </View>
-          )}
-        </Formik>
-        <View style={styles.bottomText}>
-          <Text style={styles.signupText}>Don't have an account?</Text>
-          <Link
-            style={styles.signupTextLink}
-            title="Signup"
-            onPress={() => navigation.navigate('Register')}
-          />
-        </View>
-      </ScrollView>
+              )}
+            </Formik>
+          </View>
+          <View style={styles.bottomText}>
+            <Text style={styles.signupText}>{i18next.t('login.redirect')}</Text>
+            <Link
+              style={styles.signupTextLink}
+              title={i18next.t('register.submit')}
+              onPress={onRegisterHandler}
+            />
+          </View>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
 
 const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
+    safeView: {
+      flex: 1,
+    },
+    wrapper: {
+      flex: 1,
+      justifyContent: 'space-between',
+    },
     container: {
       height: '100%',
       width: '100%',
       padding: hp(2),
-      backgroundColor: theme.backgroundSoft,
+      backgroundColor: theme.backgroundLight,
+    },
+    scrollContent: {
+      flexGrow: 1,
+      justifyContent: 'space-between',
+    },
+    mainContent: {
+      flex: 1,
     },
     title: {
-      fontFamily: Font.family.ralewayMedium,
-      fontSize: Font.size.xxl,
-      padding: hp(2),
+      ...fontFamily.ROBOTO_BOLD,
+      fontSize: fontSize.xxl,
+      padding: hp(1),
+      textAlign: 'center',
     },
     form: {
-      marginTop: hp(4),
+      paddingTop: hp(6),
     },
     controlGroup: {
       gap: hp(4),
@@ -157,14 +182,16 @@ const createStyles = (theme: IColorScheme) => {
       paddingTop: hp(1),
       paddingBottom: hp(1),
       textAlign: 'right',
-      color: theme.text,
+      color: theme.textLight,
+      ...fontFamily.ROBOTO_MEDIUM,
+      fontSize: fontSize.md,
     },
     errorMsg: {
       color: 'red',
       position: 'absolute',
       bottom: -18,
       left: 5,
-      fontSize: Font.size.sm,
+      fontSize: fontSize.xs,
     },
     buttonGroup: {
       paddingTop: hp(2),
@@ -174,23 +201,27 @@ const createStyles = (theme: IColorScheme) => {
       marginTop: 10,
     },
     buttonText: {
-      fontSize: Font.size.lg,
-      fontFamily: Font.family.regular,
+      ...fontFamily.ROBOTO_REGULAR,
+      fontSize: fontSize.md,
     },
     bottomText: {
-      top: hp(2),
       flexDirection: 'row',
       justifyContent: 'center',
-      alignItems: 'flex-end',
       gap: 5,
-      fontFamily: Font.family.italic,
-      fontSize: Font.size.md,
+      width: '100%',
+      paddingTop: hp(4),
+      paddingBottom: hp(1),
     },
     signupText: {
       textAlign: 'center',
+      ...fontFamily.ROBOTO_REGULAR,
+      fontSize: fontSize.md,
+      color: theme.textLight,
     },
     signupTextLink: {
       color: theme.primary,
+      ...fontFamily.ROBOTO_BOLD,
+      fontSize: fontSize.md,
     },
   });
 };

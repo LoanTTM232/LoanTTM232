@@ -1,13 +1,7 @@
 import React, { useContext, useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-import { Font, IColorScheme, Radius } from '@/constants';
+import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { hp, wp } from '@/helpers/dimensions';
 import EyeIcon from '@/ui/icon/eye';
@@ -23,14 +17,14 @@ interface IInputProps {
   onBlur?: (e: any) => void;
 }
 
-function Input({
+const Input: React.FC<IInputProps> = ({
   title,
   type = 'text',
   placeholder,
   value,
   onChangeText,
   ...props
-}: IInputProps) {
+}) => {
   const { theme } = useContext(ThemeContext);
   const [showPassword, setShowPassword] = useState(false);
   const styles = createStyles(theme);
@@ -43,13 +37,14 @@ function Input({
           style={styles.input}
           value={value}
           placeholder={placeholder}
+          placeholderTextColor={theme.textLight}
           onChangeText={onChangeText}
           secureTextEntry={type === 'password' && !showPassword}
           {...props}
         />
         {type === 'password' && (
           <TouchableOpacity
-            style={styles.rightButton}
+            style={styles.rightIcon}
             onPress={() => setShowPassword(!showPassword)}
           >
             {showPassword ? (
@@ -62,7 +57,7 @@ function Input({
       </View>
     </View>
   );
-}
+};
 
 const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
@@ -70,9 +65,9 @@ const createStyles = (theme: IColorScheme) => {
       gap: 5,
     },
     title: {
-      fontFamily: Font.family.regular,
-      fontSize: Font.size.lg,
-      color: theme.icon,
+      ...fontFamily.ROBOTO_REGULAR,
+      fontSize: fontSize.md,
+      color: theme.textLight,
     },
     inputContainer: {
       flex: 1,
@@ -82,14 +77,21 @@ const createStyles = (theme: IColorScheme) => {
       alignItems: 'center',
     },
     input: {
-      fontFamily: Font.family.regular,
-      fontSize: Font.size.lg,
+      ...fontFamily.ROBOTO_REGULAR,
+      fontSize: fontSize.md,
       borderCurve: 'continuous',
       paddingHorizontal: wp(4),
-      width: wp(82),
+      color: theme.textDark,
       height: hp(6.6),
+      flex: 1,
     },
-    rightButton: {},
+    rightIcon: {
+      width: hp(6.6),
+      height: hp(6.6),
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 0,
+    },
   });
 };
 

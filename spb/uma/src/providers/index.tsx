@@ -1,20 +1,25 @@
-import React from 'react';
-import { RootSiblingParent } from 'react-native-root-siblings';
+import React, { useContext } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 
-import { ThemeProvider } from '@/contexts/theme.context';
+import { ThemeContext, ThemeProvider } from '@/contexts/theme.context';
+import { hp } from '@/helpers/dimensions';
+import { toastConfig } from '@/helpers/toast';
 
 export type ProviderProps = {
   children: React.ReactNode;
 };
 
 const AppProvider: React.FC<ProviderProps> = ({ children }) => {
+  const { theme } = useContext(ThemeContext);
+
   return (
-    <RootSiblingParent>
-      <ThemeProvider>
-        <SafeAreaProvider>{children}</SafeAreaProvider>
-      </ThemeProvider>
-    </RootSiblingParent>
+    <ThemeProvider>
+      <SafeAreaProvider>
+        {children}
+        <Toast config={toastConfig(theme)} position="top" topOffset={hp(2)} />
+      </SafeAreaProvider>
+    </ThemeProvider>
   );
 };
 

@@ -7,7 +7,7 @@ import {
   TextStyle,
 } from 'react-native';
 
-import { Font } from '@/constants';
+import { fontFamily } from '@/constants';
 
 export type LinkProps = {
   title: string;
@@ -25,7 +25,7 @@ const Link: React.FC<LinkProps> = ({ title, style, onPress }) => {
 
 const styles = StyleSheet.create({
   link: {
-    fontFamily: Font.family.medium,
+    ...fontFamily.ROBOTO_MEDIUM,
     textDecorationLine: 'underline',
   },
 });

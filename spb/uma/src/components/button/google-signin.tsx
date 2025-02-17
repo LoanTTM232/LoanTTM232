@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 
-import { Font, IColorScheme } from '@/constants';
+import { fontFamily, fontSize, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import i18next from '@/helpers/i18n';
 import Button from '@/ui/button';
@@ -33,9 +33,9 @@ const createStyles = (theme: IColorScheme) => {
       backgroundColor: theme.secondary,
     },
     buttonText: {
-      fontSize: Font.size.lg,
-      fontFamily: Font.family.regular,
-      color: theme.text,
+      ...fontFamily.ROBOTO_REGULAR,
+      fontSize: fontSize.md,
+      color: theme.textLight,
     },
   });
 };

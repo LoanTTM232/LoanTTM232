@@ -15,12 +15,14 @@ const ExploreScreen: React.FC = () => {
   );
 };
 
-const createStyles = (_: IColorScheme) => {
+const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
+    safeView: {
+      flex: 1,
+    },
     container: {
-      width: '100%',
-      height: '100%',
-      backgroundColor: 'green',
+      flex: 1,
+      backgroundColor: theme.backgroundDark,
     },
   });
 };

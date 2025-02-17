@@ -67,7 +67,9 @@ const useAuthStoreBase = create<AuthState>((set) => ({
   },
 
   googleCallback: async (data: { code: string }) => {
+    console.log('call googleCallback');
     const res = await authService.googleCallback(data);
+
     if (res instanceof Error) {
       throw res;
     }

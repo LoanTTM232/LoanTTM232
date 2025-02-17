@@ -1,10 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TextStyle,
-  ViewStyle,
+    Animated, Pressable, StyleProp, StyleSheet, Text, TextStyle, ViewStyle
 } from 'react-native';
 
 import { IColorScheme, Radius } from '@/constants';
@@ -13,8 +9,8 @@ import { hp } from '@/helpers/dimensions';
 
 interface ButtonProps {
   title: string;
-  buttonStyle?: ViewStyle;
-  textStyles?: TextStyle;
+  buttonStyle?: StyleProp<ViewStyle>;
+  textStyles?: StyleProp<TextStyle>;
   disable?: boolean;
   shadow?: boolean;
   onPress?: (e: any) => void;
@@ -35,26 +31,66 @@ function Button({
   const { theme } = useContext(ThemeContext);
   const defaultStyles = createStyle(theme);
 
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const opacityAnim = useRef(new Animated.Value(1)).current;
+
+  const handlePressIn = () => {
+    Animated.parallel([
+      Animated.timing(scaleAnim, {
+        toValue: 0.95,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(opacityAnim, {
+        toValue: 0.8,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.parallel([
+      Animated.timing(scaleAnim, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(opacityAnim, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
   return (
-    <Pressable
-      style={({ pressed }) => [
-        defaultStyles.button,
-        buttonStyle,
-        shadow && defaultStyles.shadow,
-        pressed && defaultStyles.pressed,
-      ]}
-      onPress={onPress}
-      disabled={disable}
+    <Animated.View
+      style={{ transform: [{ scale: scaleAnim }], opacity: opacityAnim }}
     >
-      {before}
-      {title && <Text style={[defaultStyles.text, textStyles]}>{title}</Text>}
-      {after}
-    </Pressable>
+      <Pressable
+        style={({ pressed }) => [
+          defaultStyles.button,
+          buttonStyle,
+          shadow && defaultStyles.shadow,
+          pressed && defaultStyles.pressed,
+        ]}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        onPress={onPress}
+        disabled={disable}
+        accessibilityRole="button"
+      >
+        {before ?? null}
+        {title && <Text style={[defaultStyles.text, textStyles]}>{title}</Text>}
+        {after ?? null}
+      </Pressable>
+    </Animated.View>
   );
 }
 
-const createStyle = function (theme: IColorScheme) {
-  return StyleSheet.create({
+const createStyle = (theme: IColorScheme) =>
+  StyleSheet.create({
     button: {
       backgroundColor: theme.primary,
       height: hp(6.6),
@@ -76,9 +112,7 @@ const createStyle = function (theme: IColorScheme) {
     },
     pressed: {
       opacity: 0.85,
-      transform: [{ scale: 0.98 }],
     },
   });
-};
 
 export default Button;

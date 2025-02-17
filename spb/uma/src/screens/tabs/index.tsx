@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { Font, IColorScheme } from '@/constants';
+import { fontFamily, fontSize, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { hp } from '@/helpers/dimensions';
 import BookingScreen from '@/screens/tabs/booking.screen';
@@ -53,6 +53,8 @@ const TabStack: React.FC = () => {
         headerShown: false,
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabBarLabelStyle,
+        tabBarItemStyle: styles.tabBarItemStyle,
+        tabBarIconStyle: styles.tabBarIconStyle,
         tabBarActiveTintColor: theme.primary,
         tabBarIcon: ({ focused, color }) =>
           renderTabBarIcon(route, focused, color),
@@ -71,11 +73,19 @@ const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
     tabBar: {
       height: hp(7.5),
-      backgroundColor: theme.backgroundSoft,
+      backgroundColor: theme.backgroundLight,
     },
     tabBarLabelStyle: {
-      fontFamily: Font.family.medium,
-      fontSize: hp(1.5),
+      ...fontFamily.ROBOTO_MEDIUM,
+      fontSize: fontSize.sm,
+      textAlign: 'center',
+    },
+    tabBarItemStyle: {
+      paddingHorizontal: 0,
+    },
+    tabBarIconStyle: {
+      alignItems: 'center',
+      marginTop: 4,
     },
   });
 };

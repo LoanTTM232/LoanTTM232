@@ -2,9 +2,10 @@ import React, { useContext } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Color, Font, IColorScheme } from '@/constants';
+import { Color, fontFamily, fontSize, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { hp, wp } from '@/helpers/dimensions';
+import i18next from '@/helpers/i18n';
 import { ParamList } from '@/screens';
 import Link from '@/ui/link';
 import { useNavigation } from '@react-navigation/native';
@@ -16,7 +17,7 @@ const OnBoarding: React.FC = () => {
   const styles = createStyles(theme);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.safeView}>
       <View style={styles.container}>
         <Image
           style={styles.image}
@@ -25,10 +26,12 @@ const OnBoarding: React.FC = () => {
         />
         <View style={styles.footer}>
           <View style={styles.bottomText}>
-            <Text style={styles.loginText}>Already have an account!</Text>
+            <Text style={styles.loginText}>
+              {i18next.t('onboarding.redirect')}
+            </Text>
             <Link
               style={styles.loginTextLink}
-              title="Login"
+              title={i18next.t('login.submit')}
               onPress={() => navigation.navigate('Login')}
             />
           </View>
@@ -40,12 +43,15 @@ const OnBoarding: React.FC = () => {
 
 const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
+    safeView: {
+      flex: 1,
+    },
     container: {
       height: '100%',
       width: '100%',
       justifyContent: 'space-around',
       alignItems: 'center',
-      backgroundColor: Color.light.backgroundSoft,
+      backgroundColor: Color.light.backgroundLight,
       paddingHorizontal: wp(4),
     },
     image: {
@@ -64,10 +70,14 @@ const createStyles = (theme: IColorScheme) => {
     },
     loginText: {
       textAlign: 'center',
-      fontSize: Font.size.md,
+      ...fontFamily.ROBOTO_REGULAR,
+      fontSize: fontSize.md,
+      color: theme.textLight,
     },
     loginTextLink: {
       color: theme.primary,
+      ...fontFamily.ROBOTO_BOLD,
+      fontSize: fontSize.md,
     },
   });
 };
