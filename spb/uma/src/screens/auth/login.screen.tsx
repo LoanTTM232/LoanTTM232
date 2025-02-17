@@ -1,10 +1,10 @@
 import { Formik } from 'formik';
 import React, { useContext, useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import BackButton from '@/components/button/back';
 import GoogleSignIn from '@/components/button/google-signin';
-import ScreenWrapper from '@/components/screen-wrapper';
 import { Font, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { hp } from '@/helpers/dimensions';
@@ -33,7 +33,7 @@ const LoginScreen: React.FC = () => {
       webClientId: WEB_CLIENT_ID,
       scopes: ['email', 'profile'],
     });
-  }, []);
+  }, [navigation]);
 
   const onGoogleButtonHandler = async () => {
     try {
@@ -55,7 +55,7 @@ const LoginScreen: React.FC = () => {
   };
 
   return (
-    <ScreenWrapper>
+    <SafeAreaView>
       <ScrollView style={styles.container}>
         <BackButton />
         <Text style={styles.title}>Welcome back</Text>
@@ -130,15 +130,17 @@ const LoginScreen: React.FC = () => {
           />
         </View>
       </ScrollView>
-    </ScreenWrapper>
+    </SafeAreaView>
   );
 };
 
 const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
     container: {
+      height: '100%',
+      width: '100%',
       padding: hp(2),
-      backgroundColor: theme.background,
+      backgroundColor: theme.backgroundSoft,
     },
     title: {
       fontFamily: Font.family.ralewayMedium,

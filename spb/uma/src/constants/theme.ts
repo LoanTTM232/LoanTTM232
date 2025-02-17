@@ -1,5 +1,6 @@
 export interface IColorScheme {
-  background: string;
+  backgroundSoft: string;
+  backgroundHard: string;
   primary: string;
   secondary: string;
   shadow: string;
@@ -13,7 +14,8 @@ export interface IColor {
 
 export const Color: IColor = {
   light: {
-    background: '#FFFFFF',
+    backgroundSoft: '#FFFFFF',
+    backgroundHard: '#F2F2F2',
     primary: '#E86F00',
     secondary: '#F7F7F9',
     shadow: '#000000',
@@ -21,9 +23,10 @@ export const Color: IColor = {
     text: '#6A6A6A',
   },
   dark: {
-    background: 'black',
-    primary: 'black',
-    secondary: 'black',
+    backgroundSoft: '#FFFFFF',
+    backgroundHard: '#F2F2F2',
+    primary: '#E86F00',
+    secondary: '#F7F7F9',
     shadow: '#000000',
     icon: '#6A6A6A',
     text: '#6A6A6A',

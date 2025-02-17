@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import ScreenWrapper from '@/components/screen-wrapper';
 import { Color, Font, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { hp, wp } from '@/helpers/dimensions';
@@ -16,7 +16,7 @@ const OnBoarding: React.FC = () => {
   const styles = createStyles(theme);
 
   return (
-    <ScreenWrapper>
+    <SafeAreaView>
       <View style={styles.container}>
         <Image
           style={styles.image}
@@ -34,17 +34,18 @@ const OnBoarding: React.FC = () => {
           </View>
         </View>
       </View>
-    </ScreenWrapper>
+    </SafeAreaView>
   );
 };
 
 const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
     container: {
-      flex: 1,
+      height: '100%',
+      width: '100%',
       justifyContent: 'space-around',
       alignItems: 'center',
-      backgroundColor: Color.light.background,
+      backgroundColor: Color.light.backgroundSoft,
       paddingHorizontal: wp(4),
     },
     image: {

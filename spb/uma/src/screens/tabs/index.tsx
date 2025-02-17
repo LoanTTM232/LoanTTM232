@@ -14,6 +14,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const Tab = createBottomTabNavigator();
 
+export type TabParamList = {
+  Home: undefined;
+  Explore: undefined;
+  Booking: undefined;
+  Notify: undefined;
+  Profile: undefined;
+};
+
 const TabStack: React.FC = () => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
@@ -59,10 +67,11 @@ const TabStack: React.FC = () => {
   );
 };
 
-const createStyles = (_: IColorScheme) => {
+const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
     tabBar: {
       height: hp(7.5),
+      backgroundColor: theme.backgroundSoft,
     },
     tabBarLabelStyle: {
       fontFamily: Font.family.medium,

@@ -4,18 +4,24 @@ import SplashScreen from 'react-native-splash-screen';
 import AppProvider from '@/providers';
 import RootStack from '@/screens';
 import { useAuthStore } from '@/zustand';
+import { NavigationContainer } from '@react-navigation/native';
 
 const App: React.FC = () => {
   const checkIsLoggedIn = useAuthStore.use.checkIsLoggedIn();
 
   useEffect(() => {
-    SplashScreen.hide();
     checkIsLoggedIn();
   }, [checkIsLoggedIn]);
 
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
   return (
     <AppProvider>
-      <RootStack />
+      <NavigationContainer>
+        <RootStack />
+      </NavigationContainer>
     </AppProvider>
   );
 };

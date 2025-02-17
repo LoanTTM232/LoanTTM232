@@ -3,8 +3,10 @@ import { Pressable, StyleSheet, ViewStyle } from 'react-native';
 
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
+import { ParamList } from '@/screens';
 import ArrowLeft from '@/ui/icon/arrow-left';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type BackButtonProps = {
   styles?: ViewStyle;
@@ -14,7 +16,7 @@ export type BackButtonProps = {
 function BackButton(props: BackButtonProps) {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<ParamList>>();
 
   const defaultOnPress = () => {
     navigation.goBack();
