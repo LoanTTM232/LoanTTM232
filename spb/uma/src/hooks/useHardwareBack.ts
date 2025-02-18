@@ -34,7 +34,7 @@ const useBackHandler = () => {
       return true;
     }
 
-    if (currentTab.name === RootScreens.Tabs) {
+    if (currentTab.name === RootScreens.Auth) {
       handleDoubleBackPress();
       return true;
     }

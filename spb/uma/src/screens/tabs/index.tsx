@@ -42,17 +42,17 @@ const TabStack: React.FC = () => {
     let iconName = '';
 
     if (route.name === TabScreens.Home) {
-      iconName = focused ? 'home' : 'home-outline';
+      iconName = 'home-outline';
     } else if (route.name === TabScreens.Explore) {
-      iconName = focused ? 'compass' : 'compass-outline';
+      iconName = 'compass-outline';
     } else if (route.name === TabScreens.Booking) {
-      iconName = focused ? 'time' : 'time-outline';
+      iconName = 'time-outline';
     } else if (route.name === TabScreens.Notify) {
-      iconName = focused ? 'notifications' : 'notifications-outline';
+      iconName = 'notifications-outline';
     } else if (route.name === TabScreens.Profile) {
-      iconName = focused ? 'person' : 'person-outline';
+      iconName = 'person-outline';
     }
-    return <Ionicons name={iconName} size={22} color={color} />;
+    return <Ionicons name={iconName} size={24} color={color} />;
   };
 
   return (
@@ -82,12 +82,12 @@ const TabStack: React.FC = () => {
 const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
     tabBar: {
-      height: hp(7.5),
+      height: hp(8),
       backgroundColor: theme.backgroundLight,
     },
     tabBarLabelStyle: {
       ...fontFamily.ROBOTO_MEDIUM,
-      fontSize: fontSize.sm,
+      fontSize: fontSize.xs,
       textAlign: 'center',
     },
     tabBarItemStyle: {
