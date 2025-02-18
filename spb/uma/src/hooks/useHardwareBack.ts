@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { BackHandler, ToastAndroid } from 'react-native';
 
-import { ParamList } from '@/screens';
+import { ParamList, RootScreens } from '@/screens';
 import { TabParamList } from '@/screens/tabs';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -9,7 +9,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 const useBackHandler = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<ParamList & TabParamList>>();
-
   const [doubleBackToExitPressedOnce, setDoubleBackToExitPressedOnce] =
     useState(false);
 
@@ -22,7 +21,6 @@ const useBackHandler = () => {
     setDoubleBackToExitPressedOnce(true);
     ToastAndroid.show('Click back again to exit app', ToastAndroid.SHORT);
 
-    // Reset after 2 seconds
     setTimeout(() => {
       setDoubleBackToExitPressedOnce(false);
     }, 2000);
@@ -32,6 +30,11 @@ const useBackHandler = () => {
     const state = navigation.getState();
     const currentTab = state?.routes?.[state?.index];
     if (!currentTab) {
+      handleDoubleBackPress();
+      return true;
+    }
+
+    if (currentTab.name === RootScreens.Tabs) {
       handleDoubleBackPress();
       return true;
     }

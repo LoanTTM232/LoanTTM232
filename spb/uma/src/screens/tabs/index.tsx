@@ -22,6 +22,14 @@ export type TabParamList = {
   Profile: undefined;
 };
 
+export const TabScreens: Record<string, keyof TabParamList> = {
+  Home: 'Home',
+  Explore: 'Explore',
+  Booking: 'Booking',
+  Notify: 'Notify',
+  Profile: 'Profile',
+};
+
 const TabStack: React.FC = () => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
@@ -33,15 +41,15 @@ const TabStack: React.FC = () => {
   ) => {
     let iconName = '';
 
-    if (route.name === 'Home') {
+    if (route.name === TabScreens.Home) {
       iconName = focused ? 'home' : 'home-outline';
-    } else if (route.name === 'Explore') {
+    } else if (route.name === TabScreens.Explore) {
       iconName = focused ? 'compass' : 'compass-outline';
-    } else if (route.name === 'Booking') {
+    } else if (route.name === TabScreens.Booking) {
       iconName = focused ? 'time' : 'time-outline';
-    } else if (route.name === 'Notify') {
+    } else if (route.name === TabScreens.Notify) {
       iconName = focused ? 'notifications' : 'notifications-outline';
-    } else if (route.name === 'Profile') {
+    } else if (route.name === TabScreens.Profile) {
       iconName = focused ? 'person' : 'person-outline';
     }
     return <Ionicons name={iconName} size={22} color={color} />;
@@ -49,7 +57,7 @@ const TabStack: React.FC = () => {
 
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName={TabScreens.Home}
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: styles.tabBar,
@@ -60,12 +68,13 @@ const TabStack: React.FC = () => {
           renderTabBarIcon(route, focused, color),
         animation: 'fade',
       })}
+      backBehavior="history"
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Explore" component={ExploreScreen} />
-      <Tab.Screen name="Booking" component={BookingScreen} />
-      <Tab.Screen name="Notify" component={NotifyScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name={TabScreens.Home} component={HomeScreen} />
+      <Tab.Screen name={TabScreens.Explore} component={ExploreScreen} />
+      <Tab.Screen name={TabScreens.Booking} component={BookingScreen} />
+      <Tab.Screen name={TabScreens.Notify} component={NotifyScreen} />
+      <Tab.Screen name={TabScreens.Profile} component={ProfileScreen} />
     </Tab.Navigator>
   );
 };

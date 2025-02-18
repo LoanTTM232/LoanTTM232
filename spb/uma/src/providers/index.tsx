@@ -17,7 +17,11 @@ const AppProvider: React.FC<ProviderProps> = ({ children }) => {
     <ThemeProvider>
       <SafeAreaProvider>
         {children}
-        <Toast config={toastConfig(theme)} position="top" topOffset={hp(2)} />
+        <Toast
+          config={toastConfig(theme)}
+          position="bottom"
+          bottomOffset={hp(10)}
+        />
       </SafeAreaProvider>
     </ThemeProvider>
   );
