@@ -57,7 +57,7 @@ func (s *Service) AccountRegister(u *model.RegisterRequest) (*tb.User, error) {
 		return nil, err
 	}
 
-	if err := cache.OTP.SetOTP(otpToken, global.SPB_CONFIG.Cache.VerifyEmailExp); err != nil {
+	if err := cache.OTP.SetOTP(otpToken, global.SPB_CONFIG.OTP.OTPExp); err != nil {
 		tx.Rollback()
 		return nil, err
 	}

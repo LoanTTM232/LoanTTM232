@@ -13,11 +13,13 @@ interface AuthState {
   email: string;
   fullName: string;
 
-  checkIsLoggedIn: () => void;
-  login: (data: LoginRequest) => void;
-  logout: () => void;
-  register: (data: RegisterRequest) => void;
-  googleCallback: (data: { code: string }) => void;
+  checkIsLoggedIn: () => Promise<void>;
+  login: (data: LoginRequest) => Promise<void>;
+  logout: () => Promise<void>;
+  register: (data: RegisterRequest) => Promise<void>;
+  googleCallback: (data: { code: string }) => Promise<void>;
+  verifyEmail: (data: { token: number }) => Promise<void>;
+  resendVerifyEmailOtp: (data: { email: string }) => Promise<void>;
 }
 
 const useAuthStoreBase = create<AuthState>((set) => ({
@@ -67,7 +69,6 @@ const useAuthStoreBase = create<AuthState>((set) => ({
   },
 
   googleCallback: async (data: { code: string }) => {
-    console.log('call googleCallback');
     const res = await authService.googleCallback(data);
 
     if (res instanceof Error) {
@@ -80,6 +81,20 @@ const useAuthStoreBase = create<AuthState>((set) => ({
       email: res.data.user.email,
       fullName: res.data.user.full_name,
     }));
+  },
+
+  verifyEmail: async (data: { token: number }) => {
+    const res = await authService.verifyEmail(data.token);
+    if (res instanceof Error) {
+      throw res;
+    }
+  },
+
+  resendVerifyEmailOtp: async (data: { email: string }) => {
+    const res = await authService.resendVerifyEmailOtp(data.email);
+    if (res instanceof Error) {
+      throw res;
+    }
   },
 }));
 

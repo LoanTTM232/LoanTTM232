@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  GestureResponderEvent,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextStyle,
-} from 'react-native';
+import { GestureResponderEvent, Pressable, StyleSheet, Text, TextStyle } from 'react-native';
 
 import { fontFamily } from '@/constants';
 
@@ -26,7 +20,6 @@ const Link: React.FC<LinkProps> = ({ title, style, onPress }) => {
 const styles = StyleSheet.create({
   link: {
     ...fontFamily.ROBOTO_MEDIUM,
-    textDecorationLine: 'underline',
   },
 });
 

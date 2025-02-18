@@ -82,7 +82,7 @@ func ResetPasswordMessage(otpCode, email string, oEmailTemplate *tb.Notification
 		"OTPCode":     otpCode,
 		"Name":        email,
 		"CompanyName": global.SPB_CONFIG.ProjectName,
-		"Expire":      fmt.Sprintf("%d minutes", global.SPB_CONFIG.Cache.ResetPasswordExp),
+		"Expire":      fmt.Sprintf("%d minutes", global.SPB_CONFIG.OTP.OTPExp),
 	}
 
 	temp := oEmailTemplate.MapTemplate(oEmailTemplateData)

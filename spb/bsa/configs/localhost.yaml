@@ -22,10 +22,6 @@ cors:
         - "DELETE"
     allow_credentials: true
 
-cache:
-    verify_email_exp: 43200 # minutes
-    reset_password_exp: 60 # minutes
-
 jwt:
     secret: "1234balhblahblah"
     access_token_exp: 10 # minutes
@@ -78,5 +74,5 @@ notification:
         worker_num: 4
 
 otp:
-    length: 6
+    length: 4
     expire: 5 # minutes

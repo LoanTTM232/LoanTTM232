@@ -1,7 +1,6 @@
 {
     "onboarding": {
-        "title": "Welcome to the app",
-        "redirect": "Already have an account?"
+        "get-started": "Get Started"
     },
     "login": {
         "title": "Welcome back",
@@ -16,8 +15,10 @@
         "your_name": "Your Name",
         "email": "Email Address",
         "password": "Password",
+        "confirmPassword": "Confirm Password",
         "submit": "Register",
-        "redirect": "Already have an account?"
+        "redirect": "Already have an account?",
+        "google": "Sign up with Google"
     },
     "forgot": {
         "title": "Forgot password",
@@ -34,6 +35,12 @@
             "submit": "Verify",
             "resend": "Resend OTP code in"
         }
+    },
+    "notification": {
+        "login_success": "Login successful!",
+        "register_success": "Register successful!",
+        "login_failed": "Login failed!",
+        "register_failed": "Register failed!"
     },
     "error": {
         "ERS001": "",

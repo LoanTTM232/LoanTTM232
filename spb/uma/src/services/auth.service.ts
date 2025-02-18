@@ -1,8 +1,6 @@
 import {
-  GOOGLE_SIGNIN_CALLBACK_PATH,
-  LOGIN_PATH,
-  REFRESH_TOKEN_PATH,
-  REGISTER_PATH,
+    GOOGLE_SIGNIN_CALLBACK_PATH, LOGIN_PATH, LOGOUT_PATH, REFRESH_TOKEN_PATH, REGISTER_PATH,
+    VERIFY_EMAIL_PATH
 } from '@/constants';
 import { ResponseError } from '@/helpers/error';
 import { removeData, storeData } from '@/helpers/storage';
@@ -35,6 +33,28 @@ export type GoogleCallbackRequest = {
   code: string;
 };
 
+export interface IAuthService {
+  login(
+    data: LoginRequest
+  ): Promise<ApiResponse<LoginResponse> | ResponseError>;
+
+  logout(): Promise<void>;
+
+  register(data: RegisterRequest): Promise<ApiResponse<null> | ResponseError>;
+
+  refreshToken(): Promise<ApiResponse<RefreshTokenResponse> | ResponseError>;
+
+  googleCallback(
+    data: GoogleCallbackRequest
+  ): Promise<ApiResponse<LoginResponse> | ResponseError>;
+
+  verifyEmail(token: number): Promise<ApiResponse<null> | ResponseError>;
+
+  resendVerifyEmailOtp(
+    email: string
+  ): Promise<ApiResponse<null> | ResponseError>;
+}
+
 class AuthService {
   public async login(
     data: LoginRequest
@@ -49,6 +69,9 @@ class AuthService {
   }
 
   public async logout(): Promise<void> {
+    const api = apiFactory<null>(LOGOUT_PATH, false);
+    await api.post();
+
     removeData('accessToken');
   }
 
@@ -81,6 +104,20 @@ class AuthService {
       await storeData('accessToken', response.data.access_token);
     }
     return response;
+  }
+
+  public async verifyEmail(
+    token: number
+  ): Promise<ApiResponse<null> | ResponseError> {
+    const api = apiFactory<null>(VERIFY_EMAIL_PATH);
+    return await api.post({ token });
+  }
+
+  public async resendVerifyEmailOtp(
+    email: string
+  ): Promise<ApiResponse<null> | ResponseError> {
+    const api = apiFactory<null>(VERIFY_EMAIL_PATH);
+    return await api.post({ email });
   }
 }
 

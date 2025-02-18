@@ -114,6 +114,7 @@ dependencies {
 	implementation("com.google.android.gms:play-services-auth:21.3.0")
 	implementation("androidx.browser:browser:1.2.0")
 	implementation project(':react-native-vector-icons')
+	implementation project(':react-native-pager-view')
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

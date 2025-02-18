@@ -20,7 +20,7 @@ const ProfileScreen: React.FC = () => {
     await logout();
 
     // navigate to login screen
-    navigation.navigate('Login');
+    navigation.navigate('Auth');
   };
   return (
     <View style={styles.container}>

@@ -1,23 +1,22 @@
 {
     "onboarding": {
-        "redirect": "Already have an account?"
+        "get_started": "Get Started"
     },
     "login": {
-        "title": "Welcome back",
+        "title": "Sign In",
         "forgot": "Forgot password?",
-        "submit": "Sign in",
+        "submit": "Sign In",
         "email": "Email Address",
         "password": "Password",
-        "redirect": "Don't have an account?",
-        "google": "Sign in with Google"
+        "google": "Continue with Google"
     },
     "register": {
-        "title": "Get started",
-        "your_name": "Your Name",
+        "title": "Create Account",
         "email": "Email Address",
         "password": "Password",
-        "submit": "Register",
-        "redirect": "Already have an account?"
+        "confirm_password": "Confirm Password",
+        "submit": "Sign Up",
+        "google": "Continue with Google"
     },
     "forgot": {
         "title": "Forgot password",
@@ -35,10 +34,20 @@
             "resend": "Resend OTP code in"
         }
     },
+    "verification": {
+        "title": "OTP Verification",
+        "description": "Please check your email to see the verification code",
+        "submit": "Verify",
+        "resend": "Resend OTP code in",
+        "otp": "OTP Code",
+        "otp_required": "OTP Code is required",
+        "otp_invalid": "OTP Code is invalid"
+    },
     "notification": {
-        "login_success": "Login successfull",
-        "register_success": "Register successfull",
-        "login_failed": "Login failed"
+        "login_success": "Login successful!",
+        "register_success": "Register successful!",
+        "login_failed": "Login failed!",
+        "register_failed": "Register failed!"
     },
     "error": {
         "ERS001": "abc",

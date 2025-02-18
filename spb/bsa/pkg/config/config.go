@@ -54,11 +54,6 @@ type CORS struct {
 	AllowCredentials bool     `mapstructure:"allow_credentials"`
 }
 
-type Cache struct {
-	VerifyEmailExp   int `mapstructure:"verify_email_exp"`
-	ResetPasswordExp int `mapstructure:"reset_password_exp"`
-}
-
 type JWT struct {
 	Secret          string `mapstructure:"secret"`
 	AccessTokenExp  int    `mapstructure:"access_token_exp"`
@@ -107,7 +102,6 @@ type OAuth struct {
 type Config struct {
 	ProjectName  string        `mapstructure:"project_name"`
 	Server       *Server       `mapstructure:"server"`
-	Cache        *Cache        `mapstructure:"cache"`
 	JWT          *JWT          `mapstructure:"jwt"`
 	DB           *DB           `mapstructure:"database"`
 	Redis        *Redis        `mapstructure:"redis"`

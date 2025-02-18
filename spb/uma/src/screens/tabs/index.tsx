@@ -5,11 +5,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { fontFamily, fontSize, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { hp } from '@/helpers/dimensions';
-import BookingScreen from '@/screens/tabs/booking.screen';
-import ExploreScreen from '@/screens/tabs/explore.screen';
-import HomeScreen from '@/screens/tabs/home.screen';
-import NotifyScreen from '@/screens/tabs/notify.screen';
-import ProfileScreen from '@/screens/tabs/profile.screen';
+import BookingScreen from '@/screens/tabs/booking';
+import ExploreScreen from '@/screens/tabs/explore';
+import HomeScreen from '@/screens/tabs/home';
+import NotifyScreen from '@/screens/tabs/notify';
+import ProfileScreen from '@/screens/tabs/profile';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const Tab = createBottomTabNavigator();
@@ -49,15 +49,16 @@ const TabStack: React.FC = () => {
 
   return (
     <Tab.Navigator
+      initialRouteName="Home"
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabBarLabelStyle,
         tabBarItemStyle: styles.tabBarItemStyle,
-        tabBarIconStyle: styles.tabBarIconStyle,
         tabBarActiveTintColor: theme.primary,
         tabBarIcon: ({ focused, color }) =>
           renderTabBarIcon(route, focused, color),
+        animation: 'fade',
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
@@ -81,11 +82,9 @@ const createStyles = (theme: IColorScheme) => {
       textAlign: 'center',
     },
     tabBarItemStyle: {
-      paddingHorizontal: 0,
-    },
-    tabBarIconStyle: {
+      justifyContent: 'center',
       alignItems: 'center',
-      marginTop: 4,
+      flexDirection: 'row',
     },
   });
 };

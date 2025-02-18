@@ -9,18 +9,18 @@ import GoogleIcon from '@/ui/icon/google';
 
 export type GoogleSignInProps = {
   onPress: () => void;
+  title?: string;
 };
 
-const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onPress }) => {
+const GoogleSignIn: React.FC<GoogleSignInProps> = ({ title, onPress }) => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
-  //   return <GoogleSigninButton style={styles.button} onPress={onPress} />;
   return (
     <Button
       buttonStyle={styles.button}
       textStyles={styles.buttonText}
-      title={i18next.t('login.google')}
+      title={title || i18next.t('login.google')}
       onPress={onPress}
       before={<GoogleIcon size={22} />}
     />

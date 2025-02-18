@@ -1,34 +1,51 @@
 package service
 
 import (
+	"fmt"
+
+	"spb/bsa/api/auth/model"
 	notifyServ "spb/bsa/api/notification"
 	notifyModel "spb/bsa/api/notification/model"
-	userServ "spb/bsa/api/user"
 	"spb/bsa/pkg/cache"
 	"spb/bsa/pkg/config"
+	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/entities/enum"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
 )
 
-func (s *Service) ForgotPassword(email string) error {
-	// check email exist
-	user, err := userServ.UserService.GetByEmail(email)
+// @author: LoanTT
+// @function: ResendVerifyEmailOTP
+// @description: Resend verify email OTP
+// @param: reqBody *model.ResendVerifyEmailOTPRequest
+// @return: error
+func (s *Service) ResendVerifyEmailOTP(reqBody *model.ResendVerifyEmailOTPRequest) error {
+	var err error
+	user := tb.User{}
+
+	tx := s.db.Begin()
+	err = s.db.Where("email = ?", reqBody.Email).First(&user).Error
 	if err != nil {
 		return err
 	}
-	tx := s.db.Begin()
 
-	// generate token
-	optCode := utils.GenerateOTPCode(global.SPB_CONFIG.OTP.OTPLength)
-	if err := cache.OTP.SetOTP(optCode, global.SPB_CONFIG.OTP.OTPExp); err != nil {
+	if user.IsEmailVerified {
+		return fmt.Errorf("email already verified")
+	}
+
+	otpToken := utils.GenerateOTPCode(global.SPB_CONFIG.OTP.OTPLength)
+	err = s.db.Model(&user).Update("email_verify_token", otpToken).Error
+	if err != nil {
+		return err
+	}
+
+	if err := cache.OTP.SetOTP(otpToken, global.SPB_CONFIG.OTP.OTPExp); err != nil {
 		tx.Rollback()
 		return err
 	}
 
-	// send email
-	notify, err := s.SendVerifyEmail(optCode, email, config.AUTH_RESET_PASSWORD, tx)
+	notify, err := s.SendVerifyEmail(otpToken, reqBody.Email, config.AUTH_VERIFY_EMAIL, tx)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -41,7 +58,7 @@ func (s *Service) ForgotPassword(email string) error {
 		Platform:         enum.Platform(enum.EMAIL),
 		Title:            notify.Title,
 		Message:          notify.Message,
-		NotificationType: config.AUTH_RESET_PASSWORD,
+		NotificationType: config.AUTH_VERIFY_EMAIL,
 	}
 
 	// Create notification
@@ -54,6 +71,5 @@ func (s *Service) ForgotPassword(email string) error {
 		tx.Rollback()
 		return err
 	}
-
 	return nil
 }

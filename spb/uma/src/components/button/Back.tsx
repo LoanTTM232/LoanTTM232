@@ -22,7 +22,9 @@ function BackButton(props: BackButtonProps) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const defaultOnPress = () => {
-    navigation.goBack();
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    }
   };
 
   const handlePressIn = () => {

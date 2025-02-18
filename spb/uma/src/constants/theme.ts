@@ -11,6 +11,8 @@ export interface IColorScheme {
   success: string;
   error: string;
   warning: string;
+  borderLight: string;
+  borderDark: string;
 }
 export interface IColor {
   light: IColorScheme;
@@ -31,6 +33,8 @@ export const Color: IColor = {
     success: '#4CAF50',
     error: '#F44336',
     warning: '#FFFF00',
+    borderLight: '#BDBDBD',
+    borderDark: '#6A6A6A',
   },
   dark: {
     backgroundLight: '#FFFFFF',
@@ -45,11 +49,13 @@ export const Color: IColor = {
     success: '#008000',
     error: '#FF0000',
     warning: '#FFFF00',
+    borderLight: '#E0E0E0',
+    borderDark: '#BDBDBD',
   },
 };
 
 export const Radius = {
-  xs: 8,
+  xs: 5,
   sm: 12,
   md: 14,
   lg: 16,

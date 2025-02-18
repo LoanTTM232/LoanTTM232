@@ -12,7 +12,7 @@ import (
 // @return: model.SportTypeResponse
 func MapSportTypeEntityToResponse(sportType *tb.SportType) model.SportTypeResponse {
 	return model.SportTypeResponse{
-		SportTypeID: sportType.ID,
+		ID: sportType.ID,
 	}
 }
 

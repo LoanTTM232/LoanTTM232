@@ -21,7 +21,7 @@ type UserResponse struct {
 
 type LoginRequest struct {
 	Email    string `json:"email"    validate:"min=6,max=256,required,email"`
-	Password string `json:"password" validate:"min=6,max=256,required"`
+	Password string `json:"password" validate:"min=6,max=256,required,password"`
 }
 
 type LoginResponse struct {
@@ -31,7 +31,7 @@ type LoginResponse struct {
 
 type RegisterRequest struct {
 	Email    string `json:"email"    validate:"min=6,max=256,required,email"`
-	Password string `json:"password" validate:"min=6,max=256,required"`
+	Password string `json:"password" validate:"min=6,max=256,required,password"`
 }
 
 type RefreshTokenResponse struct {
@@ -54,7 +54,7 @@ type VerifyTokenRequest struct {
 type ResetPasswordRequest struct {
 	Token    int    `json:"token"    validate:"gte=999,lte=1000000"`
 	Email    string `json:"email"    validate:"min=6,max=256,required,email"`
-	Password string `json:"password" validate:"min=6,max=256,required"`
+	Password string `json:"password" validate:"min=6,max=256,required,password"`
 }
 
 type SendVerificationRequest struct {
@@ -69,4 +69,8 @@ type GooglePayload struct {
 	Email string `json:"email"`
 	Name  string `json:"name"`
 	Sub   string `json:"sub"`
+}
+
+type ResendVerifyEmailOTPRequest struct {
+	Email string `json:"email" validate:"min=6,max=256,required,email"`
 }
