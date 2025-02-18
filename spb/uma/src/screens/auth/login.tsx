@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import LoginForm from '@/components/form/LoginForm';
+import LoginForm from '@/components/auth/LoginForm';
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { hp } from '@/helpers/dimensions';

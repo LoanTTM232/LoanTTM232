@@ -2,7 +2,7 @@ import React, { FC, useContext } from 'react';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import AuthTabView from '@/components/tab/AuthTabView';
+import AuthTabView from '@/components/auth/AuthTabView';
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { hp } from '@/helpers/dimensions';

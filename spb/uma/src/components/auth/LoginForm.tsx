@@ -2,14 +2,14 @@ import { Formik } from 'formik';
 import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import GoogleSignIn from '@/components/button/GoogleSignIn';
-import FormField from '@/components/field/FormField';
+import FormField from '@/components/auth/FormField';
 import { fontFamily, fontSize, IColorScheme } from '@/constants';
 import { hp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
 import { loginValidation } from '@/helpers/validate';
 import { ILoginFormValues } from '@/screens/auth/login';
-import Button from '@/ui/button';
+import Button from '@/ui/button/BaseButton';
+import GoogleSignIn from '@/ui/button/GoogleSignIn';
 import Line from '@/ui/line';
 import Link from '@/ui/link';
 

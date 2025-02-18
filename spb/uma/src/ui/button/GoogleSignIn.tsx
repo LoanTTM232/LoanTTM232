@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native';
 import { fontFamily, fontSize, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import i18next from '@/helpers/i18n';
-import Button from '@/ui/button';
+import Button from '@/ui/button/BaseButton';
 import GoogleIcon from '@/ui/icon/google';
 
 export type GoogleSignInProps = {

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import OTPInput from '@/components/field/OTPInput';
+import OTPInput from '@/components/verification/OTPInput';
 import { fontFamily, fontSize, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { convertSecondsToMMSS } from '@/helpers/datetime';
@@ -12,7 +12,7 @@ import { logDebug, logError } from '@/helpers/logger';
 import useOTP from '@/hooks/useOTP';
 import useResendTimer from '@/hooks/useResendTimer';
 import { ParamList } from '@/screens';
-import Button from '@/ui/button';
+import Button from '@/ui/button/BaseButton';
 import { useAuthStore } from '@/zustand';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

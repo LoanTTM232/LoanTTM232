@@ -25,7 +25,7 @@ const AuthTabView: React.FC<ITabViewProps> = ({ routes, theme }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} accessibilityRole="tabbar">
       <View style={styles.tabSwitch}>
         {routes.map((route, i) => (
           <Pressable

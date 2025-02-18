@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import RegisterForm from '@/components/form/RegisterForm';
+import RegisterForm from '@/components/auth/RegisterForm';
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { hp } from '@/helpers/dimensions';

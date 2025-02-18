@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { ParamList } from '@/screens';
-import Button from '@/ui/button';
+import Button from '@/ui/button/BaseButton';
 import { useAuthStore } from '@/zustand';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

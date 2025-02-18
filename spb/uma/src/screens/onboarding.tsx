@@ -7,7 +7,7 @@ import { ThemeContext } from '@/contexts/theme.context';
 import { hp, wp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
 import { ParamList } from '@/screens';
-import Button from '@/ui/button';
+import Button from '@/ui/button/BaseButton';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
