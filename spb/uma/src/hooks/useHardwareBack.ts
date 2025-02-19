@@ -40,12 +40,16 @@ const useBackHandler = () => {
     }
 
     const currentTabStateIndex = currentTab.state?.index;
-    if (currentTabStateIndex !== undefined && currentTabStateIndex > 0) {
+    if (
+      currentTabStateIndex !== undefined &&
+      currentTabStateIndex > 0 &&
+      navigation.canGoBack()
+    ) {
       navigation.goBack();
       return true;
     }
 
-    if (currentTabStateIndex === 0) {
+    if (!currentTabStateIndex) {
       handleDoubleBackPress();
       return true;
     }
