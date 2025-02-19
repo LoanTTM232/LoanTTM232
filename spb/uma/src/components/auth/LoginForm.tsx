@@ -120,7 +120,7 @@ const createStyles = (theme: IColorScheme) => {
       justifyContent: 'flex-end',
     },
     link: {
-      ...fontFamily.ROBOTO_REGULAR,
+      ...fontFamily.POPPINS_REGULAR,
       fontSize: fontSize.md,
       color: theme.primary,
     },
@@ -132,7 +132,7 @@ const createStyles = (theme: IColorScheme) => {
       marginTop: 10,
     },
     buttonText: {
-      ...fontFamily.ROBOTO_REGULAR,
+      ...fontFamily.POPPINS_REGULAR,
       fontSize: fontSize.md,
     },
   });

@@ -1,7 +1,10 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Toast, {
-    BaseToast, BaseToastProps, ErrorToast, ToastProps
+  BaseToast,
+  BaseToastProps,
+  ErrorToast,
+  ToastProps,
 } from 'react-native-toast-message';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -18,10 +21,10 @@ const createStyles = (theme: IColorScheme) => {
       height: hp(6.6),
     },
     successContent: {
-      paddingHorizontal: 15,
+      paddingHorizontal: hp(2),
     },
     successText1: {
-      ...fontFamily.ROBOTO_REGULAR,
+      ...fontFamily.POPPINS_REGULAR,
       fontSize: fontSize.md,
     },
     error: {
@@ -31,14 +34,14 @@ const createStyles = (theme: IColorScheme) => {
       height: hp(6.6),
     },
     errorContent: {
-      paddingHorizontal: 15,
+      paddingHorizontal: hp(2),
     },
     errorText1: {
-      ...fontFamily.ROBOTO_BOLD,
+      ...fontFamily.RALEWAY_BOLD,
       fontSize: fontSize.md,
     },
     errorText2: {
-      ...fontFamily.ROBOTO_REGULAR,
+      ...fontFamily.POPPINS_REGULAR,
       fontSize: fontSize.md,
     },
     iconContainer: {

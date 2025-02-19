@@ -78,7 +78,7 @@ const createStyles = (theme: IColorScheme) =>
       backgroundColor: theme.backgroundLight,
     },
     tabText: {
-      ...fontFamily.ROBOTO_THIN,
+      ...fontFamily.RALEWAY_LIGHT,
       fontSize: fontSize.md,
     },
     pagerView: {

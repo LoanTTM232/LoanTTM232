@@ -27,7 +27,7 @@ const createStyles = (theme: IColorScheme) =>
       backgroundColor: theme.borderLight,
     },
     title: {
-      ...fontFamily.ROBOTO_REGULAR,
+      ...fontFamily.RALEWAY_REGULAR,
       fontSize: fontSize.sm,
       color: theme.textLight,
       backgroundColor: theme.backgroundLight,

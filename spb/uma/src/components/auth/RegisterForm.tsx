@@ -121,7 +121,7 @@ const createStyles = (_: IColorScheme) => {
       marginTop: 10,
     },
     buttonText: {
-      ...fontFamily.ROBOTO_REGULAR,
+      ...fontFamily.POPPINS_REGULAR,
       fontSize: fontSize.md,
     },
   });

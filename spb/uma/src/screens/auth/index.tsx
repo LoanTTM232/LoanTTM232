@@ -70,7 +70,7 @@ const createStyles = (theme: IColorScheme) => {
       flex: 1,
     },
     title: {
-      ...fontFamily.ROBOTO_BOLD,
+      ...fontFamily.RALEWAY_BOLD,
       fontSize: fontSize.xxl,
       paddingVertical: hp(1),
       textAlign: 'center',

@@ -33,7 +33,7 @@ const createStyles = (theme: IColorScheme) => {
       backgroundColor: theme.secondary,
     },
     buttonText: {
-      ...fontFamily.ROBOTO_REGULAR,
+      ...fontFamily.POPPINS_REGULAR,
       fontSize: fontSize.md,
       color: theme.textLight,
     },

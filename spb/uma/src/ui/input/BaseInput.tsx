@@ -67,7 +67,7 @@ const createStyles = (theme: IColorScheme, hasError: boolean) => {
       borderBottomWidth: 1,
     },
     input: {
-      ...fontFamily.ROBOTO_REGULAR,
+      ...fontFamily.POPPINS_REGULAR,
       fontSize: fontSize.md,
       paddingHorizontal: wp(4),
       color: theme.textDark,

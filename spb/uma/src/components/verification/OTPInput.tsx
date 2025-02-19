@@ -49,7 +49,7 @@ const createOTPStyles = (theme: IColorScheme) => {
       height: 50,
       textAlign: 'center',
       fontSize: fontSize.xl,
-      ...fontFamily.ROBOTO_BOLD,
+      ...fontFamily.POPPINS_BOLD,
       color: theme.textLight,
       backgroundColor: theme.secondary,
       borderRadius: 8,

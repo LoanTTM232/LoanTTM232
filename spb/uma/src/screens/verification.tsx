@@ -107,7 +107,7 @@ const createStyles = (theme: IColorScheme) =>
       backgroundColor: theme.backgroundLight,
     },
     title: {
-      ...fontFamily.ROBOTO_BOLD,
+      ...fontFamily.RALEWAY_BLACK,
       fontSize: fontSize.xxl,
       paddingTop: hp(10),
       paddingBottom: hp(1),
@@ -122,7 +122,7 @@ const createStyles = (theme: IColorScheme) =>
     },
     inputTitle: {
       marginTop: hp(10),
-      ...fontFamily.ROBOTO_MEDIUM,
+      ...fontFamily.RALEWAY_MEDIUM,
       fontSize: fontSize.xl,
       color: theme.textDark,
     },
@@ -135,7 +135,7 @@ const createStyles = (theme: IColorScheme) =>
       marginTop: 10,
     },
     buttonText: {
-      ...fontFamily.ROBOTO_REGULAR,
+      ...fontFamily.RALEWAY_REGULAR,
       fontSize: fontSize.md,
     },
     resendContainer: {
@@ -144,12 +144,12 @@ const createStyles = (theme: IColorScheme) =>
       justifyContent: 'space-between',
     },
     resendText: {
-      ...fontFamily.ROBOTO_MEDIUM,
+      ...fontFamily.RALEWAY_MEDIUM,
       fontSize: fontSize.sm,
       color: theme.textLight,
     },
     resendTimer: {
-      ...fontFamily.ROBOTO_MEDIUM,
+      ...fontFamily.RALEWAY_MEDIUM,
       fontSize: fontSize.md,
       color: theme.primary,
     },

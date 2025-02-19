@@ -2,11 +2,18 @@ import { TextStyle } from 'react-native';
 
 type FontFamilyKey =
   | 'SYSTEM'
-  | 'ROBOTO_ITALIC'
-  | 'ROBOTO_THIN'
-  | 'ROBOTO_REGULAR'
-  | 'ROBOTO_MEDIUM'
-  | 'ROBOTO_BOLD';
+  | 'POPPINS_BLACK'
+  | 'POPPINS_BOLD'
+  | 'POPPINS_ITALIC'
+  | 'POPPINS_LIGHT'
+  | 'POPPINS_MEDIUM'
+  | 'POPPINS_REGULAR'
+  | 'RALEWAY_BLACK'
+  | 'RALEWAY_BOLD'
+  | 'RALEWAY_ITALIC'
+  | 'RALEWAY_LIGHT'
+  | 'RALEWAY_MEDIUM'
+  | 'RALEWAY_REGULAR';
 
 type FontFamily = {
   fontFamily: string;
@@ -17,7 +24,7 @@ type FontFamily = {
 type FontFamilyStyles = Record<FontFamilyKey, FontFamily>;
 
 type FontWeightStyles = Record<
-  'normal' | 'medium' | 'bold',
+  'light' | 'normal' | 'medium' | 'bold' | 'black',
   NonNullable<TextStyle['fontWeight']>
 >;
 
@@ -34,9 +41,11 @@ export const fontSize: Record<
 };
 
 const fontWeight: FontWeightStyles = {
+  light: '300',
   normal: '400',
   medium: '500',
   bold: '700',
+  black: '900',
 };
 
 export const fontFamily: FontFamilyStyles = {
@@ -45,28 +54,63 @@ export const fontFamily: FontFamilyStyles = {
     fontStyle: 'normal',
     fontWeight: fontWeight.normal,
   },
-  ROBOTO_BOLD: {
-    fontFamily: 'Roboto-Bold, Segoe UI Emoji, Noto Color Emoji',
+  POPPINS_BLACK: {
+    fontFamily: 'Poppins-Black, Segoe UI Emoji, Noto Color Emoji',
+    fontStyle: 'normal',
+    fontWeight: fontWeight.black,
+  },
+  POPPINS_BOLD: {
+    fontFamily: 'Poppins-Bold, Segoe UI Emoji, Noto Color Emoji',
     fontStyle: 'normal',
     fontWeight: fontWeight.bold,
   },
-  ROBOTO_ITALIC: {
-    fontFamily: 'Roboto-Italic, Segoe UI Emoji, Noto Color Emoji',
+  POPPINS_ITALIC: {
+    fontFamily: 'Poppins-Italic, Segoe UI Emoji, Noto Color Emoji',
     fontStyle: 'italic',
     fontWeight: fontWeight.normal,
   },
-  ROBOTO_MEDIUM: {
-    fontFamily: 'Roboto-Medium, Segoe UI Emoji, Noto Color Emoji',
+  POPPINS_LIGHT: {
+    fontFamily: 'Poppins-Light, Segoe UI Emoji, Noto Color Emoji',
+    fontStyle: 'normal',
+    fontWeight: fontWeight.light,
+  },
+  POPPINS_MEDIUM: {
+    fontFamily: 'Poppins-Medium, Segoe UI Emoji, Noto Color Emoji',
     fontStyle: 'normal',
     fontWeight: fontWeight.medium,
   },
-  ROBOTO_REGULAR: {
-    fontFamily: 'Roboto-Regular, Segoe UI Emoji, Noto Color Emoji',
+  POPPINS_REGULAR: {
+    fontFamily: 'Poppins-Regular, Segoe UI Emoji, Noto Color Emoji',
     fontStyle: 'normal',
     fontWeight: fontWeight.normal,
   },
-  ROBOTO_THIN: {
-    fontFamily: 'Roboto-Thin, Segoe UI Emoji, Noto Color Emoji',
+  RALEWAY_BLACK: {
+    fontFamily: 'Raleway-Black, Segoe UI Emoji, Noto Color Emoji',
+    fontStyle: 'normal',
+    fontWeight: fontWeight.black,
+  },
+  RALEWAY_BOLD: {
+    fontFamily: 'Raleway-Bold, Segoe UI Emoji, Noto Color Emoji',
+    fontStyle: 'normal',
+    fontWeight: fontWeight.bold,
+  },
+  RALEWAY_ITALIC: {
+    fontFamily: 'Raleway-Italic, Segoe UI Emoji, Noto Color Emoji',
+    fontStyle: 'italic',
+    fontWeight: fontWeight.normal,
+  },
+  RALEWAY_LIGHT: {
+    fontFamily: 'Raleway-Light, Segoe UI Emoji, Noto Color Emoji',
+    fontStyle: 'normal',
+    fontWeight: fontWeight.light,
+  },
+  RALEWAY_MEDIUM: {
+    fontFamily: 'Raleway-Medium, Segoe UI Emoji, Noto Color Emoji',
+    fontStyle: 'normal',
+    fontWeight: fontWeight.medium,
+  },
+  RALEWAY_REGULAR: {
+    fontFamily: 'Raleway-Regular, Segoe UI Emoji, Noto Color Emoji',
     fontStyle: 'normal',
     fontWeight: fontWeight.normal,
   },

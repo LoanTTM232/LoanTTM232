@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { fontFamily, fontSize, IColorScheme } from '@/constants';
 import i18next from '@/helpers/i18n';
-import Input from '@/ui/input';
+import Input from '@/ui/input/BaseInput';
 
 interface FormFieldProps {
   title: string;
@@ -53,7 +53,7 @@ const createStyles = (theme: IColorScheme) =>
   StyleSheet.create({
     errorMsg: {
       color: theme.error,
-      ...fontFamily.ROBOTO_REGULAR,
+      ...fontFamily.POPPINS_REGULAR,
       fontSize: fontSize.xs,
       position: 'absolute',
       bottom: -18,
