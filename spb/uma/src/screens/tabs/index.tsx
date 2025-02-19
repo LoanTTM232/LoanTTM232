@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { fontFamily, fontSize, IColorScheme } from '@/constants';
+import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { hp } from '@/helpers/dimensions';
 import BookingScreen from '@/screens/tabs/booking';
@@ -37,22 +37,30 @@ const TabStack: React.FC = () => {
   const renderTabBarIcon = (
     route: { name: string },
     focused: boolean,
-    color: string
+    color: string,
+    size: number
   ) => {
     let iconName = '';
 
-    if (route.name === TabScreens.Home) {
-      iconName = 'home-outline';
-    } else if (route.name === TabScreens.Explore) {
-      iconName = 'compass-outline';
-    } else if (route.name === TabScreens.Booking) {
-      iconName = 'time-outline';
-    } else if (route.name === TabScreens.Notify) {
-      iconName = 'notifications-outline';
-    } else if (route.name === TabScreens.Profile) {
-      iconName = 'person-outline';
+    switch (route.name) {
+      case TabScreens.Home:
+        iconName = focused ? 'home' : 'home-outline';
+        break;
+      case TabScreens.Explore:
+        iconName = focused ? 'location' : 'location-outline';
+        break;
+      case TabScreens.Booking:
+        iconName = focused ? 'bag' : 'bag-outline';
+        break;
+      case TabScreens.Notify:
+        iconName = focused ? 'notifications' : 'notifications-outline';
+        break;
+      case TabScreens.Profile:
+        iconName = focused ? 'person' : 'person-outline';
+        break;
     }
-    return <Ionicons name={iconName} size={24} color={color} />;
+
+    return <Ionicons name={iconName} size={size} color={color} />;
   };
 
   return (
@@ -60,13 +68,15 @@ const TabStack: React.FC = () => {
       initialRouteName={TabScreens.Home}
       screenOptions={({ route }) => ({
         headerShown: false,
+        tabBarShowLabel: false,
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabBarLabelStyle,
         tabBarItemStyle: styles.tabBarItemStyle,
         tabBarActiveTintColor: theme.primary,
-        tabBarIcon: ({ focused, color }) =>
-          renderTabBarIcon(route, focused, color),
+        tabBarHideOnKeyboard: true,
         animation: 'fade',
+        tabBarIcon: ({ focused, color, size }) =>
+          renderTabBarIcon(route, focused, color, size + 2),
       })}
       backBehavior="history"
     >
@@ -83,10 +93,12 @@ const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
     tabBar: {
       height: hp(8),
+      margin: hp(1),
       backgroundColor: theme.backgroundLight,
+      borderRadius: Radius.md,
     },
     tabBarLabelStyle: {
-      ...fontFamily.ROBOTO_MEDIUM,
+      ...fontFamily.RALEWAY_MEDIUM,
       fontSize: fontSize.xs,
       textAlign: 'center',
     },
@@ -94,6 +106,7 @@ const createStyles = (theme: IColorScheme) => {
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'row',
+      borderRadius: Radius.md,
     },
   });
 };
