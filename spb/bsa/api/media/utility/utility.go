@@ -21,12 +21,25 @@ func MapMediaEntityToResponse(media *tb.Media) model.MediaResponse {
 }
 
 // @author: LoanTT
+// @function: MapMediaEntitiesToResponse
+// @description: Map media entities to response
+// @param: medias []tb.Media
+// @return: []model.MediaResponse
+func MapMediaEntitiesToResponse(medias []tb.Media) []model.MediaResponse {
+	mediaResponses := make([]model.MediaResponse, 0)
+	for _, media := range medias {
+		mediaResponses = append(mediaResponses, MapMediaEntityToResponse(&media))
+	}
+	return mediaResponses
+}
+
+// @author: LoanTT
 // @function: MapCreateRequestToEntity
 // @description: Mapping create media request to media entity
 // @param: reqBody *model.CreateMediaRequest
 // @return: *tb.Media
-func MapCreateRequestToEntity(reqBody *model.CreateMediaRequest) *tb.Media {
-	return &tb.Media{
+func MapCreateRequestToEntity(reqBody *model.CreateMediaRequest) tb.Media {
+	return tb.Media{
 		FilePath:   reqBody.FilePath,
 		FileType:   reqBody.FileType,
 		Hash:       reqBody.Hash,
@@ -42,7 +55,7 @@ func MapCreateRequestToEntity(reqBody *model.CreateMediaRequest) *tb.Media {
 func MapCreateRequestToEntities(reqBody []model.CreateMediaRequest) []tb.Media {
 	medias := make([]tb.Media, 0)
 	for _, media := range reqBody {
-		medias = append(medias, *MapCreateRequestToEntity(&media))
+		medias = append(medias, MapCreateRequestToEntity(&media))
 	}
 	return medias
 }

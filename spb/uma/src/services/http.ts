@@ -10,7 +10,6 @@ import axios, {
 import ConcurrencyHandler from '@/helpers/concurrency';
 import { ResponseError } from '@/helpers/error';
 import i18next from '@/helpers/i18n';
-import { logDebug } from '@/helpers/logger';
 import { getData } from '@/helpers/storage';
 import authService from '@/services/auth.service';
 import { API_URL } from '@env';
@@ -20,7 +19,6 @@ class AxiosConfig {
   private concurrencyHandler: ConcurrencyHandler;
 
   constructor() {
-    logDebug(API_URL);
     this.axiosInstance = axios.create({
       baseURL: API_URL,
       headers: this.defaultHeaders(),

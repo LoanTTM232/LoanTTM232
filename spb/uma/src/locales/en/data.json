@@ -49,6 +49,10 @@
         "login_failed": "Login failed!",
         "register_failed": "Register failed!"
     },
+    "search": {
+        "placeholder": "Search here",
+        "placeholder_description": "Choose the best Football Field"
+    },
     "error": {
         "ERS001": "abc",
         "ERS002": "abc",

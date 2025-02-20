@@ -10,3 +10,7 @@ log/
 
 # docker volumns
 workspace/develop/database
+
+# docker host server volumns
+workspace/host/*
+!workspace/host/compose.yml

@@ -26,7 +26,7 @@ export const Color: IColor = {
     backgroundContent: '#F7F7F9',
     primary: '#E86F00',
     secondary: '#F7F7F9',
-    shadow: '#000000',
+    shadow: '#6A6A6A',
     icon: '#6A6A6A',
     textLight: '#6A6A6A',
     textDark: '#000000',

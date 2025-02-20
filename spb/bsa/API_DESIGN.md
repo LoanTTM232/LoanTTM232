@@ -18,7 +18,7 @@ Authentication API for user (Admin, Club Owner, Member, User)
 | 1   | &#x2705;    | POST   | /auth/login              |            | Admin, Club Owner, Member, User can login               |
 | 2   | &#x2705;    | POST   | /auth/register           |            | User can register                                       |
 | 3   | &#x2705;    | POST   | /auth/refresh            |            | Admin, Club Owner, Member, User can refresh             |
-| 4   | &#x274c;    | POST   | /auth/logout             |            | Admin, Club Owner, Member, User can logout              |
+| 4   | &#x2705;    | POST   | /auth/logout             |            | Admin, Club Owner, Member, User can logout              |
 | 5   | &#x2705;    | POST   | /auth/verify-email       |            | Club Owner, Member, User can verify email               |
 | 6   | &#x2705;    | POST   | /auth/forgot-password    |            | Admin, Club Owner, Member, User can use forgot password |
 | 7   | &#x2705;    | POST   | /auth/reset-password     |            | Club Owner, Member, User can reset password             |
@@ -58,14 +58,15 @@ Manage unit services for club and unit
 
 Manage clubs by Admin, Club Owner
 
-| No  | Implemented | Method | Path                                                                                                            | Permission  | Description                                          |
-| --- | ----------- | ------ | --------------------------------------------------------------------------------------------------------------- | ----------- | ---------------------------------------------------- |
-| 1   | &#x274c;    | GET    | /clubs?i={items}&p={page}&b={order by}&t={order type}&c={club name}&lg={longitude}&lt={latitude}&s={sport type} |             | Get all clubs with pagination and sorting and filter |
-| 2   | &#x274c;    | GET    | /clubs/:id                                                                                                      |             | Get club by id                                       |
-| 3   | &#x274c;    | POST   | /clubs/                                                                                                         | club:create | Create new club                                      |
-| 4   | &#x274c;    | PUT    | /clubs/:id                                                                                                      | club:update | Update club info                                     |
-| 5   | &#x274c;    | DELETE | /clubs/:id                                                                                                      | club:delete | Delete club                                          |
-| 6   | &#x274c;    | GET    | /clubs/:id/payment_info                                                                                         |             | Get club's payment info                              |
+| No  | Implemented | Method | Path                                                                               | Permission  | Description                                          |
+| --- | ----------- | ------ | ---------------------------------------------------------------------------------- | ----------- | ---------------------------------------------------- |
+| 1   | &#x274c;    | GET    | /clubs?i={items}&p={page}&b={order by}&t={order type}&c={club name}&s={sport type} |             | Get all clubs with pagination and sorting and filter |
+| 2   | &#x274c;    | GET    | /clubs/:id                                                                         |             | Get club by id                                       |
+| 3   | &#x274c;    | POST   | /clubs/                                                                            | club:create | Create new club                                      |
+| 4   | &#x274c;    | PUT    | /clubs/:id                                                                         | club:update | Update club info                                     |
+| 5   | &#x274c;    | DELETE | /clubs/:id                                                                         | club:delete | Delete club                                          |
+| 6   | &#x274c;    | GET    | /clubs/:id/payment_info                                                            |             | Get club's payment info                              |
+| 7   | &#x274c;    | GET    | /clubs/:id/units                                                                   |             | Get club's units                                     |
 
 ---
 
@@ -73,12 +74,13 @@ Manage clubs by Admin, Club Owner
 
 Manage units by Admin, Club Owner, Member
 
-| No  | Implemented | Method | Path       | Permission  | Description      |
-| --- | ----------- | ------ | ---------- | ----------- | ---------------- |
-| 1   | &#x2705;    | GET    | /units/:id |             | Get unit by id   |
-| 2   | &#x2705;    | POST   | /units/    | unit:create | Create new unit  |
-| 3   | &#x2705;    | PUT    | /units/:id | unit:update | Update unit info |
-| 4   | &#x2705;    | DELETE | /units/:id | unit:delete | Delete unit      |
+| No  | Implemented | Method | Path                                                                                                   | Permission  | Description                                |
+| --- | ----------- | ------ | ------------------------------------------------------------------------------------------------------ | ----------- | ------------------------------------------ |
+| 1   | &#x2705;    | GET    | /units/:id                                                                                             |             | Get unit by id                             |
+| 2   | &#x2705;    | POST   | /units/                                                                                                | unit:create | Create new unit                            |
+| 3   | &#x2705;    | PUT    | /units/:id                                                                                             | unit:update | Update unit info                           |
+| 4   | &#x2705;    | DELETE | /units/:id                                                                                             | unit:delete | Delete unit                                |
+| 5   | &#x274c;    | GET    | /units?i={items}&p={page}&b={order by}&t={order type}&s={sport type}&q={query - unit name or location} |             | Search units by name, location, sport type |
 
 ---
 

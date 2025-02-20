@@ -6,17 +6,7 @@ import { ThemeContext } from '@/contexts/theme.context';
 import { hp, wp } from '@/helpers/dimensions';
 import EyeIcon from '@/ui/icon/eye';
 import EyeOffIcon from '@/ui/icon/eye-off';
-
-interface IInputProps {
-  type: 'text' | 'password';
-  placeholder?: string;
-  value?: string;
-  onChangeText?: (text: string) => void;
-  keyboardType?: 'default' | 'numeric' | 'email-address' | 'phone-pad';
-  onBlur?: (e: any) => void;
-  error: boolean;
-  autoFocus?: boolean;
-}
+import { IInputProps } from '@/ui/input/types';
 
 const Input: React.FC<IInputProps> = ({
   type = 'text',

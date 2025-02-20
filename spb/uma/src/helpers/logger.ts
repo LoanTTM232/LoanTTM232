@@ -11,7 +11,7 @@ const colors: { [key in LogLevel]: string } = {
 const log = (level: LogLevel, message: string) => {
   const timestamp = new Date().toISOString();
   const color = colors[level] || colors.RESET;
-  console.log(`${timestamp} ${color}${level}${colors.RESET}: ${message}`);
+  console.log(`[${timestamp}] ${color}${level}${colors.RESET}: ${message}`);
 };
 
 export const logInfo = (infoOrMessage: object | string) => {

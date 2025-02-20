@@ -9,31 +9,15 @@ import (
 	"spb/bsa/pkg/utils"
 )
 
-type GetUnitsRequest struct {
+var ORDER_BY = []string{
+	"name",
+	"open_time",
+	"updated_at",
+}
+
+type SearchUnitsRequest struct {
 	Pagination utils.Pagination
 	Search     string
-}
-
-type UnitResponse struct {
-	UnitID       string                   `json:"unit_id"`
-	Name         string                   `json:"name"`
-	OpenTime     string                   `json:"open_time"`
-	CloseTime    string                   `json:"close_time"`
-	Phone        string                   `json:"phone"`
-	Description  string                   `json:"description"`
-	Status       int8                     `json:"status"`
-	ClubID       string                   `json:"club_id"`
-	Address      address.AddressResponse  `json:"address"`
-	UnitPrices   []up.UnitPriceResponse   `json:"unit_prices"`
-	UnitServices []us.UnitServiceResponse `json:"unit_services"`
-	Media        []media.MediaResponse    `json:"media"`
-	SportTypes   []st.SportTypeResponse   `json:"sport_types"`
-}
-
-type UnitsResponse struct {
-	Units      []UnitResponse    `json:"units"`
-	Total      uint              `json:"total"`
-	Pagination *utils.Pagination `json:"pagination"`
 }
 
 type CreateUnitRequest struct {
@@ -64,4 +48,26 @@ type UpdateUnitRequest struct {
 	UnitServices *[]us.UpdateUnitServiceRequest `json:"unit_services,omitempty" validate:"omitempty"`
 	Media        *[]media.UpdateMediaRequest    `json:"media,omitempty" validate:"omitempty"`
 	SportTypes   *[]st.UpdateSportTypeRequest   `json:"sport_types,omitempty" validate:"omitempty"`
+}
+
+type UnitResponse struct {
+	UnitID       string                   `json:"unit_id"`
+	Name         string                   `json:"name"`
+	OpenTime     string                   `json:"open_time"`
+	CloseTime    string                   `json:"close_time"`
+	Phone        string                   `json:"phone"`
+	Description  string                   `json:"description"`
+	Status       int8                     `json:"status"`
+	ClubID       string                   `json:"club_id"`
+	Address      address.AddressResponse  `json:"address"`
+	UnitPrices   []up.UnitPriceResponse   `json:"unit_prices"`
+	UnitServices []us.UnitServiceResponse `json:"unit_services"`
+	Media        []media.MediaResponse    `json:"media"`
+	SportTypes   []st.SportTypeResponse   `json:"sport_types"`
+}
+
+type UnitsResponse struct {
+	Units      []UnitResponse    `json:"units"`
+	Total      uint              `json:"total"`
+	Pagination *utils.Pagination `json:"pagination"`
 }

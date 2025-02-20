@@ -10,10 +10,10 @@ import (
 const DEFAULT_SORT_KEY = "created_at"
 
 // @queries: i=?&p=?&b=?&t=?
-// @i = items
-// @p = page
-// @b = order by
-// @t = order type
+// &i = items
+// &p = page
+// &b = order by
+// &t = order type
 type Pagination struct {
 	Page       int    `json:"page"`        // current page
 	PageItems  int    `json:"page_items"`  // number item per page
@@ -81,14 +81,14 @@ func (p *Pagination) SetNewPagination(total_page int) {
 	p.TotalPages = CeilFloatToInt(float64(total_page) / float64(p.PageItems))
 	p.TotalItems = total_page
 
-	p.nextPageUrl()
-	p.prevPageUrl()
+	p.NextPageUrl()
+	p.PrevPageUrl()
 }
 
 // @author: LoanTT
 // @function: nextPageUrl
 // @description: set next page url
-func (p *Pagination) nextPageUrl() {
+func (p *Pagination) NextPageUrl() {
 	var nextPageUrl string
 	if p.Page < p.TotalPages {
 		nextPageUrl = fmt.Sprintf("i=%d&p=%d&b=%s&t=%s", p.PageItems, p.Page+1, p.OrderBy, p.OrderType)
@@ -99,7 +99,7 @@ func (p *Pagination) nextPageUrl() {
 // @author: LoanTT
 // @function: prevPageUrl
 // @description: set prev page url
-func (p *Pagination) prevPageUrl() {
+func (p *Pagination) PrevPageUrl() {
 	var prevPageUrl string
 	if p.Page > 1 {
 		prevPageUrl = fmt.Sprintf("i=%d&p=%d&b=%s&t=%s", p.PageItems, p.Page-1, p.OrderBy, p.OrderType)
@@ -111,7 +111,7 @@ func (p *Pagination) prevPageUrl() {
 // @function: GetPagination
 // @description: get pagination
 // @param: map[string]string
-// @return: *Pagination
+// @return: Pagination
 func GetPagination(queries map[string]string, orderByOptions []string) Pagination {
 	pagination := getDefaultPagination()
 
@@ -143,4 +143,18 @@ func Paginate(p *Pagination) func(*gorm.DB) *gorm.DB {
 		offset := int((p.Page - 1) * p.PageItems)
 		return db.Offset(offset).Limit(p.PageItems).Order(fmt.Sprintf("%s %s", p.OrderBy, p.OrderType))
 	}
+}
+
+// @author: LoanTT
+// @function: ConcatenateQueries
+// @description: concatenate queries with alias and value
+// @param: string prevQuery
+// @param: string alias
+// @param: string value
+// @return: string query
+func ConcatenateQueries(prevQuery, alias, value string) string {
+	if value != "" {
+		return fmt.Sprintf("%s&%s=%s", prevQuery, alias, value)
+	}
+	return prevQuery
 }

@@ -11,7 +11,8 @@ type Unit struct {
 	Description  string        `gorm:"type:text" json:"description"`
 	Status       int8          `gorm:"not null" json:"status"`
 	ClubID       string        `gorm:"type:uuid;not null" json:"club_id"`
-	Address      Address       `gorm:"foreignKey:UnitID;" json:"address"`
+	AddressID    string        `gorm:"type:uuid;not null" json:"address_id"`
+	Address      Address       `gorm:"not null;" json:"address"`
 	UnitPrice    []UnitPrice   `gorm:"foreignKey:UnitID" json:"unit_price"`
 	UnitServices []UnitService `gorm:"foreignKey:UnitID" json:"unit_services"`
 	Media        []Media       `gorm:"many2many:unit_media;" json:"media"`

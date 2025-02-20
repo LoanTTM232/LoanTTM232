@@ -18,9 +18,11 @@ const ProfileScreen: React.FC = () => {
 
   const logoutHandler = async () => {
     await logout();
-
-    // navigate to login screen
-    navigation.navigate('Auth');
+    // delete all routes history
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Auth' }],
+    });
   };
   return (
     <View style={styles.container}>

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
+import { DEFAULT_ICON_SIZE, fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { hp } from '@/helpers/dimensions';
 import BookingScreen from '@/screens/tabs/booking';
@@ -75,8 +75,8 @@ const TabStack: React.FC = () => {
         tabBarActiveTintColor: theme.primary,
         tabBarHideOnKeyboard: true,
         animation: 'fade',
-        tabBarIcon: ({ focused, color, size }) =>
-          renderTabBarIcon(route, focused, color, size + 2),
+        tabBarIcon: ({ focused, color }) =>
+          renderTabBarIcon(route, focused, color, DEFAULT_ICON_SIZE),
       })}
       backBehavior="history"
     >
@@ -93,9 +93,10 @@ const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
     tabBar: {
       height: hp(8),
-      margin: hp(1),
+      marginHorizontal: hp(2),
+      marginBottom: hp(2),
       backgroundColor: theme.backgroundLight,
-      borderRadius: Radius.md,
+      borderRadius: Radius.xs,
     },
     tabBarLabelStyle: {
       ...fontFamily.RALEWAY_MEDIUM,

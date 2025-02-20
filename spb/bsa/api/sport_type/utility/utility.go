@@ -22,10 +22,10 @@ func MapSportTypeEntityToResponse(sportType *tb.SportType) model.SportTypeRespon
 // @description: Mapping sportType entities to response
 // @param: sportTypes []*tb.SportType
 // @return: []model.SportTypeResponse
-func MapSportTypeEntitiesToResponse(sportTypes []*tb.SportType) []model.SportTypeResponse {
+func MapSportTypeEntitiesToResponse(sportTypes []tb.SportType) []model.SportTypeResponse {
 	sportTypeResponses := make([]model.SportTypeResponse, 0)
 	for _, sportType := range sportTypes {
-		sportTypeResponses = append(sportTypeResponses, MapSportTypeEntityToResponse(sportType))
+		sportTypeResponses = append(sportTypeResponses, MapSportTypeEntityToResponse(&sportType))
 	}
 	return sportTypeResponses
 }
