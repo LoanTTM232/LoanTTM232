@@ -7,4 +7,5 @@ declare module '@env' {
   export const CLOUD_ENDPOINT: string;
   export const CLOUD_MEDIA_BUCKET: string;
   export const CLOUD_REGION: string;
+  export const OTP_LENGTH: number;
 }

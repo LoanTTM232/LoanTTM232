@@ -11,6 +11,8 @@ import (
 	"spb/bsa/pkg/entities/enum"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/utils"
+
+	"gorm.io/gorm"
 )
 
 func (s *Service) GoogleLogin(reqBody model.GoogleCallbackRequest) (*tb.User, error) {
@@ -29,9 +31,41 @@ func (s *Service) GoogleLogin(reqBody model.GoogleCallbackRequest) (*tb.User, er
 
 	err = s.db.
 		Preload("AuthenticationProviders", "provider = ? AND provider_key = ?", enum.GOOGLE, payload.Sub).
+		Preload("Role").
 		Where("email = ?", payload.Email).
-		Preload("Roles").First(&user).Error
+		First(&user).Error
 	if err == nil {
+		hasUpdate := false
+		// add google provider if not found
+		if len(user.AuthenticationProviders) == 0 || !checkProviderExist(user.AuthenticationProviders, enum.GOOGLE) {
+			user.AuthenticationProviders = append(user.AuthenticationProviders, tb.AuthenticationProvider{
+				Provider:    enum.GOOGLE,
+				ProviderKey: payload.Sub,
+			})
+
+			if err = s.db.Save(&user).Error; err != nil {
+				logger.Errorf("save google provider error: %v", err)
+				return nil, err
+			}
+
+			hasUpdate = true
+		}
+
+		// remove password if user verifying email
+		if !user.IsEmailVerified {
+			user.Password = ""
+			hasUpdate = true
+		}
+
+		if hasUpdate {
+			err = s.db.Save(&user).Error
+			if err != nil {
+				logger.Errorf("save user error: %v", err)
+				return nil, err
+			}
+		}
+
+		// if user has google provider, return user
 		var permissions []tb.Permission
 
 		permissions, err = permissionModule.PermissionService.GetByRole(user.Role.ID)
@@ -43,7 +77,9 @@ func (s *Service) GoogleLogin(reqBody model.GoogleCallbackRequest) (*tb.User, er
 		return &user, nil
 	}
 
-	if err.Error() == "record not found" {
+	switch err {
+	// create user if not found
+	case gorm.ErrRecordNotFound:
 		var role tb.Role
 		err = s.db.Where("name = ?", tb.ROLE_USER).Preload("Permissions").First(&role).Error
 		if err != nil {
@@ -53,12 +89,13 @@ func (s *Service) GoogleLogin(reqBody model.GoogleCallbackRequest) (*tb.User, er
 		user = tb.User{
 			Email:           payload.Email,
 			FullName:        utils.ToPtr(payload.Name),
+			Password:        "",
 			Role:            role,
 			IsEmailVerified: true,
 			AuthenticationProviders: []tb.AuthenticationProvider{
 				{
-					Provider:   enum.GOOGLE,
-					ProvideKey: payload.Sub,
+					Provider:    enum.GOOGLE,
+					ProviderKey: payload.Sub,
 				},
 			},
 		}
@@ -69,14 +106,25 @@ func (s *Service) GoogleLogin(reqBody model.GoogleCallbackRequest) (*tb.User, er
 		}
 
 		var permissions []tb.Permission
-
 		permissions, err = permissionModule.PermissionService.GetByRole(user.Role.ID)
 		if err != nil {
 			return nil, err
 		}
 
 		user.Role.Permissions = permissions
+	default:
+		logger.Errorf("get user error: %v", err)
+		return nil, err
 	}
 
 	return &user, nil
+}
+
+func checkProviderExist(AuthenticationProviders []tb.AuthenticationProvider, provider enum.OAuthProvider) bool {
+	for _, authProvider := range AuthenticationProviders {
+		if authProvider.Provider == provider {
+			return true
+		}
+	}
+	return false
 }

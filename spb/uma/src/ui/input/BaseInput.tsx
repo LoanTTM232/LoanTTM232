@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
-import { fontFamily, fontSize, IColorScheme } from '@/constants';
+import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { hp, wp } from '@/helpers/dimensions';
-import EyeIcon from '@/ui/icon/eye';
-import EyeOffIcon from '@/ui/icon/eye-off';
+import EyeIcon from '@/ui/icon/Eye';
+import EyeOffIcon from '@/ui/icon/EyeOff';
 import { IInputProps } from '@/ui/input/types';
 
 const Input: React.FC<IInputProps> = ({
@@ -54,22 +54,22 @@ const createStyles = (theme: IColorScheme, hasError: boolean) => {
       alignItems: 'center',
       borderCurve: 'continuous',
       borderColor: hasError ? theme.error : theme.borderLight,
-      borderBottomWidth: 1,
+      borderWidth: 2,
+      borderRadius: Radius.xs,
     },
     input: {
       ...fontFamily.POPPINS_REGULAR,
-      fontSize: fontSize.md,
+      fontSize: fontSize.sm,
       paddingHorizontal: wp(4),
       color: theme.textDark,
-      height: hp(5),
+      height: hp(6),
       flex: 1,
     },
     rightIcon: {
-      width: hp(5),
-      height: hp(5),
+      width: hp(6),
+      height: hp(6),
       justifyContent: 'center',
       alignItems: 'center',
-      padding: 0,
     },
   });
 };

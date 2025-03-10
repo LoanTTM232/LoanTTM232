@@ -48,7 +48,8 @@ func (s *Service) SendVerifyEmail(token, email, notifyType string, tx *gorm.DB) 
 
 	if err != nil {
 		tx.Rollback()
-		return nil, logger.RErrorf("Can't make message: %v", err)
+		logger.Errorf("Can't make message: %v", err)
+		return nil, err
 	}
 
 	notify := &notification.PushNotification{
@@ -65,7 +66,8 @@ func (s *Service) SendVerifyEmail(token, email, notifyType string, tx *gorm.DB) 
 	// Send notification
 	if err := global.SPB_NOTIFY.Notify(notify); err != nil {
 		tx.Rollback()
-		return nil, logger.RErrorf("Can't send notification: %v", err)
+		logger.Errorf("Can't send notification: %v", err)
+		return nil, err
 	}
 	return notify, nil
 }

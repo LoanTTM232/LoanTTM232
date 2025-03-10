@@ -247,7 +247,6 @@ INSERT INTO
 		"password",
 		full_name,
 		phone,
-		email_verify_token,
 		is_email_verified,
 		role_id
 	)
@@ -259,7 +258,6 @@ VALUES
 		NULL,
 		'admin@gmail.com',
 		'$2a$10$nCvN3CAF4b1mMuramtpSre8Dx7fsBf4FoRG2btotNKvbLftZPKbqu',
-		NULL,
 		NULL,
 		NULL,
 		true,
@@ -274,7 +272,6 @@ VALUES
 		'$2a$10$A20KBHwJ8dpuL951mY23P.D0gV6kek73rKqspLgAm2sfkCe7HgbFm',
 		NULL,
 		NULL,
-		NULL,
 		true,
 		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid
 	),
@@ -285,7 +282,6 @@ VALUES
 		NULL,
 		'user1@gmail.com',
 		'$2a$10$buwiJga6U0oGp4eim88zCuKYYFdxLz3cGgGxb9mhzuXoh3G5vpY26',
-		NULL,
 		NULL,
 		NULL,
 		false,

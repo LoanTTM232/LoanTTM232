@@ -3,11 +3,11 @@ import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import FormField from '@/components/auth/FormField';
-import { fontFamily, fontSize, IColorScheme } from '@/constants';
+import { IColorScheme } from '@/constants';
 import { hp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
 import { registerValidation } from '@/helpers/validate';
-import { IRegisterFormValues } from '@/screens/auth/register';
+import { IRegisterFormValues } from '@/screens/auth/tab/register';
 import Button from '@/ui/button/BaseButton';
 import GoogleSignIn from '@/ui/button/GoogleSignIn';
 import Line from '@/ui/line';
@@ -54,7 +54,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
         <View style={styles.form}>
           <View style={styles.controlGroup}>
             <FormField
-              title="register.email"
+              title={i18next.t('register.email')}
               value={values.email}
               error={errors.email}
               touched={touched.email}
@@ -64,7 +64,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               theme={theme}
             />
             <FormField
-              title="register.password"
+              title={i18next.t('register.password')}
               value={values.password}
               error={errors.password}
               touched={touched.password}
@@ -74,7 +74,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
               theme={theme}
             />
             <FormField
-              title="register.confirm_password"
+              title={i18next.t('register.confirm_password')}
               value={values.confirmPassword}
               error={errors.confirmPassword}
               touched={touched.confirmPassword}
@@ -87,9 +87,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({
           <View style={styles.buttonGroup}>
             <Button
               buttonStyle={styles.button}
-              textStyles={styles.buttonText}
               title={i18next.t('register.submit')}
               onPress={handleSubmit}
+              disable={!(touched.email && touched.password)}
             />
             <Line title="Or" theme={theme} />
             <GoogleSignIn
@@ -111,18 +111,14 @@ const createStyles = (_: IColorScheme) => {
     controlGroup: {
       flexDirection: 'column',
       justifyContent: 'space-around',
-      gap: hp(2),
+      gap: hp(3),
     },
     buttonGroup: {
       paddingTop: hp(4),
       gap: hp(3),
     },
     button: {
-      marginTop: 10,
-    },
-    buttonText: {
-      ...fontFamily.POPPINS_REGULAR,
-      fontSize: fontSize.md,
+      marginTop: hp(2),
     },
   });
 };

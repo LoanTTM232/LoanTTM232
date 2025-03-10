@@ -4,6 +4,7 @@ export interface IColorScheme {
   backgroundContent: string;
   primary: string;
   secondary: string;
+  disable: string;
   shadow: string;
   icon: string;
   textLight: string;
@@ -26,14 +27,15 @@ export const Color: IColor = {
     backgroundContent: '#F7F7F9',
     primary: '#E86F00',
     secondary: '#F7F7F9',
+    disable: '#f1a866',
     shadow: '#6A6A6A',
     icon: '#6A6A6A',
-    textLight: '#6A6A6A',
+    textLight: '#707B81',
     textDark: '#000000',
     success: '#4CAF50',
     error: '#F44336',
     warning: '#FFFF00',
-    borderLight: '#BDBDBD',
+    borderLight: '#DDDDDD',
     borderDark: '#6A6A6A',
   },
   dark: {
@@ -42,15 +44,16 @@ export const Color: IColor = {
     backgroundContent: '#F7F7F9',
     primary: '#E86F00',
     secondary: '#F7F7F9',
+    disable: '#DDDDDD',
     shadow: '#000000',
     icon: '#6A6A6A',
-    textLight: '#6A6A6A',
+    textLight: '#707B81',
     textDark: '#000000',
     success: '#008000',
     error: '#FF0000',
     warning: '#FFFF00',
     borderLight: '#E0E0E0',
-    borderDark: '#BDBDBD',
+    borderDark: '#DDDDDD',
   },
 };
 

@@ -3,16 +3,34 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import PagerView from 'react-native-pager-view';
 
 import { fontFamily, fontSize, IColorScheme } from '@/constants';
-import { hp } from '@/helpers/dimensions';
+import { hp, wp } from '@/helpers/dimensions';
+
+interface Route {
+  key: string;
+  component: ReactNode;
+  title: string;
+}
 
 interface ITabViewProps {
-  routes: Array<{
-    key: string;
-    component: ReactNode;
-    title: string;
-  }>;
+  routes: Route[];
   theme: IColorScheme;
 }
+
+const TabButton: React.FC<{
+  route: Route;
+  isActive: boolean;
+  onPress: () => void;
+  styles: ReturnType<typeof createStyles>;
+}> = ({ route, isActive, onPress, styles }) => (
+  <Pressable
+    style={[styles.tab, isActive && styles.activeTab]}
+    onPress={onPress}
+    accessibilityRole="tab"
+    accessibilityState={{ selected: isActive }}
+  >
+    <Text style={styles.tabText}>{route.title}</Text>
+  </Pressable>
+);
 
 const AuthTabView: React.FC<ITabViewProps> = ({ routes, theme }) => {
   const styles = createStyles(theme);
@@ -25,16 +43,16 @@ const AuthTabView: React.FC<ITabViewProps> = ({ routes, theme }) => {
   };
 
   return (
-    <View style={styles.container} accessibilityRole="tabbar">
+    <View style={styles.container} accessibilityRole="tablist">
       <View style={styles.tabSwitch}>
-        {routes.map((route, i) => (
-          <Pressable
+        {routes.map((route, index) => (
+          <TabButton
             key={route.key}
-            style={[styles.tab, i === activeTab && styles.activeTab]}
-            onPress={() => handleTabSwitch(i)}
-          >
-            <Text style={styles.tabText}>{route.title}</Text>
-          </Pressable>
+            route={route}
+            isActive={index === activeTab}
+            onPress={() => handleTabSwitch(index)}
+            styles={styles}
+          />
         ))}
       </View>
       <PagerView
@@ -44,7 +62,12 @@ const AuthTabView: React.FC<ITabViewProps> = ({ routes, theme }) => {
         ref={viewRef}
       >
         {routes.map((route) => (
-          <View key={route.key} style={styles.page} collapsable={false}>
+          <View
+            key={route.key}
+            style={styles.page}
+            collapsable={false}
+            accessibilityLabel={`${route.title} tab content`}
+          >
             {route.component}
           </View>
         ))}
@@ -64,7 +87,7 @@ const createStyles = (theme: IColorScheme) =>
       backgroundColor: theme.backgroundDark,
       gap: hp(1),
       marginTop: hp(4),
-      marginHorizontal: hp(2),
+      marginHorizontal: wp(4),
       borderRadius: 6,
     },
     tab: {
@@ -78,8 +101,8 @@ const createStyles = (theme: IColorScheme) =>
       backgroundColor: theme.backgroundLight,
     },
     tabText: {
-      ...fontFamily.RALEWAY_LIGHT,
-      fontSize: fontSize.md,
+      ...fontFamily.POPPINS_MEDIUM,
+      fontSize: fontSize.sm,
     },
     pagerView: {
       width: '100%',

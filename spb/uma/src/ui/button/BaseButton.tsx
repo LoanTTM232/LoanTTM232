@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { IColorScheme, Radius } from '@/constants';
+import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { hp } from '@/helpers/dimensions';
 
@@ -80,6 +80,7 @@ function Button({
           buttonStyle,
           shadow && defaultStyles.shadow,
           pressed && defaultStyles.pressed,
+          disable && defaultStyles.disable,
         ]}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
@@ -99,7 +100,7 @@ const createStyle = (theme: IColorScheme) =>
   StyleSheet.create({
     button: {
       backgroundColor: theme.primary,
-      height: hp(6),
+      height: hp(6.6),
       alignItems: 'center',
       borderRadius: Radius.xs,
       flexDirection: 'row',
@@ -108,6 +109,8 @@ const createStyle = (theme: IColorScheme) =>
     },
     text: {
       color: theme.secondary,
+      ...fontFamily.RALEWAY_BOLD,
+      fontSize: fontSize.sm,
     },
     shadow: {
       shadowColor: theme.shadow,
@@ -118,6 +121,14 @@ const createStyle = (theme: IColorScheme) =>
     },
     pressed: {
       opacity: 0.85,
+    },
+    disable: {
+      backgroundColor: theme.disable,
+      shadowColor: 'transparent',
+      shadowOffset: { width: 0, height: 0 },
+      shadowOpacity: 0,
+      shadowRadius: 0,
+      elevation: 0,
     },
   });
 

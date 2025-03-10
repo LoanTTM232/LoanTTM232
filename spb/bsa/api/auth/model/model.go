@@ -38,15 +38,16 @@ type RefreshTokenResponse struct {
 	AccessToken string `json:"access_token"`
 }
 
-type VerifyEmailRequest struct {
-	Token int `json:"token"  validate:"gte=999,lte=1000000"`
+type VerifyRegisterTokenRequest struct {
+	Token int    `json:"token"  validate:"gte=999,lte=1000000"`
+	Email string `json:"email"  validate:"min=6,max=256,required,email"`
 }
 
 type ForgotPasswordRequest struct {
 	Email string `json:"email" validate:"min=6,max=256,required,email"`
 }
 
-type VerifyTokenRequest struct {
+type VerifyForgotPasswordTokenRequest struct {
 	Token int    `json:"token"  validate:"gte=999,lte=1000000"`
 	Email string `json:"email"  validate:"min=6,max=256,required,email"`
 }
@@ -71,6 +72,6 @@ type GooglePayload struct {
 	Sub   string `json:"sub"`
 }
 
-type ResendVerifyEmailOTPRequest struct {
+type ResendVerifyRegisterTokenRequest struct {
 	Email string `json:"email" validate:"min=6,max=256,required,email"`
 }

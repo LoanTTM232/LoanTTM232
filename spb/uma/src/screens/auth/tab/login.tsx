@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import LoginForm from '@/components/auth/LoginForm';
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
-import { hp } from '@/helpers/dimensions';
+import { hp, wp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
 import { logError } from '@/helpers/logger';
 import { toastError, toastSuccess } from '@/helpers/toast';
@@ -65,7 +65,8 @@ const createStyles = (_: IColorScheme) => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      padding: hp(2),
+      paddingVertical: hp(2),
+      paddingHorizontal: wp(4),
     },
   });
 };

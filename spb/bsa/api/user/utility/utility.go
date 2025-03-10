@@ -12,9 +12,9 @@ import (
 // @function: MapUserEntityToResponse
 // @description: Mapping user entity to response
 // @param: user tb.User
-// @return: model.UserResponse
-func MapUserEntityToResponse(user *tb.User) model.UserResponse {
-	return model.UserResponse{
+// @return: *model.UserResponse
+func MapUserEntityToResponse(user *tb.User) *model.UserResponse {
+	return &model.UserResponse{
 		UserId:          user.ID,
 		Email:           user.Email,
 		FullName:        user.FullName,

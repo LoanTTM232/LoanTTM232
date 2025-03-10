@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 
-import { fontFamily, fontSize, IColorScheme } from '@/constants';
+import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import i18next from '@/helpers/i18n';
 import Button from '@/ui/button/BaseButton';
-import GoogleIcon from '@/ui/icon/google';
+import GoogleIcon from '@/ui/icon/Google';
 
 export type GoogleSignInProps = {
   onPress: () => void;
@@ -33,8 +33,6 @@ const createStyles = (theme: IColorScheme) => {
       backgroundColor: theme.secondary,
     },
     buttonText: {
-      ...fontFamily.POPPINS_REGULAR,
-      fontSize: fontSize.md,
       color: theme.textLight,
     },
   });

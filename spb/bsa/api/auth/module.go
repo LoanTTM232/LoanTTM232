@@ -28,11 +28,11 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	authRoute.Post("/register", AuthHandler.AccountRegister)
 	authRoute.Post("/logout", AuthHandler.AccountLogout)
 	authRoute.Post("/refresh", AuthHandler.AccountRefreshToken)
-	authRoute.Post("/verify-email", AuthHandler.VerifyEmail)
+	authRoute.Post("/verify-register-token", AuthHandler.VerifyRegisterToken)
+	authRoute.Post("/verify-register-token/resend", AuthHandler.ResendVerifyRegisterToken)
 	authRoute.Post("/forgot-password", AuthHandler.ForgotPasswordHandler)
-	authRoute.Post("/verify-reset-token", AuthHandler.VerifyResetToken)
+	authRoute.Post("/verify-forgot-password-token", AuthHandler.VerifyForgotPasswordToken)
 	authRoute.Post("/reset-password", AuthHandler.ResetPassword)
-	authRoute.Post("/resend-verify-email-otp", AuthHandler.ResendVerifyEmailOTP)
 
 	// aws ses verify
 	authRoute.Get(("/ses-verify"), AuthHandler.SendVerification)

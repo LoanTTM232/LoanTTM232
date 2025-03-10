@@ -21,14 +21,15 @@ func (s *Service) ForgotPassword(email string) error {
 	tx := s.db.Begin()
 
 	// generate token
-	optCode := utils.GenerateOTPCode(global.SPB_CONFIG.OTP.OTPLength)
-	if err := cache.OTP.SetOTP(optCode, global.SPB_CONFIG.OTP.OTPExp); err != nil {
+	otpToken := utils.GenerateOTPCode(global.SPB_CONFIG.OTP.OTPLength)
+	cacheToken := utils.ConcatStr(":", config.AUTH_OTP, user.Email, otpToken)
+	if err := cache.OTP.SetOTP(cacheToken, global.SPB_CONFIG.OTP.OTPExp); err != nil {
 		tx.Rollback()
 		return err
 	}
 
 	// send email
-	notify, err := s.SendVerifyEmail(optCode, email, config.AUTH_RESET_PASSWORD, tx)
+	notify, err := s.SendVerifyEmail(otpToken, email, config.AUTH_RESET_PASSWORD, tx)
 	if err != nil {
 		tx.Rollback()
 		return err

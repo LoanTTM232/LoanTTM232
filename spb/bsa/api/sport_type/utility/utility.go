@@ -10,8 +10,8 @@ import (
 // @description: Mapping sportType entity to response
 // @param: sportType tb.SportType
 // @return: model.SportTypeResponse
-func MapSportTypeEntityToResponse(sportType *tb.SportType) model.SportTypeResponse {
-	return model.SportTypeResponse{
+func MapSportTypeEntityToResponse(sportType *tb.SportType) *model.SportTypeResponse {
+	return &model.SportTypeResponse{
 		ID:   sportType.ID,
 		Name: sportType.Name,
 	}
@@ -22,10 +22,10 @@ func MapSportTypeEntityToResponse(sportType *tb.SportType) model.SportTypeRespon
 // @description: Mapping sportType entities to response
 // @param: sportTypes []*tb.SportType
 // @return: []model.SportTypeResponse
-func MapSportTypeEntitiesToResponse(sportTypes []tb.SportType) []model.SportTypeResponse {
-	sportTypeResponses := make([]model.SportTypeResponse, 0)
+func MapSportTypeEntitiesToResponse(sportTypes []*tb.SportType) []*model.SportTypeResponse {
+	sportTypeResponses := make([]*model.SportTypeResponse, 0)
 	for _, sportType := range sportTypes {
-		sportTypeResponses = append(sportTypeResponses, MapSportTypeEntityToResponse(&sportType))
+		sportTypeResponses = append(sportTypeResponses, MapSportTypeEntityToResponse(sportType))
 	}
 	return sportTypeResponses
 }
@@ -46,10 +46,10 @@ func MapCreateRequestToEntity(reqBody *model.CreateSportTypeRequest) *tb.SportTy
 // @description: Mapping create sportType request to sportType entity
 // @param: reqBody []model.CreateSportTypeRequest
 // @return: []tb.SportType
-func MapCreateRequestToEntities(reqBody []model.CreateSportTypeRequest) []tb.SportType {
-	sportTypes := make([]tb.SportType, 0)
+func MapCreateRequestToEntities(reqBody []*model.CreateSportTypeRequest) []*tb.SportType {
+	sportTypes := make([]*tb.SportType, 0)
 	for _, sportType := range reqBody {
-		sportTypes = append(sportTypes, *MapCreateRequestToEntity(&sportType))
+		sportTypes = append(sportTypes, MapCreateRequestToEntity(sportType))
 	}
 	return sportTypes
 }
@@ -58,9 +58,9 @@ func MapCreateRequestToEntities(reqBody []model.CreateSportTypeRequest) []tb.Spo
 // @function: MapUpdateRequestToEntity
 // @description: mapping update fields
 // @param: reqBody *model.UpdateSportTypeRequest
-// @return: tb.SportType
-func MapUpdateRequestToEntity(reqBody *model.UpdateSportTypeRequest) tb.SportType {
-	var sportTypeUpdate tb.SportType
+// @return: *tb.SportType
+func MapUpdateRequestToEntity(reqBody *model.UpdateSportTypeRequest) *tb.SportType {
+	sportTypeUpdate := new(tb.SportType)
 
 	sportTypeUpdate.Name = reqBody.Name
 	return sportTypeUpdate
@@ -71,10 +71,10 @@ func MapUpdateRequestToEntity(reqBody *model.UpdateSportTypeRequest) tb.SportTyp
 // @description: mapping update fields
 // @param: reqBody []model.UpdateSportTypeRequest
 // @return: []tb.SportType
-func MapUpdateRequestToEntities(reqBody []model.UpdateSportTypeRequest) []tb.SportType {
-	sportTypes := make([]tb.SportType, 0)
+func MapUpdateRequestToEntities(reqBody []*model.UpdateSportTypeRequest) []*tb.SportType {
+	sportTypes := make([]*tb.SportType, 0)
 	for _, sportType := range reqBody {
-		sportTypes = append(sportTypes, MapUpdateRequestToEntity(&sportType))
+		sportTypes = append(sportTypes, MapUpdateRequestToEntity(sportType))
 	}
 	return sportTypes
 }

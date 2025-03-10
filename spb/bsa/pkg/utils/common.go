@@ -215,3 +215,13 @@ func GenerateOTPCode(length int) string {
 	randomNum := rng.Intn(max-min+1) + min
 	return strconv.Itoa(randomNum)
 }
+
+func ConcatStr(joinCharacter string, values ...string) string {
+	var builder strings.Builder
+	for index := range len(values) - 1 {
+		builder.WriteString(values[index])
+	}
+
+	builder.WriteString(values[len(values)-1])
+	return builder.String()
+}

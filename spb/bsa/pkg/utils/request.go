@@ -13,9 +13,8 @@ import (
 )
 
 type JSONResult struct {
-	Status string      `json:"status"`
-	Code   string      `json:"code"`
-	Data   interface{} `json:"data"`
+	Code string `json:"code"`
+	Data any    `json:"data"`
 }
 
 type FlexInt int64
@@ -78,10 +77,10 @@ func (ctx *FiberCtx) ValidateJson() error {
 // @function: ParseJsonToStruct
 // @description: Parse json to struct
 // @param: ctx fiber.Ctx
-// @param: dest interface{}
+// @param: dest any
 // @param: validate *validator.Validate
 // @return: error
-func (ctx *FiberCtx) ParseJsonToStruct(dest interface{}, validate *validator.Validate) error {
+func (ctx *FiberCtx) ParseJsonToStruct(dest any, validate *validator.Validate) error {
 	if err := ctx.Fctx.Bind().Body(dest); err != nil {
 		return err
 	}
@@ -143,30 +142,30 @@ func (ctx *FiberCtx) ParseQuery(keys ...string) (map[string]string, error) {
 // @description: Json response
 // @param: ctx fiber.Ctx
 // @param: respCode int
-// @param: data ...interface{}
+// @param: data ...any
 // @return: error
-func (ctx *FiberCtx) JsonResponse(respCode int, code string, data ...interface{}) error {
-	var resData interface{}
+func (ctx *FiberCtx) JsonResponse(respCode int, code string, data ...any) error {
+	var resData any
 	if len(data) > 0 {
 		resData = data[0]
 	}
 	return ctx.Fctx.
 		Status(respCode).
-		JSON(JSONResult{Status: "success", Data: resData, Code: code})
+		JSON(JSONResult{Data: resData, Code: code})
 }
 
 // @author: LoanTT
 // @function: ErrResponse
 // @description: Error response
 // @param: err *fiber.Error
-// @param: data ...interface{}
+// @param: data ...any
 // @return: error
-func (ctx *FiberCtx) ErrResponse(err *fiber.Error, data ...interface{}) error {
-	var resData interface{}
+func (ctx *FiberCtx) ErrResponse(err *fiber.Error, data ...any) error {
+	var resData any
 	if len(data) > 0 {
 		resData = data[0]
 	}
 	return ctx.Fctx.
 		Status(err.Code).
-		JSON(JSONResult{Status: "error", Data: resData, Code: err.Message})
+		JSON(JSONResult{Data: resData, Code: err.Message})
 }

@@ -75,4 +75,4 @@ notification:
 
 otp:
     length: 4
-    expire: 5 # minutes
+    expire: 2 # minutes

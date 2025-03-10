@@ -5,9 +5,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AuthTabView from '@/components/auth/AuthTabView';
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
-import { hp } from '@/helpers/dimensions';
-import LoginScreen from '@/screens/auth/login';
-import RegisterScreen from '@/screens/auth/register';
+import { hp, wp } from '@/helpers/dimensions';
+import LoginScreen from '@/screens/auth/tab/login';
+import RegisterScreen from '@/screens/auth/tab/register';
 
 const AuthScreen: FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -24,12 +24,12 @@ const AuthScreen: FC = () => {
         style={styles.container}
         contentContainerStyle={styles.scrollContent}
       >
-        <View style={styles.info}>
+        <View style={styles.header}>
           <View style={styles.logo}>
             <Image
               style={styles.image}
               resizeMode="contain"
-              source={require('../../../assets/images/logo.png')}
+              source={require('../../../../assets/images/logo.png')}
             />
           </View>
         </View>
@@ -48,19 +48,19 @@ const createStyles = (theme: IColorScheme) => {
     },
     container: {
       flex: 1,
-      backgroundColor: theme.secondary,
+      backgroundColor: theme.backgroundLight,
     },
     scrollContent: {
       flexGrow: 1,
       justifyContent: 'space-between',
     },
-    info: {
-      padding: hp(2),
+    header: {
+      paddingVertical: hp(2),
+      paddingHorizontal: wp(4),
     },
     logo: {
       height: hp(8),
       width: hp(20),
-      alignSelf: 'flex-start',
     },
     image: {
       width: '100%',
@@ -82,8 +82,8 @@ const createStyles = (theme: IColorScheme) => {
       backgroundColor: theme.backgroundLight,
       shadowColor: theme.shadow,
       shadowOffset: { width: 0, height: -4 },
-      shadowOpacity: 0.2,
-      shadowRadius: 6,
+      shadowOpacity: 0.15,
+      shadowRadius: 8,
       elevation: 10,
     },
   });

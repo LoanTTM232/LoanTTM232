@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TextStyle, View, ViewStyle } from 'react-native';
 import Toast, {
   BaseToast,
   BaseToastProps,
@@ -9,41 +9,61 @@ import Toast, {
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-import { fontFamily, fontSize, IColorScheme } from '@/constants';
+import {
+  DEFAULT_ICON_SIZE,
+  fontFamily,
+  fontSize,
+  IColorScheme,
+} from '@/constants';
 import { hp } from '@/helpers/dimensions';
 
-const createStyles = (theme: IColorScheme) => {
-  return StyleSheet.create({
-    success: {
-      borderLeftColor: theme.success,
-      borderLeftWidth: 6,
-      borderRadius: 0,
-      height: hp(6.6),
+// Types
+interface ToastStyles {
+  container: ViewStyle;
+  content: ViewStyle;
+  text1: TextStyle;
+  text2?: TextStyle;
+}
+
+interface ToastIconProps {
+  color: string;
+  name: string;
+  size: number;
+  IconComponent: typeof AntDesign | typeof MaterialIcons;
+}
+
+const TOAST_CONFIG = {
+  success: {
+    iconProps: {
+      name: 'check',
+      size: DEFAULT_ICON_SIZE,
+      IconComponent: AntDesign,
     },
-    successContent: {
-      paddingHorizontal: hp(2),
+    textStyles: {
+      text1: fontFamily.RALEWAY_BOLD,
+      text2: fontFamily.POPPINS_REGULAR,
     },
-    successText1: {
-      ...fontFamily.POPPINS_REGULAR,
-      fontSize: fontSize.md,
+  },
+  error: {
+    iconProps: {
+      name: 'error-outline',
+      size: DEFAULT_ICON_SIZE,
+      IconComponent: MaterialIcons,
     },
-    error: {
-      borderLeftColor: theme.error,
-      borderLeftWidth: 6,
-      borderRadius: 0,
-      height: hp(6.6),
+    textStyles: {
+      text1: fontFamily.RALEWAY_BOLD,
+      text2: fontFamily.POPPINS_REGULAR,
     },
-    errorContent: {
-      paddingHorizontal: hp(2),
-    },
-    errorText1: {
-      ...fontFamily.RALEWAY_BOLD,
-      fontSize: fontSize.md,
-    },
-    errorText2: {
-      ...fontFamily.POPPINS_REGULAR,
-      fontSize: fontSize.md,
-    },
+  },
+} as const;
+
+const ToastIcon: React.FC<ToastIconProps> = ({
+  color,
+  name,
+  size,
+  IconComponent,
+}) => {
+  const styles = StyleSheet.create({
     iconContainer: {
       height: '100%',
       width: 40,
@@ -52,60 +72,104 @@ const createStyles = (theme: IColorScheme) => {
       alignItems: 'center',
     },
   });
+
+  return (
+    <View style={styles.iconContainer}>
+      <IconComponent name={name} size={size} color={color} />
+    </View>
+  );
 };
 
-const onPressHandler = () => {
-  Toast.hide();
+// Helper functions
+const createToastStyles = (
+  theme: IColorScheme,
+  type: 'success' | 'error'
+): ToastStyles => {
+  const baseStyles: ToastStyles = {
+    container: {
+      borderLeftColor: theme[type],
+      borderLeftWidth: 6,
+      borderRadius: 0,
+      height: hp(6.6),
+    },
+    content: {
+      paddingHorizontal: hp(2),
+    },
+    text1: {
+      ...TOAST_CONFIG[type].textStyles.text1,
+      fontSize: fontSize.sm,
+    },
+  };
+
+  if (TOAST_CONFIG[type].textStyles.text2) {
+    baseStyles.text2 = {
+      ...TOAST_CONFIG[type].textStyles.text2,
+      fontSize: fontSize.sm,
+    };
+  }
+
+  return baseStyles;
 };
 
-export const toastConfig = (theme: IColorScheme) => {
-  const styles = createStyles(theme);
+// Main toast configuration
+export const toastConfig = (theme: IColorScheme) => ({
+  success: (props: BaseToastProps): React.ReactNode => {
+    const styles = createToastStyles(theme, 'success');
+    const { name, size, IconComponent } = TOAST_CONFIG.success.iconProps;
 
-  return {
-    success: (props: BaseToastProps): React.ReactNode => (
+    return (
       <BaseToast
         {...props}
-        style={styles.success}
-        contentContainerStyle={styles.successContent}
+        style={styles.container}
+        contentContainerStyle={styles.content}
+        text1Style={styles.text1}
+        onPress={() => Toast.hide()}
         renderLeadingIcon={() => (
-          <View style={styles.iconContainer}>
-            <AntDesign name="check" size={22} color={theme.success} />
-          </View>
+          <ToastIcon
+            color={theme.success}
+            name={name}
+            size={size}
+            IconComponent={IconComponent}
+          />
         )}
-        text1Style={styles.successText1}
-        onPress={onPressHandler}
       />
-    ),
+    );
+  },
+  error: (props: ToastProps) => {
+    const styles = createToastStyles(theme, 'error');
+    const { name, size, IconComponent } = TOAST_CONFIG.error.iconProps;
 
-    error: (props: ToastProps) => (
+    return (
       <ErrorToast
         {...props}
-        style={styles.error}
-        contentContainerStyle={styles.errorContent}
-        text1Style={styles.errorText1}
-        text2Style={styles.errorText2}
+        style={styles.container}
+        contentContainerStyle={styles.content}
+        text1Style={styles.text1}
+        text2Style={styles.text2}
+        onPress={() => Toast.hide()}
         renderLeadingIcon={() => (
-          <View style={styles.iconContainer}>
-            <MaterialIcons name="error-outline" size={22} color={theme.error} />
-          </View>
+          <ToastIcon
+            color={theme.error}
+            name={name}
+            size={size}
+            IconComponent={IconComponent}
+          />
         )}
       />
-    ),
-  };
+    );
+  },
+});
+
+// Toast helper functions
+export const showToast = (
+  type: 'success' | 'error',
+  text1: string,
+  text2?: string
+) => {
+  Toast.show({ type, text1, text2 });
 };
 
-export const toastSuccess = (text1: string, text2?: string) => {
-  Toast.show({
-    type: 'success',
-    text1,
-    text2,
-  });
-};
-
-export const toastError = (text1: string, text2?: string) => {
-  Toast.show({
-    type: 'error',
-    text1,
-    text2,
-  });
-};
+export const toastSuccess = (text1: string, text2?: string) =>
+  showToast('success', text1, text2);
+export const toastError = (text1: string, text2?: string) =>
+  showToast('error', text1, text2);

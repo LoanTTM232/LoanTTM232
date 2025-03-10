@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { fontFamily, fontSize, IColorScheme } from '@/constants';
-import i18next from '@/helpers/i18n';
 import Input from '@/ui/input/BaseInput';
 
 interface FormFieldProps {
@@ -13,7 +12,7 @@ interface FormFieldProps {
   touched?: boolean | undefined;
   theme: IColorScheme;
   handleChange: (text: string) => void;
-  handleBlur: (e: any) => void;
+  handleBlur?: (e: any) => void;
   type?: 'text' | 'password';
   keyboardType?: 'default' | 'email-address';
 }
@@ -33,7 +32,7 @@ const FormField: React.FC<FormFieldProps> = ({
   const styles = createStyles(theme);
 
   return (
-    <View>
+    <View style={styles.formField}>
       <Input
         type={type}
         value={value}
@@ -41,7 +40,7 @@ const FormField: React.FC<FormFieldProps> = ({
         autoFocus={autoFocus}
         onChangeText={handleChange}
         onBlur={handleBlur}
-        placeholder={i18next.t(title)}
+        placeholder={title}
         keyboardType={keyboardType}
       />
       {error && touched && <Text style={styles.errorMsg}>{error}</Text>}
@@ -51,6 +50,9 @@ const FormField: React.FC<FormFieldProps> = ({
 
 const createStyles = (theme: IColorScheme) =>
   StyleSheet.create({
+    formField: {
+      width: '100%',
+    },
     errorMsg: {
       color: theme.error,
       ...fontFamily.POPPINS_REGULAR,

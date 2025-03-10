@@ -18,8 +18,21 @@ interface AuthState {
   logout: () => Promise<void>;
   register: (data: RegisterRequest) => Promise<void>;
   googleCallback: (data: { code: string }) => Promise<void>;
-  verifyEmail: (data: { token: number }) => Promise<void>;
-  resendVerifyEmailOtp: (data: { email: string }) => Promise<void>;
+  verifyRegisterToken: (data: {
+    token: number;
+    email: string;
+  }) => Promise<void>;
+  resendVerifyRegisterToken: (data: { email: string }) => Promise<void>;
+  forgotPassword: (data: { email: string }) => Promise<void>;
+  verifyForgotPasswordToken: (data: {
+    token: number;
+    email: string;
+  }) => Promise<void>;
+  resetPassword: (data: {
+    token: number;
+    email: string;
+    password: string;
+  }) => Promise<void>;
 }
 
 const useAuthStoreBase = create<AuthState>((set) => ({
@@ -68,7 +81,7 @@ const useAuthStoreBase = create<AuthState>((set) => ({
     }
   },
 
-  googleCallback: async (data: { code: string }) => {
+  googleCallback: async (data) => {
     const res = await authService.googleCallback(data);
 
     if (res instanceof Error) {
@@ -83,15 +96,43 @@ const useAuthStoreBase = create<AuthState>((set) => ({
     }));
   },
 
-  verifyEmail: async (data: { token: number }) => {
-    const res = await authService.verifyEmail(data.token);
+  verifyRegisterToken: async (data) => {
+    const res = await authService.verifyRegisterToken(data.token, data.email);
     if (res instanceof Error) {
       throw res;
     }
   },
 
-  resendVerifyEmailOtp: async (data: { email: string }) => {
-    const res = await authService.resendVerifyEmailOtp(data.email);
+  resendVerifyRegisterToken: async (data) => {
+    const res = await authService.resendVerifyRegisterToken(data.email);
+    if (res instanceof Error) {
+      throw res;
+    }
+  },
+
+  forgotPassword: async (data) => {
+    const res = await authService.forgotPassword(data.email);
+    if (res instanceof Error) {
+      throw res;
+    }
+  },
+
+  verifyForgotPasswordToken: async (data) => {
+    const res = await authService.verifyForgotPasswordToken(
+      data.token,
+      data.email
+    );
+    if (res instanceof Error) {
+      throw res;
+    }
+  },
+
+  resetPassword: async (data) => {
+    const res = await authService.resetPassword(
+      data.token,
+      data.email,
+      data.password
+    );
     if (res instanceof Error) {
       throw res;
     }

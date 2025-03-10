@@ -11,9 +11,9 @@ import (
 // @description: Mapping address entity to response
 // @param: address tb.Address
 // @return: model.AddressResponse
-func MapAddressEntityToResponse(address *tb.Address) model.AddressResponse {
+func MapAddressEntityToResponse(address *tb.Address) *model.AddressResponse {
 	longitude, latitude := address.GetGeography()
-	return model.AddressResponse{
+	return &model.AddressResponse{
 		AddressID:         address.ID,
 		Address:           address.Address,
 		Location:          *lu.MapLocationEntityToResponse(&address.Location),
@@ -34,8 +34,8 @@ func MapCreateRequestToEntity(reqBody *model.CreateAddressRequest) *tb.Address {
 	}
 }
 
-func MapUpdateRequestToEntity(reqBody *model.UpdateAddressRequest) tb.Address {
-	return tb.Address{
+func MapUpdateRequestToEntity(reqBody *model.UpdateAddressRequest) *tb.Address {
+	return &tb.Address{
 		Address:           *reqBody.Address,
 		LocationGeography: reqBody.LocationGeography.GetGeography(),
 		Location:          lu.MapUpdateRequestToEntity(reqBody.Location),

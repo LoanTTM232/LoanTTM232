@@ -4,12 +4,12 @@ import { Animated, Pressable, StyleSheet, ViewStyle } from 'react-native';
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { ParamList } from '@/screens';
-import ArrowLeft from '@/ui/icon/arrow-left';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type BackButtonProps = {
   styles?: ViewStyle;
+  icon: React.ReactNode;
   onPress?: () => void;
 };
 
@@ -54,9 +54,10 @@ function BackButton(props: BackButtonProps) {
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       onPress={props.onPress || defaultOnPress}
+      style={styles.container}
     >
-      <Animated.View style={[styles.container, animatedStyle, props.styles]}>
-        <ArrowLeft color={theme.icon} size={20} />
+      <Animated.View style={[animatedStyle, props.styles]}>
+        {props.icon}
       </Animated.View>
     </Pressable>
   );

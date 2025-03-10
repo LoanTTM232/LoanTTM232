@@ -31,3 +31,12 @@ export const registerValidation = Yup.object().shape({
   password: passwordValidate,
   confirmPassword: confirmPasswordValidate,
 });
+
+export const forgotPasswordValidation = Yup.object().shape({
+  email: emailValidate,
+});
+
+export const resetPasswordValidation = Yup.object().shape({
+  password: passwordValidate,
+  confirmPassword: confirmPasswordValidate,
+});

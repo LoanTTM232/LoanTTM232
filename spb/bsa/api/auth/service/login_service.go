@@ -22,20 +22,21 @@ func (s *Service) AccountLogin(u *model.LoginRequest) (*tb.User, error) {
 		Where("email = ?", u.Email).
 		Preload("Role").
 		First(&user).Error
-	if err == nil {
-		if ok := utils.BcryptCheck(u.Password, user.Password); !ok {
-			return nil, msg.ErrIncorrectPassword
-		}
-		var permissions []tb.Permission
-
-		permissions, err = permissionModule.PermissionService.GetByRole(user.Role.ID)
-		if err != nil {
-			return nil, err
-		}
-
-		user.Role.Permissions = permissions
-		return &user, nil
+	if err != nil {
+		return nil, err
 	}
 
-	return nil, err
+	if ok := utils.BcryptCheck(u.Password, user.Password); !ok {
+		return nil, msg.ErrIncorrectPassword
+	}
+
+	var permissions []tb.Permission
+
+	permissions, err = permissionModule.PermissionService.GetByRole(user.Role.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	user.Role.Permissions = permissions
+	return &user, nil
 }

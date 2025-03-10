@@ -67,7 +67,7 @@ const createStyles = (_: IColorScheme) => {
     },
     buttonText: {
       ...fontFamily.RALEWAY_REGULAR,
-      fontSize: fontSize.md,
+      fontSize: fontSize.sm,
     },
   });
 };

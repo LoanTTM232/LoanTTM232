@@ -9,7 +9,7 @@ const (
 	FACEBOOK OAuthProvider = "facebook"
 )
 
-func (st *OAuthProvider) Scan(val interface{}) error {
+func (st *OAuthProvider) Scan(val any) error {
 	*st = OAuthProvider(val.(string))
 	return nil
 }

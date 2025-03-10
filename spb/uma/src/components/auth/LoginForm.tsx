@@ -2,16 +2,16 @@ import { Formik } from 'formik';
 import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import ForgotPasswordLink from '@/components/auth/ForgotPasswordLink';
 import FormField from '@/components/auth/FormField';
-import { fontFamily, fontSize, IColorScheme } from '@/constants';
+import { IColorScheme } from '@/constants';
 import { hp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
 import { loginValidation } from '@/helpers/validate';
-import { ILoginFormValues } from '@/screens/auth/login';
+import { ILoginFormValues } from '@/screens/auth/tab/login';
 import Button from '@/ui/button/BaseButton';
 import GoogleSignIn from '@/ui/button/GoogleSignIn';
 import Line from '@/ui/line';
-import Link from '@/ui/link';
 
 interface LoginFormProps {
   onSubmit: (data: { email: string; password: string }) => Promise<void>;
@@ -37,10 +37,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
     [onSubmit]
   );
 
-  const handleForgotPassword = () => {
-    console.log('Forgot Password');
-  };
-
   return (
     <Formik
       initialValues={initialValues}
@@ -58,7 +54,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <View style={styles.form}>
           <View style={styles.controlGroup}>
             <FormField
-              title="login.email"
+              title={i18next.t('login.email')}
               value={values.email}
               error={errors.email}
               touched={touched.email}
@@ -68,7 +64,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
               theme={theme}
             />
             <FormField
-              title="login.password"
+              title={i18next.t('login.password')}
               value={values.password}
               error={errors.password}
               touched={touched.password}
@@ -79,18 +75,14 @@ const LoginForm: React.FC<LoginFormProps> = ({
             />
           </View>
           <View style={styles.optionGroup}>
-            <Link
-              title={i18next.t('login.forgot')}
-              onPress={handleForgotPassword}
-              style={styles.link}
-            />
+            <ForgotPasswordLink theme={theme} />
           </View>
           <View style={styles.buttonGroup}>
             <Button
               buttonStyle={styles.button}
-              textStyles={styles.buttonText}
               title={i18next.t('login.submit')}
               onPress={handleSubmit}
+              disable={!(values.email && values.password)}
             />
             <Line title="Or" theme={theme} />
             <GoogleSignIn
@@ -104,7 +96,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   );
 };
 
-const createStyles = (theme: IColorScheme) => {
+const createStyles = (_: IColorScheme) => {
   return StyleSheet.create({
     form: {
       paddingTop: hp(3),
@@ -112,28 +104,19 @@ const createStyles = (theme: IColorScheme) => {
     controlGroup: {
       flexDirection: 'column',
       justifyContent: 'space-around',
-      gap: hp(2),
+      gap: hp(3),
     },
     optionGroup: {
       flexDirection: 'row',
       marginTop: hp(2),
       justifyContent: 'flex-end',
     },
-    link: {
-      ...fontFamily.POPPINS_REGULAR,
-      fontSize: fontSize.md,
-      color: theme.primary,
-    },
     buttonGroup: {
       paddingTop: hp(4),
       gap: hp(3),
     },
     button: {
-      marginTop: 10,
-    },
-    buttonText: {
-      ...fontFamily.POPPINS_REGULAR,
-      fontSize: fontSize.md,
+      marginTop: hp(2),
     },
   });
 };

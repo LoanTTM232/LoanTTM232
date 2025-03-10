@@ -19,6 +19,7 @@ class AxiosConfig {
   private concurrencyHandler: ConcurrencyHandler;
 
   constructor() {
+    console.log(API_URL);
     this.axiosInstance = axios.create({
       baseURL: API_URL,
       headers: this.defaultHeaders(),
@@ -164,10 +165,7 @@ const responseParse = <K, T extends ApiResponse<K> = ApiResponse<K>>(
     });
 };
 
-export const apiFactory = <K, T extends ApiResponse<K> = ApiResponse<K>>(
-  url: string,
-  protectedApi: boolean = true
-) => {
+export const apiFactory = (url: string, protectedApi: boolean = true) => {
   const http = HttpService.getInstance();
   if (protectedApi) {
     http.protected();
@@ -176,9 +174,13 @@ export const apiFactory = <K, T extends ApiResponse<K> = ApiResponse<K>>(
   }
 
   return {
-    get: (params?: any) => responseParse(http.get<T>(url, { params })),
-    post: (data?: any) => responseParse(http.post<T>(url, data)),
-    put: (data?: any) => responseParse(http.put<T>(url, data)),
-    delete: (config?: any) => responseParse(http.delete<T>(url, { config })),
+    get: <K, T extends ApiResponse<K> = ApiResponse<K>>(params?: any) =>
+      responseParse(http.get<T>(url, { params })),
+    post: <K, T extends ApiResponse<K> = ApiResponse<K>>(data?: any) =>
+      responseParse(http.post<T>(url, data)),
+    put: <K, T extends ApiResponse<K> = ApiResponse<K>>(data?: any) =>
+      responseParse(http.put<T>(url, data)),
+    delete: <K, T extends ApiResponse<K> = ApiResponse<K>>(config?: any) =>
+      responseParse(http.delete<T>(url, { config })),
   };
 };

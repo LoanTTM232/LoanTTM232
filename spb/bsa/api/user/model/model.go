@@ -32,7 +32,7 @@ type PermissionResponse struct {
 }
 
 type GetUsersResponse struct {
-	Users      []UserResponse    `json:"users"`
+	Users      []*UserResponse   `json:"users"`
 	Total      uint              `json:"total"`
 	Pagination *utils.Pagination `json:"pagination"`
 }

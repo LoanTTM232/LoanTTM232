@@ -10,19 +10,19 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
-// VerifyEmail godoc
+// VerifyRegisterToken godoc
 //
 // @summary		Verify email api
 // @description	Verify email api
 // @tags		auth
 // @accept		json
 // @produce		json
-// @param	  	group body model.VerifyEmailRequest true "Verify email"
+// @param	  	group body model.VerifyRegisterTokenRequest true "Verify email"
 // @success		200 {object} utils.JSONResult{}			 "Email verification success"
 // @failure		400 {object} utils.JSONResult{}			 "Verify token error"
 // @router		/api/v1/auth/verify-email [post]
-func (h *Handler) VerifyEmail(ctx fiber.Ctx) error {
-	reqBody := new(model.VerifyEmailRequest)
+func (h *Handler) VerifyRegisterToken(ctx fiber.Ctx) error {
+	reqBody := new(model.VerifyRegisterTokenRequest)
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	if err := fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {
@@ -30,7 +30,7 @@ func (h *Handler) VerifyEmail(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.VERIFY_TOKEN_FAILED)
 	}
 
-	if err := h.service.VerifyEmail(reqBody); err != nil {
+	if err := h.service.VerifyRegisterToken(reqBody); err != nil {
 		logger.Errorf("error verify email: %v", err)
 		return fctx.ErrResponse(msg.VERIFY_TOKEN_FAILED)
 	}
