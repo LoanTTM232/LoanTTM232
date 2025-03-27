@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { DimensionValue, StyleSheet, Text, View } from 'react-native';
 
 import { fontFamily, fontSize, IColorScheme } from '@/constants';
 
@@ -7,10 +7,11 @@ interface ILineProps {
   isHorizontal?: boolean;
   title?: string;
   theme: IColorScheme;
+  width?: DimensionValue;
 }
 
-const Line: React.FC<ILineProps> = ({ title, theme }) => {
-  const styles = createStyles(theme);
+const Line: React.FC<ILineProps> = ({ title, theme, width }) => {
+  const styles = createStyles(theme, width);
   return (
     <View style={styles.line}>
       {!!title && <Text style={styles.title}>{title}</Text>}
@@ -18,11 +19,11 @@ const Line: React.FC<ILineProps> = ({ title, theme }) => {
   );
 };
 
-const createStyles = (theme: IColorScheme) =>
+const createStyles = (theme: IColorScheme, width?: DimensionValue) =>
   StyleSheet.create({
     line: {
       height: 1,
-      width: '95%',
+      width: width || '95%',
       margin: 'auto',
       backgroundColor: theme.borderLight,
     },

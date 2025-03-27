@@ -10,7 +10,7 @@ const ExploreScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text>bookinbg</Text>
+      <Text>explore</Text>
     </View>
   );
 };

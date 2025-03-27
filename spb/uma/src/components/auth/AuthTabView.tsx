@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef, useState } from 'react';
+import React, { FC, ReactNode, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import PagerView from 'react-native-pager-view';
 
@@ -16,7 +16,7 @@ interface ITabViewProps {
   theme: IColorScheme;
 }
 
-const TabButton: React.FC<{
+const TabButton: FC<{
   route: Route;
   isActive: boolean;
   onPress: () => void;
@@ -32,7 +32,7 @@ const TabButton: React.FC<{
   </Pressable>
 );
 
-const AuthTabView: React.FC<ITabViewProps> = ({ routes, theme }) => {
+const AuthTabView: FC<ITabViewProps> = ({ routes, theme }) => {
   const styles = createStyles(theme);
   const viewRef = useRef<PagerView>(null);
   const [activeTab, setActiveTab] = useState(0);

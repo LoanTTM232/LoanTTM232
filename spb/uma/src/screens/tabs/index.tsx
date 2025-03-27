@@ -2,7 +2,13 @@ import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import { DEFAULT_ICON_SIZE, fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
+import {
+  DEFAULT_ICON_SIZE,
+  fontFamily,
+  fontSize,
+  IColorScheme,
+  Radius,
+} from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { hp } from '@/helpers/dimensions';
 import BookingScreen from '@/screens/tabs/booking';
@@ -93,8 +99,8 @@ const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
     tabBar: {
       height: hp(8),
-      marginHorizontal: hp(2),
-      marginBottom: hp(2),
+      //   marginHorizontal: hp(2),
+      //   marginBottom: hp(2),
       backgroundColor: theme.backgroundLight,
       borderRadius: Radius.xs,
     },

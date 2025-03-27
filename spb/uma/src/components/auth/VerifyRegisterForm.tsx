@@ -21,8 +21,6 @@ interface IVerifyRegisterFormProps {
 const VerifyRegisterForm: FC<IVerifyRegisterFormProps> = ({ email }) => {
   const verifyRegisterEmail = useAuthStore.use.verifyRegisterToken();
   const navigation = useNavigation<NativeStackNavigationProp<ParamList>>();
-  //   const resendVerifyRegisterEmailOtp =
-  //     useAuthStore.use.resendVerifyRegisterToken();
   const [otp, setOtp] = React.useState<string>('');
 
   const { theme } = useContext(ThemeContext);

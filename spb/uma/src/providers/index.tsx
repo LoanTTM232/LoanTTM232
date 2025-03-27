@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { FC, ReactNode, useContext } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 
@@ -7,10 +7,10 @@ import { hp } from '@/helpers/dimensions';
 import { toastConfig } from '@/helpers/toast';
 
 export type ProviderProps = {
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
-const AppProvider: React.FC<ProviderProps> = ({ children }) => {
+const AppProvider: FC<ProviderProps> = ({ children }) => {
   const { theme } = useContext(ThemeContext);
 
   return (

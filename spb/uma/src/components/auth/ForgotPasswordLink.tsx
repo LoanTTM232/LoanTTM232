@@ -5,7 +5,7 @@ import { fontFamily, fontSize, IColorScheme } from '@/constants';
 import { wp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
 import { ParamList } from '@/screens';
-import Link from '@/ui/link';
+import Link from '@/ui/Link';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 

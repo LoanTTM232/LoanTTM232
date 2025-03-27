@@ -10,7 +10,7 @@ import { registerValidation } from '@/helpers/validate';
 import { IRegisterFormValues } from '@/screens/auth/tab/register';
 import Button from '@/ui/button/BaseButton';
 import GoogleSignIn from '@/ui/button/GoogleSignIn';
-import Line from '@/ui/line';
+import Line from '@/ui/Line';
 
 interface RegisterFormProps {
   onSubmit: (data: { email: string; password: string }) => Promise<void>;

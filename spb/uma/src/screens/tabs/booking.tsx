@@ -10,7 +10,7 @@ const Booking: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text>bookinbg</Text>
+      <Text>booking</Text>
     </View>
   );
 };

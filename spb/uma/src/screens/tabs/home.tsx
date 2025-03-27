@@ -1,33 +1,37 @@
 import React, { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Feather from 'react-native-vector-icons/Feather';
 
-import { DEFAULT_ICON_SIZE, IColorScheme } from '@/constants';
+import SearchBar from '@/components/home/SearchBar';
+import UnitTabView from '@/components/home/UnitTabView';
+import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme.context';
 import { hp } from '@/helpers/dimensions';
-import IconButton from '@/ui/button/IconButton';
-import Search from '@/ui/search/Search';
 
 const HomeScreen: React.FC = () => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
+  const unitTabs = [
+    {
+      key: '1',
+      component: <View />,
+      title: 'Near Me',
+      icon: 'location-outline',
+    },
+    {
+      key: '2',
+      component: <View />,
+      title: 'Popular',
+      icon: 'star-outline',
+    },
+  ];
+
   return (
     <SafeAreaView style={styles.safeView}>
       <View style={styles.container}>
-        <View style={styles.searchSection}>
-          <Search theme={theme} onSearch={() => {}} />
-          <IconButton
-            icon={
-              <Feather
-                name="sliders"
-                size={DEFAULT_ICON_SIZE}
-                color={theme.secondary}
-              />
-            }
-          />
-        </View>
+        <SearchBar />
+        <UnitTabView routes={unitTabs} />
       </View>
     </SafeAreaView>
   );
@@ -41,17 +45,7 @@ const createStyles = (theme: IColorScheme) => {
     container: {
       flex: 1,
       backgroundColor: theme.backgroundDark,
-    },
-    searchSection: {
-      width: '100%',
-      padding: hp(2),
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignContent: 'center',
       gap: hp(2),
-    },
-    searchSectionIcon: {
-      paddingHorizontal: hp(1),
     },
   });
 };
