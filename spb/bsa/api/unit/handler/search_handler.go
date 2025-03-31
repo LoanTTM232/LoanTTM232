@@ -23,7 +23,7 @@ import (
 // @param 			q query string false "Query"
 // @param 			st query string false "Sport type"
 // @param 			pv query string false "Province"
-// @param 			ct query string false "City"
+// @param 			wd query string false "Ward"
 // @param 			dt query string false "District"
 // @success 		200 {object} utils.JSONResult{data=[]model.UnitResponse}	"Search unit success"
 // @failure 		400 {object} utils.JSONResult{}      						"Search unit failed"

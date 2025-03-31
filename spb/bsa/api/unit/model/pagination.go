@@ -12,14 +12,14 @@ import (
 // &q = query
 // &st = sport type
 // &pv = province
-// &ct = city
+// &wd = ward
 // &dt = district
 type UnitPagination struct {
 	utils.Pagination
 	Query     string `json:"query"`
 	SportType string `json:"sport_type"`
 	Province  string `json:"province"`
-	City      string `json:"city"`
+	Ward      string `json:"ward"`
 	District  string `json:"district"`
 }
 
@@ -37,8 +37,8 @@ func GetPagination(queries map[string]string) *UnitPagination {
 	if queries["pv"] != "" {
 		unitPagination.Province = queries["pv"]
 	}
-	if queries["ct"] != "" {
-		unitPagination.City = queries["ct"]
+	if queries["wd"] != "" {
+		unitPagination.Ward = queries["wd"]
 	}
 	if queries["dt"] != "" {
 		unitPagination.District = queries["dt"]
@@ -77,7 +77,7 @@ func addOtherQueries(url string, up *UnitPagination) string {
 	url = utils.ConcatenateQueries(url, "q", up.Query)
 	url = utils.ConcatenateQueries(url, "st", up.SportType)
 	url = utils.ConcatenateQueries(url, "pv", up.Province)
-	url = utils.ConcatenateQueries(url, "ct", up.City)
 	url = utils.ConcatenateQueries(url, "dt", up.District)
+	url = utils.ConcatenateQueries(url, "wd", up.Ward)
 	return url
 }

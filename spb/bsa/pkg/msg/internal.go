@@ -32,6 +32,7 @@ var (
 	ErrUnitNameExists          = NewError("unit name already exists")
 	ErrMetadataNotFound        = NewError("metadata not found")
 	ErrUpdateMetadataFailed    = NewError("update metadata failed")
+	ErrClubNameExists          = NewError("club name already exists")
 )
 
 var (

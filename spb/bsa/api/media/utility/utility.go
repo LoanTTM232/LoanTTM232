@@ -12,11 +12,10 @@ import (
 // @return: model.MediaResponse
 func MapMediaEntityToResponse(media *tb.Media) *model.MediaResponse {
 	return &model.MediaResponse{
-		MediaID:    media.ID,
-		FilePath:   media.FilePath,
-		FileType:   media.FileType,
-		Hash:       media.Hash,
-		UploadedAt: media.UploadedAt,
+		MediaID:  media.ID,
+		FilePath: media.FilePath,
+		FileType: media.FileType,
+		Hash:     media.Hash,
 	}
 }
 
@@ -40,10 +39,9 @@ func MapMediaEntitiesToResponse(medias []*tb.Media) []*model.MediaResponse {
 // @return: *tb.Media
 func MapCreateRequestToEntity(reqBody *model.CreateMediaRequest) *tb.Media {
 	return &tb.Media{
-		FilePath:   reqBody.FilePath,
-		FileType:   reqBody.FileType,
-		Hash:       reqBody.Hash,
-		UploadedAt: reqBody.UploadedAt,
+		FilePath: reqBody.FilePath,
+		FileType: reqBody.FileType,
+		Hash:     reqBody.Hash,
 	}
 }
 
@@ -67,10 +65,9 @@ func MapCreateRequestToEntities(reqBody []*model.CreateMediaRequest) []*tb.Media
 // @return: tb.Media
 func MapUpdateRequestToEntity(reqBody *model.UpdateMediaRequest) *tb.Media {
 	return &tb.Media{
-		FilePath:   *reqBody.FilePath,
-		FileType:   *reqBody.FileType,
-		Hash:       *reqBody.Hash,
-		UploadedAt: reqBody.UploadedAt,
+		FilePath: *reqBody.FilePath,
+		FileType: *reqBody.FileType,
+		Hash:     *reqBody.Hash,
 	}
 }
 

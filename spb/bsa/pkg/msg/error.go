@@ -5,6 +5,7 @@ import "github.com/gofiber/fiber/v3"
 const (
 	CODE_SERVER_ERROR = "ERS001"
 	CODE_FORBIDDEN    = "ERS002"
+	CODE_BAD_REQUEST  = "ERS003"
 )
 
 const (
@@ -91,6 +92,7 @@ const (
 var (
 	SERVER_ERROR = fiber.NewError(fiber.StatusInternalServerError, CODE_SERVER_ERROR)
 	FORBIDDEN    = fiber.NewError(fiber.StatusForbidden, CODE_FORBIDDEN)
+	BAD_REQUEST  = fiber.NewError(fiber.StatusBadRequest, CODE_BAD_REQUEST)
 )
 
 var (
@@ -107,18 +109,15 @@ var (
 	NOT_ACCEPTABLE            = fiber.NewError(fiber.StatusNotAcceptable)
 
 	// location error
-	LOCATION_INCORRECT     = fiber.NewError(fiber.StatusBadRequest, CODE_LOCATION_INCORRECT)
 	CREATE_LOCATION_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_CREATE_LOCATION_FAILED)
 	DELETE_LOCATION_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_DELETE_LOCATION_FAILED)
 	UPDATE_LOCATION_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_LOCATION_FAILED)
 
 	// metadata error
-	METADATA_INCORRECT     = fiber.NewError(fiber.StatusBadRequest, CODE_METADATA_INCORRECT)
 	METADATA_NOTFOUND      = fiber.NewError(fiber.StatusNotFound, CODE_METADATA_NOTFOUND)
 	UPDATE_METADATA_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_METADATA_FAILED)
 
 	// unit error
-	UNIT_INCORRECT     = fiber.NewError(fiber.StatusBadRequest, CODE_UNIT_INCORRECT)
 	DELETE_UNIT_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_DELETE_UNIT_FAILED)
 	GET_UNIT_FAILED    = fiber.NewError(fiber.StatusBadRequest, CODE_GET_UNIT_FAILED)
 	UNIT_NOTFOUND      = fiber.NewError(fiber.StatusNotFound, CODE_UNIT_NOTFOUND)
@@ -154,7 +153,6 @@ var (
 	USER_NOTFOUND      = fiber.NewError(fiber.StatusBadRequest, CODE_USER_NOTFOUND)
 
 	// club error
-	CLUB_INCORRECT     = fiber.NewError(fiber.StatusBadRequest, CODE_CLUB_INCORRECT)
 	CREATE_CLUB_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_CREATE_CLUB_FAILED)
 	DELETE_CLUB_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_DELETE_CLUB_FAILED)
 	GET_CLUB_FAILED    = fiber.NewError(fiber.StatusBadRequest, CODE_GET_CLUB_FAILED)

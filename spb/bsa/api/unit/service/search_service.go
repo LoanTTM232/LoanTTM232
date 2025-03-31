@@ -1,9 +1,9 @@
 package service
 
 import (
-	location "spb/bsa/api/location"
-	locationModel "spb/bsa/api/location/model"
-	locationUtility "spb/bsa/api/location/utility"
+	address "spb/bsa/api/address"
+	am "spb/bsa/api/address/model"
+	au "spb/bsa/api/address/utility"
 	"spb/bsa/api/unit/model"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/logger"
@@ -16,7 +16,6 @@ import (
 // @param: reqBody *model.SearchUnitRequest
 // @return: []*tb.Unit, int64, error
 func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, error) {
-	var locations []*tb.Location
 	var err error
 	units := make([]*tb.Unit, 0)
 
@@ -29,15 +28,15 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 
 	// search by location
 	if IsSearchByLocation(reqBody) {
-		requestLocation := locationModel.NewSearchLocationRequest(reqBody.Pagination.Province, reqBody.Pagination.City, reqBody.Pagination.District)
-		locations, err = location.LocationService.Search(requestLocation)
+		requestLocation := am.NewSearchLocationRequest(reqBody.Pagination.Province, reqBody.Pagination.District, reqBody.Pagination.Ward)
+		wards, err := address.AddressService.SearchByIDs(requestLocation)
 		if err != nil {
 			logger.Errorf("Error when searching location: %v", err)
 			return nil, 0, err
 		}
 
-		locationIds := locationUtility.MapLocationEntitiesToIDs(locations)
-		query = query.Where("location_id IN (?)", locationIds)
+		locationIds := au.MapWardEntitiesToIDs(wards)
+		query = query.Where("ward_id IN (?)", locationIds)
 	}
 
 	// get by sport type
@@ -70,7 +69,7 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 }
 
 func IsSearchByLocation(reqBody *model.SearchUnitRequest) bool {
-	return reqBody.Pagination.Province != "" || reqBody.Pagination.City != "" || reqBody.Pagination.District != ""
+	return reqBody.Pagination.Province != "" || reqBody.Pagination.Ward != "" || reqBody.Pagination.District != ""
 }
 
 func IsSearchByQuery(reqBody *model.SearchUnitRequest) bool {

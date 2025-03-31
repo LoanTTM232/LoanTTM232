@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import EyeIcon from '@/ui/icon/Eye';
 import EyeOffIcon from '@/ui/icon/EyeOff';

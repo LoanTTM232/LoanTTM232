@@ -1,5 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Animated, Text, TextInput, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  Animated,
+  Keyboard,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import { DEFAULT_ICON_SIZE, IColorScheme } from '@/constants';
@@ -27,6 +34,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [placeholderAnim] = useState(new Animated.Value(1));
+  const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     Animated.timing(placeholderAnim, {
@@ -38,72 +46,92 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleClear = () => {
     onQueryChange('');
+    inputRef.current?.blur();
+  };
+
+  const handleOutsidePress = (event: any) => {
+    // Prevent handling if touch is on the TextInput
+    if (event.target === inputRef.current) {
+      return;
+    }
+
+    Keyboard.dismiss();
+    inputRef.current?.blur();
+    if (query.length === 0) {
+      setIsFocused(false);
+    }
   };
 
   return (
-    <View style={[styles.searchBar, searchBarStyle]}>
-      <Animated.View
-        style={[
-          styles.placeholder,
-          {
-            opacity: placeholderAnim,
-            transform: [
-              {
-                translateY: placeholderAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [-20, 0],
-                }),
-              },
-            ],
-          },
-        ]}
-      >
-        <Text style={styles.placeholderText1}>
-          {i18next.t('search.placeholder')}
-        </Text>
-        <Text style={styles.placeholderText2}>
-          {i18next.t('search.placeholder_description')}
-        </Text>
-      </Animated.View>
-      <AntDesign
-        style={styles.icon}
-        name="search1"
-        size={DEFAULT_ICON_SIZE}
-        color={theme.primary}
-        onPress={() => setIsFocused(true)}
-      />
-      <Animated.View
-        style={[
-          styles.inputContent,
-          {
-            opacity: placeholderAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: [1, 0],
-            }),
-          },
-        ]}
-      >
-        <TextInput
-          style={[styles.input, inputStyle]}
-          value={query}
-          placeholder={placeholder}
-          onChangeText={onQueryChange}
-          onSubmitEditing={onSubmit}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => {
-            if (query.length === 0) setIsFocused(false);
+    <TouchableWithoutFeedback onPress={handleOutsidePress}>
+      <View style={[styles.searchBar, searchBarStyle]}>
+        <Animated.View
+          style={[
+            styles.placeholder,
+            {
+              opacity: placeholderAnim,
+              transform: [
+                {
+                  translateY: placeholderAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [-20, 0],
+                  }),
+                },
+              ],
+            },
+          ]}
+        >
+          <Text style={styles.placeholderText1}>
+            {i18next.t('search.placeholder')}
+          </Text>
+          <Text style={styles.placeholderText2}>
+            {i18next.t('search.placeholder_description')}
+          </Text>
+        </Animated.View>
+        <AntDesign
+          style={styles.icon}
+          name="search1"
+          size={DEFAULT_ICON_SIZE}
+          color={theme.primary}
+          onPress={() => {
+            setIsFocused(true);
+            inputRef.current?.focus();
           }}
         />
-        {query.length > 0 && (
-          <AntDesign
-            style={styles.icon}
-            name="close"
-            size={DEFAULT_ICON_SIZE - 4}
-            color={theme.icon}
-            onPress={handleClear}
+        <Animated.View
+          style={[
+            styles.inputContent,
+            {
+              opacity: placeholderAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [1, 0],
+              }),
+            },
+          ]}
+        >
+          <TextInput
+            ref={inputRef}
+            style={[styles.input, inputStyle]}
+            value={query}
+            placeholder={placeholder}
+            onChangeText={onQueryChange}
+            onSubmitEditing={onSubmit}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => {
+              if (query.length === 0) setIsFocused(false);
+            }}
           />
-        )}
-      </Animated.View>
-    </View>
+          {query.length > 0 && (
+            <AntDesign
+              style={styles.icon}
+              name="close"
+              size={DEFAULT_ICON_SIZE - 4}
+              color={theme.icon}
+              onPress={handleClear}
+            />
+          )}
+        </Animated.View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };

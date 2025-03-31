@@ -5,7 +5,7 @@ import VectorIcon from 'react-native-vector-icons/AntDesign';
 
 import VerifyForgotPasswordForm from '@/components/auth/VerifyForgotPasswordForm';
 import { DEFAULT_ICON_SIZE, IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
 import { logError } from '@/helpers/logger';

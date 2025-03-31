@@ -6,6 +6,7 @@ import (
 	media "spb/bsa/api/media/utility"
 	st "spb/bsa/api/sport_type/utility"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/utils"
 )
 
 // @author: LoanTT
@@ -31,13 +32,14 @@ func MapEntityToResponse(club *tb.Club) *model.ClubResponse {
 func MapCreateRequestToEntity(reqBody *model.CreateClubRequest) *tb.Club {
 	return &tb.Club{
 		Name:        reqBody.Name,
+		Slug:        utils.CreateSlug(reqBody.Name),
 		OpenTime:    reqBody.OpenTime,
 		CloseTime:   reqBody.CloseTime,
 		Phone:       reqBody.Phone,
 		OwnerID:     reqBody.OwnerID,
-		Address:     addr.MapCreateRequestToEntity(reqBody.Address),
 		Description: reqBody.Description,
+		Address:     addr.MapCreateRequestToEntity(reqBody.Address),
 		Media:       media.MapCreateRequestToEntities(reqBody.Media),
-		SportTypes:  st.MapCreateRequestToEntities(reqBody.SportTypes),
+		SportTypes:  st.MapIdsToEntities(reqBody.SportTypes),
 	}
 }

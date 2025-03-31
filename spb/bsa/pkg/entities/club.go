@@ -12,7 +12,7 @@ type Club struct {
 	Owner        *User          `gorm:"foreignKey:OwnerID" json:"owner"`
 	Phone        string         `gorm:"size:20;not null" json:"phone"`
 	AddressID    string         `gorm:"type:uuid;not null" json:"address_id"`
-	Address      *Address       `gorm:"size:255;not null" json:"address"`
+	Address      *Address       `gorm:"foreignKey:AddressID;not null" json:"address"`
 	Description  string         `gorm:"size:3000" json:"description"`
 	Media        []*Media       `gorm:"many2many:club_media;" json:"media"`
 	PaymentInfos []*PaymentInfo `gorm:"many2many:club_payment_infos;" json:"payment_infos"`

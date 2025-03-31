@@ -5,7 +5,7 @@ import VectorIcon from 'react-native-vector-icons/Ionicons';
 
 import ForgotPasswordForm from '@/components/auth/ForgotPasswordForm';
 import { IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import { logError } from '@/helpers/logger';
 import { ParamList } from '@/screens';

@@ -9,7 +9,7 @@ import {
   IColorScheme,
   Radius,
 } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp } from '@/helpers/dimensions';
 import BookingScreen from '@/screens/tabs/booking';
 import ExploreScreen from '@/screens/tabs/explore';

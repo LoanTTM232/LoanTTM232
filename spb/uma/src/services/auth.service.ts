@@ -45,22 +45,16 @@ export interface IAuthService {
   login(
     data: LoginRequest
   ): Promise<ApiResponse<LoginResponse> | ResponseError>;
-
   logout(): Promise<void>;
-
   register(data: RegisterRequest): Promise<ApiResponse<null> | ResponseError>;
-
   refreshToken(): Promise<ApiResponse<RefreshTokenResponse> | ResponseError>;
-
   googleCallback(
     data: GoogleCallbackRequest
   ): Promise<ApiResponse<LoginResponse> | ResponseError>;
-
   verifyEmail(
     token: number,
     email: string
   ): Promise<ApiResponse<null> | ResponseError>;
-
   resendVerifyEmailOtp(
     email: string
   ): Promise<ApiResponse<null> | ResponseError>;

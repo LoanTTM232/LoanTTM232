@@ -1,8 +1,14 @@
 import React, { FC, useContext, useRef } from 'react';
-import { Animated, Pressable, StyleProp, StyleSheet, ViewStyle } from 'react-native';
+import {
+  Animated,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native';
 
 import { IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp } from '@/helpers/dimensions';
 
 interface IButtonProps {

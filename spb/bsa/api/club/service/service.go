@@ -10,7 +10,7 @@ import (
 
 type IService interface {
 	Update(reqBody *model.UpdateClubRequest, clubId string) (*tb.Club, error)
-	GetByID(clubId, currentClubRoleName string) (*tb.Club, error)
+	GetByID(clubId string) (*tb.Club, error)
 	Delete(clubId string) error
 	Create(reqBody *model.CreateClubRequest) (*tb.Club, error)
 }

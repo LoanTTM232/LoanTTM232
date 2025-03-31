@@ -2,10 +2,10 @@ import React, { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import SearchBar from '@/components/home/SearchBar';
-import UnitTabView from '@/components/home/UnitTabView';
+import SearchBar from '@/components/common/SearchBar';
+import UnitTabView from '@/components/home/UnitTab';
 import { IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp } from '@/helpers/dimensions';
 
 const HomeScreen: React.FC = () => {
@@ -45,7 +45,7 @@ const createStyles = (theme: IColorScheme) => {
     container: {
       flex: 1,
       backgroundColor: theme.backgroundDark,
-      gap: hp(2),
+      gap: hp(1),
     },
   });
 };

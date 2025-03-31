@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { DEFAULT_ICON_SIZE, fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
+import {
+  DEFAULT_ICON_SIZE,
+  fontFamily,
+  fontSize,
+  IColorScheme,
+  Radius,
+} from '@/constants';
 import { hp } from '@/helpers/dimensions';
 import { useSearchAnimation } from '@/hooks/useSearchAnimation';
 import { SearchBar } from '@/ui/search/SearchBar';
@@ -9,7 +15,7 @@ import { SearchResults } from '@/ui/search/SearchResults';
 import { SearchProps } from '@/ui/search/types';
 
 const Search: React.FC<SearchProps> = ({
-  placeholder = 'Search...',
+  placeholder = 'Search',
   onSearch,
   theme,
   containerStyle,

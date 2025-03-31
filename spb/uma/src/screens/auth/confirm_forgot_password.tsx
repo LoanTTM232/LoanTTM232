@@ -5,7 +5,7 @@ import VectorIcon from 'react-native-vector-icons/AntDesign';
 
 import ConfirmForgotPasswordForm from '@/components/auth/ConfirmForgotPasswordForm';
 import { DEFAULT_ICON_SIZE, IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import { ParamList } from '@/screens';
 import BackButton from '@/ui/button/Back';

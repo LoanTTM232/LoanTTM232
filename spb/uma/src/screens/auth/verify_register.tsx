@@ -5,7 +5,7 @@ import VectorIcon from 'react-native-vector-icons/Ionicons';
 
 import VerifyRegisterForm from '@/components/auth/VerifyRegisterForm';
 import { IColorScheme } from '@/constants';
-import { ThemeContext } from '@/contexts/theme.context';
+import { ThemeContext } from '@/contexts/theme';
 import { hp } from '@/helpers/dimensions';
 import { ParamList } from '@/screens';
 import BackButton from '@/ui/button/Back';

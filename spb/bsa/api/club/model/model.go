@@ -7,15 +7,15 @@ import (
 )
 
 type CreateClubRequest struct {
-	Name        string                              `json:"name" validate:"required"`
-	OpenTime    string                              `json:"open_time" validate:"yy:mm,required"`
-	CloseTime   string                              `json:"close_time" validate:"yy:mm,required"`
-	Phone       string                              `json:"phone" validate:"required,e164"`
-	OwnerID     string                              `json:"owner_id" validate:"required"`
-	Address     *addressModel.CreateAddressRequest  `json:"address" validate:"required"`
-	Description string                              `json:"description"`
-	Media       []*mediaModel.CreateMediaRequest    `json:"media" validate:"required"`
-	SportTypes  []*sportType.CreateSportTypeRequest `json:"sport_types" validate:"required"`
+	Name        string                             `json:"name" validate:"required"`
+	OpenTime    string                             `json:"open_time" validate:"yy:mm,required"`
+	CloseTime   string                             `json:"close_time" validate:"yy:mm,required"`
+	Phone       string                             `json:"phone" validate:"required,e164"`
+	OwnerID     string                             `json:"owner_id" validate:"required"`
+	Address     *addressModel.CreateAddressRequest `json:"address" validate:"required"`
+	Description string                             `json:"description"`
+	Media       []*mediaModel.CreateMediaRequest   `json:"media" validate:"required"`
+	SportTypes  []string                           `json:"sport_types" validate:"required"`
 }
 
 type UpdateClubRequest struct {
