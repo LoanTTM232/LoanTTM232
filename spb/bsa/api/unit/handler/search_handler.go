@@ -38,7 +38,7 @@ func (h *Handler) Search(ctx fiber.Ctx) error {
 
 	units, total, err := h.service.Search(reqBody)
 	if err != nil {
-		return fctx.ErrResponse(msg.UNIT_NOTFOUND)
+		return fctx.ErrResponse(msg.NOT_FOUND)
 	}
 
 	response := utility.MapUnitEntitiesToResponse(units, reqBody, total)

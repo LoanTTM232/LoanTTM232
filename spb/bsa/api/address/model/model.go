@@ -22,9 +22,10 @@ type CreateAddressRequest struct {
 }
 
 type UpdateAddressRequest struct {
-	Address           *string `json:"address" validate:"omitempty,max=255"`
-	LocationGeography Point   `json:"location_geography" validate:"omitempty"`
-	WardID            string  `json:"ward_id" validate:"omitempty"`
+	ID                string `json:"id" validate:"required"`
+	Address           string `json:"address" validate:"omitempty,max=255"`
+	LocationGeography *Point `json:"location_geography" validate:"omitempty"`
+	WardID            string `json:"ward_id" validate:"omitempty"`
 }
 
 type AddressResponse struct {

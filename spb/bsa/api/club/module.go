@@ -25,6 +25,7 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	ClubHandler = handler.NewHandler(ClubService)
 
 	clubRoute := router.Group("/api/v1/clubs")
+	clubRoute.Get("/", ClubHandler.GetAll)
 	clubRoute.Get("/:id", ClubHandler.GetByID)
 	clubRoute.Post("/", ClubHandler.Create, customMiddleware.CheckAccess("club:create"))
 	clubRoute.Put("/:id", ClubHandler.Update, customMiddleware.CheckAccess("club:update"))

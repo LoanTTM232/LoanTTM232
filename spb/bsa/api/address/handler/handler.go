@@ -10,6 +10,9 @@ type IHandler interface {
 	GetProvinces(ctx fiber.Ctx) error
 	GetProvinceDistricts(ctx fiber.Ctx) error
 	GetDistrictWards(ctx fiber.Ctx) error
+	GetProvinceByID(ctx fiber.Ctx) error
+	GetDistrictByID(ctx fiber.Ctx) error
+	GetWardByID(ctx fiber.Ctx) error
 }
 
 type Handler struct {

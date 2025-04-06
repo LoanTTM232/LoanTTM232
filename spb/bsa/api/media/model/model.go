@@ -1,5 +1,12 @@
 package model
 
+type OwnerType string
+
+var (
+	OwnerTypeClub OwnerType = "club"
+	OwnerTypeUnit OwnerType = "unit"
+)
+
 type MediaResponse struct {
 	MediaID  string `json:"media_id"`
 	FilePath string `json:"file_path"`
@@ -14,7 +21,8 @@ type CreateMediaRequest struct {
 }
 
 type UpdateMediaRequest struct {
-	FilePath *string `json:"file_path" validate:"omitempty,max=255"`
-	FileType *string `json:"file_type" validate:"omitempty,max=255"`
-	Hash     *string `json:"hash" validate:"omitempty,max=255"`
+	ID       string `json:"id" validate:"required"`
+	FilePath string `json:"file_path" validate:"omitempty,max=255"`
+	FileType string `json:"file_type" validate:"omitempty,max=255"`
+	Hash     string `json:"hash" validate:"omitempty,max=255"`
 }

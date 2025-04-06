@@ -34,9 +34,9 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 
 	if club, err = s.service.GetByID(clubId); err != nil {
 		logger.Errorf("error get club by id: %v", err)
-		return fctx.ErrResponse(msg.UNIT_NOTFOUND)
+		return fctx.ErrResponse(msg.NOT_FOUND)
 	}
 
 	clubResponse := utility.MapEntityToResponse(club)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_GET_UNIT_SUCCESS, clubResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_GET_CLUB_SUCCESS, clubResponse)
 }

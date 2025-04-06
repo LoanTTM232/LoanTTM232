@@ -1,6 +1,8 @@
 package utility
 
 import (
+	"strings"
+
 	"spb/bsa/api/address/model"
 	tb "spb/bsa/pkg/entities"
 )
@@ -55,12 +57,23 @@ func MapCreateRequestToEntity(reqBody *model.CreateAddressRequest) *tb.Address {
 	}
 }
 
-func MapUpdateRequestToEntity(reqBody *model.UpdateAddressRequest) *tb.Address {
-	return &tb.Address{
-		Address:           *reqBody.Address,
-		LocationGeography: tb.GeoPoint{Type: "Point", Coordinates: PointToDoubleFloat(reqBody.LocationGeography)},
-		WardID:            reqBody.WardID,
+func MapUpdateRequestToEntity(reqBody *model.UpdateAddressRequest) map[string]interface{} {
+	updates := make(map[string]interface{})
+
+	if trimmed := strings.TrimSpace(reqBody.Address); trimmed != "" {
+		updates["address"] = trimmed
 	}
+	if reqBody.LocationGeography != nil {
+		updates["location_geography"] = tb.GeoPoint{Type: "Point", Coordinates: PointToDoubleFloat(*reqBody.LocationGeography)}
+	}
+	if trimmed := strings.TrimSpace(reqBody.WardID); trimmed != "" {
+		updates["ward_id"] = trimmed
+	}
+	if trimmed := strings.TrimSpace(reqBody.ID); trimmed != "" {
+		updates["id"] = trimmed
+	}
+
+	return updates
 }
 
 func MapWardEntitiesToIDs(ward []*tb.Ward) []string {
@@ -77,12 +90,7 @@ func MapProvinceEntitiesToResponse(provinces []*tb.Province) []*model.LocationRe
 	provinceResponses := make([]*model.LocationResponse, len(provinces))
 
 	for i, province := range provinces {
-		provinceResponses[i] = &model.LocationResponse{
-			ID:     province.ID,
-			Name:   province.Name,
-			NameEn: province.NameEn,
-			Code:   province.Code,
-		}
+		provinceResponses[i] = MapProvinceEntityToResponse(province)
 	}
 
 	return provinceResponses
@@ -92,12 +100,7 @@ func MapDistrictEntitiesToResponse(districts []*tb.District) []*model.LocationRe
 	districtResponses := make([]*model.LocationResponse, len(districts))
 
 	for i, district := range districts {
-		districtResponses[i] = &model.LocationResponse{
-			ID:     district.ID,
-			Name:   district.Name,
-			NameEn: district.NameEn,
-			Code:   district.Code,
-		}
+		districtResponses[i] = MapDistrictEntityToResponse(district)
 	}
 
 	return districtResponses
@@ -107,13 +110,35 @@ func MapWardEntitiesToResponse(wards []*tb.Ward) []*model.LocationResponse {
 	wardResponses := make([]*model.LocationResponse, len(wards))
 
 	for i, ward := range wards {
-		wardResponses[i] = &model.LocationResponse{
-			ID:     ward.ID,
-			Name:   ward.Name,
-			NameEn: ward.NameEn,
-			Code:   ward.Code,
-		}
+		wardResponses[i] = MapWardEntityToResponse(ward)
 	}
 
 	return wardResponses
+}
+
+func MapProvinceEntityToResponse(province *tb.Province) *model.LocationResponse {
+	return &model.LocationResponse{
+		ID:     province.ID,
+		Name:   province.Name,
+		NameEn: province.NameEn,
+		Code:   province.Code,
+	}
+}
+
+func MapDistrictEntityToResponse(district *tb.District) *model.LocationResponse {
+	return &model.LocationResponse{
+		ID:     district.ID,
+		Name:   district.Name,
+		NameEn: district.NameEn,
+		Code:   district.Code,
+	}
+}
+
+func MapWardEntityToResponse(ward *tb.Ward) *model.LocationResponse {
+	return &model.LocationResponse{
+		ID:     ward.ID,
+		Name:   ward.Name,
+		NameEn: ward.NameEn,
+		Code:   ward.Code,
+	}
 }

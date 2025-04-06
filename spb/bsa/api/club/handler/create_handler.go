@@ -38,5 +38,5 @@ func (s *Handler) Create(ctx fiber.Ctx) error {
 	}
 
 	clubResponse := utility.MapEntityToResponse(clubCreated)
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_CREATE_CLUB_FAILED, clubResponse)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_CREATE_CLUB_SUCCESS, clubResponse)
 }

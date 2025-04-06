@@ -5,6 +5,7 @@ var UnitTN = "unit"
 type Unit struct {
 	Base
 	Name        string         `gorm:"size:255;not null;uniqueIndex" json:"name"`
+	NameEn      string         `gorm:"size:255;not null" json:"name_en"`
 	OpenTime    string         `gorm:"size:5;not null" json:"open_time"`
 	CloseTime   string         `gorm:"size:5;not null" json:"close_time"`
 	Phone       string         `gorm:"size:25;not null" json:"phone"`
@@ -12,11 +13,11 @@ type Unit struct {
 	Status      int8           `gorm:"not null" json:"status"`
 	ClubID      string         `gorm:"type:uuid;not null" json:"club_id"`
 	AddressID   string         `gorm:"type:uuid;not null" json:"address_id"`
-	Address     *Address       `gorm:"not null;" json:"address"`
-	UnitPrice   []*UnitPrice   `gorm:"foreignKey:UnitID" json:"unit_price"`
-	UnitService []*UnitService `gorm:"foreignKey:UnitID" json:"unit_services"`
-	Media       []*Media       `gorm:"many2many:unit_media;" json:"media"`
-	SportTypes  []*SportType   `gorm:"many2many:unit_sporttype;" json:"sport_types"`
+	Address     *Address       `gorm:"not null;constraint:OnDelete:CASCADE" json:"address"`
+	UnitPrice   []*UnitPrice   `gorm:"foreignKey:UnitID;constraint:OnDelete:CASCADE" json:"unit_price"`
+	UnitService []*UnitService `gorm:"foreignKey:UnitID;constraint:OnDelete:CASCADE" json:"unit_services"`
+	Media       []*Media       `gorm:"polymorphic:Owner;polymorphicValue:unit" json:"media"`
+	SportTypes  []*SportType   `gorm:"many2many:unit_sporttype;constraint:OnDelete:CASCADE" json:"sport_types"`
 }
 
 func (Unit) TableName() string {

@@ -1,6 +1,8 @@
 package utility
 
 import (
+	"strings"
+
 	au "spb/bsa/api/address/utility"
 	mu "spb/bsa/api/media/utility"
 	stu "spb/bsa/api/sport_type/utility"
@@ -54,6 +56,7 @@ func MapUnitEntitiesToResponse(units []*tb.Unit, reqBody *model.SearchUnitReques
 func MapCreateRequestToEntity(reqBody *model.CreateUnitRequest) *tb.Unit {
 	return &tb.Unit{
 		Name:        reqBody.Name,
+		NameEn:      utils.VietNameseCharacterToASCII(reqBody.Name),
 		OpenTime:    reqBody.OpenTime,
 		CloseTime:   reqBody.CloseTime,
 		Phone:       reqBody.Phone,
@@ -64,7 +67,7 @@ func MapCreateRequestToEntity(reqBody *model.CreateUnitRequest) *tb.Unit {
 		UnitPrice:   upu.MapCreateRequestToEntities(reqBody.UnitPrices),
 		UnitService: usu.MapCreateRequestToEntities(reqBody.UnitServices),
 		Media:       mu.MapCreateRequestToEntities(reqBody.Media),
-		SportTypes:  stu.MapCreateRequestToEntities(reqBody.SportTypes),
+		SportTypes:  stu.MapIdsToEntities(reqBody.SportTypes),
 	}
 }
 
@@ -72,42 +75,46 @@ func MapCreateRequestToEntity(reqBody *model.CreateUnitRequest) *tb.Unit {
 // @function: MapUpdateRequestToEntity
 // @description: mapping update fields
 // @param: reqBody *model.UpdateUnitRequest
-// @return: tb.Unit
-func MapUpdateRequestToEntity(reqBody *model.UpdateUnitRequest) *tb.Unit {
-	unitUpdate := new(tb.Unit)
+// @return: map[string]interface{}
+func MapUpdateRequestToEntity(reqBody *model.UpdateUnitRequest) map[string]interface{} {
+	unitUpdate := make(map[string]interface{})
 
-	if reqBody.Name != nil {
-		unitUpdate.Name = *reqBody.Name
+	// Trim and check non-empty strings
+	if trimmed := strings.TrimSpace(reqBody.Name); trimmed != "" {
+		unitUpdate["name"] = trimmed
+		unitUpdate["name_en"] = utils.VietNameseCharacterToASCII(trimmed)
 	}
-	if reqBody.OpenTime != nil {
-		unitUpdate.OpenTime = *reqBody.OpenTime
+	if trimmed := strings.TrimSpace(reqBody.OpenTime); trimmed != "" {
+		unitUpdate["open_time"] = trimmed
 	}
-	if reqBody.CloseTime != nil {
-		unitUpdate.CloseTime = *reqBody.CloseTime
+	if trimmed := strings.TrimSpace(reqBody.CloseTime); trimmed != "" {
+		unitUpdate["close_time"] = trimmed
 	}
-	if reqBody.Phone != nil {
-		unitUpdate.Phone = *reqBody.Phone
+	if trimmed := strings.TrimSpace(reqBody.Phone); trimmed != "" {
+		unitUpdate["phone"] = trimmed
 	}
-	if reqBody.Description != nil {
-		unitUpdate.Description = *reqBody.Description
+	if trimmed := strings.TrimSpace(reqBody.Description); trimmed != "" {
+		unitUpdate["description"] = trimmed
 	}
 	if reqBody.Status != nil {
-		unitUpdate.Status = *reqBody.Status
+		unitUpdate["status"] = *reqBody.Status
 	}
 	if reqBody.Address != nil {
-		unitUpdate.Address = au.MapUpdateRequestToEntity(reqBody.Address)
+		unitUpdate["address"] = au.MapUpdateRequestToEntity(reqBody.Address)
 	}
+
+	// Handle non-string fields
 	if reqBody.UnitPrices != nil {
-		unitUpdate.UnitPrice = upu.MapUpdateRequestToEntities(reqBody.UnitPrices)
+		unitUpdate["unit_price"] = upu.MapUpdateRequestToEntities(reqBody.UnitPrices)
 	}
 	if reqBody.UnitServices != nil {
-		unitUpdate.UnitService = usu.MapUpdateRequestToEntities(reqBody.UnitServices)
+		unitUpdate["unit_service"] = usu.MapUpdateRequestToEntities(reqBody.UnitServices)
 	}
 	if reqBody.Media != nil {
-		unitUpdate.Media = mu.MapUpdateRequestToEntities(reqBody.Media)
+		unitUpdate["media"] = mu.MapUpdateRequestToEntities(reqBody.Media)
 	}
 	if reqBody.SportTypes != nil {
-		unitUpdate.SportTypes = stu.MapUpdateRequestToEntities(reqBody.SportTypes)
+		unitUpdate["sport_types"] = stu.MapIdsToEntities(reqBody.SportTypes)
 	}
 
 	return unitUpdate

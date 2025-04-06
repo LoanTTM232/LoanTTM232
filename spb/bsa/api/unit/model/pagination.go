@@ -4,7 +4,7 @@ import (
 	"spb/bsa/pkg/utils"
 )
 
-// @queries: i=?&p=?&b=?&t=?&q=?&st=?&pv=?&ct=?&dt=?
+// @queries: i=?&p=?&b=?&t=?&q=?&st=?&pv=?&wd=?&dt=?
 // &i = items
 // &p = page
 // &b = order by

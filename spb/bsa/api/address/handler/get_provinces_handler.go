@@ -8,6 +8,16 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
+// GetProvinces godoc
+//
+// @Summary Get all provinces
+// @Description Get all provinces
+// @Tags Address
+// @Accept json
+// @Produce json
+// @Success 200 {object} utils.JSONResult{} "Get all provinces success"
+// @Failure 400 {object} utils.JSONResult{} "Get all provinces failed"
+// @Router /api/v1/provinces [get]
 func (h Handler) GetProvinces(ctx fiber.Ctx) error {
 	fctx := utils.FiberCtx{Fctx: ctx}
 

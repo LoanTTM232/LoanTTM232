@@ -9,6 +9,17 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
+// GetProvinceByID godoc
+//
+// @Summary Get province by ID
+// @Description Get province by ID
+// @Tags Address
+// @Accept json
+// @Produce json
+// @Param id path string true "Province ID"
+// @Success 200 {object} utils.JSONResult{} "Get province by ID success"
+// @Failure 400 {object} utils.JSONResult{} "Get province by ID failed"
+// @Router /api/v1/provinces/{id}/districts [get]
 func (h Handler) GetProvinceDistricts(ctx fiber.Ctx) error {
 	var err error
 	var provinceID string

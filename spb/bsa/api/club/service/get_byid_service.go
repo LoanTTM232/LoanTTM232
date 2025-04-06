@@ -1,7 +1,9 @@
 package service
 
 import (
+	"spb/bsa/api/address"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/msg"
 )
 
 // @author: LoanTT
@@ -12,16 +14,18 @@ import (
 func (s *Service) GetByID(clubId string) (*tb.Club, error) {
 	club := new(tb.Club)
 
-	err := s.db.
-		Model(&tb.Club{}).
-		Preload("Address").
+	err := s.db.Model(&tb.Club{}).
+		Preload("Owner").
 		Preload("Media").
 		Preload("SportTypes").
-		// Select("*, ST_AsGeoJSON(address.location_geography) as location_geography").
-		// Joins("join address on club.address_id = address.id").
 		Where("club.id = ?", clubId).First(club).Error
 	if err != nil {
-		return nil, err
+		return nil, msg.ErrClubNotFound
+	}
+
+	club.Address, err = address.AddressService.GetAddressByID(club.AddressID)
+	if err != nil {
+		return nil, msg.ErrAddressNotFound
 	}
 
 	return club, nil

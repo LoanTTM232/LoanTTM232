@@ -33,6 +33,8 @@ var (
 	ErrMetadataNotFound        = NewError("metadata not found")
 	ErrUpdateMetadataFailed    = NewError("update metadata failed")
 	ErrClubNameExists          = NewError("club name already exists")
+	ErrClubNotFound            = NewError("club not found")
+	ErrAddressNotFound         = NewError("address not found")
 )
 
 var (

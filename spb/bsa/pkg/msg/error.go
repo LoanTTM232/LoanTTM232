@@ -6,6 +6,7 @@ const (
 	CODE_SERVER_ERROR = "ERS001"
 	CODE_FORBIDDEN    = "ERS002"
 	CODE_BAD_REQUEST  = "ERS003"
+	CODE_NOT_FOUND    = "ERS004"
 )
 
 const (
@@ -93,6 +94,7 @@ var (
 	SERVER_ERROR = fiber.NewError(fiber.StatusInternalServerError, CODE_SERVER_ERROR)
 	FORBIDDEN    = fiber.NewError(fiber.StatusForbidden, CODE_FORBIDDEN)
 	BAD_REQUEST  = fiber.NewError(fiber.StatusBadRequest, CODE_BAD_REQUEST)
+	NOT_FOUND    = fiber.NewError(fiber.StatusNotFound, CODE_BAD_REQUEST)
 )
 
 var (
@@ -114,20 +116,17 @@ var (
 	UPDATE_LOCATION_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_LOCATION_FAILED)
 
 	// metadata error
-	METADATA_NOTFOUND      = fiber.NewError(fiber.StatusNotFound, CODE_METADATA_NOTFOUND)
 	UPDATE_METADATA_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_METADATA_FAILED)
 
 	// unit error
 	DELETE_UNIT_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_DELETE_UNIT_FAILED)
 	GET_UNIT_FAILED    = fiber.NewError(fiber.StatusBadRequest, CODE_GET_UNIT_FAILED)
-	UNIT_NOTFOUND      = fiber.NewError(fiber.StatusNotFound, CODE_UNIT_NOTFOUND)
 	UPDATE_UNIT_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_UNIT_FAILED)
 
 	// unit price error
 	CREATE_UNITPRICE_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_CREATE_UNITPRICE_FAILED)
 	DELETE_UNITPRICE_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_DELETE_UNITPRICE_FAILED)
 	GET_UNITPRICE_FAILED    = fiber.NewError(fiber.StatusNotFound, CODE_GET_UNITPRICE_FAILED)
-	UNITPRICE_NOTFOUND      = fiber.NewError(fiber.StatusNotFound, CODE_UNITPRICE_NOTFOUND)
 	UPDATE_UNITPRICE_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_UNITPRICE_FAILED)
 
 	// unit service error
@@ -135,14 +134,12 @@ var (
 	DELETE_UNIT_SERVICE_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_DELETE_UNIT_SERVICE_FAILED)
 	GET_UNIT_SERVICE_FAILED    = fiber.NewError(fiber.StatusBadRequest, CODE_GET_UNIT_SERVICE_FAILED)
 	UPDATE_UNIT_SERVICE_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_UNIT_SERVICE_FAILED)
-	UNIT_SERVICE_NOTFOUND      = fiber.NewError(fiber.StatusBadRequest, CODE_UNIT_SERVICE_NOTFOUND)
 
 	// sport type error
 	CREATE_SPORT_TYPE_FAILED  = fiber.NewError(fiber.StatusBadRequest, CODE_CREATE_SPORT_TYPE_FAILED)
 	DELETE_SPORT_TYPE_FAILED  = fiber.NewError(fiber.StatusBadRequest, CODE_DELETE_SPORT_TYPE_FAILED)
 	GET_SPORT_TYPE_FAILED     = fiber.NewError(fiber.StatusBadRequest, CODE_GET_SPORT_TYPE_FAILED)
 	UPDATE_SPORT_TYPE_FAILED  = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_SPORT_TYPE_FAILED)
-	SPORT_TYPE_NOTFOUND       = fiber.NewError(fiber.StatusBadRequest, CODE_SPORT_TYPE_NOTFOUND)
 	GET_ALL_SPORT_TYPE_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_GET_ALL_SPORT_TYPE_FAILED)
 
 	// user error
@@ -150,12 +147,10 @@ var (
 	DELETE_USER_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_DELETE_USER_FAILED)
 	GET_USER_FAILED    = fiber.NewError(fiber.StatusBadRequest, CODE_GET_USER_FAILED)
 	UPDATE_USER_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_USER_FAILED)
-	USER_NOTFOUND      = fiber.NewError(fiber.StatusBadRequest, CODE_USER_NOTFOUND)
 
 	// club error
 	CREATE_CLUB_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_CREATE_CLUB_FAILED)
 	DELETE_CLUB_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_DELETE_CLUB_FAILED)
 	GET_CLUB_FAILED    = fiber.NewError(fiber.StatusBadRequest, CODE_GET_CLUB_FAILED)
 	UPDATE_CLUB_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_UPDATE_CLUB_FAILED)
-	CLUB_NOTFOUND      = fiber.NewError(fiber.StatusBadRequest, CODE_CLUB_NOTFOUND)
 )

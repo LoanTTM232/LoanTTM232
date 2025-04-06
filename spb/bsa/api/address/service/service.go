@@ -13,6 +13,10 @@ type IService interface {
 	GetProvinceDistricts(provinceID string) ([]*tb.District, error)
 	GetDistrictWards(districtID string) ([]*tb.Ward, error)
 	SearchByIDs(reqBody *model.SearchByIDRequest) ([]*tb.Ward, error)
+	GetAddressByID(addressID string) (*tb.Address, error)
+	GetProvinceByID(id string) (*tb.Province, error)
+	GetDistrictByID(id string) (*tb.District, error)
+	GetWardByID(id string) (*tb.Ward, error)
 }
 
 type Service struct {

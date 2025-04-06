@@ -140,6 +140,18 @@ func ContainBit(bit, val uint64) bool {
 // @param: val string
 // @return: string
 func CreateSlug(val string) string {
+	slug := VietNameseCharacterToASCII(val)
+
+	splitRegex := regexp.MustCompile(`(\s+)`)
+	slug = splitRegex.ReplaceAllString(slug, "-")
+
+	splitsRegex := regexp.MustCompile(`-+`)
+	slug = splitsRegex.ReplaceAllString(slug, "-")
+
+	return strings.Trim(slug, "-")
+}
+
+func VietNameseCharacterToASCII(val string) string {
 	slug := strings.ToLower(val)
 	aRegex := regexp.MustCompile(`(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)`)
 	slug = aRegex.ReplaceAllString(slug, "a")
@@ -162,16 +174,6 @@ func CreateSlug(val string) string {
 	dRegex := regexp.MustCompile(`(đ)`)
 	slug = dRegex.ReplaceAllString(slug, "d")
 
-	specRegex := regexp.MustCompile(`([^0-9a-z-\s])`)
-	slug = specRegex.ReplaceAllString(slug, "")
-
-	splitRegex := regexp.MustCompile(`(\s+)`)
-	slug = splitRegex.ReplaceAllString(slug, "-")
-
-	splitsRegex := regexp.MustCompile(`-+`)
-	slug = splitsRegex.ReplaceAllString(slug, "-")
-
-	slug = strings.Trim(slug, "-")
 	return slug
 }
 

@@ -9,6 +9,17 @@ import (
 	"github.com/gofiber/fiber/v3"
 )
 
+// GetDistrictWards godoc
+//
+// @Summary Get all wards in a district
+// @Description Get all wards in a district
+// @Tags Address
+// @Accept json
+// @Produce json
+// @Param id path string true "District ID"
+// @Success 200 {object} utils.JSONResult{} "Get all wards in a district success"
+// @Failure 400 {object} utils.JSONResult{} "Get all wards in a district failed"
+// @Router /api/v1/districts/{id}/wards [get]
 func (h Handler) GetDistrictWards(ctx fiber.Ctx) error {
 	var err error
 	var districtID string

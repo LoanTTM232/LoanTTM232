@@ -1,6 +1,8 @@
 package utility
 
 import (
+	"strings"
+
 	"spb/bsa/api/unit_price/model"
 	tb "spb/bsa/pkg/entities"
 
@@ -69,20 +71,23 @@ func MapCreateRequestToEntities(reqBody []*model.CreateUnitPriceRequest) []*tb.U
 // @function: MapUpdateRequestToEntity
 // @description: mapping update fields
 // @param: reqBody *model.UpdateUnitPriceRequest
-// @return: tb.UnitPrice
-func MapUpdateRequestToEntity(reqBody *model.UpdateUnitPriceRequest) *tb.UnitPrice {
-	unitPriceUpdate := new(tb.UnitPrice)
+// @return: map[string]interface{}
+func MapUpdateRequestToEntity(reqBody *model.UpdateUnitPriceRequest) map[string]interface{} {
+	updates := make(map[string]interface{})
 
 	if reqBody.Price != nil {
-		unitPriceUpdate.Price = *reqBody.Price
+		updates["price"] = *reqBody.Price
 	}
-	if reqBody.StartTime != nil {
-		unitPriceUpdate.StartTime = *reqBody.StartTime
+
+	if strings.TrimSpace(reqBody.StartTime) != "" {
+		updates["start_time"] = strings.TrimSpace(reqBody.StartTime)
 	}
-	if reqBody.EndTime != nil {
-		unitPriceUpdate.EndTime = *reqBody.EndTime
+
+	if strings.TrimSpace(reqBody.EndTime) != "" {
+		updates["end_time"] = strings.TrimSpace(reqBody.EndTime)
 	}
-	return unitPriceUpdate
+
+	return updates
 }
 
 // @author: LoanTT
@@ -90,10 +95,10 @@ func MapUpdateRequestToEntity(reqBody *model.UpdateUnitPriceRequest) *tb.UnitPri
 // @description: mapping update fields
 // @param: reqBody []model.UpdateUnitPriceRequest
 // @return: []tb.UnitPrice
-func MapUpdateRequestToEntities(reqBody []*model.UpdateUnitPriceRequest) []*tb.UnitPrice {
-	unitPrices := make([]*tb.UnitPrice, 0)
+func MapUpdateRequestToEntities(reqBody []model.UpdateUnitPriceRequest) []map[string]interface{} {
+	unitPrices := make([]map[string]interface{}, len(reqBody))
 	for id := range reqBody {
-		unitPrices[id] = MapUpdateRequestToEntity(reqBody[id])
+		unitPrices[id] = MapUpdateRequestToEntity(&reqBody[id])
 	}
 	return unitPrices
 }

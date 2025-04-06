@@ -36,6 +36,6 @@ type CreateUnitPriceRequest struct {
 
 type UpdateUnitPriceRequest struct {
 	Price     *float32 `json:"price,omitempty" validate:"omitempty,gt=0"`
-	StartTime *string  `json:"start_time,omitempty" validate:"omitempty,yy:mm"`
-	EndTime   *string  `json:"end_time,omitempty" validate:"omitempty,yy:mm"`
+	StartTime string   `json:"start_time,omitempty" validate:"omitempty,yy:mm"`
+	EndTime   string   `json:"end_time,omitempty" validate:"omitempty,yy:mm"`
 }

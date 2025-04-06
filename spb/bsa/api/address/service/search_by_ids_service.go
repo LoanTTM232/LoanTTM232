@@ -14,7 +14,7 @@ func (s Service) SearchByIDs(reqBody *model.SearchByIDRequest) ([]*tb.Ward, erro
 	} else if reqBody.DistrictID != "" {
 		query = query.Preload("District").Where("district_id = ?", reqBody.DistrictID)
 	} else if reqBody.ProvinceID != "" {
-		query = query.Preload("District").Where("district_id IN (SELECT id FROM districts WHERE province_id = ?)", reqBody.ProvinceID)
+		query = query.Preload("District.Province").Where("district_id IN (SELECT id FROM districts WHERE province_id = ?)", reqBody.ProvinceID)
 	}
 
 	err := query.Find(&wards).Error

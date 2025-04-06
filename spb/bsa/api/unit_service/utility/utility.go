@@ -1,6 +1,8 @@
 package utility
 
 import (
+	"strings"
+
 	"spb/bsa/api/unit_service/model"
 	tb "spb/bsa/pkg/entities"
 )
@@ -69,33 +71,35 @@ func MapCreateRequestToEntities(reqBody []*model.CreateUnitServiceRequest) []*tb
 // @author: LoanTT
 // @function: MapUpdateRequestToEntity
 // @description: mapping update fields
-// @param: reqBody *model.UpdateUnitServiceRequest
-// @return: tb.UnitService
-func MapUpdateRequestToEntity(reqBody *model.UpdateUnitServiceRequest) *tb.UnitService {
-	unitServiceUpdate := new(tb.UnitService)
+// @param: reqBody model.UpdateUnitServiceRequest
+// @return: map[string]interface{}
+func MapUpdateRequestToEntity(reqBody model.UpdateUnitServiceRequest) map[string]interface{} {
+	updates := make(map[string]interface{})
 
-	if reqBody.Icon != nil {
-		unitServiceUpdate.Icon = *reqBody.Icon
+	if trimmed := strings.TrimSpace(reqBody.Icon); trimmed != "" {
+		updates["icon"] = trimmed
 	}
+
 	if reqBody.Price != nil {
-		unitServiceUpdate.Price = *reqBody.Price
-	}
-	if reqBody.Description != nil {
-		unitServiceUpdate.Description = *reqBody.Description
+		updates["price"] = *reqBody.Price
 	}
 
-	return unitServiceUpdate
+	if trimmed := strings.TrimSpace(reqBody.Description); trimmed != "" {
+		updates["description"] = trimmed
+	}
+
+	return updates
 }
 
 // @author: LoanTT
 // @function: MapUpdateRequestToEntities
 // @description: mapping update fields
-// @param: reqBody []model.UpdateUnitServiceRequest
-// @return: []tb.UnitService
-func MapUpdateRequestToEntities(reqBody []*model.UpdateUnitServiceRequest) []*tb.UnitService {
-	unitServices := make([]*tb.UnitService, 0)
-	for _, unitService := range reqBody {
-		unitServices = append(unitServices, MapUpdateRequestToEntity(unitService))
+// @param: reqBody []*model.UpdateUnitServiceRequest
+// @return: []map[string]interface{}
+func MapUpdateRequestToEntities(reqBody []model.UpdateUnitServiceRequest) []map[string]interface{} {
+	updates := make([]map[string]interface{}, 0, len(reqBody))
+	for _, service := range reqBody {
+		updates = append(updates, MapUpdateRequestToEntity(service))
 	}
-	return unitServices
+	return updates
 }

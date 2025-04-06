@@ -20,7 +20,6 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 	units := make([]*tb.Unit, 0)
 
 	query := s.db.
-		Preload("Address").
 		Preload("UnitPrice").
 		Preload("UnitService").
 		Preload("Media").
@@ -35,8 +34,8 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 			return nil, 0, err
 		}
 
-		locationIds := au.MapWardEntitiesToIDs(wards)
-		query = query.Where("ward_id IN (?)", locationIds)
+		wardIds := au.MapWardEntitiesToIDs(wards)
+		query = query.Where("address_id IN (SELECT id from address WHERE ward_id IN ?)", wardIds)
 	}
 
 	// get by sport type

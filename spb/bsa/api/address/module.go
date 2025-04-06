@@ -24,7 +24,10 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	AddressHandler = handler.NewHandler(AddressService)
 
 	addressRoute := router.Group("/api/v1/addresses")
-	addressRoute.Get("/province", AddressHandler.GetProvinces)
-	addressRoute.Get("/province/:id", AddressHandler.GetProvinceDistricts)
-	addressRoute.Get("/province/district/:id", AddressHandler.GetDistrictWards)
+	addressRoute.Get("/provinces", AddressHandler.GetProvinces)
+	addressRoute.Get("/provinces/:id", AddressHandler.GetProvinceByID)
+	addressRoute.Get("/provinces/:id/districts", AddressHandler.GetProvinceDistricts)
+	addressRoute.Get("/districts/:id", AddressHandler.GetDistrictByID)
+	addressRoute.Get("/districts/:id/wards", AddressHandler.GetDistrictWards)
+	addressRoute.Get("/wards/:id", AddressHandler.GetWardByID)
 }

@@ -34,7 +34,7 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 
 	if unit, err = s.service.GetByID(unitId); err != nil {
 		logger.Errorf("error get unit by id: %v", err)
-		return fctx.ErrResponse(msg.UNIT_NOTFOUND)
+		return fctx.ErrResponse(msg.NOT_FOUND)
 	}
 
 	unitResponse := utility.MapUnitEntityToResponse(unit)
