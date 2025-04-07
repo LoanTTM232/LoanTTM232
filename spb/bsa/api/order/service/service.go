@@ -1,15 +1,12 @@
 package service
 
 import (
-	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/global"
 
 	"gorm.io/gorm"
 )
 
-type IService interface {
-	GetChildren(role any) ([]tb.Role, error)
-}
+type IService interface{}
 
 type Service struct {
 	db *gorm.DB
@@ -17,7 +14,7 @@ type Service struct {
 
 // @author: LoanTT
 // @function: NewService
-// @description: Create a new user service
+// @description: Create a new order service
 // @return: IService
 func NewService() IService {
 	return &Service{db: global.SPB_DB}
