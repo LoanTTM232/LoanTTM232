@@ -7,7 +7,7 @@ import (
 	"spb/bsa/pkg/msg"
 )
 
-func (s Service) DeleteMedia(clubId string, mediaId string) error {
+func (s *Service) DeleteMedia(clubId string, mediaId string) error {
 	// Check if club exists
 	var club tb.Club
 	err := s.db.Where("id = ?", clubId).First(&club).Error

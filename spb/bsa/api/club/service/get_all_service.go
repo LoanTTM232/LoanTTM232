@@ -13,7 +13,7 @@ import (
 // @description: Service for get all clubs
 // @param: reqBody model.GetClubsRequest
 // @return: []*tb.Club, int64, error
-func (s Service) GetAll(reqBody *model.GetClubsRequest) ([]*tb.Club, int64, error) {
+func (s *Service) GetAll(reqBody *model.GetClubsRequest) ([]*tb.Club, int64, error) {
 	var count int64
 	clubs := make([]*tb.Club, 0)
 

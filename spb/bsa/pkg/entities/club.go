@@ -15,7 +15,7 @@ type Club struct {
 	Owner       *User        `gorm:"foreignKey:OwnerID" json:"owner"`
 	Phone       string       `gorm:"size:20;not null" json:"phone"`
 	AddressID   string       `gorm:"type:uuid;not null" json:"address_id"`
-	Address     *Address     `gorm:"foreignKey:AddressID;not null" json:"address"`
+	Address     *Address     `gorm:"foreignKey:AddressID;constraint:OnDelete:RESTRICT;not null" json:"address"`
 	Description string       `gorm:"size:3000" json:"description"`
 	Media       []*Media     `gorm:"polymorphic:Owner;polymorphicValue:club" json:"media"`
 	Units       []*Unit      `gorm:"foreignKey:ClubID;constraint:OnDelete:CASCADE" json:"units"`

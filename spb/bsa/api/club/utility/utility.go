@@ -64,9 +64,6 @@ func MapUpdateRequestToEntity(reqBody *model.UpdateClubRequest) map[string]inter
 	if reqBody.Description != "" {
 		clubUpdate["description"] = reqBody.Description
 	}
-	if reqBody.Address != nil {
-		clubUpdate["address"] = addr.MapUpdateRequestToEntity(reqBody.Address)
-	}
 
 	return clubUpdate
 }

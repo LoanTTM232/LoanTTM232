@@ -2,6 +2,9 @@ package database
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"time"
 
 	"spb/bsa/pkg/config"
 	tb "spb/bsa/pkg/entities"
@@ -9,6 +12,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 // @author: LoanTT
@@ -37,6 +41,16 @@ func ConnectDB(configVal *config.Config) (*gorm.DB, error) {
 
 	db, err := gorm.Open(postgres.Open(databaseURL), &gorm.Config{
 		SkipDefaultTransaction: true,
+		Logger: logger.New(
+			log.New(os.Stdout, "\r\n", log.LstdFlags),
+			logger.Config{
+				SlowThreshold:             time.Second,
+				LogLevel:                  logger.Silent,
+				IgnoreRecordNotFoundError: true,
+				ParameterizedQueries:      true,
+				Colorful:                  true,
+			},
+		),
 	})
 	if err != nil {
 		return nil, msg.ErrConnectionFailed(err)

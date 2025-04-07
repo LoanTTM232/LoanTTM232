@@ -9,7 +9,7 @@ import (
 	"spb/bsa/pkg/msg"
 )
 
-func (s Service) AddMedia(clubId string, reqBody *mediaModel.CreateMediaRequest) error {
+func (s *Service) AddMedia(clubId string, reqBody *mediaModel.CreateMediaRequest) error {
 	// Check if club exists
 	var count int64
 	err := s.db.Model(&tb.Club{}).Where("id = ?", clubId).Count(&count).Error
@@ -20,29 +20,14 @@ func (s Service) AddMedia(clubId string, reqBody *mediaModel.CreateMediaRequest)
 		return msg.ErrClubNotFound
 	}
 
-	// Start transaction
-	tx := s.db.Begin()
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
-
 	// Create media record
 	media := mediaUtil.MapCreateRequestToEntity(reqBody)
-	if err := tx.Create(media).Error; err != nil {
-		tx.Rollback()
+	media.OwnerID = clubId
+	media.OwnerType = string(mediaModel.OwnerTypeClub)
+
+	if err := s.db.Create(media).Error; err != nil {
 		return fmt.Errorf("failed to create media: %w", err)
 	}
 
-	// Add media to club
-	if err := tx.Model(&tb.Club{}).
-		Where("id = ?", clubId).
-		Association("Media").
-		Append(media); err != nil {
-		tx.Rollback()
-		return fmt.Errorf("failed to associate media with club: %w", err)
-	}
-
-	return tx.Commit().Error
+	return nil
 }

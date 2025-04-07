@@ -13,7 +13,7 @@ type Unit struct {
 	Status      int8           `gorm:"not null" json:"status"`
 	ClubID      string         `gorm:"type:uuid;not null" json:"club_id"`
 	AddressID   string         `gorm:"type:uuid;not null" json:"address_id"`
-	Address     *Address       `gorm:"not null;constraint:OnDelete:CASCADE" json:"address"`
+	Address     *Address       `gorm:"not null;constraint:OnDelete:RESTRICT" json:"address"`
 	UnitPrice   []*UnitPrice   `gorm:"foreignKey:UnitID;constraint:OnDelete:CASCADE" json:"unit_price"`
 	UnitService []*UnitService `gorm:"foreignKey:UnitID;constraint:OnDelete:CASCADE" json:"unit_services"`
 	Media       []*Media       `gorm:"polymorphic:Owner;polymorphicValue:unit" json:"media"`

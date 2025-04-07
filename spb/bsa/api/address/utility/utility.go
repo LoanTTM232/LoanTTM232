@@ -69,9 +69,6 @@ func MapUpdateRequestToEntity(reqBody *model.UpdateAddressRequest) map[string]in
 	if trimmed := strings.TrimSpace(reqBody.WardID); trimmed != "" {
 		updates["ward_id"] = trimmed
 	}
-	if trimmed := strings.TrimSpace(reqBody.ID); trimmed != "" {
-		updates["id"] = trimmed
-	}
 
 	return updates
 }

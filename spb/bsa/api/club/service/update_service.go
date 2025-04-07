@@ -1,6 +1,10 @@
 package service
 
 import (
+	"fmt"
+
+	addressModel "spb/bsa/api/address/model"
+	addressUtil "spb/bsa/api/address/utility"
 	"spb/bsa/api/club/model"
 	"spb/bsa/api/club/utility"
 	tb "spb/bsa/pkg/entities"
@@ -35,18 +39,39 @@ func (s *Service) Update(reqBody *model.UpdateClubRequest, clubId string) error 
 	// Update club
 	club := utility.MapUpdateRequestToEntity(reqBody)
 	if len(club) > 0 {
-		if err = tx.Model(&tb.Club{}).Save(club).Error; err != nil {
+		if err = tx.Model(&tb.Club{}).Where("id = ?", clubId).Save(club).Error; err != nil {
 			return err
 		}
 	}
-
 	if reqBody.SportTypes != nil {
 		if err = UpdateClubSportTypes(tx, clubId, reqBody.SportTypes); err != nil {
 			return err
 		}
 	}
+	var clubEntity tb.Club
+	if err := tx.Select("address_id").Where("id = ?", clubId).First(&clubEntity).Error; err != nil {
+		tx.Rollback()
+		return fmt.Errorf("failed to get club's address: %w", err)
+	}
+	if reqBody.Address != nil {
+		if err = UpdateClubAddress(tx, clubEntity.AddressID, reqBody.Address); err != nil {
+			return err
+		}
+	}
 
 	if err := tx.Commit().Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return nil
+}
+
+func UpdateClubAddress(tx *gorm.DB, addressID string, address *addressModel.UpdateAddressRequest) error {
+	newAddress := addressUtil.MapUpdateRequestToEntity(address)
+
+	if err := tx.Model(&tb.Address{Base: tb.Base{ID: addressID}}).
+		Updates(newAddress).Error; err != nil {
 		tx.Rollback()
 		return err
 	}
