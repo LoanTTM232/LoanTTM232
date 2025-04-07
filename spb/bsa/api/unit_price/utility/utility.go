@@ -13,24 +13,25 @@ import (
 // @function: Map unitPrice entity to response
 // @description: Return unitPrice response
 // @return: model.UnitPriceResponse
-func MapUnitPriceEntityToResponse(unitPrice *tb.UnitPrice) model.UnitPriceResponse {
-	return model.UnitPriceResponse{
-		UnitPriceId: unitPrice.ID,
-		Price:       unitPrice.Price,
-		StartTime:   unitPrice.StartTime,
-		EndTime:     unitPrice.EndTime,
+func MapUnitPriceEntityToResponse(unitPrice *tb.UnitPrice) *model.UnitPriceResponse {
+	return &model.UnitPriceResponse{
+		ID:        unitPrice.ID,
+		Price:     unitPrice.Price,
+		Currency:  unitPrice.Currency,
+		StartTime: unitPrice.StartTime,
+		EndTime:   unitPrice.EndTime,
 	}
 }
 
 // @author: LoanTT
-// @function: MapUnitPricesEntityToResponse
+// @function: MapUnitPriceEntitiesToResponse
 // @description: Map unit_prices entity to response
 // @param: unit_prices []*tb.UnitPrice
 // @return: *model.UnitPricesResponse
-func MapUnitPricesEntityToResponse(unit_prices []*tb.UnitPrice, reqBody *model.GetUnitPricesRequest) *model.UnitPricesResponse {
+func MapUnitPriceEntitiesToResponse(unit_prices []*tb.UnitPrice, reqBody *model.GetUnitPricesRequest) *model.UnitPricesResponse {
 	res := new(model.UnitPricesResponse)
 	for id := range unit_prices {
-		res.UnitPrices = append(res.UnitPrices, MapUnitPriceEntityToResponse(unit_prices[id]))
+		res.UnitPrices = append(res.UnitPrices, *MapUnitPriceEntityToResponse(unit_prices[id]))
 	}
 
 	unitPriceNum := len(res.UnitPrices)
@@ -48,6 +49,7 @@ func MapUnitPricesEntityToResponse(unit_prices []*tb.UnitPrice, reqBody *model.G
 func MapCreateRequestToEntity(reqBody *model.CreateUnitPriceRequest) *tb.UnitPrice {
 	return &tb.UnitPrice{
 		Price:     reqBody.Price,
+		Currency:  reqBody.Currency,
 		StartTime: reqBody.StartTime,
 		EndTime:   reqBody.EndTime,
 	}
@@ -71,20 +73,21 @@ func MapCreateRequestToEntities(reqBody []*model.CreateUnitPriceRequest) []*tb.U
 // @function: MapUpdateRequestToEntity
 // @description: mapping update fields
 // @param: reqBody *model.UpdateUnitPriceRequest
-// @return: map[string]interface{}
-func MapUpdateRequestToEntity(reqBody *model.UpdateUnitPriceRequest) map[string]interface{} {
-	updates := make(map[string]interface{})
+// @return: *tb.UnitPrice
+func MapUpdateRequestToEntity(reqBody *model.UpdateUnitPriceRequest) *tb.UnitPrice {
+	updates := new(tb.UnitPrice)
 
 	if reqBody.Price != nil {
-		updates["price"] = *reqBody.Price
+		updates.Price = *reqBody.Price
 	}
-
+	if strings.TrimSpace(reqBody.Currency) != "" {
+		updates.Currency = strings.TrimSpace(reqBody.Currency)
+	}
 	if strings.TrimSpace(reqBody.StartTime) != "" {
-		updates["start_time"] = strings.TrimSpace(reqBody.StartTime)
+		updates.StartTime = strings.TrimSpace(reqBody.StartTime)
 	}
-
 	if strings.TrimSpace(reqBody.EndTime) != "" {
-		updates["end_time"] = strings.TrimSpace(reqBody.EndTime)
+		updates.EndTime = strings.TrimSpace(reqBody.EndTime)
 	}
 
 	return updates
@@ -95,8 +98,8 @@ func MapUpdateRequestToEntity(reqBody *model.UpdateUnitPriceRequest) map[string]
 // @description: mapping update fields
 // @param: reqBody []model.UpdateUnitPriceRequest
 // @return: []tb.UnitPrice
-func MapUpdateRequestToEntities(reqBody []model.UpdateUnitPriceRequest) []map[string]interface{} {
-	unitPrices := make([]map[string]interface{}, len(reqBody))
+func MapUpdateRequestToEntities(reqBody []model.UpdateUnitPriceRequest) []*tb.UnitPrice {
+	unitPrices := make([]*tb.UnitPrice, len(reqBody))
 	for id := range reqBody {
 		unitPrices[id] = MapUpdateRequestToEntity(&reqBody[id])
 	}
@@ -113,4 +116,38 @@ func OverlappedTime(startTime, endTime string) func(*gorm.DB) *gorm.DB {
 		return db.Where("REPLACE(start_time, ':', '.')::FLOAT < REPLACE(?, ':', '.')::FLOAT", endTime).
 			Where("REPLACE(?, ':', '.')::FLOAT < REPLACE(end_time, ':', '.')::FLOAT", endTime)
 	}
+}
+
+func MapUnitPriceEntitiesToListResponse(unitPrices []*tb.UnitPrice) []*model.UnitPriceResponse {
+	unitPricesResponse := make([]*model.UnitPriceResponse, len(unitPrices))
+	for i, unitPrice := range unitPrices {
+		unitPricesResponse[i] = MapUnitPriceEntityToResponse(unitPrice)
+	}
+	return unitPricesResponse
+}
+
+func MapCreateRequestToJSON(unitPrices []*model.CreateUnitPriceRequest) []map[string]interface{} {
+	unitPricesJSON := make([]map[string]interface{}, len(unitPrices))
+	for i, unitPrice := range unitPrices {
+		unitPricesJSON[i] = map[string]interface{}{
+			"price":      unitPrice.Price,
+			"currency":   unitPrice.Currency,
+			"start_time": unitPrice.StartTime,
+			"end_time":   unitPrice.EndTime,
+		}
+	}
+	return unitPricesJSON
+}
+
+func MapUpdateRequestToJSON(unitPrices []model.UpdateUnitPriceRequest) []map[string]interface{} {
+	unitPricesJSON := make([]map[string]interface{}, len(unitPrices))
+	for i, unitPrice := range unitPrices {
+		unitPricesJSON[i] = map[string]interface{}{
+			"price":      unitPrice.Price,
+			"currency":   unitPrice.Currency,
+			"start_time": unitPrice.StartTime,
+			"end_time":   unitPrice.EndTime,
+		}
+	}
+	return unitPricesJSON
 }

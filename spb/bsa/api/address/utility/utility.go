@@ -139,3 +139,13 @@ func MapWardEntityToResponse(ward *tb.Ward) *model.LocationResponse {
 		Code:   ward.Code,
 	}
 }
+
+func MapAddressEntitiesToIDs(addresses []*tb.Address) []string {
+	addressIDs := make([]string, len(addresses))
+
+	for id := range addresses {
+		addressIDs[id] = addresses[id].ID
+	}
+
+	return addressIDs
+}

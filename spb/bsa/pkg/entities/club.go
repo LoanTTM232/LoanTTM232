@@ -1,6 +1,10 @@
 package entities
 
-import "gorm.io/gorm"
+import (
+	"fmt"
+
+	"gorm.io/gorm"
+)
 
 var ClubTN = "club"
 
@@ -30,6 +34,12 @@ func (c *Club) AfterDelete(tx *gorm.DB) error {
 	// Delete the associated address
 	if err := tx.Delete(&Address{}, "id = ?", c.AddressID).Error; err != nil {
 		return err
+	}
+
+	// Delete associated media using the polymorphic relationship
+	if err := tx.Where("owner_id = ? AND owner_type = ?", c.ID, "club").
+		Delete(&Media{}).Error; err != nil {
+		return fmt.Errorf("failed to delete media records: %w", err)
 	}
 	return nil
 }

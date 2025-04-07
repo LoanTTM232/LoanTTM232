@@ -16,7 +16,7 @@ type IService interface {
 	Create(reqBody *model.CreateClubRequest) (*tb.Club, error)
 	GetAll(reqBody *model.GetClubsRequest) ([]*tb.Club, int64, error)
 	AddMedia(clubId string, reqBody *mediaModel.CreateMediaRequest) error
-	DeleteMedia(clubId string, mediaId string) error
+	DeleteMedia(mediaId string) error
 }
 
 type Service struct {

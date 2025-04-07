@@ -40,7 +40,6 @@ type UpdateUnitRequest struct {
 	Address      *address.UpdateAddressRequest `json:"address,omitempty" validate:"omitempty"`
 	UnitPrices   []up.UpdateUnitPriceRequest   `json:"unit_prices,omitempty" validate:"omitempty"`
 	UnitServices []us.UpdateUnitServiceRequest `json:"unit_services,omitempty" validate:"omitempty"`
-	Media        []media.UpdateMediaRequest    `json:"media,omitempty" validate:"omitempty"`
 	SportTypes   []string                      `json:"sport_types,omitempty" validate:"omitempty"`
 }
 

@@ -227,3 +227,27 @@ func ConcatStr(joinCharacter string, values ...string) string {
 	builder.WriteString(values[len(values)-1])
 	return builder.String()
 }
+
+func StringToFloat64(str string) float64 {
+	val, err := strconv.ParseFloat(str, 64)
+	if err != nil {
+		return 0
+	}
+	return val
+}
+
+func Float64ToString(val float64) string {
+	return strconv.FormatFloat(val, 'f', -1, 64)
+}
+
+func StringToInt(str string) int {
+	val, err := strconv.Atoi(str)
+	if err != nil {
+		return 0
+	}
+	return val
+}
+
+func IntToString(val int) string {
+	return strconv.Itoa(val)
+}

@@ -22,10 +22,12 @@ import (
 func (s *Service) Update(reqBody *model.UpdateClubRequest, clubId string) error {
 	// Check if club exists
 	var count int64
-	err := s.db.Model(&tb.Club{}).
+	if err := s.db.Model(&tb.Club{}).
 		Where("id = ?", clubId).
-		Count(&count).Error
-	if count == 0 || err != nil {
+		Count(&count).Error; err != nil {
+		return err
+	}
+	if count == 0 {
 		return msg.ErrClubNotFound
 	}
 
@@ -39,12 +41,12 @@ func (s *Service) Update(reqBody *model.UpdateClubRequest, clubId string) error 
 	// Update club
 	club := utility.MapUpdateRequestToEntity(reqBody)
 	if len(club) > 0 {
-		if err = tx.Model(&tb.Club{}).Where("id = ?", clubId).Save(club).Error; err != nil {
+		if err := tx.Model(&tb.Club{}).Where("id = ?", clubId).Save(club).Error; err != nil {
 			return err
 		}
 	}
 	if reqBody.SportTypes != nil {
-		if err = UpdateClubSportTypes(tx, clubId, reqBody.SportTypes); err != nil {
+		if err := UpdateClubSportTypes(tx, clubId, reqBody.SportTypes); err != nil {
 			return err
 		}
 	}
@@ -54,7 +56,7 @@ func (s *Service) Update(reqBody *model.UpdateClubRequest, clubId string) error 
 		return fmt.Errorf("failed to get club's address: %w", err)
 	}
 	if reqBody.Address != nil {
-		if err = UpdateClubAddress(tx, clubEntity.AddressID, reqBody.Address); err != nil {
+		if err := UpdateClubAddress(tx, clubEntity.AddressID, reqBody.Address); err != nil {
 			return err
 		}
 	}

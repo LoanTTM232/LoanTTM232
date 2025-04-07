@@ -1,7 +1,9 @@
 package service
 
 import (
+	address "spb/bsa/api/address"
 	tb "spb/bsa/pkg/entities"
+	"spb/bsa/pkg/msg"
 )
 
 // @author: LoanTT
@@ -13,15 +15,18 @@ func (s *Service) GetByID(unitId string) (*tb.Unit, error) {
 	unit := new(tb.Unit)
 
 	err := s.db.Model(&tb.Unit{}).
-		Preload("Address").
-		Preload("Club").
 		Preload("UnitPrice").
 		Preload("UnitService").
 		Preload("Media").
-		Preload("SportType").
+		Preload("SportTypes").
 		Where("id = ?", unitId).First(unit).Error
 	if err != nil {
 		return nil, err
+	}
+
+	unit.Address, err = address.AddressService.GetAddressByID(unit.AddressID)
+	if err != nil {
+		return nil, msg.ErrAddressNotFound
 	}
 
 	return unit, nil

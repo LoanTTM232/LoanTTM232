@@ -10,15 +10,15 @@ import (
 
 // DeleteMedia godoc
 //
-// @summary 		Delete media from club
-// @description 	Delete media from club
-// @tags 			clubs
+// @summary 		Delete media from unit
+// @description 	Delete media from unit
+// @tags 			units
 // @accept  		json
 // @produce 		json
 // @param 			id path string true "Media ID"
-// @success 		200 {object} utils.JSONResult{} "Delete media from club success"
-// @failure 		400 {object} utils.JSONResult{} "Delete media from club failed"
-// @router 			/api/v1/clubs/media/{id} [delete]
+// @success 		200 {object} utils.JSONResult{} "Delete media from unit success"
+// @failure 		400 {object} utils.JSONResult{} "Delete media from unit failed"
+// @router 			/api/v1/units/media/{id} [delete]
 func (h *Handler) DeleteMedia(ctx fiber.Ctx) error {
 	var err error
 	var mediaId string

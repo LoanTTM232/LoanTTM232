@@ -1,5 +1,11 @@
 package entities
 
+import (
+	"fmt"
+
+	"gorm.io/gorm"
+)
+
 var UnitTN = "unit"
 
 type Unit struct {
@@ -22,4 +28,19 @@ type Unit struct {
 
 func (Unit) TableName() string {
 	return UnitTN
+}
+
+func (u *Unit) AfterDelete(tx *gorm.DB) error {
+	// Delete the associated address
+	if err := tx.Delete(&Address{}, "id = ?", u.AddressID).Error; err != nil {
+		return err
+	}
+
+	// Delete associated media using the polymorphic relationship
+	if err := tx.Where("owner_id = ? AND owner_type = ?", u.ID, "unit").
+		Delete(&Media{}).Error; err != nil {
+		return fmt.Errorf("failed to delete media records: %w", err)
+	}
+
+	return nil
 }

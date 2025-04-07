@@ -4,7 +4,7 @@ import (
 	"spb/bsa/pkg/utils"
 )
 
-// @queries: i=?&p=?&b=?&t=?&q=?&st=?&pv=?&wd=?&dt=?
+// @queries: i=?&p=?&b=?&t=?&q=?&st=?&pv=?&wd=?&dt=?&lng=?&lat=?&r=?
 // &i = items
 // &p = page
 // &b = order by
@@ -14,13 +14,19 @@ import (
 // &pv = province
 // &wd = ward
 // &dt = district
+// &lng = longitude
+// &lat = latitude
+// &r = radius
 type UnitPagination struct {
 	utils.Pagination
-	Query     string `json:"query"`
-	SportType string `json:"sport_type"`
-	Province  string `json:"province"`
-	Ward      string `json:"ward"`
-	District  string `json:"district"`
+	Query     string  `json:"query"`
+	SportType string  `json:"sport_type"`
+	Province  string  `json:"province"`
+	Ward      string  `json:"ward"`
+	District  string  `json:"district"`
+	Longitude float64 `json:"longitude"`
+	Latitude  float64 `json:"latitude"`
+	Radius    int     `json:"radius"`
 }
 
 func GetPagination(queries map[string]string) *UnitPagination {
@@ -42,6 +48,15 @@ func GetPagination(queries map[string]string) *UnitPagination {
 	}
 	if queries["dt"] != "" {
 		unitPagination.District = queries["dt"]
+	}
+	if queries["lng"] != "" {
+		unitPagination.Longitude = utils.StringToFloat64(queries["lng"])
+	}
+	if queries["lat"] != "" {
+		unitPagination.Latitude = utils.StringToFloat64(queries["lat"])
+	}
+	if queries["r"] != "" {
+		unitPagination.Radius = utils.StringToInt(queries["r"])
 	}
 
 	return unitPagination
@@ -79,5 +94,8 @@ func addOtherQueries(url string, up *UnitPagination) string {
 	url = utils.ConcatenateQueries(url, "pv", up.Province)
 	url = utils.ConcatenateQueries(url, "dt", up.District)
 	url = utils.ConcatenateQueries(url, "wd", up.Ward)
+	url = utils.ConcatenateQueries(url, "lng", utils.Float64ToString(up.Longitude))
+	url = utils.ConcatenateQueries(url, "lat", utils.Float64ToString(up.Latitude))
+	url = utils.ConcatenateQueries(url, "r", utils.IntToString(up.Radius))
 	return url
 }

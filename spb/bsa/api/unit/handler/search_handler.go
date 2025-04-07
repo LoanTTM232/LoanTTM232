@@ -25,6 +25,8 @@ import (
 // @param 			pv query string false "Province"
 // @param 			wd query string false "Ward"
 // @param 			dt query string false "District"
+// @param 			lng query float false "Longitude"
+// @param 			lat query float false "Latitude"
 // @success 		200 {object} utils.JSONResult{data=[]model.UnitResponse}	"Search unit success"
 // @failure 		400 {object} utils.JSONResult{}      						"Search unit failed"
 // @router 			/api/v1/units [get]

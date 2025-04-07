@@ -31,5 +31,5 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	clubRoute.Put("/:id", ClubHandler.Update, customMiddleware.CheckAccess("club:update"))
 	clubRoute.Delete("/:id", ClubHandler.Delete, customMiddleware.CheckAccess("club:delete"))
 	clubRoute.Post("/:id/media", ClubHandler.AddMedia, customMiddleware.CheckAccess("club:update"))
-	clubRoute.Delete("/:club_id/media/:media_id", ClubHandler.DeleteMedia, customMiddleware.CheckAccess("club:update"))
+	clubRoute.Delete("/media/:id", ClubHandler.DeleteMedia, customMiddleware.CheckAccess("club:update"))
 }
