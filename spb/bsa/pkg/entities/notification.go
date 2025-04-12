@@ -1,8 +1,6 @@
 package entities
 
 import (
-	"time"
-
 	"spb/bsa/pkg/entities/enum"
 )
 
@@ -20,7 +18,6 @@ type Notification struct {
 	Sender             *User            `gorm:"foreignKey:SenderID" json:"sender"`
 	ReceiverID         *string          `gorm:"type:uuid;" json:"receiver_id"`
 	Receiver           *User            `gorm:"foreignKey:ReceiverID" json:"receiver"`
-	ReadAt             *time.Time       `json:"read_at"`
 }
 
 func (Notification) TableName() string {

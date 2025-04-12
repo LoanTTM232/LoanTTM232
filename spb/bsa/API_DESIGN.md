@@ -81,8 +81,8 @@ Manage notification
 
 | No  | Implemented | Method | Path                        | Permission        | Description                      |
 | --- | ----------- | ------ | --------------------------- | ----------------- | -------------------------------- |
-| 1   | &#x274c;    | POST   | /notifications/sender/:id   | notification:read | Get all notification of sender   |
-| 2   | &#x274c;    | POST   | /notifications/receiver/:id | notification:read | Get all notification of receiver |
+| 1   | &#x2705;    | POST   | /notifications/sender/:id   | notification:read | Get all notification of sender   |
+| 2   | &#x2705;    | POST   | /notifications/receiver/:id | notification:read | Get all notification of receiver |
 
 ---
 
