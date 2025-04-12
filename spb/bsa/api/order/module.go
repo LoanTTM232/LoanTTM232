@@ -23,6 +23,6 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	OrderHandler = handler.NewHandler(OrderService)
 
 	orderRoute := router.Group("/api/v1/orders")
-	orderRoute.Post("/pay", OrderHandler.Pay)
-	orderRoute.Post("/momo/callback", OrderHandler.MoMoCallback)
+	orderRoute.Post("/pay", OrderHandler.Pay, customMiddleware.CheckAccess("order:pay"))
+	orderRoute.Post("/momo/callback", OrderHandler.MoMoCallback, customMiddleware.CheckAccess("order:pay"))
 }

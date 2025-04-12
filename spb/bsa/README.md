@@ -35,6 +35,11 @@ notification_type:
 #### Permissions
 
 ```
+address:read
+
+auth:aws
+
+club:read
 club:create
 club:update
 club:delete
@@ -43,18 +48,29 @@ club:member
 metadata:read
 metadata:update
 
-order:create
+notification:read
+
+order:pay
+order:read
 order:create
 order:delete
 
+sport_type:read
 sport_type:create
 sport_type:update
 sport_type:delete
 
+unit:read
 unit:create
 unit:update
 unit:delete
 
 user:read
 user:update
+user:list
+user:create
+
+payment_method:read
+payment_method:update
+payment_method:create
 ```

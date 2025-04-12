@@ -114,13 +114,13 @@ func NewError(msg string) error {
 
 func NewErrorArgs(msg string) func(...any) error {
 	return func(args ...any) error {
-		return fmt.Errorf(msg, args)
+		return fmt.Errorf(msg, args...)
 	}
 }
 
 func NewMessageArgs(msg string) func(...any) string {
 	return func(args ...any) string {
-		return fmt.Sprintf(msg, args)
+		return fmt.Sprintf(msg, args...)
 	}
 }
 

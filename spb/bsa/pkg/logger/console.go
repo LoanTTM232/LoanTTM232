@@ -2,7 +2,6 @@ package logger
 
 import (
 	"os"
-	"runtime"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -45,9 +44,7 @@ func Errorf(err error) {
 func (zl *ZapLog) Debugf(message string) {
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= DebugLevel {
-		pc, _, line, _ := runtime.Caller(1)
-		fn := runtime.FuncForPC(pc)
-		sugar.Debugf("[ERROR] %s:%d %s - %v", fn.Name(), line, fn.Entry(), message)
+		sugar.Debugf("- %s", message)
 	}
 }
 
@@ -58,9 +55,7 @@ func (zl *ZapLog) Debugf(message string) {
 func (zl *ZapLog) Infof(message string) {
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= InfoLevel {
-		pc, _, line, _ := runtime.Caller(1)
-		fn := runtime.FuncForPC(pc)
-		sugar.Infof("[ERROR] %s:%d %s - %v", fn.Name(), line, fn.Entry(), message)
+		sugar.Infof("- %s", message)
 	}
 }
 
@@ -71,9 +66,7 @@ func (zl *ZapLog) Infof(message string) {
 func (zl *ZapLog) Warnf(message string) {
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= WarnLevel {
-		pc, _, line, _ := runtime.Caller(1)
-		fn := runtime.FuncForPC(pc)
-		sugar.Warnf("[ERROR] %s:%d %s - %v", fn.Name(), line, fn.Entry(), message)
+		sugar.Warnf("- %s", message)
 	}
 }
 
@@ -84,8 +77,6 @@ func (zl *ZapLog) Warnf(message string) {
 func (zl *ZapLog) Errorf(err error) {
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= ErrorLevel {
-		pc, _, line, _ := runtime.Caller(1)
-		fn := runtime.FuncForPC(pc)
-		sugar.Errorf("[ERROR] %s:%d %s - %v", fn.Name(), line, fn.Entry(), err)
+		sugar.Errorf("- %+v", err)
 	}
 }

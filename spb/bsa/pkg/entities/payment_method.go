@@ -1,12 +1,12 @@
 package entities
 
-var PaymentMethodTN = "payment_method"
+const PaymentMethodTN = "payment_method"
 
 type PaymentMethod struct {
 	Base
-	MethodType int8   `json:"method_type"`
-	ProviderID string `gorm:"type:text" json:"provider_id"`
-	IsDefault  bool   `gorm:"default:false" json:"is_default"`
+	Code   string `gorm:"uniqueIndex" json:"code"`
+	Name   string `json:"name"`
+	Active bool   `gorm:"default:true"`
 }
 
 func (PaymentMethod) TableName() string {

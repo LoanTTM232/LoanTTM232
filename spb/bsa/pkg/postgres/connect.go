@@ -73,12 +73,10 @@ func AutoMigrate(db *gorm.DB) error {
 		&tb.User{},
 		&tb.Address{},
 		&tb.Order{},
-		&tb.PaymentInfo{},
+		&tb.OrderItem{},
 		&tb.PaymentMethod{},
-		&tb.Payments{},
 		&tb.SportType{},
-		&tb.Transactions{},
-		&tb.WebHook{},
+		&tb.Transaction{},
 		&tb.AuthenticationProvider{})
 	if err != nil {
 		return msg.ErrMigrationFailed(err)

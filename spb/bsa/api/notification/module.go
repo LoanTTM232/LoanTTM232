@@ -23,7 +23,7 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	NotificationService = service.NewService()
 	NotificationHandler = handler.NewHandler(NotificationService)
 
-	notificationRoute := router.Group("/api/v1/notifications")
+	notificationRoute := router.Group("/api/v1/notifications", customMiddleware.CheckAccess("notification:read"))
 	notificationRoute.Post("/sender/:id", NotificationHandler.GetBySender)
 	notificationRoute.Post("/receiver/:id", NotificationHandler.GetByReceiver)
 }

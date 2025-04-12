@@ -1,6 +1,6 @@
 package entities
 
-var UnitPriceTN = "unit_price"
+const UnitPriceTN = "unit_price"
 
 type UnitPrice struct {
 	Base

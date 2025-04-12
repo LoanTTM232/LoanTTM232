@@ -41,7 +41,8 @@ func (s *Handler) Create(ctx fiber.Ctx) error {
 
 	unitCreated, err := s.service.Create(reqBody)
 	if err != nil {
-		logger.Errorf(msg.ErrCreateFailed("unit", err))
+		a := msg.ErrCreateFailed("unit", err)
+		logger.Errorf(a)
 		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}
 

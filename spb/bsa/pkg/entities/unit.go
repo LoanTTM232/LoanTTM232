@@ -1,12 +1,10 @@
 package entities
 
 import (
-	"fmt"
-
 	"gorm.io/gorm"
 )
 
-var UnitTN = "unit"
+const UnitTN = "unit"
 
 type Unit struct {
 	Base
@@ -19,11 +17,11 @@ type Unit struct {
 	Status      int8           `gorm:"not null" json:"status"`
 	ClubID      string         `gorm:"type:uuid;not null" json:"club_id"`
 	AddressID   string         `gorm:"type:uuid;not null" json:"address_id"`
-	Address     *Address       `gorm:"not null;constraint:OnDelete:RESTRICT" json:"address"`
-	UnitPrice   []*UnitPrice   `gorm:"foreignKey:UnitID;constraint:OnDelete:CASCADE" json:"unit_price"`
-	UnitService []*UnitService `gorm:"foreignKey:UnitID;constraint:OnDelete:CASCADE" json:"unit_services"`
+	Address     *Address       `gorm:"not null" json:"address"`
+	UnitPrice   []*UnitPrice   `gorm:"foreignKey:UnitID" json:"unit_price"`
+	UnitService []*UnitService `gorm:"foreignKey:UnitID" json:"unit_services"`
 	Media       []*Media       `gorm:"polymorphic:Owner;polymorphicValue:unit" json:"media"`
-	SportTypes  []*SportType   `gorm:"many2many:unit_sporttype;constraint:OnDelete:CASCADE" json:"sport_types"`
+	SportTypes  []*SportType   `gorm:"many2many:unit_sporttype" json:"sport_types"`
 }
 
 func (Unit) TableName() string {
@@ -35,11 +33,26 @@ func (u *Unit) AfterDelete(tx *gorm.DB) error {
 	if err := tx.Delete(&Address{}, "id = ?", u.AddressID).Error; err != nil {
 		return err
 	}
-
 	// Delete associated media using the polymorphic relationship
 	if err := tx.Where("owner_id = ? AND owner_type = ?", u.ID, "unit").
 		Delete(&Media{}).Error; err != nil {
-		return fmt.Errorf("failed to delete media records: %w", err)
+		return err
+	}
+	// Delete associated unit prices
+	if err := tx.Where("unit_id = ?", u.ID).
+		Delete(&UnitPrice{}).Error; err != nil {
+		return err
+	}
+	// Delete associated unit services
+	if err := tx.Where("unit_id = ?", u.ID).
+		Delete(&UnitService{}).Error; err != nil {
+		return err
+	}
+	// Delete associated sport types
+	if err := tx.Model(u).
+		Association("SportTypes").
+		Delete(u.SportTypes); err != nil {
+		return err
 	}
 
 	return nil

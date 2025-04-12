@@ -1,6 +1,6 @@
 package entities
 
-var UnitServiceTN = "unit_service"
+const UnitServiceTN = "unit_service"
 
 type UnitService struct {
 	Base
