@@ -1,6 +1,9 @@
 package utils
 
 import (
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"math"
 	"math/rand"
@@ -218,7 +221,7 @@ func GenerateOTPCode(length int) string {
 	return strconv.Itoa(randomNum)
 }
 
-func ConcatStr(joinCharacter string, values ...string) string {
+func Join(joinCharacter string, values ...string) string {
 	var builder strings.Builder
 	for index := range len(values) - 1 {
 		builder.WriteString(values[index])
@@ -250,4 +253,10 @@ func StringToInt(str string) int {
 
 func IntToString(val int) string {
 	return strconv.Itoa(val)
+}
+
+func GenerateSignature(data, secret string) string {
+	h := hmac.New(sha256.New, []byte(secret))
+	h.Write([]byte(data))
+	return hex.EncodeToString(h.Sum(nil))
 }

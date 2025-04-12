@@ -1,8 +1,6 @@
 package service
 
 import (
-	"fmt"
-
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/msg"
 )
@@ -16,7 +14,7 @@ func (s *Service) Delete(clubId string) error {
 	// Check if club exists
 	var club tb.Club
 	if err := s.db.Preload("Units").First(&club, "id = ?", clubId).Error; err != nil {
-		return msg.ErrClubNotFound
+		return msg.ErrNotFound("club")
 	}
 
 	// Start transaction
@@ -31,14 +29,14 @@ func (s *Service) Delete(clubId string) error {
 	for _, unit := range club.Units {
 		if err := tx.Delete(unit).Error; err != nil {
 			tx.Rollback()
-			return fmt.Errorf("failed to delete unit: %w", err)
+			return msg.ErrDeleteFailed("unit", err)
 		}
 	}
 
 	// Delete club record
 	if err := tx.Delete(&club).Error; err != nil {
 		tx.Rollback()
-		return fmt.Errorf("failed to delete club: %w", err)
+		return msg.ErrDeleteFailed("club", err)
 	}
 
 	return tx.Commit().Error

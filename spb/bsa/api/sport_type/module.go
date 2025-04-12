@@ -23,8 +23,8 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	SportTypeHandler = handler.NewHandler(SportTypeService)
 
 	sportTypeRoute := router.Group("/api/v1/sport-types")
-	sportTypeRoute.Get("/", SportTypeHandler.GetAll, customMiddleware.CheckAccess("sport_type:list"))
-	sportTypeRoute.Get("/:id", SportTypeHandler.GetByID, customMiddleware.CheckAccess("sport_type:read"))
+	sportTypeRoute.Get("/", SportTypeHandler.GetAll)
+	sportTypeRoute.Get("/:id", SportTypeHandler.GetByID)
 	sportTypeRoute.Post("/", SportTypeHandler.Create, customMiddleware.CheckAccess("sport_type:create"))
 	sportTypeRoute.Put("/:id", SportTypeHandler.Update, customMiddleware.CheckAccess("sport_type:update"))
 	sportTypeRoute.Delete("/:id", SportTypeHandler.Delete, customMiddleware.CheckAccess("sport_type:delete"))

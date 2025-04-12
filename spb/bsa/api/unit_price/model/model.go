@@ -11,8 +11,8 @@ var ORDER_BY = []string{
 }
 
 type GetUnitPricesRequest struct {
-	Pagination utils.Pagination `json:"pagination"`
-	UnitID     string           `json:"unit_id"`
+	Pagination utils.Pagination
+	UnitID     string `json:"unit_id"`
 }
 
 type UnitPriceResponse struct {

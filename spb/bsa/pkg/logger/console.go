@@ -1,8 +1,8 @@
 package logger
 
 import (
-	"fmt"
 	"os"
+	"runtime"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -22,87 +22,70 @@ func newConsoleLogger() *zap.Logger {
 	return zap.New(core, zap.AddCaller(), zap.AddCallerSkip(2))
 }
 
-func Debugf(format string, args ...any) {
-	Zlog.Debugf(format, args...)
+func Debugf(format string) {
+	Zlog.Debugf(format)
 }
 
-func Infof(format string, args ...any) {
-	Zlog.Infof(format, args...)
+func Infof(format string) {
+	Zlog.Infof(format)
 }
 
-func Warnf(format string, args ...any) {
-	Zlog.Warnf(format, args...)
+func Warnf(format string) {
+	Zlog.Warnf(format)
 }
 
-func RErrorf(format string, args ...any) error {
-	Zlog.Errorf(format, args...)
-	return fmt.Errorf(format, args...)
-}
-
-func Errorf(format string, args ...any) {
-	Zlog.Errorf(format, args...)
-}
-
-func Fatalf(format string, args ...any) {
-	Zlog.Fatalf(format, args...)
+func Errorf(err error) {
+	Zlog.Errorf(err)
 }
 
 // @author: LoanTT
 // @function: Debugf
 // @description: Debugf
-// @param: format string
-// @param: args ...any
-func (zl *ZapLog) Debugf(format string, args ...any) {
+// @param: message string
+func (zl *ZapLog) Debugf(message string) {
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= DebugLevel {
-		sugar.Debugf(format, args...)
+		pc, _, line, _ := runtime.Caller(1)
+		fn := runtime.FuncForPC(pc)
+		sugar.Debugf("[ERROR] %s:%d %s - %v", fn.Name(), line, fn.Entry(), message)
 	}
 }
 
 // @author: LoanTT
 // @function: Infof
 // @description: Infof
-// @param: format string
-// @param: args ...any
-func (zl *ZapLog) Infof(format string, args ...any) {
+// @param: message string
+func (zl *ZapLog) Infof(message string) {
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= InfoLevel {
-		sugar.Infof(format, args...)
+		pc, _, line, _ := runtime.Caller(1)
+		fn := runtime.FuncForPC(pc)
+		sugar.Infof("[ERROR] %s:%d %s - %v", fn.Name(), line, fn.Entry(), message)
 	}
 }
 
 // @author: LoanTT
 // @function: Warnf
 // @description: Warnf
-// @param: format string
-// @param: args ...any
-func (zl *ZapLog) Warnf(format string, args ...any) {
+// @param: message string
+func (zl *ZapLog) Warnf(message string) {
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= WarnLevel {
-		sugar.Warnf(format, args...)
+		pc, _, line, _ := runtime.Caller(1)
+		fn := runtime.FuncForPC(pc)
+		sugar.Warnf("[ERROR] %s:%d %s - %v", fn.Name(), line, fn.Entry(), message)
 	}
 }
 
 // @author: LoanTT
 // @function: Errorf
 // @description: Errorf
-// @param: format string
-// @param: args ...any
-func (zl *ZapLog) Errorf(format string, args ...any) {
+// @param: err error
+func (zl *ZapLog) Errorf(err error) {
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= ErrorLevel {
-		sugar.Errorf(format, args...)
-	}
-}
-
-// @author: LoanTT
-// @function: FErrorf
-// @description: FErrorf
-// @param: format string
-// @param: args ...any
-func (zl *ZapLog) Fatalf(format string, args ...any) {
-	sugar := Zlog.ConsoleLogger.Sugar()
-	if zl.Level <= ErrorLevel {
-		sugar.Fatalf(format, args...)
+		pc, _, line, _ := runtime.Caller(1)
+		fn := runtime.FuncForPC(pc)
+		sugar.Errorf("[ERROR] %s:%d %s - %v", fn.Name(), line, fn.Entry(), err)
 	}
 }

@@ -5,9 +5,10 @@ const RoleTN = "role"
 type RoleDefault string
 
 const (
-	ROLE_ADMIN  RoleDefault = "admin"
-	ROLE_USER   RoleDefault = "user"
-	ROLE_CLIENT RoleDefault = "client"
+	ROLE_ADMIN         RoleDefault = "admin"
+	ROLE_USER          RoleDefault = "user"
+	ROLE_CLIENT        RoleDefault = "client"
+	ROLE_CLIENT_MEMBER RoleDefault = "client_member"
 )
 
 type Role struct {

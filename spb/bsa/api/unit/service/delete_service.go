@@ -14,7 +14,7 @@ func (s *Service) Delete(unitId string) error {
 	unit := new(tb.Unit)
 	// Check if club exists
 	if err := s.db.First(&unit, "id = ?", unitId).Error; err != nil {
-		return msg.ErrClubNotFound
+		return msg.ErrNotFound("Unit")
 	}
 
 	err := s.db.Delete(&unit).Error
