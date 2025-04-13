@@ -39,5 +39,9 @@ func (s *Service) Delete(clubId string) error {
 		return msg.ErrDeleteFailed("club", err)
 	}
 
-	return tx.Commit().Error
+	if err := tx.Commit().Error; err != nil {
+		tx.Rollback()
+		return msg.ErrCommitFailed(err)
+	}
+	return nil
 }

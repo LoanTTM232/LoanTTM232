@@ -9,7 +9,7 @@ const (
 type OrderItem struct {
 	Base
 	OrderID   string  `gorm:"type:uuid;not null" json:"order_id"`
-	Price     float32 `gorm:"type:decimal(12,2);" json:"price"`
+	Price     int64   `gorm:"default:0" json:"price"`
 	StartTime *string `gorm:"not null" json:"start_time"`
 	EndTime   *string `gorm:"not null" json:"end_time"`
 	ItemID    string  `gorm:"type:uuid;not null" json:"item_id"`

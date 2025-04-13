@@ -39,7 +39,7 @@ func (m *MoMoGateway) CreatePayment(req *PaymentRequest) (*PaymentResponse, erro
 
 	orderId := uuid.New().String()
 	requestId := uuid.New().String()
-	amount := utils.FloorFloatToInt(req.Amount)
+	amount := req.Amount
 
 	rawSig := fmt.Sprintf(
 		"accessKey=%s&amount=%d&extraData=&orderId=%s&orderInfo=%s&partnerCode=%s&redirectUrl=%s&ipnUrl=%s&requestId=%s&requestType=captureWallet",
@@ -51,7 +51,7 @@ func (m *MoMoGateway) CreatePayment(req *PaymentRequest) (*PaymentResponse, erro
 		"partnerCode": m.PartnerCode,
 		"accessKey":   m.AccessKey,
 		"requestId":   requestId,
-		"amount":      fmt.Sprintf("%d", amount),
+		"amount":      amount,
 		"orderId":     orderId,
 		"orderInfo":   req.OrderInfo,
 		"redirectUrl": m.ReturnURL,
@@ -74,8 +74,7 @@ func (m *MoMoGateway) CreatePayment(req *PaymentRequest) (*PaymentResponse, erro
 	_ = json.Unmarshal(bodyResp, &result)
 
 	return &PaymentResponse{
-		PayURL:  fmt.Sprintf("%v", result["payUrl"]),
-		OrderID: orderId,
+		PayURL: fmt.Sprintf("%v", result["payUrl"]),
 	}, nil
 }
 

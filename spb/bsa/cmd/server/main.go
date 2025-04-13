@@ -137,7 +137,13 @@ func (f *Fiber) LoadRoutes() {
 		"/api/v1/auth/forgot-password",
 		"/api/v1/auth/verify-forgot-password-token",
 		"/api/v1/auth/reset-password",
+
+		// Google OAuth callback
 		global.SPB_CONFIG.OAuth.Google.Callback,
+
+		// ZaloPay callback
+		"/api/v1/orders/zalopay/callback",
+
 		// testing
 		"/api/v1/auth/ses-verify",
 	}

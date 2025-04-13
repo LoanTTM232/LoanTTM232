@@ -8,7 +8,8 @@ import (
 
 type IHandler interface {
 	Pay(ctx fiber.Ctx) error
-	MoMoCallback(ctx fiber.Ctx) error
+	ZaloPayCallback(ctx fiber.Ctx) error
+	GetByUserID(ctx fiber.Ctx) error
 }
 
 type Handler struct {

@@ -1,6 +1,8 @@
 package service
 
 import (
+	"spb/bsa/api/order/model"
+	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/payment"
 
@@ -8,12 +10,14 @@ import (
 )
 
 type IService interface {
-	Pay(reqBody *payment.PaymentRequest) (*payment.PaymentResponse, error)
-	MoMoCallback(reqBody map[string]interface{}) (map[string]interface{}, error)
+	Pay(reqBody *model.PayRequest) (*payment.PaymentResponse, error)
+	ZaloPayCallback(reqBody map[string]interface{}) (*model.CallBackResponse, error)
+	GetByUserID(userID string) ([]*tb.Order, error)
 }
 
 type Service struct {
-	db *gorm.DB
+	db      *gorm.DB
+	gateway payment.PaymentGateway
 }
 
 // @author: LoanTT
@@ -21,5 +25,14 @@ type Service struct {
 // @description: Create a new order service
 // @return: IService
 func NewService() IService {
-	return &Service{db: global.SPB_DB}
+	// Initialize payment gateway
+	zaloGateway := payment.NewZaloPay(
+		global.SPB_CONFIG.Payment.ZaloPay.AppID,
+		global.SPB_CONFIG.Payment.ZaloPay.Key1,
+		global.SPB_CONFIG.Payment.ZaloPay.Key2,
+		global.SPB_CONFIG.Payment.ZaloPay.Endpoint,
+		global.SPB_CONFIG.Payment.ZaloPay.CallbackURL,
+		global.SPB_CONFIG.Payment.ZaloPay.RedirectURL,
+	)
+	return &Service{db: global.SPB_DB, gateway: zaloGateway}
 }

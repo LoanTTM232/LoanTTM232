@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"spb/bsa/api/order/model"
 	"spb/bsa/pkg/global"
 	"spb/bsa/pkg/logger"
 	"spb/bsa/pkg/msg"
@@ -24,7 +25,7 @@ import (
 func (h *Handler) Pay(ctx fiber.Ctx) error {
 	var err error
 	var response *payment.PaymentResponse
-	reqBody := new(payment.PaymentRequest)
+	reqBody := new(model.PayRequest)
 	fctx := utils.FiberCtx{Fctx: ctx}
 
 	if err = fctx.ParseJsonToStruct(reqBody, global.SPB_VALIDATOR); err != nil {

@@ -90,14 +90,14 @@ Manage notification
 
 Manage orders by Admin, Club Owner, Member, User
 
-| No  | Implemented | Method | Path                  | Permission   | Description                                       |
-| --- | ----------- | ------ | --------------------- | ------------ | ------------------------------------------------- |
-| 1   | &#x2705;    | POST   | /orders/pay           | order:pay    | Create order pay by User                          |
-| 2   | &#x2705;    | POST   | /orders/momo/callback | order:pay    | MoMo payment callback                             |
-| 3   | &#x274c;    | GET    | /orders/:id           | order:read   | Get orders of user by user_id                     |
-| 4   | &#x274c;    | POST   | /orders/              | order:create | Create order by client/member                     |
-| 5   | &#x274c;    | POST   | /orders/:id           | order:create | Submit order by client/member                     |
-| 6   | &#x274c;    | DELETE | /orders/:id           | order:delete | Delete order (not submitted yet) by client/member |
+| No  | Implemented | Method | Path                     | Permission   | Description                                       |
+| --- | ----------- | ------ | ------------------------ | ------------ | ------------------------------------------------- |
+| 1   | &#x2705;    | POST   | /orders/pay              | order:pay    | Create order pay by User                          |
+| 2   | &#x2705;    | POST   | /orders/zalopay/callback |              | ZaloPay payment callback                          |
+| 3   | &#x274c;    | GET    | /orders/:id              | order:read   | Get orders of user by user_id                     |
+| 4   | &#x274c;    | POST   | /orders/                 | order:create | Create order by client/member                     |
+| 5   | &#x274c;    | POST   | /orders/:id              | order:create | Submit order by client/member                     |
+| 6   | &#x274c;    | DELETE | /orders/:id              | order:delete | Delete order (not submitted yet) by client/member |
 
 ---
 

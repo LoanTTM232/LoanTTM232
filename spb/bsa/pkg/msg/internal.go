@@ -36,8 +36,9 @@ var (
 	ErrResetPasswordFailed     = NewErrorArgs("reset password failed: %+v")
 
 	// payment
-	ErrPaymentFailed      = NewErrorArgs("payment failed: %+v")
-	ErrMoMoCallbackFailed = NewErrorArgs("momo callback failed: %+v")
+	ErrPaymentFailed             = NewErrorArgs("payment failed: %+v")
+	ErrMoMoCallbackFailed        = NewErrorArgs("momo callback failed: %+v")
+	ErrZaloPayCallbackInvalidMac = NewErrorArgs("invalid MAC: expected %s, got %s")
 
 	// cache
 	ErrCacheSetFailed     = NewErrorArgs("failed to set [%s] cache: %+v")
@@ -99,6 +100,8 @@ var (
 	// payment
 	InfoCreatePayment = NewMessageArgs("creating payment with MoMo: %+v")
 	InfoMoMoCallback  = NewMessageArgs("momo callback: %+v")
+	InfoPaySuccess    = NewMessageArgs("payment success: %+v")
+	InfoPayFailed     = NewMessageArgs("payment failed: %+v")
 
 	// notification
 	InfoSendNotification = NewMessageArgs("Send notification [%s] to: %+v")

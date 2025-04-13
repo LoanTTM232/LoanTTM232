@@ -74,7 +74,6 @@ func AutoMigrate(db *gorm.DB) error {
 		&tb.Address{},
 		&tb.Order{},
 		&tb.OrderItem{},
-		&tb.PaymentMethod{},
 		&tb.SportType{},
 		&tb.Transaction{},
 		&tb.AuthenticationProvider{})

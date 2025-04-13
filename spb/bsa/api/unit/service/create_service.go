@@ -54,6 +54,7 @@ func (s *Service) Create(reqBody *model.CreateUnitRequest) (*tb.Unit, error) {
 
 	// Commit transaction
 	if err := tx.Commit().Error; err != nil {
+		tx.Rollback()
 		return nil, msg.ErrCommitFailed(err)
 	}
 

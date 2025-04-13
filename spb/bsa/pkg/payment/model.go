@@ -1,12 +1,12 @@
 package payment
 
 type PaymentRequest struct {
-	UserID    string  `json:"user_id"`
-	Amount    float64 `json:"amount"`
-	OrderInfo string  `json:"order_info"`
+	UserID    string `json:"user_id"`
+	Amount    int64  `json:"amount"`
+	OrderInfo string `json:"order_info"`
 }
 
 type PaymentResponse struct {
-	PayURL  string `json:"pay_url"`
-	OrderID string `json:"order_id"`
+	PayURL    string `json:"pay_url"`
+	AppTranID string `json:"app_tran_id"`
 }
