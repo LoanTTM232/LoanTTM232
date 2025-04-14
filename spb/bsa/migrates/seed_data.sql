@@ -44,28 +44,28 @@ INSERT INTO
 VALUES
 	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
 		'admin',
-		67108863,
+		536870911,
 		null,
 		NOW (),
 		NOW ()
 	),
 	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
 		'client',
-		16547413,
+		83656277,
 		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
 		NOW (),
 		NOW ()
 	),
 	('bcb2b9aa-9b1d-47dc-9d29-f7b142df79ed' :: uuid,
 		'client_member',
-		13223317,
+		79986181,
 		'6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid,
 		NOW (),
 		NOW ()
 	),
 	('9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid,
 		'user',
-		12889145,
+		79973893,
 		'cc203bb9-7b33-4391-8917-0089588356f2' :: uuid,
 		NOW (),
 		NOW ()
@@ -74,6 +74,7 @@ VALUES
 INSERT INTO
 	role_permissions (role_id, permission_id)
 VALUES
+	/* Admin */
 	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 1),
 	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 2),
 	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 4),
@@ -103,6 +104,8 @@ VALUES
 	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 67108864),
 	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 134217728),
 	('cc203bb9-7b33-4391-8917-0089588356f2' :: uuid, 268435456),
+
+	/* Client */
 	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 1),
 	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 4),
 	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 16),
@@ -120,6 +123,8 @@ VALUES
 	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 4194304),
 	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 8388608),
 	('6c8647dc-091f-4249-b9f7-12bed594d124' :: uuid, 67108864),
+
+	/* Client Member*/
 	('bcb2b9aa-9b1d-47dc-9d29-f7b142df79ed' :: uuid, 1),
 	('bcb2b9aa-9b1d-47dc-9d29-f7b142df79ed' :: uuid, 4),
 	('bcb2b9aa-9b1d-47dc-9d29-f7b142df79ed' :: uuid, 512),
@@ -132,11 +137,13 @@ VALUES
 	('bcb2b9aa-9b1d-47dc-9d29-f7b142df79ed' :: uuid, 4194304),
 	('bcb2b9aa-9b1d-47dc-9d29-f7b142df79ed' :: uuid, 8388608),
 	('bcb2b9aa-9b1d-47dc-9d29-f7b142df79ed' :: uuid, 67108864),
+
+	/* User */
 	('9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid, 1),
 	('9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid, 4),
 	('9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid, 512),
-	('9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid, 4096),
-	('9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid, 8192),
+	('9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid, 1024),
+	('9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid, 2048),
 	('9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid, 16384),
 	('9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid, 262144),
 	('9666740a-4ff5-4d22-830f-ab3361ba5ef4' :: uuid, 4194304),

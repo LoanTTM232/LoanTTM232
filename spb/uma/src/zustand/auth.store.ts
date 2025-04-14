@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 import { getData } from '@/helpers/storage';
-import authService, { LoginRequest, RegisterRequest } from '@/services/auth.service';
+import authService from '@/services/auth.service';
 import { createSelectors } from '@/zustand/selectors';
 
 interface AuthState {

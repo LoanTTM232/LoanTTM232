@@ -13,35 +13,17 @@ import (
 func (s *Service) Delete(clubId string) error {
 	// Check if club exists
 	var club tb.Club
-	if err := s.db.Preload("Units").First(&club, "id = ?", clubId).Error; err != nil {
+	if err := s.db.
+		Preload("Units").
+		Preload("SportTypes").
+		First(&club, "id = ?", clubId).Error; err != nil {
 		return msg.ErrNotFound("club")
 	}
 
-	// Start transaction
-	tx := s.db.Begin()
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
-
-	// Delete each unit manually to trigger hooks
-	for _, unit := range club.Units {
-		if err := tx.Delete(unit).Error; err != nil {
-			tx.Rollback()
-			return msg.ErrDeleteFailed("unit", err)
-		}
-	}
-
 	// Delete club record
-	if err := tx.Delete(&club).Error; err != nil {
-		tx.Rollback()
+	if err := s.db.Delete(&club).Error; err != nil {
 		return msg.ErrDeleteFailed("club", err)
 	}
 
-	if err := tx.Commit().Error; err != nil {
-		tx.Rollback()
-		return msg.ErrCommitFailed(err)
-	}
 	return nil
 }

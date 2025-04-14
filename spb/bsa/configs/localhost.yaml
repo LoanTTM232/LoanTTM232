@@ -53,7 +53,7 @@ redis:
 logging:
     level: 0 # debug:0, info:1, warning:2, error:3
     output:
-        # - "console"
+        - "console"
         - "file"
     filename: "requests.log"
 
@@ -84,7 +84,7 @@ payment:
         key1: "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn"
         key2: "trMrHtvjo6myautxDUiAcYsVtaeQ8nhf"
         endpoint: "https://sb-openapi.zalopay.vn"
-        callback_url: "https://meanwhile-cambodia-mug-charlie.trycloudflare.com/api/v1/orders/zalopay/callback"
+        callback_url: "https://products-controlling-civilian-garbage.trycloudflare.com/api/v1/orders/zalopay/callback"
         redirect_url: ""
 
 otp:

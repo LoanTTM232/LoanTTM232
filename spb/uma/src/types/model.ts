@@ -58,3 +58,25 @@ export type UnitModel = {
   media: MediaModel[];
   sportTypes: SportTypeModel[];
 };
+
+export type Pagination = {
+  page: number;
+  pageItems: number;
+  orderBy: string;
+  orderType: string;
+  totalItems: number;
+  totalPages: number;
+  nextPage: string;
+  prevPage: string;
+};
+
+export type UnitPagination = Pagination & {
+  query: string;
+  sportType: string;
+  province: string;
+  ward: string;
+  district: string;
+  longitude: number;
+  latitude: number;
+  radius: number;
+};
