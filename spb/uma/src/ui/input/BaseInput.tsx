@@ -54,7 +54,7 @@ const createStyles = (theme: IColorScheme, hasError: boolean) => {
       alignItems: 'center',
       borderCurve: 'continuous',
       borderColor: hasError ? theme.error : theme.borderLight,
-      borderWidth: 2,
+      borderWidth: 1,
       borderRadius: Radius.xs,
     },
     input: {

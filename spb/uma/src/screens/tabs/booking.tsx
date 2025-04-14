@@ -17,9 +17,6 @@ const Booking: React.FC = () => {
 
 const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
-    safeView: {
-      flex: 1,
-    },
     container: {
       flex: 1,
       backgroundColor: theme.backgroundDark,

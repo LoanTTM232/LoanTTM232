@@ -6,7 +6,7 @@ export interface Route {
   key: string;
   component: ReactNode;
   title: string;
-  icon: string;
+  icon: React.ComponentType<{ color: string }>;
 }
 
 export interface UnitTabButtonProps {
@@ -14,8 +14,8 @@ export interface UnitTabButtonProps {
   isActive: boolean;
   onPress: () => void;
   styles: ReturnType<typeof import('@/components/home/UnitTab').createStyles>;
-  iconActiveColor?: string;
-  iconInactiveColor?: string;
+  iconActiveColor: string;
+  iconInactiveColor: string;
 }
 
 export interface UnitTabProps {

@@ -81,7 +81,6 @@ export const createStyles = (theme: IColorScheme) =>
     },
     tabSwitch: {
       flexDirection: 'row',
-      backgroundColor: theme.backgroundDark,
       gap: hp(3),
       borderRadius: 6,
     },
@@ -105,7 +104,7 @@ export const createStyles = (theme: IColorScheme) =>
     },
     shadowLine: {
       backgroundColor: theme.borderLight,
-      height: 2,
+      height: 1,
       width: wp(100),
       transform: [{ translateX: -wp(4) }],
       shadowColor: theme.textLight,
