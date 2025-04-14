@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useContext, useState } from 'react';
+import React, { FC, useCallback, useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import LocationInfo from '@/components/common/LocationInfo';
@@ -7,19 +7,13 @@ import SearchBar from '@/components/common/SearchBar';
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp } from '@/helpers/dimensions';
-
-interface Location {
-  title: string;
-  subtitle: string;
-}
+import { useLocationStore } from '@/zustand';
 
 const Header: FC = () => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
-  const [location, _] = useState<Location>({
-    title: 'Da Nang',
-    subtitle: '123 Main Street, City',
-  });
+  const address = useLocationStore.use.address();
+  const city = useLocationStore.use.city();
 
   const handleLocationPress = useCallback(() => {
     // Handle location selection
@@ -34,8 +28,8 @@ const Header: FC = () => {
     <View style={styles.container}>
       <View style={styles.topBar}>
         <LocationInfo
-          title={location.title}
-          subtitle={location.subtitle}
+          title={city as string}
+          subtitle={address as string}
           onPress={handleLocationPress}
         />
         <NotificationBell

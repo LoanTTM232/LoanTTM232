@@ -4,11 +4,13 @@ import { createSelectors } from '@/zustand/selectors';
 
 interface EventState {
   focus: boolean;
+}
 
+interface EventActions {
   setFocus: (focused: boolean) => void;
 }
 
-const useEventStoreBase = create<EventState>((set) => ({
+const useEventStoreBase = create<EventState & EventActions>((set) => ({
   focus: false,
 
   setFocus: (focused: boolean) => {

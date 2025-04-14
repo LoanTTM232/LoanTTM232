@@ -46,6 +46,7 @@ const createStyles = (theme: IColorScheme) =>
       ...fontFamily.POPPINS_BOLD,
       fontSize: fontSize.sm,
       color: theme.textDark,
+      maxWidth: wp(50),
       lineHeight: 20,
     },
     subtitle: {
@@ -53,6 +54,7 @@ const createStyles = (theme: IColorScheme) =>
       fontSize: fontSize.xs,
       color: theme.textLight,
       lineHeight: 18,
+      maxWidth: wp(50),
       marginTop: 2,
     },
   });
