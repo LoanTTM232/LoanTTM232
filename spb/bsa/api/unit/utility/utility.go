@@ -56,7 +56,7 @@ func MapUnitEntitiesToResponse(units []*tb.Unit, reqBody *model.SearchUnitReques
 	response.Units = unitResponse
 	response.Total = len(unitResponse)
 	response.Pagination = reqBody.Pagination
-	response.Pagination.SetNewPagination(utils.SafeInt64ToInt(total))
+	response.Pagination.SetNewUnitPagination(utils.SafeInt64ToInt(total))
 
 	return response
 }
