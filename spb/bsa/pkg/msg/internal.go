@@ -39,6 +39,7 @@ var (
 	ErrPaymentFailed             = NewErrorArgs("payment failed: %+v")
 	ErrMoMoCallbackFailed        = NewErrorArgs("momo callback failed: %+v")
 	ErrZaloPayCallbackInvalidMac = NewErrorArgs("invalid MAC: expected %s, got %s")
+	ErrPaymentAmountInvalid      = NewError("payment amount invalid")
 
 	// cache
 	ErrCacheSetFailed     = NewErrorArgs("failed to set [%s] cache: %+v")
@@ -48,6 +49,17 @@ var (
 
 	// notification
 	ErrSendNotificationFailed = NewErrorArgs("failed to send notification: %+v")
+
+	// club
+	ErrClubNotFound   = NewError("club not found")
+	ErrClubWrongOwner = NewError("club owner is not correct")
+
+	// unit
+	ErrUnitNotFound   = NewError("unit not found")
+	ErrUnitWrongOwner = NewError("unit owner is not correct")
+
+	// media
+	ErrMediaCreateFailed = NewError("failed to create media")
 
 	// queue
 	ErrMissingWorker       = NewError("missing worker module")

@@ -115,6 +115,53 @@ func MapUpdateRequestToEntity(reqBody *model.UpdateUnitRequest) map[string]inter
 	return unitUpdate
 }
 
+type TimeRange struct {
+	startTime time.Time
+	endTime   time.Time
+	index     int
+}
+
+func MapToAscTimeRange(unitPrices []map[string]interface{}) ([]TimeRange, error) {
+	// Convert and sort unit prices by start time
+	ranges := make([]TimeRange, len(unitPrices))
+	for i, price := range unitPrices {
+		start, err := time.Parse("15:04", price["start_time"].(string))
+		if err != nil {
+			return nil, fmt.Errorf("invalid start time format at index %d: %w", i, err)
+		}
+		end, err := time.Parse("15:04", price["end_time"].(string))
+		if err != nil {
+			return nil, fmt.Errorf("invalid end time format at index %d: %w", i, err)
+		}
+		// Subtract 1 minute from end time
+		end = end.Add(-time.Minute)
+		ranges[i] = TimeRange{start, end, i}
+	}
+
+	sort.Slice(ranges, func(i, j int) bool {
+		return ranges[i].startTime.Before(ranges[j].startTime)
+	})
+	return ranges, nil
+}
+
+func TimeRangeBetween(ranges []TimeRange, openTime, closeTime time.Time) error {
+	for i, r := range ranges {
+		if r.startTime.Before(openTime) || r.endTime.After(closeTime) {
+			return fmt.Errorf("price time range at index %d is outside unit operating hours", ranges[i].index)
+		}
+	}
+	return nil
+}
+
+func TimeRangeOverlap(ranges []TimeRange) error {
+	for i := range len(ranges) - 1 {
+		if !ranges[i].endTime.Before(ranges[i+1].startTime) {
+			return fmt.Errorf("overlapping time ranges at indices %d and %d", ranges[i].index, ranges[i+1].index)
+		}
+	}
+	return nil
+}
+
 func ValidateUnitPriceTime(unitPrices []map[string]interface{}, openTime, closeTime string) error {
 	if len(unitPrices) == 0 {
 		return nil
@@ -131,45 +178,21 @@ func ValidateUnitPriceTime(unitPrices []map[string]interface{}, openTime, closeT
 	}
 
 	// Convert and sort unit prices by start time
-	type timeRange struct {
-		startTime time.Time
-		endTime   time.Time
-		index     int
+	ranges, err := MapToAscTimeRange(unitPrices)
+	if err != nil {
+		return err
 	}
-
-	ranges := make([]timeRange, len(unitPrices))
-	for i, price := range unitPrices {
-		start, err := time.Parse("15:04", price["start_time"].(string))
-		if err != nil {
-			return fmt.Errorf("invalid start time format at index %d: %w", i, err)
-		}
-		end, err := time.Parse("15:04", price["end_time"].(string))
-		if err != nil {
-			return fmt.Errorf("invalid end time format at index %d: %w", i, err)
-		}
-		// Subtract 1 minute from end time
-		end = end.Add(-time.Minute)
-		ranges[i] = timeRange{start, end, i}
-	}
-
-	// Sort by start time
-	sort.Slice(ranges, func(i, j int) bool {
-		return ranges[i].startTime.Before(ranges[j].startTime)
-	})
 
 	// Check if times are within unit operating hours
-	for i, r := range ranges {
-		if r.startTime.Before(unitOpen) || r.endTime.After(unitClose) {
-			return fmt.Errorf("price time range at index %d is outside unit operating hours", ranges[i].index)
-		}
+	err = TimeRangeBetween(ranges, unitOpen, unitClose)
+	if err != nil {
+		return err
 	}
 
 	// Check for overlaps
-	for i := range len(ranges) - 1 {
-		if !ranges[i].endTime.Before(ranges[i+1].startTime) {
-			return fmt.Errorf("overlapping time ranges at indices %d and %d",
-				ranges[i].index, ranges[i+1].index)
-		}
+	err = TimeRangeOverlap(ranges)
+	if err != nil {
+		return err
 	}
 
 	return nil

@@ -10,13 +10,12 @@ import (
 // @description: Service for unit deletion
 // @param: string unit id
 // @return: error
-func (s *Service) Delete(unitId string) error {
+func (s *Service) Delete(unitId, ownerId string) error {
 	unit := new(tb.Unit)
-	// Check if unit exists
 	if err := s.db.
-		Preload("SportTypes").
-		First(&unit, "id = ?", unitId).Error; err != nil {
-		return msg.ErrNotFound("Unit")
+		Where("id = ? AND club_id = ?", unitId, ownerId).
+		First(&unit).Error; err != nil {
+		return msg.ErrUnitWrongOwner
 	}
 
 	if err := s.db.Delete(&unit).Error; err != nil {

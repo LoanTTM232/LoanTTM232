@@ -3,13 +3,14 @@ package model
 import "time"
 
 type PayRequest struct {
-	Amount    int64  `json:"amount" validate:"required"`
-	OrderInfo string `json:"order_info" validate:"required"`
-	UserID    string `json:"user_id" validate:"required"`
-	StartTime string `json:"start_time" validate:"yy:mm,required"`
-	EndTime   string `json:"end_time" validate:"yy:mm,required"`
-	UnitID    string `json:"unit_id" validate:"required"`
-	UnitName  string `json:"unit_name" validate:"required"`
+	Amount    int64     `json:"amount" validate:"required"`
+	OrderInfo string    `json:"order_info" validate:"required"`
+	UserID    string    `json:"user_id" validate:"required"`
+	StartTime string    `json:"start_time" validate:"yy:mm,required"`
+	EndTime   string    `json:"end_time" validate:"yy:mm,required"`
+	UnitID    string    `json:"unit_id" validate:"required"`
+	UnitName  string    `json:"unit_name" validate:"required"`
+	Timestamp time.Time `json:"timestamp" validate:"required"`
 }
 
 type CallBackResponse struct {

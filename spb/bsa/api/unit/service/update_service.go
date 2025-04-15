@@ -23,17 +23,15 @@ import (
 // @param: unit model.UpdateUnitRequest
 // @param: string unit id
 // @return: unit entities.Unit, error
-func (s *Service) Update(reqBody *model.UpdateUnitRequest, unitId string) error {
-	var count int64
-
-	// check if unit exists
-	if err := s.db.Model(tb.Unit{}).
-		Where("id = ?", unitId).
-		Count(&count).Error; err != nil {
-		return err
+func (s *Service) Update(reqBody *model.UpdateUnitRequest, unitId, ownerId string) error {
+	// Check if club exists
+	var unit tb.Unit
+	err := s.db.Model(&tb.Unit{}).Where("id = ?", unitId).First(&unit).Error
+	if err != nil {
+		return msg.ErrUnitNotFound
 	}
-	if count == 0 {
-		return msg.ErrNotFound("Unit")
+	if unit.ClubID == ownerId {
+		return msg.ErrUnitWrongOwner
 	}
 
 	tx := s.db.Begin()
