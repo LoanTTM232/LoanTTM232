@@ -13,7 +13,7 @@ type IService interface {
 	Update(reqBody *model.UpdateUnitRequest, unitId, ownerId string) error
 	GetByID(unitId string) (*tb.Unit, error)
 	Delete(unitId, ownerId string) error
-	Create(reqBody *model.CreateUnitRequest) (*tb.Unit, error)
+	Create(reqBody *model.CreateUnitRequest, ownerId string) (*tb.Unit, error)
 	Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, error)
 	AddMedia(reqBody *mediaModel.CreateMediaRequest, clubId, ownerId string) error
 	DeleteMedia(mediaId, ownerId string) error

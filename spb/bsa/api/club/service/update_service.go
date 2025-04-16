@@ -25,7 +25,7 @@ func (s *Service) Update(reqBody *model.UpdateClubRequest, clubId, ownerId strin
 		return msg.ErrClubNotFound
 	}
 
-	if clubOb.ID == ownerId {
+	if clubOb.OwnerID != ownerId {
 		return msg.ErrClubWrongOwner
 	}
 

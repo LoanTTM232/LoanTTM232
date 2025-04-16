@@ -18,11 +18,13 @@ const (
 	CODE_PAYMENT_AMOUNT_INVALID = "ERPA001"
 	CODE_PAYMENT_FAILED         = "ERPA002"
 
-	CODE_CLUB_NOT_FOUND   = "ECL001"
-	CODE_CLUB_WRONG_OWNER = "ECL002"
+	CODE_CLUB_NOT_FOUND           = "ECL001"
+	CODE_CLUB_WRONG_OWNER         = "ECL002"
+	CODE_CLUB_NAME_ALREADY_EXISTS = "ECL003"
 
-	CODE_UNIT_NOT_FOUND   = "ERU001"
-	CODE_UNIT_WRONG_OWNER = "ERU002"
+	CODE_UNIT_NOT_FOUND           = "ERU001"
+	CODE_UNIT_WRONG_OWNER         = "ERU002"
+	CODE_UNIT_NAME_ALREADY_EXISTS = "ERU003"
 
 	CODE_MEDIA_CREATE_FAILED = "ERM001"
 )
@@ -47,12 +49,14 @@ var (
 	PAYMENT_FAILED         = fiber.NewError(fiber.StatusBadRequest, CODE_PAYMENT_FAILED)
 
 	// club
-	CLUB_NOT_FOUND   = fiber.NewError(fiber.StatusNotFound, CODE_CLUB_NOT_FOUND)
-	CLUB_WRONG_OWNER = fiber.NewError(fiber.StatusBadRequest, CODE_CLUB_WRONG_OWNER)
+	CLUB_NOT_FOUND           = fiber.NewError(fiber.StatusNotFound, CODE_CLUB_NOT_FOUND)
+	CLUB_WRONG_OWNER         = fiber.NewError(fiber.StatusBadRequest, CODE_CLUB_WRONG_OWNER)
+	CLUB_NAME_ALREADY_EXISTS = fiber.NewError(fiber.StatusBadRequest, CODE_CLUB_NAME_ALREADY_EXISTS)
 
 	// unit
-	UNIT_NOT_FOUND   = fiber.NewError(fiber.StatusNotFound, CODE_UNIT_NOT_FOUND)
-	UNIT_WRONG_OWNER = fiber.NewError(fiber.StatusBadRequest, CODE_UNIT_WRONG_OWNER)
+	UNIT_NOT_FOUND           = fiber.NewError(fiber.StatusNotFound, CODE_UNIT_NOT_FOUND)
+	UNIT_WRONG_OWNER         = fiber.NewError(fiber.StatusBadRequest, CODE_UNIT_WRONG_OWNER)
+	UNIT_NAME_ALREADY_EXISTS = fiber.NewError(fiber.StatusBadRequest, CODE_UNIT_NAME_ALREADY_EXISTS)
 
 	// media
 	MEDIA_CREATE_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_MEDIA_CREATE_FAILED)

@@ -8,13 +8,14 @@ import (
 func (s *Service) DeleteMedia(mediaId, ownerId string) error {
 	var club tb.Club
 	err := s.db.Model(&tb.Club{}).
-		Preload("Media").Where("media.id = ?", mediaId).
+		Joins("JOIN media ON club.id = media.owner_id").
+		Where("media.id = ?", mediaId).
 		First(&club).Error
 	if err != nil {
 		return msg.ErrClubNotFound
 	}
 
-	if club.ID == ownerId {
+	if club.OwnerID != ownerId {
 		return msg.ErrClubWrongOwner
 	}
 

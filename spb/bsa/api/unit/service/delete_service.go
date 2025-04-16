@@ -12,8 +12,9 @@ import (
 // @return: error
 func (s *Service) Delete(unitId, ownerId string) error {
 	unit := new(tb.Unit)
-	if err := s.db.
-		Where("id = ? AND club_id = ?", unitId, ownerId).
+	if err := s.db.Model(&tb.Unit{}).
+		Joins("JOIN club ON unit.club_id = club.id").
+		Where("unit.id = ? AND club.owner_id = ?", unitId, ownerId).
 		First(&unit).Error; err != nil {
 		return msg.ErrUnitWrongOwner
 	}

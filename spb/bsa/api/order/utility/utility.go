@@ -1,6 +1,9 @@
 package utility
 
 import (
+	"time"
+
+	"spb/bsa/api/order/domain"
 	"spb/bsa/api/order/model"
 	tb "spb/bsa/pkg/entities"
 )
@@ -48,4 +51,26 @@ func MapOrdersToResponse(orders []*tb.Order) model.OrdersResponse {
 		ordersResponses.Orders = append(ordersResponses.Orders, MapOrderToResponse(order))
 	}
 	return ordersResponses
+}
+
+func MapPayRequestToBooking(reqBody *model.PayRequest, unit *tb.Unit) (*domain.Booking, error) {
+	startTime, err := time.Parse("15:04", reqBody.StartTime)
+	if err != nil {
+		return nil, err
+	}
+
+	endTime, err := time.Parse("15:04", reqBody.EndTime)
+	if err != nil {
+		return nil, err
+	}
+
+	booking := &domain.Booking{
+		StartTime: startTime,
+		EndTime:   endTime,
+		UserID:    reqBody.UserID,
+		OrderInfo: reqBody.OrderInfo,
+		Amount:    reqBody.Amount,
+		Unit:      unit,
+	}
+	return booking, nil
 }

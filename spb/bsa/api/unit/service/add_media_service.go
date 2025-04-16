@@ -9,12 +9,14 @@ import (
 
 func (s *Service) AddMedia(reqBody *mediaModel.CreateMediaRequest, unitId, ownerId string) error {
 	// Check if club exists
-	var unit tb.Unit
-	err := s.db.Model(&tb.Unit{}).Where("id = ?", unitId).First(&unit).Error
+	var club tb.Club
+	err := s.db.Model(&tb.Club{}).
+		Joins("JOIN unit ON unit.club_id = club.id").
+		Where("unit.id = ?", unitId).First(&club).Error
 	if err != nil {
 		return msg.ErrUnitNotFound
 	}
-	if unit.ClubID == ownerId {
+	if club.OwnerID != ownerId {
 		return msg.ErrUnitWrongOwner
 	}
 

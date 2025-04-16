@@ -14,7 +14,7 @@ func (s *Service) AddMedia(reqBody *mediaModel.CreateMediaRequest, clubId, owner
 		return msg.ErrClubNotFound
 	}
 
-	if club.ID == ownerId {
+	if club.OwnerID != ownerId {
 		return msg.ErrClubWrongOwner
 	}
 
