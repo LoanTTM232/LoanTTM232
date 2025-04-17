@@ -96,9 +96,7 @@ class AxiosConfig {
             // from refreshing the token at the same time
             return this.concurrencyHandler
               .execute(authService.refreshToken)
-              .then((res) => {
-                console.log(res);
-                console.log('re run request after token refresh');
+              .then(() => {
                 return this.axiosInstance.request(
                   config as InternalAxiosRequestConfig
                 );

@@ -32,13 +32,13 @@ const UnitCard: FC<UnitCardProps> = ({
       style={({ pressed }) => [styles.container, pressed && styles.pressed]}
       onPress={onPress}
     >
-      <Pressable style={styles.imageContainer}>
+      <View style={styles.imageContainer}>
         <Image
           source={{ uri: image }}
           style={styles.image}
           resizeMode="cover"
         />
-      </Pressable>
+      </View>
       <View style={styles.content}>
         <View style={styles.headerRow}>
           <Text style={styles.title} numberOfLines={1}>
@@ -53,7 +53,7 @@ const UnitCard: FC<UnitCardProps> = ({
         <Text style={styles.address} numberOfLines={1}>
           {address}
         </Text>
-		<UnitPrice prices={price} />
+        <UnitPrice prices={price} />
       </View>
     </Pressable>
   );
@@ -90,32 +90,6 @@ const createStyles = (theme: IColorScheme) =>
       width: '100%',
       height: '100%',
     },
-    placeholderImage: {
-      width: '100%',
-      height: '100%',
-      backgroundColor: theme.backgroundDark,
-    },
-    pagination: {
-      position: 'absolute',
-      bottom: hp(1),
-      left: 0,
-      right: 0,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    paginationDot: {
-      width: 6,
-      height: 6,
-      borderRadius: 3,
-      backgroundColor: `${theme.backgroundLight}80`,
-      marginHorizontal: 4,
-    },
-    paginationDotActive: {
-      backgroundColor: theme.backgroundLight,
-      width: 8,
-      height: 8,
-    },
     content: {
       padding: hp(2),
     },
@@ -124,11 +98,6 @@ const createStyles = (theme: IColorScheme) =>
       fontSize: fontSize.xs,
       color: theme.textLight,
       marginBottom: hp(1),
-    },
-    price: {
-      ...fontFamily.POPPINS_BOLD,
-      fontSize: fontSize.sm,
-      color: theme.primary,
     },
     headerRow: {
       flexDirection: 'row',

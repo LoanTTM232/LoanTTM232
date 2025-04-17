@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 
 import { calculateDistance } from '@/helpers/location';
-import { logDebug } from '@/helpers/logger';
 import { mappingUnitModelToUnitCard } from '@/helpers/mapping';
 import { round } from '@/helpers/number';
 import { PopularUnitRequest, SearchUnitQuery, UnitCard } from '@/services/types';
@@ -58,7 +57,6 @@ const useUnitStoreBase = create<UnitState & UnitActions>((set) => ({
       return unitCard;
     });
 
-    logDebug(unitCards, 'unitCards');
     set({ popularUnits: unitCards });
   },
 
