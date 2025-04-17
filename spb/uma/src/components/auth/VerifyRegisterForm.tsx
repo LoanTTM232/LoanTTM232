@@ -6,7 +6,7 @@ import { fontFamily, fontSize, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import i18next from '@/helpers/i18n';
-import { logDebug, logError } from '@/helpers/logger';
+import { logError } from '@/helpers/logger';
 import { toastError, toastSuccess } from '@/helpers/toast';
 import { ParamList } from '@/screens';
 import Button from '@/ui/button/BaseButton';
@@ -30,7 +30,6 @@ const VerifyRegisterForm: FC<IVerifyRegisterFormProps> = ({ email }) => {
   const handleSubmit = async () => {
     try {
       const otpNumber = Number(otp);
-      logDebug(`OTP submitted: ${otpNumber}`);
 
       await verifyRegisterEmail({ token: otpNumber, email });
       navigation.navigate('Tabs');

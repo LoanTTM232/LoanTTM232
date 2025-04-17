@@ -1,14 +1,16 @@
 import React, { FC, memo } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
+import UnitPrice from '@/components/home/UnitPrice';
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
+import { UnitPrice as UnitPriceObject } from '@/services/types';
 
 interface UnitCardProps {
   title: string;
   address: string;
-  price: string;
+  price: UnitPriceObject[];
   image: string;
   distance?: string;
   onPress?: () => void;
@@ -51,7 +53,7 @@ const UnitCard: FC<UnitCardProps> = ({
         <Text style={styles.address} numberOfLines={1}>
           {address}
         </Text>
-        <Text style={styles.price}>{price}</Text>
+		<UnitPrice prices={price} />
       </View>
     </Pressable>
   );

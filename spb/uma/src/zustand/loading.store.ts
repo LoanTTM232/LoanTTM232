@@ -12,8 +12,7 @@ interface LoadingActions {
 
 const useLoadingStoreBase = create<LoadingState & LoadingActions>((set) => ({
   isLoading: false,
-  setLoading: (isLoading: LoadingState['isLoading']) =>
-    set(() => ({ isLoading })),
+  setLoading: (isLoading: boolean) => set(() => ({ isLoading })),
 }));
 
 export const useLoadingStore = createSelectors(useLoadingStoreBase);

@@ -1,5 +1,16 @@
 class ConcurrencyHandler {
+  private static instance: ConcurrencyHandler;
+  private isExecuting: boolean = false;
   private callback: Array<[Function, Function]> = [];
+
+  private constructor() {}
+
+  public static getInstance(): ConcurrencyHandler {
+    if (!ConcurrencyHandler.instance) {
+      ConcurrencyHandler.instance = new ConcurrencyHandler();
+    }
+    return ConcurrencyHandler.instance;
+  }
 
   public async execute(action: Function): Promise<void> {
     const promise = new Promise<void>((resolve, reject) => {
@@ -13,20 +24,21 @@ class ConcurrencyHandler {
       this.callback.push([onSuccess, onError]);
     });
 
-    const performAction = this.callback.length === 1;
-    if (performAction) {
+    if (!this.isExecuting) {
+      this.isExecuting = true;
       try {
         await action();
         this.callback.forEach(([onSuccess]) => {
           onSuccess();
         });
       } catch (error) {
-        this.callback.forEach(([, onError]) => {
+        this.callback.forEach(([_, onError]) => {
           onError(error);
         });
+      } finally {
+        this.isExecuting = false;
+        this.callback = [];
       }
-
-      this.callback = [];
     }
 
     return promise;

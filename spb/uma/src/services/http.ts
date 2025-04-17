@@ -1,6 +1,8 @@
 import axios, {
-    Axios, AxiosError, AxiosHeaders, AxiosResponse, HttpStatusCode, InternalAxiosRequestConfig
+  Axios, AxiosError, AxiosHeaders, AxiosResponse, HttpStatusCode, InternalAxiosRequestConfig
 } from 'axios';
+import camelcaseKeys from 'camelcase-keys';
+import snakecaseKeys from 'snakecase-keys';
 
 import ConcurrencyHandler from '@/helpers/concurrency';
 import { ResponseError } from '@/helpers/error';
@@ -14,13 +16,17 @@ class AxiosConfig {
   private concurrencyHandler: ConcurrencyHandler;
 
   constructor() {
-    console.log(API_URL);
     this.axiosInstance = axios.create({
       baseURL: API_URL,
       headers: this.defaultHeaders(),
     });
 
-    this.concurrencyHandler = new ConcurrencyHandler();
+    this.concurrencyHandler = ConcurrencyHandler.getInstance();
+
+    // Bind methods to preserve 'this' context
+    this.onRequest = this.onRequest.bind(this);
+    this.onResponse = this.onResponse.bind(this);
+    this.onErrorResponse = this.onErrorResponse.bind(this);
   }
 
   public guessAxios(): Axios {
@@ -44,10 +50,27 @@ class AxiosConfig {
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    if (
+      config.data &&
+      typeof config.data === 'object' &&
+      typeof config.headers['Content-Type'] === 'string' &&
+      config.headers['Content-Type']?.includes('application/json')
+    ) {
+      config.data = snakecaseKeys(config.data, { deep: true });
+    }
+
     return config;
   }
 
   private onResponse(response: AxiosResponse): AxiosResponse {
+    if (
+      response.data &&
+      typeof response.data === 'object' &&
+      response.headers['content-type']?.includes('application/json')
+    ) {
+      response.data = camelcaseKeys(response.data, { deep: true });
+    }
     return response;
   }
 
@@ -57,23 +80,39 @@ class AxiosConfig {
     if (axios.isAxiosError(error)) {
       const { response, config } = error;
       const status = response?.status;
+      try {
+        switch (status) {
+          case HttpStatusCode.NotAcceptable:
+          case HttpStatusCode.Forbidden:
+            authService.logout();
+            break;
+          case HttpStatusCode.Unauthorized:
+            if (!this.concurrencyHandler) {
+              console.error('ConcurrencyHandler is not initialized');
+              return Promise.reject(error);
+            }
 
-      switch (status) {
-        case HttpStatusCode.NotAcceptable:
-        case HttpStatusCode.Forbidden:
-          authService.logout();
-          break;
-        case HttpStatusCode.Unauthorized:
-          // Use the concurrency handler to prevent multiple requests
-          // from refreshing the token at the same time
-          return await this.concurrencyHandler
-            .execute(authService.refreshToken)
-            .then(() => {
-              // Retry the original request
-              return this.axiosInstance.request(
-                config as InternalAxiosRequestConfig
-              );
-            });
+            // Use the concurrency handler to prevent multiple requests
+            // from refreshing the token at the same time
+            return this.concurrencyHandler
+              .execute(authService.refreshToken)
+              .then((res) => {
+                console.log(res);
+                console.log('re run request after token refresh');
+                return this.axiosInstance.request(
+                  config as InternalAxiosRequestConfig
+                );
+              })
+              .catch((refreshError) => {
+                console.error('Token refresh failed:', refreshError);
+                authService.logout();
+              })
+              .then(() => {
+                return Promise.reject(error);
+              });
+        }
+      } catch (err) {
+        console.error('Error in onErrorResponse:', err);
       }
     }
 
@@ -169,11 +208,13 @@ export function apiFactory(url: string, protectedApi: boolean = true) {
   }
 
   const api = {
-    addParam: (param: string, value: string) => {
-      url += `/${param}/${value}`;
+    addPathParam: (key: string, value: string) => {
+      if (url.includes(key)) {
+        url = url.replace(key, value);
+      }
       return api;
     },
-    addQuery: (param: string, value: string | null) => {
+    addQueryParam: (param: string, value: string | number | null) => {
       if (!value) return api;
 
       if (url.includes('?')) {

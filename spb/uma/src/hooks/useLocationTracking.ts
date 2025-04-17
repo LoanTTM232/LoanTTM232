@@ -3,7 +3,6 @@ import { PermissionsAndroid, Platform } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 
 import { DEFAULT_REVERSE_GEOCODE } from '@/constants';
-import { logDebug } from '@/helpers/logger';
 import { useLocationStore } from '@/zustand';
 import { OPENCAGE_API_KEY } from '@env';
 
@@ -17,7 +16,6 @@ export const useLocationTracking = () => {
   useEffect(() => {
     let watchId: number | null = null;
     let intervalId: ReturnType<typeof setInterval> | null;
-    logDebug(OPENCAGE_API_KEY);
 
     const reverseGeocode = async (lat: number, lon: number) => {
       try {

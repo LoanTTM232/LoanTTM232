@@ -34,7 +34,7 @@ export const logError = (errorOrMessage: Error | string) => {
   log('ERROR', message);
 };
 
-export const logDebug = (debugInfo: object | string | Error) => {
+export const logDebug = (debugInfo: object | string | Error, msg?: string) => {
   let message: string;
   if (debugInfo instanceof Error) {
     message = `${debugInfo.message}\n${debugInfo.stack}`;
@@ -42,6 +42,10 @@ export const logDebug = (debugInfo: object | string | Error) => {
     message = JSON.stringify(debugInfo, null, 2);
   } else {
     message = debugInfo;
+  }
+
+  if (msg) {
+    message = `${msg}\n${message}`;
   }
   log('DEBUG', message);
 };

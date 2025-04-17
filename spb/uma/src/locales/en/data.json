@@ -64,6 +64,11 @@
         "placeholder": "Search here",
         "placeholder_description": "Choose the best Football Field"
     },
+    "home": {
+        "popularity": "Popular Units",
+        "nearby": "Nearby Units",
+        "see_all": "See All"
+    },
     "error": {
         "ERS001": "ERS001",
         "ERS002": "ERS002",
