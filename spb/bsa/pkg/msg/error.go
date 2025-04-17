@@ -30,12 +30,11 @@ const (
 )
 
 var (
-	SERVER_ERROR   = fiber.NewError(fiber.StatusInternalServerError, CODE_SERVER_ERROR)
-	FORBIDDEN      = fiber.NewError(fiber.StatusForbidden, CODE_FORBIDDEN)
-	BAD_REQUEST    = fiber.NewError(fiber.StatusBadRequest, CODE_BAD_REQUEST)
-	NOT_FOUND      = fiber.NewError(fiber.StatusNotFound, CODE_BAD_REQUEST)
-	UNAUTHORIZED   = fiber.NewError(fiber.StatusUnauthorized)
-	NOT_ACCEPTABLE = fiber.NewError(fiber.StatusNotAcceptable)
+	SERVER_ERROR = fiber.NewError(fiber.StatusInternalServerError, CODE_SERVER_ERROR)
+	FORBIDDEN    = fiber.NewError(fiber.StatusForbidden, CODE_FORBIDDEN)
+	BAD_REQUEST  = fiber.NewError(fiber.StatusBadRequest, CODE_BAD_REQUEST)
+	NOT_FOUND    = fiber.NewError(fiber.StatusNotFound, CODE_BAD_REQUEST)
+	UNAUTHORIZED = fiber.NewError(fiber.StatusUnauthorized)
 
 	PARAM_INVALID            = fiber.NewError(fiber.StatusBadRequest, CODE_PARAM_INVALID)
 	REQUEST_BODY_INVALID     = fiber.NewError(fiber.StatusBadRequest, CODE_REQUEST_BODY_INVALID)

@@ -22,7 +22,7 @@ cors:
 
 jwt:
     secret: "1234balhblahblah"
-    access_token_exp: 10 # minutes
+    access_token_exp: 1 # minutes
     refresh_token_exp: 43200 # minutes
     expire_cache: 43200 # minutes
 

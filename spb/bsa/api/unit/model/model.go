@@ -44,7 +44,7 @@ type UpdateUnitRequest struct {
 }
 
 type UnitResponse struct {
-	UnitID       string                    `json:"unit_id"`
+	ID           string                    `json:"id"`
 	Name         string                    `json:"name"`
 	OpenTime     string                    `json:"open_time"`
 	CloseTime    string                    `json:"close_time"`

@@ -23,7 +23,7 @@ import (
 // @return: *model.UnitResponse
 func MapUnitEntityToResponse(unit *tb.Unit) *model.UnitResponse {
 	response := &model.UnitResponse{
-		UnitID:      unit.ID,
+		ID:          unit.ID,
 		Name:        unit.Name,
 		OpenTime:    unit.OpenTime,
 		CloseTime:   unit.CloseTime,

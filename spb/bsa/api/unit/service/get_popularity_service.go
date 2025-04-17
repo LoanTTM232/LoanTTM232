@@ -29,7 +29,7 @@ func (s *Service) GetPopularity(reqBody *model.PopularityRequest) ([]*tb.Unit, e
 		return nil, err
 	}
 	if len(addresses) == 0 {
-		return nil, msg.ErrUnitNotFound
+		return units, nil
 	}
 	addressIds := au.MapAddressEntitiesToIDs(addresses)
 
@@ -65,7 +65,8 @@ func (s *Service) GetPopularity(reqBody *model.PopularityRequest) ([]*tb.Unit, e
 	}
 
 	// Get units
-	err = s.db.Preload("Media").Find(&units).Error
+	err = s.db.Preload("Media").
+		Preload("UnitPrice").Find(&units).Error
 	if err != nil {
 		return nil, err
 	}
