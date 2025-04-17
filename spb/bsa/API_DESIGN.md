@@ -94,7 +94,7 @@ Manage orders by Admin, Club Owner, Member, User
 | --- | ----------- | ------ | ------------------------ | ------------ | ------------------------------------------------- |
 | 1   | &#x2705;    | POST   | /orders/pay              | order:pay    | Create order pay by User                          |
 | 2   | &#x2705;    | POST   | /orders/zalopay/callback |              | ZaloPay payment callback                          |
-| 3   | &#x274c;    | GET    | /orders/:id              | order:read   | Get orders of user by user_id                     |
+| 3   | &#x2705;    | GET    | /orders/:id              | order:read   | Get orders of user by user_id                     |
 | 4   | &#x274c;    | POST   | /orders/                 | order:create | Create order by client/member                     |
 | 5   | &#x274c;    | POST   | /orders/:id              | order:create | Submit order by client/member                     |
 | 6   | &#x274c;    | DELETE | /orders/:id              | order:delete | Delete order (not submitted yet) by client/member |
@@ -140,6 +140,7 @@ Manage units by Admin, Club Owner, Member
 | 5   | &#x2705;    | GET    | /units?i={items}&p={page}&b={order by}&t={order type}&q={query - unit name or club name}&st={sport type}&pv={province}&wd={ward}&dt={district}&lng={longitude}&lat={latitude}&r={radius} | unit:read   | Search units by name, location, sport type |
 | 6   | &#x2705;    | POST   | /units/:id/media                                                                                                                                                                         | unit:update | Add unit's media                           |
 | 7   | &#x2705;    | DELETE | /units/media/:id                                                                                                                                                                         | unit:update | Delete unit's media                        |
+| 8   | &#x2705;    | GET    | /units/:id/booked-time                                                                                                                                                                   |             | Get unit's booked time on day              |
 
 ---
 

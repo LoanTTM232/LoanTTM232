@@ -25,6 +25,9 @@ func MapOrderItemsToResponse(orderItems []tb.OrderItem) []model.OrderItemRespons
 		if item.EndTime != nil {
 			orderItemResponse.EndTime = item.EndTime
 		}
+		if item.BookingDay != nil {
+			orderItemResponse.BookedDay = item.BookingDay
+		}
 		orderItemResponses = append(orderItemResponses, orderItemResponse)
 	}
 	return orderItemResponses

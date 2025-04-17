@@ -234,6 +234,21 @@ VALUES
 		NOW()
 	);
 
+INSERT INTO
+	public."sport_type" (
+		id,
+		name,
+		created_at,
+		updated_at
+	)
+VALUES
+	(
+		'f6fcc299-38fa-448c-bf34-32291f356e37',
+		'Football',
+		NOW(),
+		NOW()
+	);
+
 INSERT INTO province (id, name, name_en, code, created_at, updated_at) VALUES
 ('1f7d45c7-6c36-46f4-890b-322c9e6194ed', 'Thành phố Hà Nội', 'Ha Noi City', 'ha_noi', NOW(), NOW()),
 ('e54f7d10-eb3d-402e-b0c0-ffe7b575a1bc', 'Tỉnh Hà Giang', 'Ha Giang Province', 'ha_giang', NOW(), NOW()),

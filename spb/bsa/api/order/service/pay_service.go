@@ -77,14 +77,15 @@ func (s *Service) Pay(reqBody *model.PayRequest) (*payment.PaymentResponse, erro
 	}
 
 	orderItem := &tb.OrderItem{
-		OrderID:   order.ID,
-		Price:     reqBody.Amount,
-		StartTime: &reqBody.StartTime,
-		EndTime:   &reqBody.EndTime,
-		ItemName:  reqBody.UnitName,
-		ItemID:    reqBody.UnitID,
-		ItemType:  tb.OrderItemUnit,
-		Quantity:  1,
+		OrderID:    order.ID,
+		Price:      reqBody.Amount,
+		StartTime:  &reqBody.StartTime,
+		EndTime:    &reqBody.EndTime,
+		BookingDay: &reqBody.BookingDay,
+		ItemName:   reqBody.UnitName,
+		ItemID:     reqBody.UnitID,
+		ItemType:   tb.OrderItemUnit,
+		Quantity:   1,
 	}
 	if err = tx.Create(orderItem).Error; err != nil {
 		tx.Rollback()

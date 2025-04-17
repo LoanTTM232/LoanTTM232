@@ -17,6 +17,8 @@ type IService interface {
 	Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, error)
 	AddMedia(reqBody *mediaModel.CreateMediaRequest, clubId, ownerId string) error
 	DeleteMedia(mediaId, ownerId string) error
+	BookedTimeOnDay(reqBody *model.BookedTimeRequest, unitId string) ([]model.BookedTime, error)
+	GetPopularity(reqBody *model.PopularityRequest) ([]*tb.Unit, error)
 }
 
 type Service struct {

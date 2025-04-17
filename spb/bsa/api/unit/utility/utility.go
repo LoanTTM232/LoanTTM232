@@ -22,21 +22,33 @@ import (
 // @param: unit tb.Unit
 // @return: *model.UnitResponse
 func MapUnitEntityToResponse(unit *tb.Unit) *model.UnitResponse {
-	return &model.UnitResponse{
-		UnitID:       unit.ID,
-		Name:         unit.Name,
-		OpenTime:     unit.OpenTime,
-		CloseTime:    unit.CloseTime,
-		Phone:        unit.Phone,
-		Description:  unit.Description,
-		Status:       unit.Status,
-		ClubID:       unit.ClubID,
-		Address:      au.MapAddressEntityToResponse(unit.Address),
-		UnitPrices:   upu.MapUnitPriceEntitiesToListResponse(unit.UnitPrice),
-		UnitServices: usu.MapUnitServicesEntitiesToListResponse(unit.UnitService),
-		Media:        mu.MapMediaEntitiesToResponse(unit.Media),
-		SportTypes:   stu.MapSportTypeEntitiesToListResponse(unit.SportTypes),
+	response := &model.UnitResponse{
+		UnitID:      unit.ID,
+		Name:        unit.Name,
+		OpenTime:    unit.OpenTime,
+		CloseTime:   unit.CloseTime,
+		Phone:       unit.Phone,
+		Description: unit.Description,
+		Status:      unit.Status,
+		ClubID:      unit.ClubID,
 	}
+	if unit.Address != nil {
+		response.Address = au.MapAddressEntityToResponse(unit.Address)
+	}
+	if unit.UnitPrice != nil {
+		response.UnitPrices = upu.MapUnitPriceEntitiesToListResponse(unit.UnitPrice)
+	}
+	if unit.UnitService != nil {
+		response.UnitServices = usu.MapUnitServicesEntitiesToListResponse(unit.UnitService)
+	}
+	if unit.Media != nil {
+		response.Media = mu.MapMediaEntitiesToResponse(unit.Media)
+	}
+	if unit.SportTypes != nil {
+		response.SportTypes = stu.MapSportTypeEntitiesToListResponse(unit.SportTypes)
+	}
+
+	return response
 }
 
 // @author: LoanTT
@@ -47,7 +59,7 @@ func MapUnitEntityToResponse(unit *tb.Unit) *model.UnitResponse {
 // @param: total int64
 // @return: *model.UnitsResponse
 func MapUnitEntitiesToResponse(units []*tb.Unit, reqBody *model.SearchUnitRequest, total int64) *model.UnitsResponse {
-	unitResponse := make([]*model.UnitResponse, 0)
+	unitResponse := make([]*model.UnitResponse, 0, len(units))
 	for _, unit := range units {
 		unitResponse = append(unitResponse, MapUnitEntityToResponse(unit))
 	}
@@ -58,6 +70,18 @@ func MapUnitEntitiesToResponse(units []*tb.Unit, reqBody *model.SearchUnitReques
 	response.Pagination = reqBody.Pagination
 	response.Pagination.SetNewUnitPagination(utils.SafeInt64ToInt(total))
 
+	return response
+}
+
+func MapUnitEntitiesToResponseWithoutPagination(units []*tb.Unit) *model.UnitsResponse {
+	unitResponse := make([]*model.UnitResponse, 0, len(units))
+	for _, unit := range units {
+		unitResponse = append(unitResponse, MapUnitEntityToResponse(unit))
+	}
+
+	response := new(model.UnitsResponse)
+	response.Units = unitResponse
+	response.Total = len(unitResponse)
 	return response
 }
 
@@ -170,11 +194,16 @@ func ValidateUnitPriceTime(unitPrices []map[string]interface{}, openTime, closeT
 	// Convert unit open/close time to time.Time
 	unitOpen, err := time.Parse("15:04", openTime)
 	if err != nil {
-		return fmt.Errorf("invalid unit open time format: %w", err)
+		return fmt.Errorf("invalid unit open time format: %+v", err)
 	}
 	unitClose, err := time.Parse("15:04", closeTime)
 	if err != nil {
-		return fmt.Errorf("invalid unit close time format: %w", err)
+		return fmt.Errorf("invalid unit close time format: %+v", err)
+	}
+
+	// Check open time must be before close time
+	if unitOpen.After(unitClose) {
+		return fmt.Errorf("unit open time must be before close time")
 	}
 
 	// Convert and sort unit prices by start time
@@ -196,4 +225,11 @@ func ValidateUnitPriceTime(unitPrices []map[string]interface{}, openTime, closeT
 	}
 
 	return nil
+}
+
+func MapBookedTimeToResponse(bookedTime []model.BookedTime) *model.BookedTimeResponse {
+	bookedTimeResponse := new(model.BookedTimeResponse)
+	bookedTimeResponse.Total = len(bookedTime)
+	bookedTimeResponse.BookedTime = bookedTime
+	return bookedTimeResponse
 }
