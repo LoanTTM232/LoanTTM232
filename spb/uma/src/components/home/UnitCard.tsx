@@ -7,6 +7,7 @@ import { DEFAULT_ICON_SIZE, fontFamily, fontSize, IColorScheme, Radius } from '@
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import { UnitCard as UnitCardObject } from '@/services/types';
+import FullFillLocationIcon from '@/ui/icon/FullFillLocation';
 import MoveLocation from '@/ui/icon/MoveLocation';
 import { UnitRenderTypes } from '@/zustand';
 
@@ -53,6 +54,10 @@ const UnitCard: FC<UnitCardProps> = ({
             </Pressable>
           </View>
           <View style={styles.addressRow}>
+            <FullFillLocationIcon
+              color={theme.primary}
+              size={DEFAULT_ICON_SIZE - 8}
+            />
             <Text style={styles.address} numberOfLines={1}>
               {unitCard.address}
             </Text>
@@ -102,14 +107,15 @@ const createStyles = (theme: IColorScheme) =>
     },
     addressRow: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
       alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: wp(1),
     },
     address: {
       ...fontFamily.POPPINS_REGULAR,
       fontSize: fontSize.xs,
       color: theme.textLight,
-      marginBottom: hp(1),
+      flex: 1,
     },
     headerRow: {
       flexDirection: 'row',

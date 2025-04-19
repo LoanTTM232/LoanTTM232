@@ -31,11 +31,10 @@ const UnitSection: FC<UnitSectionProps> = ({
     console.log('Unit pressed:', unitId);
   };
 
-  const handleOnPressLocation = (id: string, unitType: string) => {
-    console.log('Location pressed:', id, unitType);
+  const handleOnPressLocation = (id: string, unitType: UnitRenderTypes) => {
     navigation.navigate('Map', {
       unitId: id,
-      renderType: unitRenderType,
+      renderType: unitType,
     });
   };
 

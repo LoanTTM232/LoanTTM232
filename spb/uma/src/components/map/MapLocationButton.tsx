@@ -18,7 +18,7 @@ const MapLocationButton: FC<MapLocationButtonProps> = ({
 
   return (
     <Pressable onPress={onPress} style={[styles.container, containerStyle]}>
-      <MoveNotificationIcon color={theme.white} size={DEFAULT_ICON_SIZE + 5} />
+      <MoveNotificationIcon color={theme.white} size={DEFAULT_ICON_SIZE} />
     </Pressable>
   );
 };
@@ -27,8 +27,8 @@ export default MapLocationButton;
 
 const styles = StyleSheet.create({
   container: {
-    width: DEFAULT_ICON_SIZE * 2,
-    height: DEFAULT_ICON_SIZE * 2,
+    width: DEFAULT_ICON_SIZE * 1.75,
+    height: DEFAULT_ICON_SIZE * 1.75,
     alignItems: 'center',
     justifyContent: 'center',
   },

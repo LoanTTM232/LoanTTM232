@@ -6,7 +6,7 @@ import { IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 
-const UnitMapCardSkeleton: FC = () => {
+const MapSkeleton: FC = () => {
   const { theme } = React.useContext(ThemeContext);
   const styles = createStyles(theme);
   const animatedValue = React.useRef(new Animated.Value(0)).current;
@@ -38,36 +38,48 @@ const UnitMapCardSkeleton: FC = () => {
   });
 
   return (
-    <ShadowedView style={styles.wrapper}>
-      <View style={styles.container}>
-        <Animated.View style={[styles.imageContainer, { opacity }]} />
-        <View style={styles.content}>
-          <View style={styles.headerRow}>
-            <Animated.View style={[styles.titleSkeleton, { opacity }]} />
-            <Animated.View style={[styles.distanceSkeleton, { opacity }]} />
+    <View style={styles.container}>
+      <Animated.View style={[styles.mapArea, { opacity }]} />
+      <ShadowedView style={styles.cardWrapper}>
+        <View style={styles.card}>
+          <Animated.View style={[styles.imageContainer, { opacity }]} />
+          <View style={styles.content}>
+            <View style={styles.headerRow}>
+              <Animated.View style={[styles.titleSkeleton, { opacity }]} />
+              <Animated.View style={[styles.distanceSkeleton, { opacity }]} />
+            </View>
+            <Animated.View style={[styles.addressSkeleton, { opacity }]} />
           </View>
-          <Animated.View style={[styles.addressSkeleton, { opacity }]} />
         </View>
-      </View>
-    </ShadowedView>
+      </ShadowedView>
+    </View>
   );
 };
 
 const createStyles = (theme: IColorScheme) =>
   StyleSheet.create({
-    wrapper: {
+    container: {
+      flex: 1,
+      backgroundColor: theme.backgroundLight,
+    },
+    mapArea: {
+      width: '100%',
+      height: hp(60),
+      backgroundColor: theme.backgroundDark,
+    },
+    cardWrapper: {
+      position: 'absolute',
+      bottom: hp(2),
       width: '100%',
       height: hp(24),
-      marginBottom: hp(1),
       justifyContent: 'flex-end',
       alignItems: 'center',
     },
-    container: {
+    card: {
       width: wp(60),
       borderWidth: 1,
       borderColor: theme.borderLight,
       borderRadius: Radius.lg,
-      marginRight: wp(3),
       backgroundColor: theme.backgroundLight,
       overflow: 'hidden',
       shadowOpacity: 0.03,
@@ -113,4 +125,4 @@ const createStyles = (theme: IColorScheme) =>
     },
   });
 
-export default UnitMapCardSkeleton;
+export default MapSkeleton;

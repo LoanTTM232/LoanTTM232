@@ -39,13 +39,19 @@ const MapUnitCard: FC<MapUnitCardProps> = ({
           <Text style={styles.title} numberOfLines={1}>
             {unitCard.title}
           </Text>
-          <Pressable
-            style={styles.distanceContainer}
-            onPress={onPressLocation}
-          >
-            <MoveLocation color={theme.icon} size={DEFAULT_ICON_SIZE - 8} />
-            <Text style={styles.distance}>{unitCard.distance}</Text>
-          </Pressable>
+          <View style={styles.distanceWrapper}>
+            <Pressable
+              style={styles.distanceContainer}
+              onPress={(e) => {
+                e.stopPropagation();
+                onPressLocation();
+              }}
+              hitSlop={10}
+            >
+              <MoveLocation color={theme.icon} size={DEFAULT_ICON_SIZE - 8} />
+              <Text style={styles.distance}>{unitCard.distance}</Text>
+            </Pressable>
+          </View>
         </View>
         <View style={styles.addressRow}>
           <FullFillLocationIcon
@@ -91,20 +97,25 @@ const createStyles = (theme: IColorScheme) =>
     addressRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'space-between',
       gap: wp(1),
     },
     address: {
       ...fontFamily.POPPINS_REGULAR,
       fontSize: fontSize.xs,
       color: theme.textLight,
-      marginBottom: hp(1),
+      marginBottom: hp(0.3),
+      flex: 1,
     },
     headerRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       marginBottom: hp(0.5),
+    },
+    distanceWrapper: {
+      flexShrink: 0,
+      flexGrow: 0,
     },
     distanceContainer: {
       backgroundColor: theme.backgroundDark,
@@ -113,7 +124,6 @@ const createStyles = (theme: IColorScheme) =>
       borderRadius: Radius.sm,
       flexDirection: 'row',
       alignItems: 'center',
-      maxWidth: wp(50),
       gap: wp(1),
     },
     distance: {
@@ -127,6 +137,7 @@ const createStyles = (theme: IColorScheme) =>
       color: theme.textDark,
       flex: 1,
       marginRight: wp(2),
+      minWidth: '60%',
     },
   });
 

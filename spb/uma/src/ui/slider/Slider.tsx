@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated';
 
@@ -13,7 +13,7 @@ type SliderProps<T> = {
   data: T[];
   containerStyle: StyleProp<ViewStyle>;
   width: number;
-  initialScrollIndex?: number;
+  initialScrollIndex: number;
   renderItem: FC<RenderItemProps<T>>;
   onSlideSelected: (index: number) => void;
 };
@@ -23,9 +23,11 @@ function Slider<T>({
   containerStyle,
   width,
   renderItem,
-  initialScrollIndex = 0,
+  initialScrollIndex,
   onSlideSelected,
 }: SliderProps<T>) {
+  const flatListRef = useRef<Animated.FlatList<T>>(null);
+
   const scrollX = useSharedValue(6);
   const onScrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
@@ -33,9 +35,22 @@ function Slider<T>({
     },
   });
 
+  useEffect(() => {
+    if (
+      flatListRef.current &&
+      ((data.length > 0 && initialScrollIndex >= 0) || initialScrollIndex >= 1)
+    ) {
+      flatListRef.current.scrollToIndex({
+        index: initialScrollIndex,
+        animated: true,
+      });
+    }
+  }, [initialScrollIndex, data]);
+
   return (
     <View style={[styles.container, containerStyle]}>
       <Animated.FlatList
+        ref={flatListRef}
         data={data}
         renderItem={({ item, index }) => (
           <SliderItem index={index} scrollX={scrollX} width={width}>
@@ -51,7 +66,6 @@ function Slider<T>({
         decelerationRate="fast"
         onScroll={onScrollHandler}
         scrollEventThrottle={16}
-        initialScrollIndex={initialScrollIndex}
         getItemLayout={(_, index) => ({
           length: width,
           offset: width * index,

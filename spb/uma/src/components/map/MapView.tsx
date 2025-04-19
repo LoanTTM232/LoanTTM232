@@ -1,10 +1,11 @@
-import React, { FC, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, { FC, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import MapCard from '@/components/map/MapCard';
 import UnitMapCardSkeleton from '@/components/map/MapCardSkeleton';
 import MapLocationButton from '@/components/map/MapLocationButton';
 import MapMarker from '@/components/map/MapMarker';
+import MapSkeleton from '@/components/map/MapSkeleton';
 import { IColorScheme, ZOOM_LEVEL } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
@@ -29,6 +30,7 @@ const MapView: FC<MapViewProps> = ({
   const cameraRef = useRef<Mapbox.Camera>(null);
   const [units, setUnits] = useState<UnitCard[]>([]);
   const [activeId, setActiveId] = useState<string>('');
+  const [mapLoaded, setMapLoaded] = useState<boolean>(false);
 
   const latitude = useLocationStore.use.latitude();
   const longitude = useLocationStore.use.longitude();
@@ -46,7 +48,7 @@ const MapView: FC<MapViewProps> = ({
 
       const cameraConfig: CameraStop = {
         centerCoordinate: [lng, lat],
-        animationDuration: 1000,
+        animationDuration: 500,
         animationMode: 'flyTo',
       };
 
@@ -54,15 +56,8 @@ const MapView: FC<MapViewProps> = ({
         cameraConfig.zoomLevel = zoomLevel;
       }
       cameraRef.current.setCamera(cameraConfig);
-    }, 100)
+    }, 10)
   ).current;
-
-  const handleSlideSelected = useCallback(
-    (id: number) => {
-      setActiveId(units[id].id);
-    },
-    [units]
-  );
 
   const initialLocation = useCallback(
     (initialId: string) => {
@@ -82,11 +77,31 @@ const MapView: FC<MapViewProps> = ({
     [latitude, longitude, moveToLocationDebounced, units]
   );
 
+  const handleSlideSelected = useCallback(
+    (id: number) => {
+      setActiveId(units[id].id);
+    },
+    [units]
+  );
+
   const handleClickUnit = (id: string) => {
     console.log('handleClickUnit', id);
   };
 
   const isLoading = units === undefined || units.length === 0;
+
+  const computedInitialPage = useMemo(() => {
+    const newIndex = Math.max(
+      0,
+      units.findIndex((u) => u.id === activeId)
+    );
+
+    return newIndex;
+  }, [units, activeId]);
+
+  const handleSelectMarker = (id: string) => {
+    setActiveId(id);
+  };
 
   useEffect(() => {
     let initialId = '';
@@ -105,21 +120,21 @@ const MapView: FC<MapViewProps> = ({
         break;
     }
 
-	console.log('MapView units', unitId);
     if (unitId) {
       initialId = unitId;
     }
     setActiveId(initialId);
-  }, [popularUnits, nearByUnits, searchUnits, unitId, renderType]);
+  }, [popularUnits, nearByUnits, searchUnits, unitId, renderType, isFocused]);
 
   useEffect(() => {
-    if (!activeId) return;
-
-    initialLocation(activeId);
-  }, [activeId, initialLocation]);
+    if (mapLoaded && activeId) {
+      initialLocation(activeId);
+    }
+  }, [mapLoaded, activeId, initialLocation]);
 
   useEffect(() => {
     if (!isFocused) {
+      setMapLoaded(false);
       setActiveId('');
       setUnits([]);
     }
@@ -127,60 +142,66 @@ const MapView: FC<MapViewProps> = ({
 
   return (
     <View style={styles.container}>
-      {isFocused && (
-        <View style={styles.containerMap}>
-          <Mapbox.MapView
-            ref={mapRef}
-            style={styles.map}
-            styleURL={StyleURL.Light}
-            testID={'unit-map'}
-            zoomEnabled
-            scrollEnabled
-            pitchEnabled
-            rotateEnabled
-            logoEnabled={false}
-            attributionEnabled={false}
-            scaleBarEnabled={false}
-          >
-            <Mapbox.Camera ref={cameraRef} />
-            <Mapbox.UserLocation />
-            {units.length > 0 &&
-              units.map((unit) => (
-                <MapMarker
-                  key={unit.id}
-                  id={unit.id}
-                  coord={unit.coords}
-                  active={activeId === unit.id}
-                />
-              ))}
-          </Mapbox.MapView>
-          <MapLocationButton
-            onPress={() => moveToLocationDebounced(latitude, longitude)}
-            containerStyle={styles.gpsButton}
-          />
-        </View>
-      )}
-      {isLoading && <UnitMapCardSkeleton key="key-1" />}
-      {!isLoading && (
-        <Slider<UnitCard>
-          data={units}
-          containerStyle={styles.containerSlider}
-          width={wp(100)}
-          initialScrollIndex={units.findIndex((unit) => unit.id === activeId)}
-          onSlideSelected={handleSlideSelected}
-          renderItem={({ item }) => (
-            <MapCard
-              unitCard={item}
-              onPress={() => handleClickUnit(item.id)}
-              onPressLocation={() => {
-                moveToLocationDebounced(
-                  item.coords.latitude,
-                  item.coords.longitude
-                );
-              }}
+      {!isFocused && isLoading ? (
+        <>
+          <MapSkeleton />
+          <UnitMapCardSkeleton key="key-1" />
+        </>
+      ) : (
+        <>
+          <View style={styles.containerMap}>
+            <Mapbox.MapView
+              ref={mapRef}
+              style={styles.map}
+              styleURL={StyleURL.Light}
+              testID={'unit-map'}
+              zoomEnabled
+              scrollEnabled
+              pitchEnabled
+              rotateEnabled
+              logoEnabled={false}
+              attributionEnabled={false}
+              scaleBarEnabled={false}
+              onDidFinishLoadingMap={() => setMapLoaded(true)}
+            >
+              <Mapbox.Camera ref={cameraRef} />
+              <Mapbox.UserLocation />
+              {units.length > 0 &&
+                units.map((unit) => (
+                  <MapMarker
+                    key={unit.id}
+                    id={unit.id}
+                    coord={unit.coords}
+                    active={activeId === unit.id}
+                    onSelectMarker={handleSelectMarker}
+                  />
+                ))}
+            </Mapbox.MapView>
+            <MapLocationButton
+              onPress={() => moveToLocationDebounced(latitude, longitude)}
+              containerStyle={styles.gpsButton}
             />
-          )}
-        />
+          </View>
+          <Slider<UnitCard>
+            data={units}
+            containerStyle={styles.containerSlider}
+            width={wp(100)}
+            initialScrollIndex={computedInitialPage}
+            onSlideSelected={handleSlideSelected}
+            renderItem={({ item }) => (
+              <MapCard
+                unitCard={item}
+                onPress={() => handleClickUnit(item.id)}
+                onPressLocation={() => {
+                  moveToLocationDebounced(
+                    item.coords.latitude,
+                    item.coords.longitude
+                  );
+                }}
+              />
+            )}
+          />
+        </>
       )}
     </View>
   );
