@@ -9,8 +9,7 @@ import { hp } from '@/helpers/dimensions';
 import i18n from '@/helpers/i18n';
 import { logError } from '@/helpers/logger';
 import { SearchUnitQueryBuilder } from '@/helpers/pagination';
-import KeyboardDismissWrapper from '@/ui/KeyboardDismissWrapper';
-import { useLocationStore, useUnitStore } from '@/zustand';
+import { UnitRenderTypes, useLocationStore, useUnitStore } from '@/zustand';
 
 const HomeScreen: React.FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -51,10 +50,6 @@ const HomeScreen: React.FC = () => {
     }
   }, [getCurrentLocation, fetchPopularUnits, fetchNearByUnits, radius]);
 
-  useEffect(() => {
-    fetchHomeData();
-  }, [fetchHomeData]);
-
   const handleRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
@@ -66,8 +61,12 @@ const HomeScreen: React.FC = () => {
     }
   }, [fetchHomeData]);
 
+  useEffect(() => {
+    fetchHomeData();
+  }, [fetchHomeData]);
+
   return (
-    <KeyboardDismissWrapper style={styles.wrapper}>
+    <View style={styles.wrapper}>
       <View style={styles.container}>
         <Header />
         <ScrollView
@@ -85,16 +84,16 @@ const HomeScreen: React.FC = () => {
           <UnitSection
             title={i18n.t('home.popularity')}
             units={popularUnits}
-            isLoading={!popularUnits?.length}
+            unitRenderType={UnitRenderTypes.POPULAR}
           />
           <UnitSection
             title={i18n.t('home.nearby')}
             units={nearByUnits}
-            isLoading={!nearByUnits?.length}
+            unitRenderType={UnitRenderTypes.NEARBY}
           />
         </ScrollView>
       </View>
-    </KeyboardDismissWrapper>
+    </View>
   );
 };
 

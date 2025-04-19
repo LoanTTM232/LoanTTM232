@@ -5,14 +5,20 @@ import { mappingUnitModelToUnitCard } from '@/helpers/mapping';
 import { round } from '@/helpers/number';
 import { PopularUnitRequest, SearchUnitQuery, UnitCard } from '@/services/types';
 import unitService from '@/services/unit.service';
-import { UnitModel, UnitPagination } from '@/types/model';
+import { GeographyModel, UnitModel, UnitPagination } from '@/types/model';
 import { createSelectors } from '@/zustand/selectors';
+
+export enum UnitRenderTypes {
+  POPULAR = 'popular',
+  NEARBY = 'nearby',
+  SEARCH = 'search',
+}
 
 interface UnitState {
   popularUnits: UnitCard[];
   nearByUnits: UnitCard[];
+  searchUnits: UnitCard[];
   currentUnit: UnitModel | null;
-  units: UnitModel[];
   total: number | null;
   pagination: UnitPagination | null;
 }
@@ -21,7 +27,10 @@ interface UnitActions {
   fetchPopularUnits: (query: PopularUnitRequest) => Promise<void>;
   fetchNearByUnits: (query: SearchUnitQuery) => Promise<void>;
   fetchDetailUnit: (id: string) => Promise<void>;
-  search: (query: SearchUnitQuery) => Promise<void>;
+  search: (
+    query: SearchUnitQuery,
+    currentLocation: GeographyModel
+  ) => Promise<void>;
   reset: () => void;
 }
 
@@ -29,7 +38,7 @@ const initialState: UnitState = {
   popularUnits: [],
   nearByUnits: [],
   currentUnit: null,
-  units: [],
+  searchUnits: [],
   total: null,
   pagination: null,
 };
@@ -44,7 +53,7 @@ const useUnitStoreBase = create<UnitState & UnitActions>((set) => ({
     }
 
     const units = response.data.units;
-    const unitCards = units.map((unit: UnitModel) => {
+    const popularUnits = units.map((unit: UnitModel) => {
       const unitCard = mappingUnitModelToUnitCard(unit);
 
       const distance = round(
@@ -57,7 +66,7 @@ const useUnitStoreBase = create<UnitState & UnitActions>((set) => ({
       return unitCard;
     });
 
-    set({ popularUnits: unitCards });
+    set({ popularUnits });
   },
 
   fetchNearByUnits: async (query: SearchUnitQuery) => {
@@ -73,7 +82,7 @@ const useUnitStoreBase = create<UnitState & UnitActions>((set) => ({
     }
 
     const units = response.data.units;
-    const unitCards = units.map((unit: UnitModel) => {
+    const nearByUnits = units.map((unit: UnitModel) => {
       const unitCard = mappingUnitModelToUnitCard(unit);
       const distance = round(
         calculateDistance(
@@ -84,7 +93,7 @@ const useUnitStoreBase = create<UnitState & UnitActions>((set) => ({
       unitCard.distance = `${distance} km`;
       return unitCard;
     });
-    set({ nearByUnits: unitCards });
+    set({ nearByUnits });
   },
 
   fetchDetailUnit: async (id: string) => {
@@ -97,20 +106,48 @@ const useUnitStoreBase = create<UnitState & UnitActions>((set) => ({
     set({ currentUnit: unit });
   },
 
-  search: async (query: SearchUnitQuery) => {
+  search: async (query: SearchUnitQuery, currentLocation: GeographyModel) => {
     const response = await unitService.search(query);
     if (response instanceof Error) {
       throw response;
     }
 
+    let latitude = 0,
+      longitude = 0;
+    if (query.latitude && query.longitude) {
+      latitude = query.latitude;
+      longitude = query.longitude;
+    } else {
+      latitude = currentLocation.latitude;
+      longitude = currentLocation.longitude;
+    }
+
     const units = response.data.units;
     const total = response.data.total;
     const pagination = response.data.pagination;
-    set({ units, total, pagination });
+    const searchUnits = units.map((unit: UnitModel) => {
+      const unitCard = mappingUnitModelToUnitCard(unit);
+
+      const distance = round(
+        calculateDistance(
+          { latitude, longitude },
+          unit.address?.locationGeography
+        )
+      );
+      unitCard.distance = `${distance} km`;
+      return unitCard;
+    });
+
+    set({ searchUnits, total, pagination });
   },
 
   reset: () =>
-    set({ ...initialState, popularUnits: [], nearByUnits: [], units: [] }),
+    set({
+      ...initialState,
+      popularUnits: [],
+      nearByUnits: [],
+      searchUnits: [],
+    }),
 }));
 
 export const useUnitStore = createSelectors(useUnitStoreBase);

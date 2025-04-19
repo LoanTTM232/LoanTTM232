@@ -1,14 +1,19 @@
 import React, { FC } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 import Search from '@/ui/search/Search';
 
-const SearchBar: FC = () => {
+interface SearchBarProps {
+  onSearch: (text: string) => void;
+  containerStyles?: StyleProp<ViewStyle>;
+}
+
+const SearchBar: FC<SearchBarProps> = ({ onSearch, containerStyles }) => {
   const styles = createStyles();
 
   return (
-    <View style={styles.container}>
-      <Search onSearch={() => {}} />
+    <View style={[styles.container, containerStyles]}>
+      <Search onSearch={onSearch} />
     </View>
   );
 };

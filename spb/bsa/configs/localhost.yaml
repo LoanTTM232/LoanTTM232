@@ -22,7 +22,7 @@ cors:
 
 jwt:
     secret: "1234balhblahblah"
-    access_token_exp: 1 # minutes
+    access_token_exp: 5 # minutes
     refresh_token_exp: 43200 # minutes
     expire_cache: 43200 # minutes
 
@@ -53,7 +53,7 @@ redis:
 logging:
     level: 0 # debug:0, info:1, warning:2, error:3
     output:
-        - "console"
+        # - "console"
         - "file"
     filename: "requests.log"
 

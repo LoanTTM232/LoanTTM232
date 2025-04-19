@@ -1,5 +1,5 @@
 import { UnitCard, UnitPrice } from '@/services/types';
-import { AddressModel, MediaModel, UnitModel, UnitPriceModel } from '@/types/model';
+import { AddressModel, GeographyModel, MediaModel, UnitModel, UnitPriceModel } from '@/types/model';
 
 export const mappingAddressModelToString = (
   address: AddressModel | null
@@ -36,6 +36,10 @@ export const mappingUnitModelToUnitCard = (unit: UnitModel): UnitCard => {
     title: unit.name,
     address: mappingAddressModelToString(unit.address),
     image: mappingMediaModelToString(unit.media)[0] || '',
-	price: unit.unitPrices?.map(mappingUnitPriceModelToUnitPrice) || [],
+    price: unit.unitPrices?.map(mappingUnitPriceModelToUnitPrice) || [],
+    coords: {
+      latitude: unit.address.locationGeography.latitude,
+      longitude: unit.address.locationGeography.longitude,
+    } as GeographyModel,
   } as UnitCard;
 };

@@ -8,12 +8,14 @@ import ConcurrencyHandler from '@/helpers/concurrency';
 import { ResponseError } from '@/helpers/error';
 import i18next from '@/helpers/i18n';
 import { getData } from '@/helpers/storage';
+import { toastError } from '@/helpers/toast';
 import authService from '@/services/auth.service';
 import { API_URL } from '@env';
 
 class AxiosConfig {
   private axiosInstance: Axios;
   private concurrencyHandler: ConcurrencyHandler;
+  private isProtected: boolean = false;
 
   constructor() {
     this.axiosInstance = axios.create({
@@ -27,13 +29,21 @@ class AxiosConfig {
     this.onRequest = this.onRequest.bind(this);
     this.onResponse = this.onResponse.bind(this);
     this.onErrorResponse = this.onErrorResponse.bind(this);
+    this.onGuestErrorResponse = this.onGuestErrorResponse.bind(this);
   }
 
   public guessAxios(): Axios {
+    this.axiosInstance.interceptors.request.use(this.onRequest);
+    this.axiosInstance.interceptors.response.use(
+      this.onResponse,
+      this.onGuestErrorResponse
+    );
+
     return this.axiosInstance;
   }
 
   public protectedAxios(): Axios {
+    this.isProtected = true;
     this.axiosInstance.interceptors.request.use(this.onRequest);
     this.axiosInstance.interceptors.response.use(
       this.onResponse,
@@ -46,9 +56,11 @@ class AxiosConfig {
   private async onRequest(
     config: InternalAxiosRequestConfig
   ): Promise<InternalAxiosRequestConfig> {
-    const token = await getData('accessToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (this.isProtected) {
+      const token = await getData('accessToken');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
 
     if (
@@ -74,6 +86,20 @@ class AxiosConfig {
     return response;
   }
 
+  private async onGuestErrorResponse(
+    error: AxiosError | Error
+  ): Promise<void | AxiosError> {
+	console.log('Guest error response:', error);
+    if (axios.isAxiosError(error)) {
+      if (error.code === AxiosError.ERR_NETWORK) {
+        toastError(i18next.t('error.ERS000'));
+        return Promise.reject(error);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+
   private async onErrorResponse(
     error: AxiosError | Error
   ): Promise<void | AxiosError> {
@@ -92,21 +118,19 @@ class AxiosConfig {
               return Promise.reject(error);
             }
 
-            // Use the concurrency handler to prevent multiple requests
-            // from refreshing the token at the same time
             return this.concurrencyHandler
               .execute(authService.refreshToken)
               .then(() => {
                 return this.axiosInstance.request(
                   config as InternalAxiosRequestConfig
-                );
+                ) as Promise<void | AxiosError>;
               })
               .catch((refreshError) => {
-                console.error('Token refresh failed:', refreshError);
+                if (refreshError === AxiosError.ERR_NETWORK) {
+                  toastError(i18next.t('error.ERS000'));
+                }
                 authService.logout();
-              })
-              .then(() => {
-                return Promise.reject(error);
+                return Promise.reject(refreshError);
               });
         }
       } catch (err) {

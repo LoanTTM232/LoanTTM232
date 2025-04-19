@@ -26,11 +26,11 @@ export const logWarn = (message: string) => {
   log('WARN', message);
 };
 
-export const logError = (errorOrMessage: Error | string) => {
+export const logError = (errorOrMessage: Error | string, ...args: string[]) => {
   const message =
     errorOrMessage instanceof Error
       ? `${errorOrMessage.message}\n${errorOrMessage.stack}`
-      : errorOrMessage;
+      : `${args.join(', ')}: ${errorOrMessage}`;
   log('ERROR', message);
 };
 

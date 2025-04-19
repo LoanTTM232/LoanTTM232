@@ -24,6 +24,10 @@ const Header: FC = () => {
     console.log('Notifications pressed');
   }, []);
 
+  const handleSearch = useCallback(() => {
+    console.log('Search pressed');
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
@@ -38,7 +42,7 @@ const Header: FC = () => {
           onPress={handleNotificationPress}
         />
       </View>
-      <SearchBar />
+      <SearchBar onSearch={handleSearch} />
     </View>
   );
 };

@@ -6,6 +6,9 @@ import AppProvider from '@/providers';
 import RootStack from '@/screens';
 import { useAuthStore, useLocationStore } from '@/zustand';
 import { NavigationContainer } from '@react-navigation/native';
+import Mapbox from '@rnmapbox/maps';
+
+Mapbox.setAccessToken('sk.eyJ1IjoiaG9hbmd6cmlrIiwiYSI6ImNtOW1xd2ZoMTBmYnMyanNhNW04YXlnMnIifQ.lloLwgsIw-TTak0gfbK_SQ');
 
 const App: React.FC = () => {
   const checkIsLoggedIn = useAuthStore.use.checkIsLoggedIn();

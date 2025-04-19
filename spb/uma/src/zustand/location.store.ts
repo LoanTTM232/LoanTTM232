@@ -6,8 +6,8 @@ import { getData, storeData } from '@/helpers/storage';
 import { createSelectors } from '@/zustand/selectors';
 
 interface LocationState {
-  latitude: number | null;
-  longitude: number | null;
+  latitude: number;
+  longitude: number;
   address: string | null;
   city: string | null;
   radius: number;
@@ -22,8 +22,8 @@ interface LocationActions {
 }
 
 const initialState: LocationState = {
-  latitude: null,
-  longitude: null,
+  latitude: 0,
+  longitude: 0,
   address: null,
   city: null,
   radius: GEOGRAPHY_RADIUS,

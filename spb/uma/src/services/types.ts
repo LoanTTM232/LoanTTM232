@@ -1,5 +1,5 @@
 import {
-  NotificationModel, OrderModel, SportTypeModel, UnitModel, UnitPagination
+  GeographyModel, NotificationModel, OrderModel, SportTypeModel, UnitModel, UnitPagination
 } from '@/types/model';
 
 export type LoginRequest = {
@@ -103,4 +103,5 @@ export type UnitCard = {
   price: UnitPrice[];
   image: string;
   distance: string;
+  coords: GeographyModel;
 };

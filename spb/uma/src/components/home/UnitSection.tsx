@@ -6,17 +6,40 @@ import UnitCardSkeleton from '@/components/home/UnitCardSkeleton';
 import { fontFamily, fontSize, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
+import { TabParamList } from '@/screens/tabs';
 import { UnitCard as UnitCardObject } from '@/services/types';
+import { UnitRenderTypes } from '@/zustand';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 interface UnitSectionProps {
   title: string;
-  units?: UnitCardObject[];
-  isLoading: boolean;
+  units: UnitCardObject[];
+  unitRenderType: UnitRenderTypes;
 }
 
-const UnitSection: FC<UnitSectionProps> = ({ title, units, isLoading }) => {
+const UnitSection: FC<UnitSectionProps> = ({
+  title,
+  units,
+  unitRenderType,
+}) => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
+  const navigation = useNavigation<NativeStackNavigationProp<TabParamList>>();
+
+  const handleOnPress = (unitId: string) => {
+    console.log('Unit pressed:', unitId);
+  };
+
+  const handleOnPressLocation = (id: string, unitType: string) => {
+    console.log('Location pressed:', id, unitType);
+    navigation.navigate('Map', {
+      unitId: id,
+      renderType: unitRenderType,
+    });
+  };
+
+  const isLoading = units === undefined || units.length === 0;
 
   return (
     <View style={styles.container}>
@@ -36,12 +59,12 @@ const UnitSection: FC<UnitSectionProps> = ({ title, units, isLoading }) => {
         {units?.map((unit) => (
           <UnitCard
             key={unit.id}
-            title={unit.title}
-            address={unit.address}
-            price={unit.price}
-            image={unit.image}
-            distance={unit.distance}
-            onPress={() => console.log('Unit pressed:', unit.id)}
+            unitCard={unit}
+            unitRenderType={unitRenderType}
+            onPress={() => handleOnPress(unit.id)}
+            onPressLocation={(id, unitType) =>
+              handleOnPressLocation(id, unitType)
+            }
           />
         ))}
       </ScrollView>
@@ -52,7 +75,7 @@ const UnitSection: FC<UnitSectionProps> = ({ title, units, isLoading }) => {
 const createStyles = (theme: IColorScheme) =>
   StyleSheet.create({
     container: {
-      paddingVertical: hp(2),
+      paddingTop: hp(3),
     },
     header: {
       flexDirection: 'row',

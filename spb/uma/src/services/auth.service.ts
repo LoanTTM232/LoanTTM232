@@ -4,7 +4,6 @@ import {
   VERIFY_FORGOT_PASSWORD_TOKEN_PATH, VERIFY_REGISTER_TOKEN_PATH
 } from '@/constants';
 import { ResponseError } from '@/helpers/error';
-import { logDebug } from '@/helpers/logger';
 import { removeData, storeData } from '@/helpers/storage';
 import { apiFactory, ApiResponse } from '@/services/http';
 import {
@@ -66,7 +65,6 @@ class AuthService {
     }
 
     if ('data' in response) {
-      logDebug(response.data.accessToken, 'refreshToken');
       await storeData('accessToken', response.data.accessToken);
     }
     return response;

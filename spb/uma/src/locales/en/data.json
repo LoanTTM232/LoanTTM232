@@ -70,6 +70,7 @@
         "see_all": "See All"
     },
     "error": {
+        "ERS000": "Network error, please try again later.",
         "ERS001": "ERS001",
         "ERS002": "ERS002",
         "ERA001": "ERA001",
