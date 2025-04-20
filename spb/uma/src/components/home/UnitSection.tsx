@@ -6,7 +6,7 @@ import UnitCardSkeleton from '@/components/home/UnitCardSkeleton';
 import { fontFamily, fontSize, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
-import { TabParamList } from '@/screens/tabs';
+import { TabParamList } from '@/screens/main/tab';
 import { UnitCard as UnitCardObject } from '@/services/types';
 import { UnitRenderTypes } from '@/zustand';
 import { useNavigation } from '@react-navigation/native';

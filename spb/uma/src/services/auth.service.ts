@@ -4,6 +4,7 @@ import {
   VERIFY_FORGOT_PASSWORD_TOKEN_PATH, VERIFY_REGISTER_TOKEN_PATH
 } from '@/constants';
 import { ResponseError } from '@/helpers/error';
+import { logError } from '@/helpers/logger';
 import { removeData, storeData } from '@/helpers/storage';
 import { apiFactory, ApiResponse } from '@/services/http';
 import {
@@ -44,7 +45,13 @@ class AuthService {
   }
 
   public async logout(): Promise<void> {
-    await apiFactory(LOGOUT_PATH, false).post();
+    try {
+      await apiFactory(LOGOUT_PATH, false).post();
+    } catch (error) {
+      if (error instanceof Error) {
+        logError(error, 'Logout error');
+      }
+    }
     removeData('accessToken');
   }
 

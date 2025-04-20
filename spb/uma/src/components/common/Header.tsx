@@ -42,7 +42,7 @@ const Header: FC = () => {
           onPress={handleNotificationPress}
         />
       </View>
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar />
     </View>
   );
 };

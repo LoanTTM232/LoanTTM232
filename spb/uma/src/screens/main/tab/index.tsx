@@ -1,9 +1,9 @@
 import React from 'react';
 
-import BookingScreen from '@/screens/tabs/booking';
-import HomeScreen from '@/screens/tabs/home';
-import MapScreen from '@/screens/tabs/map';
-import ProfileScreen from '@/screens/tabs/profile';
+import BookingScreen from '@/screens/main/tab/booking';
+import HomeScreen from '@/screens/main/tab/home';
+import MapScreen from '@/screens/main/tab/map';
+import ProfileScreen from '@/screens/main/tab/profile';
 import CalenderIcon from '@/ui/icon/Calender';
 import HomeIcon from '@/ui/icon/Home';
 import MapIcon from '@/ui/icon/Map';
@@ -11,8 +11,6 @@ import UserIcon from '@/ui/icon/User';
 import TabBar from '@/ui/tabbar/TabBar';
 import { UnitRenderTypes } from '@/zustand';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
-const Tab = createBottomTabNavigator();
 
 export type TabParamList = {
   Home: undefined;
@@ -30,6 +28,8 @@ export const TabScreens: Record<string, keyof TabParamList> = {
   Booking: 'Booking',
   Profile: 'Profile',
 };
+
+const Tab = createBottomTabNavigator<TabParamList>();
 
 const renderTabBarIcon = (route: { name: string }, color: string) => {
   switch (route.name) {

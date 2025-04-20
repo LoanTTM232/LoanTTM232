@@ -7,7 +7,7 @@ import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import { logError } from '@/helpers/logger';
-import { ParamList } from '@/screens';
+import { AuthStackParamList } from '@/screens/auth';
 import BackButton from '@/ui/button/Back';
 import CloseIcon from '@/ui/icon/Close';
 import { useAuthStore } from '@/zustand';
@@ -15,7 +15,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const ForgotPassword: FC = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<ParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
   const forgotPassword = useAuthStore.use.forgotPassword();
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);

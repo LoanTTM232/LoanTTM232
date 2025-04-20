@@ -9,7 +9,6 @@ import MapSkeleton from '@/components/map/MapSkeleton';
 import { IColorScheme, ZOOM_LEVEL } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
-import { debounce } from '@/helpers/function';
 import { UnitCard } from '@/services/types';
 import Slider from '@/ui/slider/Slider';
 import { UnitRenderTypes, useLocationStore, useUnitStore } from '@/zustand';
@@ -43,12 +42,12 @@ const MapView: FC<MapViewProps> = ({
   const styles = createStyles(theme);
 
   const moveToLocationDebounced = useRef(
-    debounce((lat: number, lng: number, zoomLevel?: number | undefined) => {
+    (lat: number, lng: number, zoomLevel?: number | undefined) => {
       if (!cameraRef.current || !isFocused) return;
 
       const cameraConfig: CameraStop = {
         centerCoordinate: [lng, lat],
-        animationDuration: 500,
+        animationDuration: 200,
         animationMode: 'flyTo',
       };
 
@@ -56,7 +55,7 @@ const MapView: FC<MapViewProps> = ({
         cameraConfig.zoomLevel = zoomLevel;
       }
       cameraRef.current.setCamera(cameraConfig);
-    }, 10)
+    }
   ).current;
 
   const initialLocation = useCallback(

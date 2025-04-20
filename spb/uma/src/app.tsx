@@ -5,14 +5,15 @@ import { useLocationTracking } from '@/hooks/useLocationTracking';
 import AppProvider from '@/providers';
 import RootStack from '@/screens';
 import { useAuthStore, useLocationStore } from '@/zustand';
+import { MAPBOX_ACCESS_TOKEN } from '@env';
 import { NavigationContainer } from '@react-navigation/native';
 import Mapbox from '@rnmapbox/maps';
-
-Mapbox.setAccessToken('sk.eyJ1IjoiaG9hbmd6cmlrIiwiYSI6ImNtOW1xd2ZoMTBmYnMyanNhNW04YXlnMnIifQ.lloLwgsIw-TTak0gfbK_SQ');
 
 const App: React.FC = () => {
   const checkIsLoggedIn = useAuthStore.use.checkIsLoggedIn();
   const loadPreviousAddress = useLocationStore.use.loadPreviousAddress();
+
+  Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
 
   // Location tracking hook
   useLocationTracking();

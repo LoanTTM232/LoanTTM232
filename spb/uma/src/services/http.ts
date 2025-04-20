@@ -7,6 +7,7 @@ import snakecaseKeys from 'snakecase-keys';
 import ConcurrencyHandler from '@/helpers/concurrency';
 import { ResponseError } from '@/helpers/error';
 import i18next from '@/helpers/i18n';
+import { logError } from '@/helpers/logger';
 import { getData } from '@/helpers/storage';
 import { toastError } from '@/helpers/toast';
 import authService from '@/services/auth.service';
@@ -89,14 +90,14 @@ class AxiosConfig {
   private async onGuestErrorResponse(
     error: AxiosError | Error
   ): Promise<void | AxiosError> {
-	console.log('Guest error response:', error);
+    console.log('Guest error response:', error);
     if (axios.isAxiosError(error)) {
       if (error.code === AxiosError.ERR_NETWORK) {
         toastError(i18next.t('error.ERS000'));
-        return Promise.reject(error);
       }
     }
 
+    authService.logout();
     return Promise.reject(error);
   }
 
@@ -114,7 +115,7 @@ class AxiosConfig {
             break;
           case HttpStatusCode.Unauthorized:
             if (!this.concurrencyHandler) {
-              console.error('ConcurrencyHandler is not initialized');
+              logError(error, 'ConcurrencyHandler is not initialized');
               return Promise.reject(error);
             }
 
@@ -134,7 +135,9 @@ class AxiosConfig {
               });
         }
       } catch (err) {
-        console.error('Error in onErrorResponse:', err);
+        if (err instanceof Error) {
+          logError(err, 'Error in onErrorResponse:');
+        }
       }
     }
 

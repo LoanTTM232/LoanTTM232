@@ -6,7 +6,7 @@ import MapView from '@/components/map/MapView';
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp } from '@/helpers/dimensions';
-import { TabParamList } from '@/screens/tabs';
+import { TabParamList } from '@/screens/main/tab';
 import { RouteProp } from '@react-navigation/native';
 
 type MapScreenProps = {
@@ -20,18 +20,11 @@ const MapScreen: React.FC<MapScreenProps> = ({ route }) => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
-
   return (
     <View style={styles.wrapper}>
       <View style={styles.container}>
-        <SearchBar
-          onSearch={() => {}}
-          containerStyles={styles.floatingSearchBar}
-        />
-        <MapView
-          unitId={unitId}
-          renderType={renderType}
-        />
+        <SearchBar containerStyle={styles.floatingSearchBar} />
+        <MapView unitId={unitId} renderType={renderType} />
       </View>
     </View>
   );
@@ -42,7 +35,7 @@ const createStyles = (theme: IColorScheme) =>
     wrapper: {
       height: '100%',
       width: '100%',
-      backgroundColor: theme.backgroundDark,
+      backgroundColor: theme.backgroundLight,
     },
     container: {
       flex: 1,

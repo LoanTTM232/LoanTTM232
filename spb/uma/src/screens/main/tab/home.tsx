@@ -102,7 +102,7 @@ const createStyles = (theme: IColorScheme) =>
     wrapper: {
       height: '100%',
       width: '100%',
-      backgroundColor: theme.backgroundDark,
+      backgroundColor: theme.backgroundLight,
     },
     container: {
       flex: 1,

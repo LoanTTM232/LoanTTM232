@@ -3,7 +3,7 @@ import { Animated, Pressable, StyleSheet, ViewStyle } from 'react-native';
 
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
-import { ParamList } from '@/screens';
+import { RootParamList } from '@/screens';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -16,7 +16,7 @@ export type BackButtonProps = {
 function BackButton(props: BackButtonProps) {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
-  const navigation = useNavigation<NativeStackNavigationProp<ParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootParamList>>();
 
   // Create animated value for scale
   const scaleAnim = useRef(new Animated.Value(1)).current;

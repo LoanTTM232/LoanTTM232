@@ -9,7 +9,8 @@ import i18next from '@/helpers/i18n';
 import { logError } from '@/helpers/logger';
 import { toastError } from '@/helpers/toast';
 import { useGoogleSignIn } from '@/hooks/useGoogleSignIn';
-import { ParamList } from '@/screens';
+import { RootParamList } from '@/screens';
+import { AuthStackParamList } from '@/screens/auth';
 import { useAuthStore } from '@/zustand';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -21,7 +22,8 @@ export interface IRegisterFormValues {
 }
 
 const Register: React.FC = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<ParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootParamList>>();
+  const authNavigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
@@ -29,13 +31,13 @@ const Register: React.FC = () => {
   const register = useAuthStore.use.register();
 
   const { handleGoogleSignIn } = useGoogleSignIn(googleCallback, () =>
-    navigation.navigate('Tabs')
+    navigation.navigate('Main')
   );
 
   const handleRegister = async (data: { email: string; password: string }) => {
     try {
       await register(data);
-      navigation.navigate('VerifyRegister', { email: data.email });
+      authNavigation.navigate('VerifyRegister', { email: data.email });
     } catch (error) {
       logError(error as Error);
       toastError(i18next.t('notification.register_failed'));

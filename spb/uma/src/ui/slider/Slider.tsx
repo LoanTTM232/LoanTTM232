@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef } from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleProp, View, ViewStyle } from 'react-native';
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated';
 
 import SliderItem from '@/ui/slider/SliderItem';
@@ -48,7 +48,7 @@ function Slider<T>({
   }, [initialScrollIndex, data]);
 
   return (
-    <View style={[styles.container, containerStyle]}>
+    <View style={containerStyle}>
       <Animated.FlatList
         ref={flatListRef}
         data={data}
@@ -63,9 +63,7 @@ function Slider<T>({
         showsHorizontalScrollIndicator={false}
         pagingEnabled
         snapToInterval={width}
-        decelerationRate="fast"
         onScroll={onScrollHandler}
-        scrollEventThrottle={16}
         getItemLayout={(_, index) => ({
           length: width,
           offset: width * index,
@@ -81,11 +79,5 @@ function Slider<T>({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    overflow: 'visible',
-  },
-});
 
 export default Slider;
