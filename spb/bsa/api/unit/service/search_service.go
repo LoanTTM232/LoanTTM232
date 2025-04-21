@@ -20,11 +20,7 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 	var err error
 	units := make([]*tb.Unit, 0)
 
-	query := s.db.
-		Preload("UnitPrice").
-		Preload("UnitService").
-		Preload("Media").
-		Preload("SportTypes")
+	baseQuery := s.db.Model(&tb.Unit{})
 
 	// search by location
 	if IsSearchByLocation(reqBody) {
@@ -35,7 +31,7 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 		}
 
 		wardIds := au.MapWardEntitiesToIDs(wards)
-		query = query.Where("address_id IN (SELECT id from address WHERE ward_id IN ?)", wardIds)
+		baseQuery = baseQuery.Where("address_id IN (SELECT id from address WHERE ward_id IN ?)", wardIds)
 	}
 
 	if IsSearchByGeography(reqBody) {
@@ -45,28 +41,34 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 			return nil, 0, err
 		}
 		addressIds := au.MapAddressEntitiesToIDs(addresses)
-		query = query.Where("address_id IN ?", addressIds)
+		baseQuery = baseQuery.Where("address_id IN ?", addressIds)
 	}
 
 	// get by sport type
 	if IsSearchBySportType(reqBody) {
-		query = query.Where("sport_type_id = ?", reqBody.Pagination.SportType)
+		baseQuery = baseQuery.Where("sport_type_id = ?", reqBody.Pagination.SportType)
 	}
 
 	// search by unit name and description
 	//  TODO: can search by address
 	if IsSearchByQuery(reqBody) {
-		query = query.
+		baseQuery = baseQuery.
 			Where("SIMILARITY(unit.keywords, ?) > 0.1", reqBody.Pagination.Query)
 	}
 
 	// count total unit
 	var count int64
-	if err = query.Count(&count).Error; err != nil {
+	if err = baseQuery.Count(&count).Error; err != nil {
 		return nil, 0, err
 	}
 
-	err = query.
+	dataQuery := baseQuery.
+		Preload("UnitPrice").
+		Preload("UnitService").
+		Preload("Media").
+		Preload("SportTypes")
+
+	err = dataQuery.
 		Scopes(utils.Paginate(&reqBody.Pagination.Pagination)).
 		Find(&units).Error
 	if err != nil {
