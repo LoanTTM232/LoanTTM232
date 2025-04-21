@@ -24,9 +24,11 @@ const VerifyForgotPassword: FC<Props> = ({ route }) => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
   const email = route?.params.email || '';
-  const verifyForgotPasswordToken =
-    useAuthStore.use.verifyForgotPasswordToken();
-  const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+  const verifyForgotPasswordToken = useAuthStore(
+    (state) => state.verifyForgotPasswordToken
+  );
+  const navigation =
+    useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
 
   const handleSubmit = async (data: { otp: number }) => {
     try {

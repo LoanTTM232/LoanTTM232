@@ -23,7 +23,7 @@ export const RootScreens: Record<string, keyof RootParamList> = {
 const Stack = createNativeStackNavigator<RootParamList>();
 
 const RootStack: React.FC = () => {
-  const isLoggedIn = useAuthStore.use.isLoggedIn();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const isFirstLaunch = useFirstLaunch();
   useHardwareBack();
 

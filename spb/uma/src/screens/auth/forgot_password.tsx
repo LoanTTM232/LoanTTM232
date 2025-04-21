@@ -15,8 +15,9 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const ForgotPassword: FC = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
-  const forgotPassword = useAuthStore.use.forgotPassword();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+  const forgotPassword = useAuthStore((state) => state.forgotPassword);
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 

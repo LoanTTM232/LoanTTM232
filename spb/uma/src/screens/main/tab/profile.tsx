@@ -12,7 +12,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 const ProfileScreen: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootParamList>>();
 
-  const logout = useAuthStore.use.logout();
+  const logout = useAuthStore((state) => state.logout);
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 

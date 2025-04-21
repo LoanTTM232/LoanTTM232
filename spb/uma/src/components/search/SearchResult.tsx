@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { FlatList, RefreshControl, StyleSheet } from 'react-native';
 
 import SearchCard from '@/components/search/SearchCard';
@@ -11,59 +11,92 @@ import { UnitCard } from '@/services/types';
 import Loading from '@/ui/Loading';
 import { useLocationStore, useUnitStore } from '@/zustand';
 
-type Props = {
-  unitCard: UnitCard[];
-  onLoadMore?: () => void;
-  isLoadingMore?: boolean;
-};
+const SearchItem = React.memo(({ item }: { item: UnitCard }) => (
+  <SearchCard unitCard={item} onPress={() => {}} onPressLocation={() => {}} />
+));
 
-const SearchResult: React.FC<Props> = ({
-  unitCard,
-  onLoadMore,
-  isLoadingMore,
-}) => {
+const SearchResult: React.FC = () => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
+
   const [refreshing, setRefreshing] = useState(false);
 
-  const search = useUnitStore.use.search();
-  const filter = useUnitStore.use.filter();
-  const longitude = useLocationStore.use.longitude();
-  const latitude = useLocationStore.use.latitude();
+//   const { canLoadMore, loadMore } = useUnitStore((state) => ({
+//     canLoadMore: state.canLoadMore,
+//     loadMore: state.loadMore,
+//   }));
 
-  const handleRefresh = useCallback(() => {
-    setRefreshing(true);
-    try {
-      const unitQuerySearch = buildSearchUnitQueryFromFilter(filter);
-      search(unitQuerySearch, { longitude: longitude, latitude: latitude });
-    } catch (error) {
-      logError(error as Error);
-    } finally {
-      setRefreshing(false);
-    }
-  }, [filter, search, longitude, latitude]);
+//   const { longitude, latitude, radius } = useLocationStore((state) => ({
+//     longitude: state.longitude,
+//     latitude: state.latitude,
+//     radius: state.radius,
+//   }));
 
-  const renderItem = ({ item }: { item: UnitCard }) => (
-    <SearchCard unitCard={item} onPress={() => {}} onPressLocation={() => {}} />
-  );
+  const search = useUnitStore((state) => state.search);
+  const filter = useUnitStore((state) => state.filter);
+  const unitCard = useUnitStore((state) => state.searchUnits);
+
+//   const handleLoadMore = useCallback(() => {
+//     if (!canLoadMore) {
+//       return;
+//     }
+
+//     try {
+//       loadMore({
+//         longitude: longitude,
+//         latitude: latitude,
+//       });
+//     } catch (error) {
+//       if (error instanceof Error) {
+//         logError(error as Error);
+//       }
+//     }
+//   }, [canLoadMore, loadMore, longitude, latitude]);
+
+//   const handleRefresh = () => {
+//     setRefreshing(true);
+//     try {
+//       let additionParams;
+//       if (filter.isNearby) {
+//         additionParams = { longitude, latitude, radius };
+//       }
+//       const unitQuerySearch = buildSearchUnitQueryFromFilter(
+//         filter,
+//         additionParams
+//       );
+//       search(unitQuerySearch, { longitude: longitude, latitude: latitude });
+//     } catch (error) {
+//       logError(error as Error);
+//     } finally {
+//       setRefreshing(false);
+//     }
+//   };
+
+  useEffect(() => {
+    console.log('mounted');
+    return () => {
+      console.log('unmounted');
+    };
+  }, []);
 
   return (
     <FlatList
       data={unitCard}
+    //   extraData={[canLoadMore]}
       keyExtractor={(item) => item.id}
-      renderItem={renderItem}
-      onEndReached={onLoadMore}
-      onEndReachedThreshold={0.2}
+      renderItem={({ item }) => <SearchItem item={item} />}
+    //   onEndReached={handleLoadMore}
+    //   onEndReachedThreshold={0.2}
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
-          onRefresh={handleRefresh}
+        //   onRefresh={handleRefresh}
           tintColor={theme.primary}
         />
       }
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
-      ListFooterComponent={isLoadingMore ? <Loading /> : null}
+    //   ListFooterComponent={canLoadMore ? <Loading /> : null}
     />
   );
 };
@@ -80,4 +113,4 @@ const createStyles = (theme: IColorScheme) =>
     },
   });
 
-export default SearchResult;
+export default React.memo(SearchResult);

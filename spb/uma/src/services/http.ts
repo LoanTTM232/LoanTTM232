@@ -92,7 +92,6 @@ class AxiosConfig {
   ): Promise<void | AxiosError> {
     if (axios.isAxiosError(error)) {
       const status = error.response?.status;
-      console.log('Guest error response:', status);
 
       if (
         status === HttpStatusCode.Forbidden ||

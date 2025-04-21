@@ -23,12 +23,13 @@ export interface IRegisterFormValues {
 
 const Register: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootParamList>>();
-  const authNavigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+  const authNavigation =
+    useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
-  const googleCallback = useAuthStore.use.googleCallback();
-  const register = useAuthStore.use.register();
+  const googleCallback = useAuthStore((state) => state.googleCallback);
+  const register = useAuthStore((state) => state.register);
 
   const { handleGoogleSignIn } = useGoogleSignIn(googleCallback, () =>
     navigation.navigate('Main')

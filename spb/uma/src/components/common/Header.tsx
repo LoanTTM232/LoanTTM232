@@ -12,8 +12,8 @@ import { useLocationStore } from '@/zustand';
 const Header: FC = () => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
-  const address = useLocationStore.use.address();
-  const city = useLocationStore.use.city();
+  const address = useLocationStore((state) => state.address);
+  const city = useLocationStore((state) => state.city);
 
   const handleLocationPress = useCallback(() => {
     console.log('Location pressed');

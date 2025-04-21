@@ -20,11 +20,11 @@ const SearchBar: FC<SearchBarProps> = ({ containerStyle }) => {
   const [inputValue, setInputValue] = useState<string>('');
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
-  const filter = useUnitStore.use.filter();
-  const updateFilter = useUnitStore.use.updateFilter();
-  const longitude = useLocationStore.use.longitude();
-  const latitude = useLocationStore.use.latitude();
-  const search = useUnitStore.use.search();
+  const filter = useUnitStore((state) => state.filter);
+  const updateFilter = useUnitStore((state) => state.updateFilter);
+  const longitude = useLocationStore((state) => state.longitude);
+  const latitude = useLocationStore((state) => state.latitude);
+  const search = useUnitStore((state) => state.search);
 
   const searchRef = useRef(search);
 
@@ -50,7 +50,6 @@ const SearchBar: FC<SearchBarProps> = ({ containerStyle }) => {
 
     const trimmed = text.trim();
     if (trimmed.length > 0) {
-      console.log('debouncedSearch', filter);
       const unitQuerySearch = buildSearchUnitQueryFromFilter(filter);
       debouncedSearch(unitQuerySearch);
     } else {

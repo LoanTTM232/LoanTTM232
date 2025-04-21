@@ -6,7 +6,6 @@ export function debounce<T extends (...args: any[]) => void>(
 
   const debounced = function (...args: any[]) {
     clearTimeout(timeout);
-    console.log('re debounce', delay);
     timeout = setTimeout(() => func(...args), delay);
   };
 

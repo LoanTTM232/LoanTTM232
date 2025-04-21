@@ -8,7 +8,6 @@ import { stringQueryToSearchUnitQuery } from '@/helpers/pagination';
 import { FilterOptions, PopularUnitRequest, SearchUnitQuery, UnitCard } from '@/services/types';
 import unitService from '@/services/unit.service';
 import { GeographyModel, UnitModel, UnitPagination } from '@/types/model';
-import { createSelectors } from '@/zustand/selectors';
 
 export enum UnitRenderTypes {
   POPULAR = 'popular',
@@ -25,6 +24,7 @@ interface UnitState {
   pagination: UnitPagination | null;
   filter: FilterOptions;
   isLoading: boolean;
+  canLoadMore: boolean;
 }
 
 interface UnitActions {
@@ -33,9 +33,8 @@ interface UnitActions {
   fetchDetailUnit: (id: string) => Promise<void>;
   search: (query: SearchUnitQuery, location: GeographyModel) => Promise<void>;
   updateFilter: (filter: FilterOptions) => void;
-  loadingMore: (location: GeographyModel) => Promise<void>;
+  loadMore: (location: GeographyModel) => Promise<void>;
 
-  isLoadingMore: () => boolean;
   hasFilter: () => boolean;
   reset: () => void;
   resetSearch: () => void;
@@ -58,9 +57,10 @@ const initialState: UnitState = {
   pagination: null,
   filter: deepClone(initFilter),
   isLoading: false,
+  canLoadMore: false,
 };
 
-const useUnitStoreBase = create<UnitState & UnitActions>((set, get) => ({
+export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
   ...initialState,
 
   fetchPopularUnits: async (reqBody: PopularUnitRequest) => {
@@ -89,7 +89,6 @@ const useUnitStoreBase = create<UnitState & UnitActions>((set, get) => ({
   },
 
   fetchNearByUnits: async (query: SearchUnitQuery) => {
-    console.log('fetchNearByUnits query', query);
     const { latitude, longitude } = query;
     if (!latitude || !longitude) {
       set({ nearByUnits: [] });
@@ -131,7 +130,6 @@ const useUnitStoreBase = create<UnitState & UnitActions>((set, get) => ({
   },
 
   search: async (query: SearchUnitQuery, location: GeographyModel) => {
-    console.log('search query', query);
     set({ isLoading: true });
     const response = await unitService.search(query);
     if (response instanceof Error) {
@@ -152,8 +150,6 @@ const useUnitStoreBase = create<UnitState & UnitActions>((set, get) => ({
     const units = response.data.units;
     const total = response.data.total;
     const pagination = response.data.pagination;
-    console.log('search query === total ', total);
-    console.log('search query === pagination ', pagination);
 
     const searchUnits = units.map((unit: UnitModel) => {
       const unitCard = mappingUnitModelToUnitCard(unit);
@@ -168,7 +164,13 @@ const useUnitStoreBase = create<UnitState & UnitActions>((set, get) => ({
       return unitCard;
     });
 
-    set({ searchUnits, total, pagination, isLoading: false });
+    set({
+      searchUnits,
+      total,
+      pagination,
+      isLoading: false,
+      canLoadMore: !!pagination?.nextPage,
+    });
   },
 
   updateFilter: (filter: FilterOptions) => {
@@ -179,24 +181,20 @@ const useUnitStoreBase = create<UnitState & UnitActions>((set, get) => ({
     return !compare(get().filter, initFilter, ['query']);
   },
 
-  loadingMore: async (location: GeographyModel) => {
+  loadMore: async (location: GeographyModel) => {
     const { pagination } = get();
     if (!pagination || !pagination.nextPage) {
       return;
     }
 
-    console.log('loading more ========================= ', pagination.nextPage);
     // convert pagination.nextPage to query
     const query = stringQueryToSearchUnitQuery(pagination.nextPage);
-    console.log('query', query);
     set({ isLoading: true });
     const response = await unitService.search(query);
     if (response instanceof Error) {
       set({ isLoading: false });
       throw response;
     }
-
-    console.log('response', response);
 
     const units = response.data.units;
     const total = response.data.total;
@@ -216,15 +214,12 @@ const useUnitStoreBase = create<UnitState & UnitActions>((set, get) => ({
     });
 
     set({
-      searchUnits: [...get().searchUnits, ...searchUnits],
+      searchUnits: get().searchUnits.concat(searchUnits),
+      canLoadMore: !!paginationData?.nextPage,
       total,
       pagination: paginationData,
       isLoading: false,
     });
-  },
-
-  isLoadingMore: () => {
-    return !!get().pagination?.nextPage;
   },
 
   reset: () => {
@@ -235,5 +230,3 @@ const useUnitStoreBase = create<UnitState & UnitActions>((set, get) => ({
     set({ searchUnits: [] });
   },
 }));
-
-export const useUnitStore = createSelectors(useUnitStoreBase);

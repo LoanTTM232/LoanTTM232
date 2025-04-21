@@ -10,8 +10,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import Mapbox from '@rnmapbox/maps';
 
 const App: React.FC = () => {
-  const checkIsLoggedIn = useAuthStore.use.checkIsLoggedIn();
-  const loadPreviousAddress = useLocationStore.use.loadPreviousAddress();
+  const checkIsLoggedIn = useAuthStore(state => state.checkIsLoggedIn);
+  const loadPreviousAddress = useLocationStore(state => state.loadPreviousAddress);
 
   Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
 

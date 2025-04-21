@@ -21,8 +21,9 @@ type Props = {
 };
 
 const ResetPassword: FC<Props> = ({ route }) => {
-  const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
-  const resetPassword = useAuthStore.use.resetPassword();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+  const resetPassword = useAuthStore((state) => state.resetPassword);
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
   const email = route?.params.email || '';

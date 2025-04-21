@@ -23,8 +23,8 @@ export interface ILoginFormValues {
 
 const Login: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootParamList>>();
-  const googleCallback = useAuthStore.use.googleCallback();
-  const login = useAuthStore.use.login();
+  const googleCallback = useAuthStore((state) => state.googleCallback);
+  const login = useAuthStore((state) => state.login);
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 

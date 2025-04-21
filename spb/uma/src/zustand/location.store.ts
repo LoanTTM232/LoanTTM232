@@ -5,7 +5,6 @@ import { GEOGRAPHY_RADIUS } from '@/constants';
 import { getData, storeData } from '@/helpers/storage';
 import locationService from '@/services/location.service';
 import { District, Province, Ward } from '@/services/types';
-import { createSelectors } from '@/zustand/selectors';
 
 interface LocationState {
   latitude: number;
@@ -42,7 +41,7 @@ const initialState: LocationState = {
   isLoading: false,
 };
 
-const useLocationStoreBase = create<LocationState & LocationActions>(
+export const useLocationStore = create<LocationState & LocationActions>(
   (set, get) => ({
     ...initialState,
 
@@ -160,5 +159,3 @@ const useLocationStoreBase = create<LocationState & LocationActions>(
     reset: () => set({ ...initialState, province: [], district: [], ward: [] }),
   })
 );
-
-export const useLocationStore = createSelectors(useLocationStoreBase);

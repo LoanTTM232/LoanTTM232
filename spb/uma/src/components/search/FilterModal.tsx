@@ -28,20 +28,16 @@ interface FilterModalProps {
 // Mock data - replace with your actual data
 const SPORT_TYPES = ['Badminton', 'Tennis', 'Football', 'Basketball'];
 
-const FilterModal: FC<FilterModalProps> = ({
-  visible,
-  onClose,
-  onApply,
-}) => {
+const FilterModal: FC<FilterModalProps> = ({ visible, onClose, onApply }) => {
   const insets = useSafeAreaInsets();
   const { theme } = React.useContext(ThemeContext);
   const styles = createStyles(theme, insets);
 
-  const getProvince = useLocationStore.use.getProvince();
-  const getDistrict = useLocationStore.use.getDistrict();
-  const getWard = useLocationStore.use.getWard();
-  const filter = useUnitStore.use.filter();
-  const updateFilter = useUnitStore.use.updateFilter();
+  const getProvince = useLocationStore((state) => state.getProvince);
+  const getDistrict = useLocationStore((state) => state.getDistrict);
+  const getWard = useLocationStore((state) => state.getWard);
+  const filter = useUnitStore((state) => state.filter);
+  const updateFilter = useUnitStore((state) => state.updateFilter);
 
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
@@ -336,7 +332,7 @@ const createStyles = (theme: IColorScheme, insets: any) =>
   StyleSheet.create({
     modalContainer: {
       flex: 1,
-      backgroundColor: 'rgba(0,0,0,0.5)',
+      backgroundColor: theme.overlay,
       justifyContent: 'flex-end',
     },
     modalContent: {

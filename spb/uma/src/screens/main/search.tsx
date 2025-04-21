@@ -9,7 +9,6 @@ import SearchResult from '@/components/search/SearchResult';
 import { DEFAULT_ICON_SIZE, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp } from '@/helpers/dimensions';
-import { logError } from '@/helpers/logger';
 import { deepClone } from '@/helpers/object';
 import { buildSearchUnitQueryFromFilter } from '@/helpers/pagination';
 import { MainStackParamList } from '@/screens/main';
@@ -30,18 +29,16 @@ const SearchScreen: FC<SearchProps> = ({ route }) => {
   const styles = createStyles(theme);
   const [filterModalVisible, setFilterModalVisible] = useState(showFilter);
 
-  const searchUnits = useUnitStore.use.searchUnits();
-  const isLoading = useUnitStore.use.isLoading();
-  const hasFilter = useUnitStore.use.hasFilter();
-  const filter = useUnitStore.use.filter();
-  const updateFilter = useUnitStore.use.updateFilter();
-  const resetSearch = useUnitStore.use.resetSearch();
-  const search = useUnitStore.use.search();
-  const longitude = useLocationStore.use.longitude();
-  const latitude = useLocationStore.use.latitude();
-  const isLoadingMore = useUnitStore.use.isLoadingMore();
-  const loadingMore = useUnitStore.use.loadingMore();
-  const radius = useLocationStore.use.radius();
+  const searchUnits = useUnitStore((state) => state.searchUnits);
+  const isLoading = useUnitStore((state) => state.isLoading);
+  const hasFilter = useUnitStore((state) => state.hasFilter);
+  const filter = useUnitStore((state) => state.filter);
+  const updateFilter = useUnitStore((state) => state.updateFilter);
+  const resetSearch = useUnitStore((state) => state.resetSearch);
+  const search = useUnitStore((state) => state.search);
+  const longitude = useLocationStore((state) => state.longitude);
+  const latitude = useLocationStore((state) => state.latitude);
+  const radius = useLocationStore((state) => state.radius);
 
   const handleApplyFilter = () => {
     let additionParams;
@@ -58,20 +55,6 @@ const SearchScreen: FC<SearchProps> = ({ route }) => {
       additionParams
     );
     search(unitQuerySearch, { longitude: longitude, latitude: latitude });
-  };
-
-  const handleLoadMore = () => {
-    if (!isLoadingMore()) {
-      return;
-    }
-
-    try {
-      loadingMore({ longitude: longitude, latitude: latitude });
-    } catch (error) {
-      if (error instanceof Error) {
-        logError(error as Error);
-      }
-    }
   };
 
   useEffect(() => {
@@ -103,13 +86,7 @@ const SearchScreen: FC<SearchProps> = ({ route }) => {
       <View style={styles.searchBody}>
         {isLoading && searchUnits.length === 0 && <Loading />}
         {!isLoading && searchUnits.length === 0 && <NotFound />}
-        {!isLoading && searchUnits.length > 0 && (
-          <SearchResult
-            unitCard={searchUnits}
-            isLoadingMore={isLoadingMore()}
-            onLoadMore={handleLoadMore}
-          />
-        )}
+        {!isLoading && searchUnits.length > 0 && <SearchResult />}
       </View>
     </View>
   );

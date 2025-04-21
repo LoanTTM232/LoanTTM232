@@ -31,12 +31,11 @@ const MapView: FC<MapViewProps> = ({
   const [activeId, setActiveId] = useState<string>('');
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
 
-  const latitude = useLocationStore.use.latitude();
-  const longitude = useLocationStore.use.longitude();
-
-  const popularUnits = useUnitStore.use.popularUnits();
-  const nearByUnits = useUnitStore.use.nearByUnits();
-  const searchUnits = useUnitStore.use.searchUnits();
+  const latitude = useLocationStore((state) => state.latitude);
+  const longitude = useLocationStore((state) => state.longitude);
+  const popularUnits = useUnitStore((state) => state.popularUnits);
+  const nearByUnits = useUnitStore((state) => state.nearByUnits);
+  const searchUnits = useUnitStore((state) => state.searchUnits);
 
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);

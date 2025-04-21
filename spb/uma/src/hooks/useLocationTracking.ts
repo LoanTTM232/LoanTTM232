@@ -8,8 +8,8 @@ import { useLocationStore } from '@/zustand';
 import { OPENCAGE_API_KEY } from '@env';
 
 export const useLocationTracking = () => {
-  const setLocation = useLocationStore.use.setLocation();
-  const setAddress = useLocationStore.use.setAddress();
+  const setLocation = useLocationStore((state) => state.setLocation);
+  const setAddress = useLocationStore((state) => state.setAddress);
   const latestCoords = useRef<{ latitude: number; longitude: number } | null>(
     null
   );
