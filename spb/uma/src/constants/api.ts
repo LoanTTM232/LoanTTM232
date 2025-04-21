@@ -39,3 +39,10 @@ export const PROCESS_PAYMENT_PATH = `${V1_PREFIX}/orders/pay`;
 export const RECEIVER_NOTIFICATIONS_PATH = `${V1_PREFIX}/notifications/receiver/:id`;
 
 export const SENDER_NOTIFICATIONS_PATH = `${V1_PREFIX}/notifications/sender/:id`;
+
+// Location API paths
+export const PROVINCE_PATH = `${V1_PREFIX}/addresses/provinces`;
+
+export const DISTRICT_PATH = `${V1_PREFIX}/addresses/provinces/:id/districts`;
+
+export const WARD_PATH = `${V1_PREFIX}/addresses/districts/:id/wards`;

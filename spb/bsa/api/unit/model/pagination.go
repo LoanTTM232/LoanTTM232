@@ -1,6 +1,8 @@
 package model
 
 import (
+	"strings"
+
 	"spb/bsa/pkg/utils"
 )
 
@@ -35,7 +37,7 @@ func GetPagination(queries map[string]string) *UnitPagination {
 	unitPagination.Pagination = pagination
 
 	if queries["q"] != "" {
-		unitPagination.Query = queries["q"]
+		unitPagination.Query = strings.ToLower(queries["q"])
 	}
 	if queries["st"] != "" {
 		unitPagination.SportType = queries["st"]

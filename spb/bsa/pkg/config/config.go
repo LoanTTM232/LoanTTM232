@@ -43,6 +43,7 @@ type Server struct {
 	Host       string `mapstructure:"host"`
 	Port       string `mapstructure:"port"`
 	ClientAddr string `mapstructure:"client_addr"`
+	Debug      bool   `mapstructure:"debug"`
 }
 
 type CORS struct {

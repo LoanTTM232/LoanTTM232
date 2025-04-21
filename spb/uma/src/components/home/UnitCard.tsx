@@ -10,6 +10,7 @@ import { UnitCard as UnitCardObject } from '@/services/types';
 import FullFillLocationIcon from '@/ui/icon/FullFillLocation';
 import MoveLocation from '@/ui/icon/MoveLocation';
 import { UnitRenderTypes } from '@/zustand';
+import { PLACEHOLDER_IMAGE } from '@env';
 
 interface UnitCardProps {
   unitCard: UnitCardObject;
@@ -35,7 +36,12 @@ const UnitCard: FC<UnitCardProps> = ({
       >
         <View style={styles.imageContainer}>
           <Image
-            source={{ uri: unitCard.image }}
+            source={{
+              uri:
+                unitCard.image.length > 0
+                  ? unitCard.image[0]
+                  : PLACEHOLDER_IMAGE,
+            }}
             style={styles.image}
             resizeMode="cover"
           />

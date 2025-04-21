@@ -17,6 +17,7 @@ export interface IColorScheme {
   white: string;
   blue: string;
   red: string;
+  overlay: string;
 }
 export interface IColor {
   light: IColorScheme;
@@ -30,7 +31,7 @@ export const Color: IColor = {
     backgroundContent: '#F7F7F9',
     primary: '#E86F00',
     secondary: '#F7F7F9',
-    disable: '#f1a866',
+    disable: '#DDDDDD',
     shadow: '#6A6A6A',
     icon: '#6A6A6A',
     textLight: '#707B81',
@@ -43,6 +44,7 @@ export const Color: IColor = {
     white: '#FFFFFF',
 	blue: '#007AFF',
 	red: '#F44336',
+	overlay: 'rgba(0, 0, 0, 0.5)',
   },
   dark: {
     backgroundLight: '#FFFFFF',
@@ -63,6 +65,7 @@ export const Color: IColor = {
     white: '#FFFFFF',
 	blue: '#007AFF',
 	red: '#F44336',
+	overlay: 'rgba(0, 0, 0, 0.5)',
   },
 };
 

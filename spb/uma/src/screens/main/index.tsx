@@ -1,22 +1,20 @@
 import React, { FC } from 'react';
 
 import SearchScreen from '@/screens/main/search';
-import SearchResultScreen from '@/screens/main/search_result';
 import TabScreens from '@/screens/main/tab';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 export type MainStackParamList = {
   Tabs: undefined;
-  Search: undefined;
-  SearchResult: undefined;
+  Search: {
+    showFilter?: boolean | undefined;
+  };
 };
 
 export const MainScreens: Record<string, keyof MainStackParamList> = {
   Tabs: 'Tabs',
   Search: 'Search',
-  SearchResult: 'SearchResult',
 };
-
 const Stack = createNativeStackNavigator<MainStackParamList>();
 
 const MainStack: FC = () => {
@@ -29,12 +27,8 @@ const MainStack: FC = () => {
       <Stack.Screen
         name={MainScreens.Search}
         component={SearchScreen}
-        options={{ animation: 'slide_from_bottom' }}
-      />
-      <Stack.Screen
-        name={MainScreens.SearchResult}
-        component={SearchResultScreen}
-        options={{ animation: 'slide_from_bottom' }}
+        options={{ animation: 'fade_from_bottom' }}
+        initialParams={{ showFilter: false }}
       />
     </Stack.Navigator>
   );

@@ -11,7 +11,7 @@ import (
 var ORDER_BY = []string{
 	"name",
 	"open_time",
-	"updated_at",
+	"created_at",
 }
 
 type CreateUnitRequest struct {

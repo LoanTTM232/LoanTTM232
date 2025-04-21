@@ -28,7 +28,7 @@ function Slider<T>({
 }: SliderProps<T>) {
   const flatListRef = useRef<Animated.FlatList<T>>(null);
 
-  const scrollX = useSharedValue(6);
+  const scrollX = useSharedValue(0);
   const onScrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
       scrollX.value = event.contentOffset.x;

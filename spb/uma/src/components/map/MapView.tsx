@@ -47,7 +47,7 @@ const MapView: FC<MapViewProps> = ({
 
       const cameraConfig: CameraStop = {
         centerCoordinate: [lng, lat],
-        animationDuration: 200,
+        animationDuration: 500,
         animationMode: 'flyTo',
       };
 

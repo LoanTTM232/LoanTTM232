@@ -21,24 +21,19 @@ const MapScreen: React.FC<MapScreenProps> = ({ route }) => {
   const styles = createStyles(theme);
 
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.container}>
-        <SearchBar containerStyle={styles.floatingSearchBar} />
-        <MapView unitId={unitId} renderType={renderType} />
-      </View>
+    <View style={styles.container}>
+      <SearchBar containerStyle={styles.floatingSearchBar} />
+      <MapView unitId={unitId} renderType={renderType} />
     </View>
   );
 };
 
 const createStyles = (theme: IColorScheme) =>
   StyleSheet.create({
-    wrapper: {
+    container: {
       height: '100%',
       width: '100%',
       backgroundColor: theme.backgroundLight,
-    },
-    container: {
-      flex: 1,
       flexDirection: 'column',
     },
     floatingSearchBar: {

@@ -17,17 +17,17 @@ type SearchBarProps = {
 };
 
 const SearchBar: React.FC<SearchBarProps> = ({ containerStyle }) => {
-  const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<MainStackParamList>>();
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
   const handleSearch = () => {
-    navigation.navigate('Search');
+    navigation.navigate('Search', { showFilter: false });
   };
 
   const handleFilter = () => {
-    // Handle filter action
-    console.log('Filter pressed');
+    navigation.navigate('Search', { showFilter: true });
   };
 
   return (

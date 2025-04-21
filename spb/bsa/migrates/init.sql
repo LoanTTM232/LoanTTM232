@@ -1,3 +1,5 @@
+CREATE EXTENSION pg_trgm;
+
 CREATE TYPE public.status as ENUM ('active', 'inactive');
 
 CREATE TYPE public.platform as ENUM ('android', 'ios', 'inapp', 'email');

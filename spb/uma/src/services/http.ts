@@ -90,14 +90,21 @@ class AxiosConfig {
   private async onGuestErrorResponse(
     error: AxiosError | Error
   ): Promise<void | AxiosError> {
-    console.log('Guest error response:', error);
     if (axios.isAxiosError(error)) {
+      const status = error.response?.status;
+      console.log('Guest error response:', status);
+
+      if (
+        status === HttpStatusCode.Forbidden ||
+        status === HttpStatusCode.Unauthorized
+      ) {
+        authService.logout();
+      }
       if (error.code === AxiosError.ERR_NETWORK) {
         toastError(i18next.t('error.ERS000'));
       }
     }
 
-    authService.logout();
     return Promise.reject(error);
   }
 

@@ -53,10 +53,17 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 		query = query.Where("sport_type_id = ?", reqBody.Pagination.SportType)
 	}
 
-	// get by unit name or club name
-	// TODO: search by unit name and club name
+	// search by unit name and description
+	//  TODO: can search by address
 	if IsSearchByQuery(reqBody) {
-		query = query.Where("name LIKE ?", "%"+reqBody.Pagination.Query+"%")
+		query = query.
+			Where("SIMILARITY(unit.keywords, ?) > 0.1", reqBody.Pagination.Query)
+	}
+
+	// count total unit
+	var count int64
+	if err = query.Count(&count).Error; err != nil {
+		return nil, 0, err
 	}
 
 	err = query.
@@ -73,13 +80,6 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 		if err != nil {
 			return nil, 0, msg.ErrNotFound("Address")
 		}
-	}
-
-	// count total unit
-	var count int64
-	err = s.db.Model(tb.Unit{}).Count(&count).Error
-	if err != nil {
-		return nil, 0, err
 	}
 
 	return units, count, nil

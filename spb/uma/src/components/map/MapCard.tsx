@@ -7,6 +7,7 @@ import { hp, wp } from '@/helpers/dimensions';
 import { UnitCard } from '@/services/types';
 import FullFillLocationIcon from '@/ui/icon/FullFillLocation';
 import MoveLocation from '@/ui/icon/MoveLocation';
+import { PLACEHOLDER_IMAGE } from '@env';
 
 interface MapUnitCardProps {
   unitCard: UnitCard;
@@ -29,7 +30,10 @@ const MapUnitCard: FC<MapUnitCardProps> = ({
     >
       <View style={styles.imageContainer}>
         <Image
-          source={{ uri: unitCard.image }}
+          source={{
+            uri:
+              unitCard.image.length > 0 ? unitCard.image[0] : PLACEHOLDER_IMAGE,
+          }}
           style={styles.image}
           resizeMode="cover"
         />
@@ -70,7 +74,7 @@ const MapUnitCard: FC<MapUnitCardProps> = ({
 const createStyles = (theme: IColorScheme) =>
   StyleSheet.create({
     container: {
-      width: wp(60),
+      width: wp(65),
       borderRadius: Radius.lg,
       backgroundColor: theme.backgroundLight,
     },
@@ -91,7 +95,6 @@ const createStyles = (theme: IColorScheme) =>
       height: '100%',
     },
     content: {
-      paddingHorizontal: hp(2),
       paddingVertical: hp(1),
     },
     addressRow: {

@@ -35,7 +35,7 @@ export const mappingUnitModelToUnitCard = (unit: UnitModel): UnitCard => {
     id: unit.id,
     title: unit.name,
     address: mappingAddressModelToString(unit.address),
-    image: mappingMediaModelToString(unit.media)[0] || '',
+    image: mappingMediaModelToString(unit.media),
     price: unit.unitPrices?.map(mappingUnitPriceModelToUnitPrice) || [],
     coords: {
       latitude: unit.address.locationGeography.latitude,

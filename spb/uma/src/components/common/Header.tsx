@@ -16,16 +16,11 @@ const Header: FC = () => {
   const city = useLocationStore.use.city();
 
   const handleLocationPress = useCallback(() => {
-    // Handle location selection
     console.log('Location pressed');
   }, []);
 
   const handleNotificationPress = useCallback(() => {
     console.log('Notifications pressed');
-  }, []);
-
-  const handleSearch = useCallback(() => {
-    console.log('Search pressed');
   }, []);
 
   return (

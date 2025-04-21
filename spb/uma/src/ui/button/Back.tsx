@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { ReactNode, useContext, useRef } from 'react';
 import { Animated, Pressable, StyleSheet, ViewStyle } from 'react-native';
 
 import { IColorScheme } from '@/constants';
@@ -9,7 +9,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type BackButtonProps = {
   styles?: ViewStyle;
-  icon: React.ReactNode;
+  icon: ReactNode;
   onPress?: () => void;
 };
 
@@ -63,15 +63,13 @@ function BackButton(props: BackButtonProps) {
   );
 }
 
-const createStyles = (theme: IColorScheme) => {
+const createStyles = (_: IColorScheme) => {
   return StyleSheet.create({
     container: {
-      backgroundColor: theme.backgroundContent,
       width: 50,
       height: 50,
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 25,
     },
   });
 };

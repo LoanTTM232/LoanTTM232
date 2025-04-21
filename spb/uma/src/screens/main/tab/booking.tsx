@@ -19,7 +19,7 @@ const createStyles = (theme: IColorScheme) => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme.backgroundDark,
+      backgroundColor: theme.backgroundLight,
     },
   });
 };

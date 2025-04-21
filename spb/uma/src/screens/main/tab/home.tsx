@@ -27,7 +27,6 @@ const HomeScreen: React.FC = () => {
   const fetchHomeData = useCallback(async () => {
     try {
       const location = await getCurrentLocation();
-
       const nearByQuery = new SearchUnitQueryBuilder()
         .setPageItems(CARD_LIST_SIZE)
         .setLatitude(location.latitude)
@@ -66,46 +65,41 @@ const HomeScreen: React.FC = () => {
   }, [fetchHomeData]);
 
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.container}>
-        <Header />
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={handleRefresh}
-              tintColor={theme.primary}
-            />
-          }
-          showsVerticalScrollIndicator={false}
-        >
-          <UnitSection
-            title={i18n.t('home.popularity')}
-            units={popularUnits}
-            unitRenderType={UnitRenderTypes.POPULAR}
+    <View style={styles.container}>
+      <Header />
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            tintColor={theme.primary}
           />
-          <UnitSection
-            title={i18n.t('home.nearby')}
-            units={nearByUnits}
-            unitRenderType={UnitRenderTypes.NEARBY}
-          />
-        </ScrollView>
-      </View>
+        }
+        showsVerticalScrollIndicator={false}
+      >
+        <UnitSection
+          title={i18n.t('home.popularity')}
+          units={popularUnits}
+          unitRenderType={UnitRenderTypes.POPULAR}
+        />
+        <UnitSection
+          title={i18n.t('home.nearby')}
+          units={nearByUnits}
+          unitRenderType={UnitRenderTypes.NEARBY}
+        />
+      </ScrollView>
     </View>
   );
 };
 
 const createStyles = (theme: IColorScheme) =>
   StyleSheet.create({
-    wrapper: {
+    container: {
       height: '100%',
       width: '100%',
       backgroundColor: theme.backgroundLight,
-    },
-    container: {
-      flex: 1,
     },
     scrollView: {
       flex: 1,

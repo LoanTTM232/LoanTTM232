@@ -1,10 +1,36 @@
 export function debounce<T extends (...args: any[]) => void>(
   func: T,
   delay: number
-): T {
+): T & { cancel: () => void } {
   let timeout: ReturnType<typeof setTimeout>;
-  return function (...args: any[]) {
+
+  const debounced = function (...args: any[]) {
     clearTimeout(timeout);
+    console.log('re debounce', delay);
     timeout = setTimeout(() => func(...args), delay);
-  } as T;
+  };
+
+  debounced.cancel = () => clearTimeout(timeout);
+  return debounced as T & { cancel: () => void };
+}
+
+export function unicodeToASCII(str: string): string {
+  const map: { [key: string]: string } = {
+    a: 'áàảãạâấầẩẫậăắằẳẵặ',
+    e: 'éèẻẽẹêếềểễệ',
+    i: 'íìỉĩị',
+    o: 'óòỏõọôốồổỗộơớờởỡợ',
+    u: 'úùủũụưứừửữự',
+    y: 'ýỳỷỹỵ',
+    d: 'đ',
+  };
+
+  let result = str;
+
+  for (const key in map) {
+    const regex = new RegExp(`[${map[key]}]`, 'g');
+    result = result.replace(regex, key);
+  }
+
+  return result;
 }

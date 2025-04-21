@@ -1,4 +1,7 @@
-import { SearchUnitQuery } from '@/services/types';
+import qs from 'query-string';
+
+import { CARD_LIST_SIZE } from '@/constants';
+import { FilterOptions, SearchUnitQuery } from '@/services/types';
 
 // &i = page items
 // &p = page
@@ -54,37 +57,51 @@ export class SearchUnitQueryBuilder {
   }
 
   setOrderBy(orderBy: string): this {
-    this.query.orderBy = orderBy;
+    if (orderBy !== '') {
+      this.query.orderBy = orderBy;
+    }
     return this;
   }
 
   setOrderType(orderType: string): this {
-    this.query.orderType = orderType;
+    if (orderType !== '') {
+      this.query.orderType = orderType;
+    }
     return this;
   }
 
   setQuery(text: string): this {
-    this.query.query = text;
+    if (text !== '') {
+      this.query.query = text;
+    }
     return this;
   }
 
   setSportType(type: string): this {
-    this.query.sportType = type;
+    if (type !== '') {
+      this.query.sportType = type;
+    }
     return this;
   }
 
   setProvince(province: string): this {
-    this.query.province = province;
+    if (province !== '') {
+      this.query.province = province;
+    }
     return this;
   }
 
   setWard(ward: string): this {
-    this.query.ward = ward;
+    if (ward !== '') {
+      this.query.ward = ward;
+    }
     return this;
   }
 
   setDistrict(district: string): this {
-    this.query.district = district;
+    if (district !== '') {
+      this.query.district = district;
+    }
     return this;
   }
 
@@ -107,3 +124,74 @@ export class SearchUnitQueryBuilder {
     return this.query;
   }
 }
+
+export const buildSearchUnitQueryFromFilter = (
+  filter: FilterOptions,
+  args?: { [key: string]: string | number } | undefined
+): SearchUnitQuery => {
+  const queryBuilder = new SearchUnitQueryBuilder();
+  const query = queryBuilder
+    .setPage(1)
+    .setPageItems(CARD_LIST_SIZE)
+    .setOrderBy(filter.orderBy)
+    .setOrderType(filter.orderType)
+    .setSportType(filter.sportType)
+    .setProvince(filter.location.province)
+    .setDistrict(filter.location.district)
+    .setWard(filter.location.ward)
+    .setQuery(filter.query || '');
+
+  if (!args) return query.build();
+
+  if ('longitude' in args) {
+    query.setLongitude(args.longitude as number);
+  }
+  if ('latitude' in args) {
+    query.setLatitude(args.latitude as number);
+  }
+  if ('radius' in args) {
+    query.setRadius(args.radius as number);
+  }
+  return query.build();
+};
+
+export const getNumberParam = (
+  params: qs.ParsedQuery<string>,
+  key: string
+): number | null => {
+  if (key in params) {
+    return Number(params[key]);
+  }
+  return null;
+};
+
+export const getStringParam = (
+  params: qs.ParsedQuery<string>,
+  key: string
+): string | null => {
+  if (key in params) {
+    return params[key] as string;
+  }
+  return null;
+};
+
+export const stringQueryToSearchUnitQuery = (
+  queryString: string
+): SearchUnitQuery => {
+  const params = qs.parse(queryString);
+  const query: SearchUnitQuery = {
+    page: getNumberParam(params, PARAMS.page),
+    pageItems: getNumberParam(params, PARAMS.pageItems),
+    orderBy: getStringParam(params, PARAMS.orderBy),
+    orderType: getStringParam(params, PARAMS.orderType),
+    query: getStringParam(params, PARAMS.query),
+    sportType: getStringParam(params, PARAMS.sportType),
+    province: getStringParam(params, PARAMS.province),
+    ward: getStringParam(params, PARAMS.ward),
+    district: getStringParam(params, PARAMS.district),
+    longitude: getNumberParam(params, PARAMS.longitude),
+    latitude: getNumberParam(params, PARAMS.latitude),
+    radius: getNumberParam(params, PARAMS.radius),
+  };
+  return query;
+};

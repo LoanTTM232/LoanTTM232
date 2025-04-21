@@ -21,7 +21,7 @@ const SliderItem: FC<SliderItemProps> = ({
     const translateX = interpolate(
       scrollX.value,
       [(index - 1) * width, index * width, (index + 1) * width],
-      [-width * 0.35, 0, width * 0.35],
+      [-width * 0.3, 0, width * 0.3],
       Extrapolation.CLAMP
     );
 

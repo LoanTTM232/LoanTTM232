@@ -91,6 +91,7 @@ func MapUnitEntitiesToResponseWithoutPagination(units []*tb.Unit) *model.UnitsRe
 // @param: reqBody *model.CreateUnitRequest
 // @return: *tb.Unit
 func MapCreateRequestToEntity(reqBody *model.CreateUnitRequest) *tb.Unit {
+	keywords := MakeKeyword(reqBody.Name, reqBody.Description)
 	return &tb.Unit{
 		Name:        reqBody.Name,
 		NameEn:      utils.VietNameseCharacterToASCII(reqBody.Name),
@@ -98,6 +99,7 @@ func MapCreateRequestToEntity(reqBody *model.CreateUnitRequest) *tb.Unit {
 		CloseTime:   reqBody.CloseTime,
 		Phone:       reqBody.Phone,
 		Description: reqBody.Description,
+		Keywords:    keywords,
 		Status:      reqBody.Status,
 		ClubID:      reqBody.ClubID,
 		Address:     au.MapCreateRequestToEntity(reqBody.Address),
@@ -105,6 +107,11 @@ func MapCreateRequestToEntity(reqBody *model.CreateUnitRequest) *tb.Unit {
 		UnitService: usu.MapCreateRequestToEntities(reqBody.UnitServices),
 		SportTypes:  stu.MapIdsToEntities(reqBody.SportTypes),
 	}
+}
+
+func MakeKeyword(value ...string) string {
+	keywords := strings.ToLower(utils.Join(" ", value...))
+	return utils.VietNameseCharacterToASCII(keywords)
 }
 
 // @author: LoanTT

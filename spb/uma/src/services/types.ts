@@ -90,18 +90,50 @@ export type GetNotificationResponse = {
 };
 
 export type UnitPrice = {
-	price: number;
-	startTime: string;
-	endTime: string;
-	currency: string;
-}
+  price: number;
+  startTime: string;
+  endTime: string;
+  currency: string;
+};
 
 export type UnitCard = {
   id: string;
   title: string;
   address: string;
   price: UnitPrice[];
-  image: string;
+  image: string[];
   distance: string;
   coords: GeographyModel;
 };
+
+export type Location = {
+  id: string;
+  name: string;
+  nameEn: string;
+  code: string;
+};
+
+export type Province = Location;
+
+export type District = Location & {
+  provinceId: string;
+};
+
+export type Ward = Location & {
+  districtId: string;
+};
+
+export interface LocationFilter {
+  province: string;
+  district: string;
+  ward: string;
+}
+
+export interface FilterOptions {
+  location: LocationFilter;
+  sportType: string;
+  isNearby: boolean;
+  orderBy: string;
+  orderType: string;
+  query?: string;
+}
