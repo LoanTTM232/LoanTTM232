@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 
+import { GEOGRAPHY_RADIUS } from '@/constants';
 import { calculateDistance } from '@/helpers/location';
 import { mappingUnitModelToUnitCard } from '@/helpers/mapping';
 import { round } from '@/helpers/number';
@@ -32,7 +33,7 @@ interface UnitActions {
   fetchNearByUnits: (query: SearchUnitQuery) => Promise<void>;
   fetchDetailUnit: (id: string) => Promise<void>;
   search: (query: SearchUnitQuery, location: GeographyModel) => Promise<void>;
-  updateFilter: (filter: FilterOptions) => void;
+  updateFilter: (filter: Partial<FilterOptions>) => void;
   loadMore: (location: GeographyModel) => Promise<void>;
 
   hasFilter: () => boolean;
@@ -44,6 +45,7 @@ export const initFilter = {
   location: { province: '', district: '', ward: '' },
   sportType: '',
   isNearby: false,
+  radius: GEOGRAPHY_RADIUS,
   orderBy: '',
   orderType: '',
 } as FilterOptions;
@@ -173,8 +175,8 @@ export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
     });
   },
 
-  updateFilter: (filter: FilterOptions) => {
-    set({ filter });
+  updateFilter: (filter: Partial<FilterOptions>) => {
+    set({ filter: { ...get().filter, ...filter } });
   },
 
   hasFilter: () => {
@@ -213,6 +215,7 @@ export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
       return unitCard;
     });
 
+	console.log('load more: ', searchUnits);
     set({
       searchUnits: get().searchUnits.concat(searchUnits),
       canLoadMore: !!paginationData?.nextPage,

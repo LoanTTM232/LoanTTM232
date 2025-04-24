@@ -133,6 +133,7 @@ export interface FilterOptions {
   location: LocationFilter;
   sportType: string;
   isNearby: boolean;
+  radius: number;
   orderBy: string;
   orderType: string;
   query?: string;

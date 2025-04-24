@@ -16,12 +16,14 @@ interface UnitSectionProps {
   title: string;
   units: UnitCardObject[];
   unitRenderType: UnitRenderTypes;
+  handleSeeAll?: () => void;
 }
 
 const UnitSection: FC<UnitSectionProps> = ({
   title,
   units,
   unitRenderType,
+  handleSeeAll,
 }) => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
@@ -44,9 +46,11 @@ const UnitSection: FC<UnitSectionProps> = ({
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>{title}</Text>
-        <Pressable onPress={() => console.log('See all pressed')}>
-          <Text style={styles.seeAll}>See all</Text>
-        </Pressable>
+        {handleSeeAll && (
+          <Pressable onPress={handleSeeAll}>
+            <Text style={styles.seeAll}>See all</Text>
+          </Pressable>
+        )}
       </View>
 
       <ScrollView

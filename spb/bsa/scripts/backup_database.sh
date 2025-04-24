@@ -35,6 +35,6 @@ for table in "${TABLES[@]}"; do
 	TABLE_OPTIONS="$TABLE_OPTIONS -t $table"
 done
 
-dest="./migrates/dump-spb_database-$(date +%Y%m%d%H%M).sql"
+dest="../migrates/dump-spb_database-$(date +%Y%m%d%H%M).sql"
 touch $dest
 docker exec -it spb_database pg_dump -U $USERNAME -d $DATABASE $TABLE_OPTIONS > $dest

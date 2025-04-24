@@ -1,12 +1,15 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useShallow } from 'zustand/shallow';
 
 import {
-  DEFAULT_ICON_SIZE, fontFamily, fontSize, IColorScheme, Radius, UNIT_ORDER_BY, UNIT_ORDER_TYPE
+  DEFAULT_ICON_SIZE, fontFamily, fontSize, GEOGRAPHY_RADIUS, IColorScheme, Radius, UNIT_ORDER_BY,
+  UNIT_ORDER_TYPE
 } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
+import { debounce } from '@/helpers/function';
 import i18n from '@/helpers/i18n';
 import { logError } from '@/helpers/logger';
 import { District, Province, Ward } from '@/services/types';
@@ -18,6 +21,7 @@ import LocationIcon from '@/ui/icon/Location';
 import SortIcon from '@/ui/icon/Sort';
 import TagIcon from '@/ui/icon/Tag';
 import { useLocationStore, useUnitStore } from '@/zustand';
+import Slider from '@react-native-community/slider';
 
 interface FilterModalProps {
   visible: boolean;
@@ -36,8 +40,9 @@ const FilterModal: FC<FilterModalProps> = ({ visible, onClose, onApply }) => {
   const getProvince = useLocationStore((state) => state.getProvince);
   const getDistrict = useLocationStore((state) => state.getDistrict);
   const getWard = useLocationStore((state) => state.getWard);
-  const filter = useUnitStore((state) => state.filter);
   const updateFilter = useUnitStore((state) => state.updateFilter);
+
+  const filter = useUnitStore(useShallow((state) => state.filter));
 
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
@@ -109,6 +114,10 @@ const FilterModal: FC<FilterModalProps> = ({ visible, onClose, onApply }) => {
     updateFilter({ ...filter, orderType });
   };
 
+  const handleRadiusChange = debounce((value: number) => {
+    updateFilter({ radius: Math.round(value) });
+  }, 500);
+
   const handleApply = () => {
     onApply();
     onClose();
@@ -119,6 +128,7 @@ const FilterModal: FC<FilterModalProps> = ({ visible, onClose, onApply }) => {
       location: { province: '', district: '', ward: '' },
       sportType: '',
       isNearby: false,
+      radius: GEOGRAPHY_RADIUS,
       orderBy: '',
       orderType: '',
       query: filter.query,
@@ -189,6 +199,32 @@ const FilterModal: FC<FilterModalProps> = ({ visible, onClose, onApply }) => {
                   <Text style={styles.disabledTagNote}>
                     (Disabled when location is selected)
                   </Text>
+                )}
+
+                {/* Nearby Radius Subsection */}
+                {filter.isNearby && (
+                  <View style={styles.radiusContainer}>
+                    <Text style={styles.radiusLabel}>
+                      Radius: {Math.round(filter.radius / 1000)}km
+                    </Text>
+                    <Slider
+                      style={styles.slider}
+                      minimumValue={1}
+                      maximumValue={GEOGRAPHY_RADIUS}
+                      step={1000}
+                      value={filter.radius}
+                      onValueChange={handleRadiusChange}
+                      minimumTrackTintColor={theme.primary}
+                      maximumTrackTintColor={theme.borderLight}
+                      thumbTintColor={theme.primary}
+                    />
+                    <View style={styles.sliderLabels}>
+                      <Text style={styles.sliderLabel}>1km</Text>
+                      <Text style={styles.sliderLabel}>
+                        {Math.round(GEOGRAPHY_RADIUS / 1000)}km
+                      </Text>
+                    </View>
+                  </View>
                 )}
               </View>
             </View>
@@ -438,6 +474,33 @@ const createStyles = (theme: IColorScheme, insets: any) =>
       fontSize: fontSize.xs,
       color: theme.textLight,
       marginTop: hp(0.5),
+    },
+    radiusContainer: {
+      marginTop: hp(2),
+      paddingTop: hp(1.5),
+      borderTopWidth: 1,
+      borderTopColor: theme.borderLight,
+      width: '100%',
+    },
+    radiusLabel: {
+      ...fontFamily.POPPINS_MEDIUM,
+      fontSize: fontSize.sm,
+      color: theme.textDark,
+      marginBottom: hp(1),
+    },
+    slider: {
+      width: '100%',
+      height: hp(4),
+    },
+    sliderLabels: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: wp(1),
+    },
+    sliderLabel: {
+      ...fontFamily.POPPINS_REGULAR,
+      fontSize: fontSize.xs,
+      color: theme.textLight,
     },
   });
 
