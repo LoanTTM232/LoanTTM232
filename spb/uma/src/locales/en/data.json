@@ -82,6 +82,35 @@
             "order_type": "Order Type"
         }
     },
+    "detail": {
+        "service": "Services & Amenities",
+        "price": "Price",
+        "book_now": "Book Now"
+    },
+    "booking": {
+        "title": "Booking",
+        "description": "Please check your email to see the booking confirmation",
+        "submit": "Book Now",
+        "select_date": {
+            "title": "Select Date",
+            "description": "Choose the date and time for your booking",
+            "date": "Select Date",
+            "time": "Select Time",
+            "submit": "Next"
+        },
+        "payment_method": {
+            "title": "Payment Method",
+            "description": "Choose your payment method",
+            "cash": "Cash",
+            "bank_transfer": "Bank Transfer",
+            "momo": "Momo"
+        },
+        "payment_success": {
+            "title": "Payment Successful",
+            "description": "Your payment has been successfully processed. Click the button below to view your booking details.",
+            "submit": "View Booking"
+        }
+    },
     "error": {
         "ERS000": "Network error, please try again later.",
         "ERS001": "ERS001",

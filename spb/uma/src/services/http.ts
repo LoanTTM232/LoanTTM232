@@ -19,7 +19,6 @@ class AxiosConfig {
   private isProtected: boolean = false;
 
   constructor() {
-    console.log('API URL: ', API_URL);
     this.axiosInstance = axios.create({
       baseURL: API_URL,
       headers: this.defaultHeaders(),

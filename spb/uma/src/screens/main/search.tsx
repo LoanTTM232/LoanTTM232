@@ -17,11 +17,11 @@ import LeftArrowIcon from '@/ui/icon/LeftArrow';
 import { initFilter, useLocationStore, useUnitStore } from '@/zustand';
 import { RouteProp } from '@react-navigation/native';
 
-type SearchProps = {
+type Props = {
   route?: RouteProp<MainStackParamList, 'Search'>;
 };
 
-const SearchScreen: FC<SearchProps> = ({ route }) => {
+const SearchScreen: FC<Props> = ({ route }) => {
   const showFilter = !!route?.params?.showFilter;
 
   const { theme } = useContext(ThemeContext);

@@ -9,10 +9,12 @@ import MapSkeleton from '@/components/map/MapSkeleton';
 import { IColorScheme, ZOOM_LEVEL } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
+import { MainStackParamList } from '@/screens/main';
 import { UnitCard } from '@/services/types';
 import Slider from '@/ui/slider/Slider';
 import { UnitRenderTypes, useLocationStore, useUnitStore } from '@/zustand';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Mapbox, { CameraStop, StyleURL } from '@rnmapbox/maps';
 
 interface MapViewProps {
@@ -24,6 +26,9 @@ const MapView: FC<MapViewProps> = ({
   unitId,
   renderType = UnitRenderTypes.POPULAR,
 }) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<MainStackParamList>>();
+
   const isFocused = useIsFocused();
   const mapRef = useRef<Mapbox.MapView>(null);
   const cameraRef = useRef<Mapbox.Camera>(null);
@@ -82,8 +87,10 @@ const MapView: FC<MapViewProps> = ({
     [units]
   );
 
-  const handleClickUnit = (id: string) => {
-    console.log('handleClickUnit', id);
+  const handlePressUnit = (id: string) => {
+    navigation.navigate('Detail', {
+      unitId: id,
+    });
   };
 
   const isLoading = units === undefined || units.length === 0;
@@ -189,7 +196,7 @@ const MapView: FC<MapViewProps> = ({
             renderItem={({ item }) => (
               <MapCard
                 unitCard={item}
-                onPress={() => handleClickUnit(item.id)}
+                onPress={() => handlePressUnit(item.id)}
                 onPressLocation={() => {
                   moveToLocationDebounced(
                     item.coords.latitude,

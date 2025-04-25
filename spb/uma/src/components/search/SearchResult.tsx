@@ -8,13 +8,42 @@ import { ThemeContext } from '@/contexts/theme';
 import { hp } from '@/helpers/dimensions';
 import { logError } from '@/helpers/logger';
 import { buildSearchUnitQueryFromFilter } from '@/helpers/pagination';
+import { MainStackParamList } from '@/screens/main';
 import { UnitCard } from '@/services/types';
 import Loading from '@/ui/Loading';
-import { useLocationStore, useUnitStore } from '@/zustand';
+import { UnitRenderTypes, useLocationStore, useUnitStore } from '@/zustand';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-const SearchItem = React.memo(({ item }: { item: UnitCard }) => (
-  <SearchCard unitCard={item} onPress={() => {}} onPressLocation={() => {}} />
-));
+const SearchItem = React.memo(({ item }: { item: UnitCard }) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<MainStackParamList>>();
+
+  const handlePressUnit = () => {
+    navigation.navigate('Detail', {
+      unitId: item.id,
+    });
+  };
+
+  const handlePressLocation = () => {
+    //@ts-ignore
+    navigation.navigate('Tabs', {
+      screen: 'Map',
+      params: {
+        unitId: item.id,
+        renderType: UnitRenderTypes.NEARBY,
+      },
+    });
+  };
+
+  return (
+    <SearchCard
+      unitCard={item}
+      onPress={handlePressUnit}
+      onPressLocation={handlePressLocation}
+    />
+  );
+});
 
 const SearchResult: React.FC = () => {
   const { theme } = useContext(ThemeContext);

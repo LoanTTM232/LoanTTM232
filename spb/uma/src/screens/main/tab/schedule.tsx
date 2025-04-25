@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 
-const Booking: React.FC = () => {
+const Schedule: React.FC = () => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
@@ -24,4 +24,4 @@ const createStyles = (theme: IColorScheme) => {
   });
 };
 
-export default Booking;
+export default Schedule;

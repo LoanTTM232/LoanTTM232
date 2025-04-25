@@ -20,17 +20,6 @@ SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
-CREATE EXTENSION pg_trgm;
-
-CREATE TYPE public.status as ENUM ('active', 'inactive');
-
-CREATE TYPE public.platform as ENUM ('android', 'ios', 'inapp', 'email');
-
-CREATE TYPE public.progress as ENUM ('inprogress', 'pending', 'success', 'failure');
-
-CREATE TYPE public.oauth_provider as ENUM ('google', 'facebook');
-
-
 --
 -- Name: address; Type: TABLE; Schema: public; Owner: spb_user
 --

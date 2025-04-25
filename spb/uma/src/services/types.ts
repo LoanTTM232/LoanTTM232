@@ -60,7 +60,7 @@ export type GetUnitResponse = UnitModel;
 export type GetUnitsResponse = {
   units: UnitModel[];
   total: number;
-  pagination: UnitPagination | null;
+  pagination: UnitPagination | undefined;
 };
 
 export type PaymentRequest = {
@@ -96,14 +96,24 @@ export type UnitPrice = {
   currency: string;
 };
 
+export type UnitService = {
+  title: string;
+  price: number;
+  description: string;
+};
+
 export type UnitCard = {
   id: string;
   title: string;
+  phone: string;
+  description: string;
   address: string;
   price: UnitPrice[];
   image: string[];
   distance: string;
   coords: GeographyModel;
+  sportTypes: string[];
+  services: UnitService[];
 };
 
 export type Location = {

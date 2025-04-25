@@ -76,4 +76,5 @@ export const Radius = {
   lg: 16,
   xl: 18,
   xxl: 22,
+  full: 9999,
 };

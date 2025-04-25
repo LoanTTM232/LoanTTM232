@@ -20,9 +20,9 @@ interface UnitState {
   popularUnits: UnitCard[];
   nearByUnits: UnitCard[];
   searchUnits: UnitCard[];
-  currentUnit: UnitModel | null;
-  total: number | null;
-  pagination: UnitPagination | null;
+  currentUnit: UnitCard;
+  total: number;
+  pagination: UnitPagination;
   filter: FilterOptions;
   isLoading: boolean;
   canLoadMore: boolean;
@@ -31,7 +31,7 @@ interface UnitState {
 interface UnitActions {
   fetchPopularUnits: (query: PopularUnitRequest) => Promise<void>;
   fetchNearByUnits: (query: SearchUnitQuery) => Promise<void>;
-  fetchDetailUnit: (id: string) => Promise<void>;
+  fetchDetailUnit: (id: string, location: GeographyModel) => Promise<void>;
   search: (query: SearchUnitQuery, location: GeographyModel) => Promise<void>;
   updateFilter: (filter: Partial<FilterOptions>) => void;
   loadMore: (location: GeographyModel) => Promise<void>;
@@ -53,10 +53,10 @@ export const initFilter = {
 const initialState: UnitState = {
   popularUnits: [],
   nearByUnits: [],
-  currentUnit: null,
+  currentUnit: {} as UnitCard,
   searchUnits: [],
-  total: null,
-  pagination: null,
+  total: 0,
+  pagination: {} as UnitPagination,
   filter: deepClone(initFilter),
   isLoading: false,
   canLoadMore: false,
@@ -119,7 +119,7 @@ export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
     set({ nearByUnits, isLoading: false });
   },
 
-  fetchDetailUnit: async (id: string) => {
+  fetchDetailUnit: async (id: string, location: GeographyModel) => {
     set({ isLoading: true });
     const response = await unitService.getDetail(id);
     if (response instanceof Error) {
@@ -128,7 +128,16 @@ export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
     }
 
     const unit = response.data;
-    set({ currentUnit: unit, isLoading: false });
+    const unitCard = mappingUnitModelToUnitCard(unit);
+
+    const distance = round(
+      calculateDistance(
+        { latitude: location.latitude, longitude: location.longitude },
+        unit.address?.locationGeography
+      )
+    );
+    unitCard.distance = `${distance} km`;
+    set({ currentUnit: unitCard, isLoading: false });
   },
 
   search: async (query: SearchUnitQuery, location: GeographyModel) => {
@@ -215,7 +224,7 @@ export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
       return unitCard;
     });
 
-	console.log('load more: ', searchUnits);
+    console.log('load more: ', searchUnits);
     set({
       searchUnits: get().searchUnits.concat(searchUnits),
       canLoadMore: !!paginationData?.nextPage,

@@ -1,12 +1,6 @@
 import React, { useContext, useRef } from 'react';
 import {
-  Animated,
-  Pressable,
-  StyleProp,
-  StyleSheet,
-  Text,
-  TextStyle,
-  ViewStyle,
+  Animated, Pressable, StyleProp, StyleSheet, Text, TextStyle, ViewStyle
 } from 'react-native';
 
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
@@ -44,12 +38,12 @@ function Button({
     Animated.parallel([
       Animated.timing(scaleAnim, {
         toValue: 0.95,
-        duration: 100,
+        duration: 50,
         useNativeDriver: true,
       }),
       Animated.timing(opacityAnim, {
         toValue: 0.8,
-        duration: 100,
+        duration: 50,
         useNativeDriver: true,
       }),
     ]).start();
@@ -59,12 +53,12 @@ function Button({
     Animated.parallel([
       Animated.timing(scaleAnim, {
         toValue: 1,
-        duration: 100,
+        duration: 50,
         useNativeDriver: true,
       }),
       Animated.timing(opacityAnim, {
         toValue: 1,
-        duration: 100,
+        duration: 50,
         useNativeDriver: true,
       }),
     ]).start();
