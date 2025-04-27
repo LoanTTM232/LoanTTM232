@@ -89,26 +89,11 @@
     },
     "booking": {
         "title": "Booking",
-        "description": "Please check your email to see the booking confirmation",
         "submit": "Book Now",
         "select_date": {
-            "title": "Select Date",
+            "title": "Select Date & Time",
             "description": "Choose the date and time for your booking",
-            "date": "Select Date",
-            "time": "Select Time",
             "submit": "Next"
-        },
-        "payment_method": {
-            "title": "Payment Method",
-            "description": "Choose your payment method",
-            "cash": "Cash",
-            "bank_transfer": "Bank Transfer",
-            "momo": "Momo"
-        },
-        "payment_success": {
-            "title": "Payment Successful",
-            "description": "Your payment has been successfully processed. Click the button below to view your booking details.",
-            "submit": "View Booking"
         }
     },
     "error": {

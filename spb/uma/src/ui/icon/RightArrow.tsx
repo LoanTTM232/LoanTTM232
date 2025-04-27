@@ -4,7 +4,7 @@ import Svg, { Path } from 'react-native-svg';
 import { DEFAULT_ICON_SIZE } from '@/constants';
 import { IIconProps } from '@/ui/icon';
 
-const LeftArrowIcon: React.FC<IIconProps> = ({
+const RightArrowIcon: React.FC<IIconProps> = ({
   color,
   size = DEFAULT_ICON_SIZE,
   ...props
@@ -19,4 +19,4 @@ const LeftArrowIcon: React.FC<IIconProps> = ({
   );
 };
 
-export default LeftArrowIcon;
+export default RightArrowIcon;

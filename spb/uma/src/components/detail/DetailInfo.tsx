@@ -5,14 +5,15 @@ import UnitPrice from '@/components/home/UnitPrice';
 import { DEFAULT_ICON_SIZE, fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
-import i18n from '@/helpers/i18n';
 import { MainStackParamList } from '@/screens/main';
 import { UnitCard } from '@/services/types';
-import Button from '@/ui/button/BaseButton';
+import FloatButton from '@/ui/button/FloatButton';
+import IconButton from '@/ui/button/IconButton';
 import AddCategoryIcon from '@/ui/icon/AddCategory';
 import DollarCircleIcon from '@/ui/icon/DollarCircle';
 import FullFillLocationIcon from '@/ui/icon/FullFillLocation';
 import MoveLocation from '@/ui/icon/MoveLocation';
+import PlusIcon from '@/ui/icon/Plus';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -57,17 +58,15 @@ const DetailInfo: FC<Props> = ({ unit }) => {
                 color={theme.primary}
               />
               <Text
-                style={styles.secondaryText}
+                style={[styles.secondaryText, styles.addressText]}
                 numberOfLines={2}
               >
                 {unit.address}
               </Text>
             </View>
+
             <View style={styles.phone}>
-              <Text
-                style={styles.secondaryText}
-                numberOfLines={3}
-              >
+              <Text style={styles.secondaryText} numberOfLines={3}>
                 {unit.phone}
               </Text>
             </View>
@@ -78,7 +77,7 @@ const DetailInfo: FC<Props> = ({ unit }) => {
             </View>
           </View>
         </View>
-
+        <View style={styles.divider} />
         {/* Price section */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -92,7 +91,7 @@ const DetailInfo: FC<Props> = ({ unit }) => {
             <UnitPrice prices={unit.price} />
           </View>
         </View>
-
+        <View style={styles.divider} />
         {/* Services section */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -102,7 +101,6 @@ const DetailInfo: FC<Props> = ({ unit }) => {
             />
             <Text style={styles.sectionTitle}>Services & Amenities</Text>
           </View>
-
           {unit.services && unit.services.length > 0 ? (
             <View style={styles.servicesContainer}>
               {unit.services.map((service, index) => (
@@ -120,14 +118,10 @@ const DetailInfo: FC<Props> = ({ unit }) => {
 
         <View style={styles.footerSpacer} />
       </ScrollView>
-
-      <View style={styles.footer}>
-        <Button
-          title={i18n.t('detail.book_now')}
-          onPress={handleBookNow}
-          buttonStyle={styles.bookButton}
-        />
-      </View>
+      <FloatButton
+        icon={<PlusIcon color={theme.white} size={DEFAULT_ICON_SIZE} />}
+        onPress={handleBookNow}
+      />
     </View>
   );
 };
@@ -145,12 +139,12 @@ const createStyles = (theme: IColorScheme) =>
     body: {
       paddingHorizontal: wp(2),
       paddingTop: hp(1),
+      gap: hp(1.5),
     },
     scrollContent: {
       flex: 1,
     },
     section: {
-      marginBottom: hp(4),
       width: '100%',
     },
     row: {
@@ -169,8 +163,8 @@ const createStyles = (theme: IColorScheme) =>
       paddingHorizontal: wp(1),
     },
     sectionTitle: {
-      ...fontFamily.POPPINS_BOLD,
-      fontSize: fontSize.md,
+      ...fontFamily.POPPINS_MEDIUM,
+      fontSize: fontSize.sm,
       color: theme.textDark,
       marginLeft: wp(2),
     },
@@ -195,6 +189,9 @@ const createStyles = (theme: IColorScheme) =>
       paddingRight: wp(4),
       marginBottom: hp(0.5),
     },
+    addressText: {
+      ...fontFamily.POPPINS_ITALIC,
+    },
     phone: {
       marginLeft: wp(7),
       flexDirection: 'row',
@@ -202,6 +199,7 @@ const createStyles = (theme: IColorScheme) =>
       marginBottom: hp(0.5),
     },
     description: {
+      marginTop: hp(1),
       marginLeft: wp(7),
       flexDirection: 'row',
       paddingRight: wp(4),
@@ -251,25 +249,11 @@ const createStyles = (theme: IColorScheme) =>
     footerSpacer: {
       height: hp(12),
     },
-    footer: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      bottom: 0,
-      width: wp(100),
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingVertical: hp(2),
-      borderTopWidth: 1,
-      borderTopColor: theme.borderLight,
-      backgroundColor: theme.backgroundLight,
-      elevation: 4,
-    },
-    bookButton: {
-      width: wp(60),
-      borderRadius: Radius.full,
-      paddingVertical: hp(1.2),
+    divider: {
+      height: 1,
+      backgroundColor: theme.borderDark,
+      opacity: 0.1,
+      marginTop: hp(1.2),
     },
   });
 

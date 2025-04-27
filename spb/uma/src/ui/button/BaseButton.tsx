@@ -94,7 +94,7 @@ const createStyle = (theme: IColorScheme) =>
   StyleSheet.create({
     button: {
       backgroundColor: theme.primary,
-      height: hp(6.6),
+      height: hp(6),
       alignItems: 'center',
       borderRadius: Radius.xs,
       flexDirection: 'row',

@@ -47,7 +47,7 @@ const MainStack: FC = () => {
       <Stack.Screen
         name={MainScreens.Booking}
         component={Booking}
-        options={{ animation: 'fade_from_bottom' }}
+        options={{ animation: 'ios_from_right' }}
       />
     </Stack.Navigator>
   );

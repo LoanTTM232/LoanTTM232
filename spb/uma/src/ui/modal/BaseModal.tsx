@@ -17,13 +17,10 @@ const BaseModal: FC<PropsWithChildren<IInformModalProps>> = ({
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
-  useEffect(() => {
-    console.log('visible: ', visible);
-  }, [visible]);
-
   return (
     <Modal
-      animationType="fade"
+      animationType="slide"
+	  hardwareAccelerated={true}
       transparent={true}
       visible={visible}
       onRequestClose={onClose}
@@ -36,7 +33,7 @@ const BaseModal: FC<PropsWithChildren<IInformModalProps>> = ({
   );
 };
 
-const createStyles = (_: IColorScheme) =>
+const createStyles = (theme: IColorScheme) =>
   StyleSheet.create({
     overlay: {
       position: 'absolute',
@@ -44,9 +41,15 @@ const createStyles = (_: IColorScheme) =>
       bottom: 0,
       left: 0,
       right: 0,
-      backgroundColor: 'rgba(0,0,0,0.5)',
+      backgroundColor: theme.overlay,
     },
-    content: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+    content: {
+      flex: 1,
+      width: '100%',
+	  height: '100%',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+    },
   });
 
 export default BaseModal;

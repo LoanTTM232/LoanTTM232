@@ -113,4 +113,4 @@ const createStyles = (theme: IColorScheme) =>
     },
   });
 
-export default SearchScreen;
+export default React.memo(SearchScreen);

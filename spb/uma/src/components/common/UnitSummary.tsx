@@ -1,6 +1,5 @@
 import React, { FC, useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { ShadowedView } from 'react-native-fast-shadow';
 
 import UnitPrice from '@/components/home/UnitPrice';
 import { DEFAULT_ICON_SIZE, fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
@@ -18,7 +17,7 @@ const UnitSummary: FC<Props> = ({ unit }) => {
   const styles = createStyles(theme);
 
   return (
-    <ShadowedView style={styles.unitSummary}>
+    <View style={styles.unitSummary}>
       <Text style={styles.unitName}>{unit.title}</Text>
 
       <View style={styles.addressContainer}>
@@ -32,7 +31,7 @@ const UnitSummary: FC<Props> = ({ unit }) => {
       </View>
 
       {unit.price && unit.price.length > 0 && <UnitPrice prices={unit.price} />}
-    </ShadowedView>
+    </View>
   );
 };
 
@@ -43,10 +42,8 @@ const createStyles = (theme: IColorScheme) =>
       padding: wp(4),
       backgroundColor: theme.backgroundLight,
       borderRadius: Radius.md,
-      shadowColor: theme.shadow,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.3,
-      shadowRadius: 4,
+      borderWidth: 1,
+      borderColor: theme.borderLight,
     },
     unitName: {
       ...fontFamily.POPPINS_BOLD,
@@ -61,8 +58,8 @@ const createStyles = (theme: IColorScheme) =>
       gap: wp(2),
     },
     addressText: {
-      ...fontFamily.POPPINS_REGULAR,
-      fontSize: fontSize.sm,
+      ...fontFamily.POPPINS_ITALIC,
+      fontSize: fontSize.xs,
       color: theme.textLight,
       flex: 1,
     },

@@ -4,7 +4,7 @@ import HomeScreen from '@/screens/main/tab/home';
 import MapScreen from '@/screens/main/tab/map';
 import ProfileScreen from '@/screens/main/tab/profile';
 import ScheduleScreen from '@/screens/main/tab/schedule';
-import CalenderIcon from '@/ui/icon/Calender';
+import CalendarIcon from '@/ui/icon/Calendar';
 import HomeIcon from '@/ui/icon/Home';
 import MapIcon from '@/ui/icon/Map';
 import UserIcon from '@/ui/icon/User';
@@ -38,7 +38,7 @@ const renderTabBarIcon = (route: { name: string }, color: string) => {
     case TabScreens.Map:
       return <MapIcon color={color} />;
     case TabScreens.Schedule:
-      return <CalenderIcon color={color} />;
+      return <CalendarIcon color={color} />;
     case TabScreens.Profile:
       return <UserIcon color={color} />;
   }

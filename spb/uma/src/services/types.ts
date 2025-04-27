@@ -106,6 +106,8 @@ export type UnitCard = {
   id: string;
   title: string;
   phone: string;
+  openTime: Date;
+  closeTime: Date;
   description: string;
   address: string;
   price: UnitPrice[];
@@ -133,13 +135,13 @@ export type Ward = Location & {
   districtId: string;
 };
 
-export interface LocationFilter {
+export type LocationFilter = {
   province: string;
   district: string;
   ward: string;
-}
+};
 
-export interface FilterOptions {
+export type FilterOptions = {
   location: LocationFilter;
   sportType: string;
   isNearby: boolean;
@@ -147,4 +149,25 @@ export interface FilterOptions {
   orderBy: string;
   orderType: string;
   query?: string;
-}
+};
+
+export type TimeRange = {
+  startTime: string;
+  endTime: string;
+};
+
+export type GetBookedTimeRequest = {
+  bookedDay: string;
+};
+
+export type GetBookedTimeResponse = {
+  bookedTimes: TimeRange[];
+  total: number;
+};
+
+export type BookingTime = {
+  startTime: string;
+  endTime: string;
+  unitId: string;
+  bookedDay: string;
+};

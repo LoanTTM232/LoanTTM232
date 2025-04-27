@@ -1,3 +1,5 @@
+export const DISABLE_COLOR = '#efefef';
+
 export interface IColorScheme {
   backgroundLight: string;
   backgroundDark: string;
@@ -18,6 +20,9 @@ export interface IColorScheme {
   blue: string;
   red: string;
   overlay: string;
+  color1: string;
+  color2: string;
+  color3: string;
 }
 export interface IColor {
   light: IColorScheme;
@@ -27,9 +32,9 @@ export interface IColor {
 export const Color: IColor = {
   light: {
     backgroundLight: '#FFFFFF',
-    backgroundDark: '#F2F2F2',
+    backgroundDark: '#f2f2f2',
     backgroundContent: '#F7F7F9',
-    primary: '#E86F00',
+    primary: '#FE7743',
     secondary: '#F7F7F9',
     disable: '#DDDDDD',
     shadow: '#6A6A6A',
@@ -42,15 +47,18 @@ export const Color: IColor = {
     borderLight: '#DDDDDD',
     borderDark: '#6A6A6A',
     white: '#FFFFFF',
-	blue: '#007AFF',
-	red: '#F44336',
-	overlay: 'rgba(0, 0, 0, 0.5)',
+    blue: '#007AFF',
+    red: '#F44336',
+    overlay: 'rgba(0, 0, 0, 0.5)',
+    color1: 'rgba(0,122,255,0.3)',
+    color2: '#b2d7ff',
+    color3: '#0091ec',
   },
   dark: {
     backgroundLight: '#FFFFFF',
-    backgroundDark: '#F2F2F2',
+    backgroundDark: '#f2f2f2',
     backgroundContent: '#F7F7F9',
-    primary: '#E86F00',
+    primary: '#FE7743',
     secondary: '#F7F7F9',
     disable: '#DDDDDD',
     shadow: '#000000',
@@ -63,9 +71,12 @@ export const Color: IColor = {
     borderLight: '#E0E0E0',
     borderDark: '#DDDDDD',
     white: '#FFFFFF',
-	blue: '#007AFF',
-	red: '#F44336',
-	overlay: 'rgba(0, 0, 0, 0.5)',
+    blue: '#007AFF',
+    red: '#F44336',
+    overlay: 'rgba(0, 0, 0, 0.5)',
+    color1: 'rgba(0,122,255,0.3)',
+    color2: '#b2d7ff',
+    color3: '#0091ec',
   },
 };
 

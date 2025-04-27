@@ -1,11 +1,12 @@
-import React, { FC, useContext } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useShallow } from 'zustand/shallow';
 
 import TimeSelection from '@/components/booking/TimeSelection';
+import TimeSelectionModal from '@/components/booking/TimeSelectionModal';
 import HeaderWithBack from '@/components/common/HeaderWithBack';
 import UnitSummary from '@/components/common/UnitSummary';
-import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
+import { IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import i18n from '@/helpers/i18n';
@@ -16,6 +17,9 @@ const Booking: FC = () => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
+  const [timelineModalVisible, setTimelineModalVisible] =
+    useState<boolean>(false);
+
   const unit = useUnitStore(useShallow((state) => state.currentUnit));
 
   // Handle booking confirmation
@@ -25,14 +29,24 @@ const Booking: FC = () => {
 
   return (
     <View style={styles.container}>
-      <HeaderWithBack title={i18n.t('booking.title')} />
+      <HeaderWithBack title={i18n.t('booking.title')} isClose={false} />
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollBox}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Unit summary section */}
         <UnitSummary unit={unit} />
 
         {/* Time selector section */}
-        <TimeSelection />
+        <TimeSelection onPress={() => setTimelineModalVisible(true)} />
+        <TimeSelectionModal
+          visible={timelineModalVisible}
+          onClose={() => setTimelineModalVisible(false)}
+        />
+
+        <View style={styles.footerSpacer} />
       </ScrollView>
 
       <View style={styles.footer}>
@@ -51,41 +65,35 @@ const createStyles = (theme: IColorScheme) =>
     container: {
       height: '100%',
       width: '100%',
-      backgroundColor: theme.backgroundLight,
+      backgroundColor: theme.backgroundDark,
       position: 'relative',
       flexDirection: 'column',
     },
-    content: {
+    scrollBox: {
       flex: 1,
+    },
+    content: {
+      gap: hp(1),
       paddingHorizontal: wp(4),
+    },
+    footerSpacer: {
+      height: hp(12),
     },
     footer: {
       position: 'absolute',
-      bottom: 0,
       left: 0,
       right: 0,
-      backgroundColor: theme.backgroundLight,
-      paddingVertical: hp(2),
-      paddingHorizontal: wp(4),
-      borderTopWidth: 1,
-      borderTopColor: theme.borderLight,
+      bottom: 0,
+      width: wp(100),
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingVertical: hp(1),
     },
     confirmButton: {
       width: '100%',
       borderRadius: Radius.full,
     },
-    emptyContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: hp(4),
-    },
-    emptyText: {
-      ...fontFamily.POPPINS_MEDIUM,
-      fontSize: fontSize.md,
-      color: theme.textLight,
-      textAlign: 'center',
-    },
   });
 
-export default Booking;
+export default React.memo(Booking);

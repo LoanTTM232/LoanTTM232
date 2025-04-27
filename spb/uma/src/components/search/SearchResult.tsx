@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { FlatList, RefreshControl, StyleSheet } from 'react-native';
 import { useShallow } from 'zustand/shallow';
 
@@ -63,6 +63,7 @@ const SearchResult: React.FC = () => {
   const search = useUnitStore((state) => state.search);
   const filter = useUnitStore((state) => state.filter);
   const unitCard = useUnitStore((state) => state.searchUnits);
+  const isLoading = useUnitStore((state) => state.isLoading);
 
   const handleLoadMore = useCallback(() => {
     if (!canLoadMore) {
@@ -100,12 +101,9 @@ const SearchResult: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    console.log('mounted');
-    return () => {
-      console.log('unmounted');
-    };
-  }, []);
+  if (isLoading) {
+    return <Loading color={theme.primary} />;
+  }
 
   return (
     <FlatList
@@ -124,7 +122,9 @@ const SearchResult: React.FC = () => {
       }
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
-      ListFooterComponent={canLoadMore ? <Loading /> : null}
+      ListFooterComponent={
+        canLoadMore ? <Loading color={theme.primary} /> : null
+      }
     />
   );
 };

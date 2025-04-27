@@ -45,7 +45,7 @@ const MapView: FC<MapViewProps> = ({
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
-  const moveToLocationDebounced = useRef(
+  const moveToLocation = useRef(
     (lat: number, lng: number, zoomLevel?: number | undefined) => {
       if (!cameraRef.current || !isFocused) return;
 
@@ -68,16 +68,16 @@ const MapView: FC<MapViewProps> = ({
       const activeUnit = units.find((unit) => unit.id === initialId);
 
       if (!activeUnit) {
-        moveToLocationDebounced(latitude, longitude, ZOOM_LEVEL);
+        moveToLocation(latitude, longitude, ZOOM_LEVEL);
         return;
       }
-      moveToLocationDebounced(
+      moveToLocation(
         activeUnit.coords.latitude,
         activeUnit.coords.longitude,
         ZOOM_LEVEL
       );
     },
-    [latitude, longitude, moveToLocationDebounced, units]
+    [latitude, longitude, moveToLocation, units]
   );
 
   const handleSlideSelected = useCallback(
@@ -183,7 +183,7 @@ const MapView: FC<MapViewProps> = ({
                 ))}
             </Mapbox.MapView>
             <MapLocationButton
-              onPress={() => moveToLocationDebounced(latitude, longitude)}
+              onPress={() => moveToLocation(latitude, longitude)}
               containerStyle={styles.gpsButton}
             />
           </View>
@@ -198,10 +198,7 @@ const MapView: FC<MapViewProps> = ({
                 unitCard={item}
                 onPress={() => handlePressUnit(item.id)}
                 onPressLocation={() => {
-                  moveToLocationDebounced(
-                    item.coords.latitude,
-                    item.coords.longitude
-                  );
+                  moveToLocation(item.coords.latitude, item.coords.longitude);
                 }}
               />
             )}

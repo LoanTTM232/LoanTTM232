@@ -6,7 +6,9 @@ import { mappingUnitModelToUnitCard } from '@/helpers/mapping';
 import { round } from '@/helpers/number';
 import { compare, deepClone } from '@/helpers/object';
 import { stringQueryToSearchUnitQuery } from '@/helpers/pagination';
-import { FilterOptions, PopularUnitRequest, SearchUnitQuery, UnitCard } from '@/services/types';
+import {
+  FilterOptions, GetBookedTimeRequest, PopularUnitRequest, SearchUnitQuery, TimeRange, UnitCard
+} from '@/services/types';
 import unitService from '@/services/unit.service';
 import { GeographyModel, UnitModel, UnitPagination } from '@/types/model';
 
@@ -24,6 +26,7 @@ interface UnitState {
   total: number;
   pagination: UnitPagination;
   filter: FilterOptions;
+  bookedTimes: TimeRange[];
   isLoading: boolean;
   canLoadMore: boolean;
 }
@@ -35,7 +38,7 @@ interface UnitActions {
   search: (query: SearchUnitQuery, location: GeographyModel) => Promise<void>;
   updateFilter: (filter: Partial<FilterOptions>) => void;
   loadMore: (location: GeographyModel) => Promise<void>;
-
+  fetchBookedTime: (day: Date) => Promise<void>;
   hasFilter: () => boolean;
   reset: () => void;
   resetSearch: () => void;
@@ -60,6 +63,7 @@ const initialState: UnitState = {
   filter: deepClone(initFilter),
   isLoading: false,
   canLoadMore: false,
+  bookedTimes: [],
 };
 
 export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
@@ -184,14 +188,6 @@ export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
     });
   },
 
-  updateFilter: (filter: Partial<FilterOptions>) => {
-    set({ filter: { ...get().filter, ...filter } });
-  },
-
-  hasFilter: () => {
-    return !compare(get().filter, initFilter, ['query']);
-  },
-
   loadMore: async (location: GeographyModel) => {
     const { pagination } = get();
     if (!pagination || !pagination.nextPage) {
@@ -200,10 +196,8 @@ export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
 
     // convert pagination.nextPage to query
     const query = stringQueryToSearchUnitQuery(pagination.nextPage);
-    set({ isLoading: true });
     const response = await unitService.search(query);
     if (response instanceof Error) {
-      set({ isLoading: false });
       throw response;
     }
 
@@ -224,14 +218,43 @@ export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
       return unitCard;
     });
 
-    console.log('load more: ', searchUnits);
     set({
       searchUnits: get().searchUnits.concat(searchUnits),
       canLoadMore: !!paginationData?.nextPage,
       total,
       pagination: paginationData,
-      isLoading: false,
     });
+  },
+
+  fetchBookedTime: async (day: Date) => {
+    const { currentUnit } = get();
+    if (!currentUnit.id) {
+      return;
+    }
+
+    const requestData = {
+      bookedDay: day.toISOString().split('T')[0],
+    } as GetBookedTimeRequest;
+
+    console.log('booked time: ', requestData);
+
+    set({ isLoading: true });
+    const response = await unitService.bookedTime(currentUnit.id, requestData);
+    if (response instanceof Error) {
+      set({ isLoading: false });
+      throw response;
+    }
+
+    const bookedTimes = response.data.bookedTimes;
+    set({ bookedTimes: bookedTimes, isLoading: false });
+  },
+
+  updateFilter: (filter: Partial<FilterOptions>) => {
+    set({ filter: { ...get().filter, ...filter } });
+  },
+
+  hasFilter: () => {
+    return !compare(get().filter, initFilter, ['query']);
   },
 
   reset: () => {

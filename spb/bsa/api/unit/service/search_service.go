@@ -21,7 +21,6 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 	units := make([]*tb.Unit, 0)
 
 	baseQuery := s.db.Model(&tb.Unit{})
-
 	// search by location
 	if IsSearchByLocation(reqBody) {
 		requestLocation := am.NewSearchLocationRequest(reqBody.Pagination.Province, reqBody.Pagination.District, reqBody.Pagination.Ward)
@@ -46,7 +45,7 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 
 	// get by sport type
 	if IsSearchBySportType(reqBody) {
-		baseQuery = baseQuery.Where("sport_type_id = ?", reqBody.Pagination.SportType)
+		baseQuery = baseQuery.Where("id IN (SELECT us.unit_id FROM unit_sporttype us WHERE us.sport_type_id = ?)", reqBody.Pagination.SportType)
 	}
 
 	// search by unit name and description

@@ -1,3 +1,4 @@
+import { stringTimeToDateTime } from '@/helpers/function';
 import { UnitCard, UnitPrice, UnitService } from '@/services/types';
 import {
   AddressModel, GeographyModel, MediaModel, UnitModel, UnitPriceModel, UnitServiceModel
@@ -47,6 +48,8 @@ export const mappingUnitModelToUnitCard = (unit: UnitModel): UnitCard => {
     id: unit.id,
     title: unit.name,
     phone: unit.phone,
+    openTime: stringTimeToDateTime(unit.openTime),
+    closeTime: stringTimeToDateTime(unit.closeTime),
     description: unit.description,
     address: mappingAddressModelToString(unit.address),
     image: mappingMediaModelToString(unit.media),
