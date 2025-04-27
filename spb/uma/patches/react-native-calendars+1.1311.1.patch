@@ -60,10 +60,42 @@ index b7e02da..b879cdb 100644
        <TimelineHours start={start} end={end} date={pageDates[0]} format24h={format24h} styles={styles.current} unavailableHours={unavailableHours} unavailableHoursColor={unavailableHoursColor} onBackgroundLongPress={onBackgroundLongPress} onBackgroundLongPressOut={onBackgroundLongPressOut} width={width} numberOfDays={numberOfDays} timelineLeftInset={timelineLeftInset} testID={`${testID}.hours`}/>
        {times(numberOfDays, renderTimelineDay)}
      </ScrollView>);
+diff --git a/node_modules/react-native-calendars/src/timeline/TimelineHours.d.ts b/node_modules/react-native-calendars/src/timeline/TimelineHours.d.ts
+index 1afa163..c790c4a 100644
+--- a/node_modules/react-native-calendars/src/timeline/TimelineHours.d.ts
++++ b/node_modules/react-native-calendars/src/timeline/TimelineHours.d.ts
+@@ -1,6 +1,8 @@
+ import React from 'react';
+-import { ViewStyle, TextStyle } from 'react-native';
++import { TextStyle, ViewStyle } from 'react-native';
++
+ import { UnavailableHours } from './Packer';
++
+ interface NewEventTime {
+     hour: number;
+     minutes: number;
+@@ -11,7 +13,7 @@ export interface TimelineHoursProps {
+     end?: number;
+     date?: string;
+     format24h?: boolean;
+-    onBackgroundLongPress?: (timeString: string, time: NewEventTime) => void;
++    onBackgroundLongPress?: (timeString: string, time: NewEventTime, yPosition: number) => void;
+     onBackgroundLongPressOut?: (timeString: string, time: NewEventTime) => void;
+     unavailableHours?: UnavailableHours[];
+     unavailableHoursColor?: string;
 diff --git a/node_modules/react-native-calendars/src/timeline/TimelineHours.js b/node_modules/react-native-calendars/src/timeline/TimelineHours.js
-index 38f76e5..ab7729a 100644
+index 38f76e5..fc28048 100644
 --- a/node_modules/react-native-calendars/src/timeline/TimelineHours.js
 +++ b/node_modules/react-native-calendars/src/timeline/TimelineHours.js
+@@ -41,7 +41,7 @@ const TimelineHours = (props) => {
+         const dateByPosition = calcDateByPosition(xPosition, timelineLeftInset, numberOfDays, date);
+         lastLongPressEventTime.current = { hour, minutes, date: dateByPosition };
+         const timeString = buildTimeString(hour, minutes, dateByPosition);
+-        onBackgroundLongPress?.(timeString, lastLongPressEventTime.current);
++        onBackgroundLongPress?.(timeString, lastLongPressEventTime.current, yPosition);
+     }, [onBackgroundLongPress, date]);
+     const handlePressOut = useCallback(() => {
+         if (lastLongPressEventTime.current) {
 @@ -56,8 +56,8 @@ const TimelineHours = (props) => {
          <View style={StyleSheet.absoluteFillObject}/>
        </TouchableWithoutFeedback>

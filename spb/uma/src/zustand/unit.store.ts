@@ -26,7 +26,9 @@ interface UnitState {
   total: number;
   pagination: UnitPagination;
   filter: FilterOptions;
-  bookedTimes: TimeRange[];
+  bookedTimes: {
+    [date: string]: TimeRange[];
+  };
   isLoading: boolean;
   canLoadMore: boolean;
 }
@@ -38,7 +40,7 @@ interface UnitActions {
   search: (query: SearchUnitQuery, location: GeographyModel) => Promise<void>;
   updateFilter: (filter: Partial<FilterOptions>) => void;
   loadMore: (location: GeographyModel) => Promise<void>;
-  fetchBookedTime: (day: Date) => Promise<void>;
+  fetchBookedTime: (day: string) => Promise<void>;
   hasFilter: () => boolean;
   reset: () => void;
   resetSearch: () => void;
@@ -63,7 +65,7 @@ const initialState: UnitState = {
   filter: deepClone(initFilter),
   isLoading: false,
   canLoadMore: false,
-  bookedTimes: [],
+  bookedTimes: {},
 };
 
 export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
@@ -226,27 +228,36 @@ export const useUnitStore = create<UnitState & UnitActions>((set, get) => ({
     });
   },
 
-  fetchBookedTime: async (day: Date) => {
+  fetchBookedTime: async (day: string) => {
     const { currentUnit } = get();
     if (!currentUnit.id) {
       return;
     }
 
-    const requestData = {
-      bookedDay: day.toISOString().split('T')[0],
-    } as GetBookedTimeRequest;
+    try {
+      const requestData = {
+        bookedDay: day,
+      } as GetBookedTimeRequest;
 
-    console.log('booked time: ', requestData);
-
-    set({ isLoading: true });
-    const response = await unitService.bookedTime(currentUnit.id, requestData);
-    if (response instanceof Error) {
+      set({ isLoading: true });
+      const response = await unitService.bookedTime(
+        currentUnit.id,
+        requestData
+      );
+      if (response instanceof Error) {
+        set({ isLoading: false });
+        throw response;
+      }
+      const bookedTimes = response.data.bookedTimes;
+      set({ bookedTimes: { [requestData.bookedDay]: bookedTimes } });
+    } catch (error) {
+      console.error('Error fetching booked time:', error);
+      if (error instanceof Error) {
+        throw error;
+      }
+    } finally {
       set({ isLoading: false });
-      throw response;
     }
-
-    const bookedTimes = response.data.bookedTimes;
-    set({ bookedTimes: bookedTimes, isLoading: false });
   },
 
   updateFilter: (filter: Partial<FilterOptions>) => {

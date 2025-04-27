@@ -36,3 +36,19 @@ export function stringTimeToNumberTime(dateString: string): number {
   const [hours, minutes] = dateString.split(':').map(Number);
   return hours + minutes / 60;
 }
+
+export function stringDateToDate(dateString: string): Date {
+  const date = new Date(dateString);
+  return date;
+}
+
+export function stringDateToNumberTime(dateString: string): number {
+  const date = new Date(dateString);
+  return date.getHours() + date.getMinutes() / 60;
+}
+
+export function numberTimeToString(time: number): string {
+  const hours = Math.floor(time);
+  const minutes = Math.round((time % 1) * 60);
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+}

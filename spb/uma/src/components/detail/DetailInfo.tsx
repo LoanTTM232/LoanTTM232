@@ -14,6 +14,7 @@ import DollarCircleIcon from '@/ui/icon/DollarCircle';
 import FullFillLocationIcon from '@/ui/icon/FullFillLocation';
 import MoveLocation from '@/ui/icon/MoveLocation';
 import PlusIcon from '@/ui/icon/Plus';
+import StarIcon from '@/ui/icon/Star';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -78,6 +79,7 @@ const DetailInfo: FC<Props> = ({ unit }) => {
           </View>
         </View>
         <View style={styles.divider} />
+
         {/* Price section */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -92,6 +94,31 @@ const DetailInfo: FC<Props> = ({ unit }) => {
           </View>
         </View>
         <View style={styles.divider} />
+
+        {/* Sport type section */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <StarIcon size={DEFAULT_ICON_SIZE - 4} color={theme.primary} />
+            <Text style={styles.sectionTitle}>Sport Types</Text>
+          </View>
+          <View style={styles.servicesContainer}>
+            {unit.sportTypes && unit.sportTypes.length > 0 ? (
+              <View style={styles.servicesContainer}>
+                {unit.sportTypes.map((sport, index) => (
+                  <View key={index} style={styles.serviceItem}>
+                    <Text style={styles.serviceText}>{sport}</Text>
+                  </View>
+                ))}
+              </View>
+            ) : (
+              <Text style={styles.noServices}>
+                No sport types information available
+              </Text>
+            )}
+          </View>
+        </View>
+        <View style={styles.divider} />
+
         {/* Services section */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>

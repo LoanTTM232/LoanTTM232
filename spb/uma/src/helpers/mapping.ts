@@ -1,7 +1,8 @@
 import { stringTimeToDateTime } from '@/helpers/function';
 import { UnitCard, UnitPrice, UnitService } from '@/services/types';
 import {
-  AddressModel, GeographyModel, MediaModel, UnitModel, UnitPriceModel, UnitServiceModel
+  AddressModel, GeographyModel, MediaModel, SportTypeModel, UnitModel, UnitPriceModel,
+  UnitServiceModel
 } from '@/types/model';
 
 export const mappingAddressModelToString = (
@@ -43,6 +44,12 @@ export const mappingUnitServiceModelToUnitService = (
   }));
 };
 
+export const mappingSportTypesToString = (
+  sportTypes: SportTypeModel[]
+): string[] => {
+  return sportTypes.map((item) => item.name);
+};
+
 export const mappingUnitModelToUnitCard = (unit: UnitModel): UnitCard => {
   return {
     id: unit.id,
@@ -59,5 +66,6 @@ export const mappingUnitModelToUnitCard = (unit: UnitModel): UnitCard => {
       longitude: unit.address.locationGeography.longitude,
     } as GeographyModel,
     services: mappingUnitServiceModelToUnitService(unit.unitServices || []),
+    sportTypes: mappingSportTypesToString(unit.sportTypes || []),
   } as UnitCard;
 };

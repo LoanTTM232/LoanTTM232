@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useCallback, useContext, useRef, useState } from 'react';
+import React, { FC, Fragment, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
   Animated, PanResponder, Pressable, StyleSheet, Text, TouchableOpacity, View
 } from 'react-native';
@@ -9,10 +9,32 @@ import { HOUR_BLOCK_HEIGHT, UnavailableHours } from 'react-native-calendars/src/
 import EdgeResize from '@/components/booking/EdgeResize';
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
-import { hp } from '@/helpers/dimensions';
+import { compareDateWithToday } from '@/helpers/datetime';
+import { hp, wp } from '@/helpers/dimensions';
+import { stringDateToDate } from '@/helpers/function';
+import i18n from '@/helpers/i18n';
+import { toastError } from '@/helpers/toast';
+import Button from '@/ui/button/BaseButton';
+
+export const nextBlockValidate = (
+  disableHours: UnavailableHours[] | undefined,
+  newTop: number,
+  scrollY: number
+): boolean => {
+  if (disableHours && disableHours.length > 0) {
+    const newLocation = scrollY + newTop;
+    const newHour = newLocation / HOUR_BLOCK_HEIGHT;
+
+    if (disableHours.find((uh) => uh.start < newHour && newHour < uh.end)) {
+      return false;
+    }
+  }
+  return true;
+};
 
 type Props = TimelineProps & {
   onAddNewEvent: (startTime: number, endTime: number) => void;
+  disableHours: UnavailableHours[] | undefined;
 };
 
 const TimelineDay: FC<Props> = (props) => {
@@ -22,7 +44,12 @@ const TimelineDay: FC<Props> = (props) => {
   const scrollY = useRef<number>(0);
   const animatedHeight = useRef(new Animated.Value(0)).current;
   const animatedTop = useRef(new Animated.Value(0)).current;
-  const { unavailableHours } = props;
+  const { disableHours, date } = props;
+  const disableHoursRef = useRef(disableHours);
+
+  useEffect(() => {
+    disableHoursRef.current = disableHours;
+  }, [disableHours]);
 
   // Format time for display (HH:MM format)
   const formatTime = (dateTime: string): string => {
@@ -34,23 +61,6 @@ const TimelineDay: FC<Props> = (props) => {
   const snapToInterval = useCallback((value: number) => {
     return Math.round(value / snapSizePx) * snapSizePx;
   }, []);
-
-  const nextBlockValidate = (
-    unavailableHours: UnavailableHours[] | undefined,
-    newTop: number
-  ): boolean => {
-    if (unavailableHours && unavailableHours.length > 0) {
-      const newLocation = scrollY.current + newTop;
-      const newHour = newLocation / HOUR_BLOCK_HEIGHT;
-
-      if (
-        unavailableHours.find((uh) => uh.start < newHour && newHour < uh.end)
-      ) {
-        return false;
-      }
-    }
-    return true;
-  };
 
   const startTop = useRef<number>(0);
   const panResponder = useRef(
@@ -65,17 +75,27 @@ const TimelineDay: FC<Props> = (props) => {
       },
 
       onPanResponderMove: (e, g) => {
-        const newTop = startTop.current + g.dy;
+        let newTop = startTop.current + g.dy;
         // Can not move box outside range (0 hour to 24 hour)
-        if (newTop < 0) return;
+        if (newTop < 0) {
+          newTop = 0;
+        }
         // Can not move box outside available hour range
-        if (!nextBlockValidate(unavailableHours, newTop)) {
+        if (
+          !nextBlockValidate(disableHoursRef.current, newTop, scrollY.current)
+        ) {
           // Set newTop for nearest block
           return;
         }
         // @ts-ignore
         const newBottom = newTop + animatedHeight.__getValue();
-        if (!nextBlockValidate(unavailableHours, newBottom)) {
+        if (
+          !nextBlockValidate(
+            disableHoursRef.current,
+            newBottom,
+            scrollY.current
+          )
+        ) {
           return;
         }
 
@@ -106,6 +126,15 @@ const TimelineDay: FC<Props> = (props) => {
       <Timeline
         {...props}
         onBackgroundLongPress={(ts, time, yPosition) => {
+          const currentDay = Array.isArray(date) ? date[0] || '' : date || '';
+          if (
+            currentDay !== '' &&
+            compareDateWithToday(stringDateToDate(currentDay)) < 0
+          ) {
+            toastError(i18n.t('booking.select_date.select_in_past'));
+            return;
+          }
+
           props.onBackgroundLongPress?.(ts, time, yPosition);
           const nextSnapBlockVal = nextSnapBlock(yPosition, scrollY.current);
 
@@ -133,9 +162,34 @@ const TimelineDay: FC<Props> = (props) => {
         format24h
         scrollY={scrollY}
       />
+      <View style={styles.footer}>
+        <Button
+          title={i18n.t('booking.select_date.submit')}
+          onPress={() => {
+            const startTime =
+              // @ts-ignore
+              Math.floor(scrollY.current + animatedTop.__getValue()) /
+              HOUR_BLOCK_HEIGHT;
+            const endTime =
+              Math.floor(
+                scrollY.current +
+                  // @ts-ignore
+                  animatedTop.__getValue() +
+                  // @ts-ignore
+                  animatedHeight.__getValue()
+              ) / HOUR_BLOCK_HEIGHT;
+            props.onAddNewEvent(startTime, endTime);
+          }}
+        />
+      </View>
       {isPressed && (
         <Fragment>
-          <View style={styles.selectionLayer} />
+          <Pressable
+            style={styles.selectionLayer}
+            onPress={() => {
+              setPressed(false);
+            }}
+          />
           <Animated.View
             style={[
               styles.selectionBox,
@@ -152,32 +206,21 @@ const TimelineDay: FC<Props> = (props) => {
                 { backgroundColor: theme.color1 },
               ]}
               {...panResponder.panHandlers}
-            >
-              <Pressable
-                style={styles.selectionBoxInside}
-                onPress={() => {
-                  setPressed(false);
-                  const startTime =
-                    // @ts-ignore
-                    Math.floor(scrollY.current + animatedTop.__getValue()) /
-                    HOUR_BLOCK_HEIGHT;
-                  const endTime =
-                    Math.floor(
-                      scrollY.current +
-                        // @ts-ignore
-                        animatedTop.__getValue() +
-                        // @ts-ignore
-                        animatedHeight.__getValue()
-                    ) / HOUR_BLOCK_HEIGHT;
-                  props.onAddNewEvent(startTime, endTime);
-                }}
-              />
-            </View>
+            ></View>
             <EdgeResize
-              animatedHeight={animatedHeight}
+              position="top"
               animatedTop={animatedTop}
+              animatedHeight={animatedHeight}
+              disableHours={disableHours}
+              scrollY={scrollY}
             />
-            <EdgeResize animatedHeight={animatedHeight} />
+            <EdgeResize
+              position="bottom"
+              animatedTop={animatedTop}
+              animatedHeight={animatedHeight}
+              disableHours={disableHours}
+              scrollY={scrollY}
+            />
           </Animated.View>
         </Fragment>
       )}
@@ -198,10 +241,14 @@ const createStyles = (theme: IColorScheme) =>
     eventTime: {
       ...fontFamily.POPPINS_REGULAR,
       fontSize: fontSize.sm,
-      color: theme.primary,
+      color: theme.white,
     },
     selectionLayer: {
-      ...StyleSheet.absoluteFillObject,
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: hp(8),
       opacity: 0.5,
     },
     timelineWrapper: {
@@ -220,6 +267,12 @@ const createStyles = (theme: IColorScheme) =>
       width: '100%',
       height: '100%',
     },
+    footer: {
+      height: hp(8),
+      paddingHorizontal: wp(4),
+      backgroundColor: theme.backgroundLight,
+      justifyContent: 'center',
+    },
   });
 
-export default React.memo(TimelineDay);
+export default TimelineDay;

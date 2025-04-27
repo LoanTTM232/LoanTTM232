@@ -1,14 +1,15 @@
-import React, { FC, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { CalendarProvider, TimelineEventProps, WeekCalendar } from 'react-native-calendars';
 import { MarkedDates } from 'react-native-calendars/src/types';
+import { useShallow } from 'zustand/shallow';
 
 import Timelines from '@/components/booking/Timelines';
 import { DEFAULT_ICON_SIZE, fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { getDate } from '@/helpers/datetime';
 import { hp, wp } from '@/helpers/dimensions';
-import { stringTimeToNumberTime } from '@/helpers/function';
+import { stringDateToDate, stringTimeToNumberTime } from '@/helpers/function';
 import i18n from '@/helpers/i18n';
 import { TimeRange } from '@/services/types';
 import CloseIcon from '@/ui/icon/Close';
@@ -18,9 +19,10 @@ import { useUnitStore } from '@/zustand';
 type Props = {
   onClose: () => void;
   visible: boolean;
+  onSelectTime: (newEvent: { [date: string]: TimeRange } | undefined) => void;
 };
 
-const TimeSelectionModal: FC<Props> = ({ onClose, visible }) => {
+const TimeSelectionModal: FC<Props> = ({ onClose, visible, onSelectTime }) => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
   const unit = useUnitStore((s) => s.currentUnit);
@@ -30,17 +32,21 @@ const TimeSelectionModal: FC<Props> = ({ onClose, visible }) => {
   }>({});
   const [currentDate, setCurrentDate] = useState(getDate());
   const [markedDate, setMarkedDate] = useState<MarkedDates>();
-  const [newEvent, setNewEvent] = useState<{[date: string]: TimeRange}>();
 
   const fetchBookedTime = useUnitStore((s) => s.fetchBookedTime);
-  const bookedTimes = useUnitStore((s) => s.bookedTimes);
+  const bookedTimes = useUnitStore(useShallow((s) => s.bookedTimes));
 
   useEffect(() => {
     fetchBookedTime(currentDate);
   }, [fetchBookedTime, currentDate]);
 
   useEffect(() => {
-    if (bookedTimes.length === 0) return;
+    if (
+      !bookedTimes ||
+      Object.keys(bookedTimes).length === 0 ||
+      !bookedTimes[currentDate]
+    )
+      return;
     setMarkedDate((prev) => ({
       ...prev,
       [currentDate]: { marked: true },
@@ -48,24 +54,25 @@ const TimeSelectionModal: FC<Props> = ({ onClose, visible }) => {
 
     setEvents((prev) => ({
       ...prev,
-      [currentDate]: bookedTimes.map((item) => ({
+      [currentDate]: bookedTimes[currentDate].map((item) => ({
         start: fullStringDate(item.startTime, currentDate),
         end: fullStringDate(item.endTime, currentDate),
         color: theme.color3,
       })),
     }));
-  }, [bookedTimes]);
+  }, [bookedTimes, currentDate]);
 
   const fullStringDate = (timeHHmm: string, date: string): string => {
     return `${date} ${timeHHmm}:00`;
   };
 
-  const onDateChanged = useCallback((date: string) => {
+  const onDateChanged = (date: string) => {
     setCurrentDate(date);
-  }, []);
+    fetchBookedTime(date);
+  };
 
   const unavailableHours = useMemo(() => {
-    const unitTimeRange = unit.price.map((item) => ({
+    const unitTimeRange = (unit?.price || []).map((item) => ({
       start: stringTimeToNumberTime(item.startTime),
       end: stringTimeToNumberTime(item.endTime),
     }));
@@ -114,9 +121,16 @@ const TimeSelectionModal: FC<Props> = ({ onClose, visible }) => {
             onDayPress={(date) => onDateChanged(date.dateString)}
             markedDates={markedDate}
           />
-          <Timelines unavailableHours={unavailableHours} events={events} />
+          <Timelines
+            unavailableHours={unavailableHours}
+            events={events}
+            currentDate={currentDate}
+            setNewEvent={(e) => {
+              onSelectTime(e);
+              onClose();
+            }}
+          />
         </CalendarProvider>
-        <View style={{ height: hp(8), backgroundColor: theme.primary }}></View>
       </View>
     </BaseModal>
   );

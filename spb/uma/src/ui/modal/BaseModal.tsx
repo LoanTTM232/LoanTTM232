@@ -1,8 +1,11 @@
 import React, { FC, PropsWithChildren, useContext, useEffect } from 'react';
 import { Modal, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
+import { hp } from '@/helpers/dimensions';
+import { toastConfig } from '@/helpers/toast';
 
 export interface IInformModalProps {
   visible: boolean;
@@ -20,7 +23,7 @@ const BaseModal: FC<PropsWithChildren<IInformModalProps>> = ({
   return (
     <Modal
       animationType="slide"
-	  hardwareAccelerated={true}
+      hardwareAccelerated={true}
       transparent={true}
       visible={visible}
       onRequestClose={onClose}
@@ -29,6 +32,7 @@ const BaseModal: FC<PropsWithChildren<IInformModalProps>> = ({
         <View style={styles.overlay} />
       </TouchableWithoutFeedback>
       <View style={styles.content}>{children}</View>
+      <Toast config={toastConfig(theme)} position="top" topOffset={hp(10)} />
     </Modal>
   );
 };
@@ -46,7 +50,7 @@ const createStyles = (theme: IColorScheme) =>
     content: {
       flex: 1,
       width: '100%',
-	  height: '100%',
+      height: '100%',
       justifyContent: 'flex-end',
       alignItems: 'center',
     },

@@ -10,7 +10,7 @@ import { hp } from '@/helpers/dimensions';
 interface ButtonProps {
   title: string;
   buttonStyle?: StyleProp<ViewStyle>;
-  textStyles?: StyleProp<TextStyle>;
+  textStyle?: StyleProp<TextStyle>;
   disable?: boolean;
   shadow?: boolean;
   onPress?: (e: any) => void;
@@ -21,7 +21,7 @@ interface ButtonProps {
 function Button({
   title,
   buttonStyle,
-  textStyles,
+  textStyle,
   disable = false,
   shadow = true,
   onPress,
@@ -83,7 +83,7 @@ function Button({
         accessibilityRole="button"
       >
         {before ?? null}
-        {title && <Text style={[defaultStyles.text, textStyles]}>{title}</Text>}
+        {title && <Text style={[defaultStyles.text, textStyle]}>{title}</Text>}
         {after ?? null}
       </Pressable>
     </Animated.View>

@@ -1,38 +1,45 @@
-import React, { FC, useContext, useEffect, useMemo } from 'react';
+import React, { FC, useCallback, useContext, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TimelineEventProps, TimelineList, TimelineProps } from 'react-native-calendars';
 
 import TimelineDay from '@/components/booking/Timeline';
 import { DISABLE_COLOR, IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
-import { hp } from '@/helpers/dimensions';
-import { numberTimeToDateTime } from '@/helpers/function';
+import {
+  numberTimeToDateTime, numberTimeToString, stringDateToNumberTime
+} from '@/helpers/function';
+import { deepClone } from '@/helpers/object';
+import { TimeRange } from '@/services/types';
 
 type Props = {
   events: { [date: string]: TimelineEventProps[] };
   unavailableHours: { start: number; end: number }[];
+  currentDate: string;
+  setNewEvent: (newEvent: { [date: string]: TimeRange } | undefined) => void;
 };
 
-const Timelines: FC<Props> = ({ events, unavailableHours }) => {
+const Timelines: FC<Props> = ({
+  events,
+  unavailableHours,
+  currentDate,
+  setNewEvent,
+}) => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
-  useEffect(() => {
-    console.log('events:', events);
-  }, [events]);
-
   const timelineProps: Partial<TimelineProps> = {
     format24h: true,
-    onEventPress: (event: TimelineEventProps) => {
-      console.log('TimelineSelector onEventPress: ', event);
-    },
-    scrollToNow: true,
     unavailableHours: unavailableHours,
     unavailableHoursColor: DISABLE_COLOR,
   };
 
   const handleAddNewEvent = (startTime: number, endTime: number) => {
-    console.log('New event added from Timelines:', startTime, endTime);
+    setNewEvent({
+      [currentDate]: {
+        startTime: numberTimeToString(startTime),
+        endTime: numberTimeToString(endTime),
+      },
+    });
   };
 
   const initialTime = useMemo(() => {
@@ -42,6 +49,21 @@ const Timelines: FC<Props> = ({ events, unavailableHours }) => {
       minutes: startTime.getMinutes(),
     };
   }, [unavailableHours]);
+
+  const disableHours = useCallback(() => {
+    const result = deepClone(unavailableHours);
+    if (events && Object.keys(events).length > 0 && events[currentDate]) {
+		events[currentDate].forEach((event) => {
+			result.push({
+				start: stringDateToNumberTime(event.start),
+				end: stringDateToNumberTime(event.end),
+			});
+		});
+    }
+	
+    // Sort by start
+    return result.sort((a, b) => a.start - b.start);
+  }, [unavailableHours, events, currentDate]);
 
   return (
     <View style={styles.container}>
@@ -54,6 +76,7 @@ const Timelines: FC<Props> = ({ events, unavailableHours }) => {
         renderItem={(props: TimelineProps) => (
           <TimelineDay
             {...props}
+            disableHours={disableHours()}
             key={props.date as string}
             onAddNewEvent={handleAddNewEvent}
           />
@@ -67,10 +90,11 @@ const createStyles = (theme: IColorScheme) =>
   StyleSheet.create({
     container: {
       width: '100%',
-      height: hp(65),
+      //   height: hp(65),
+      flex: 1,
       backgroundColor: theme.backgroundLight,
       overflow: 'hidden',
     },
   });
 
-export default React.memo(Timelines);
+export default Timelines;

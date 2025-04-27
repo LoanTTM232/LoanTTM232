@@ -63,12 +63,6 @@ export type GetUnitsResponse = {
   pagination: UnitPagination | undefined;
 };
 
-export type PaymentRequest = {
-  orderId: string;
-  amount: number;
-  paymentMethod: string;
-};
-
 export type PaymentResponse = {
   payUrl: string;
   appTranId: string;
@@ -170,4 +164,16 @@ export type BookingTime = {
   endTime: string;
   unitId: string;
   bookedDay: string;
+};
+
+export type PaymentRequest = {
+  amount: number;
+  orderInfo: string;
+  userId: string;
+  startTime: string;
+  endTime: string;
+  bookingDay: string;
+  unitId: string;
+  unitName: string;
+  timestamp: string;
 };

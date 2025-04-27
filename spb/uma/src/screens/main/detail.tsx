@@ -48,7 +48,7 @@ const Detail: FC<Props> = ({ route }) => {
     };
 
     fetchAPI();
-  }, [fetchDetailUnit, unitId, latitude, longitude]);
+  }, [fetchDetailUnit, unitId]);
 
   if (unit.id !== unitId) {
     return (

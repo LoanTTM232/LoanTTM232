@@ -1,4 +1,18 @@
-export const DISABLE_COLOR = '#efefef';
+export const DISABLE_COLOR = '#E0E0E0';
+
+export const CARD_COLORS = [
+  '#4CAF50',
+  '#2196F3',
+  '#F44336',
+  '#FF9800',
+  '#5C6BC0',
+  '#7E57C2',
+  '#03A9F4',
+];
+
+export const RANDOM_CARD_COLOR = () => {
+  return CARD_COLORS[Math.floor(Math.random() * CARD_COLORS.length)];
+};
 
 export interface IColorScheme {
   backgroundLight: string;
@@ -23,6 +37,7 @@ export interface IColorScheme {
   color1: string;
   color2: string;
   color3: string;
+  color4: string;
 }
 export interface IColor {
   light: IColorScheme;
@@ -52,7 +67,8 @@ export const Color: IColor = {
     overlay: 'rgba(0, 0, 0, 0.5)',
     color1: 'rgba(0,122,255,0.3)',
     color2: '#b2d7ff',
-    color3: '#0091ec',
+    color3: '#5C6BC0',
+    color4: '#03A9F4',
   },
   dark: {
     backgroundLight: '#FFFFFF',
@@ -76,7 +92,8 @@ export const Color: IColor = {
     overlay: 'rgba(0, 0, 0, 0.5)',
     color1: 'rgba(0,122,255,0.3)',
     color2: '#b2d7ff',
-    color3: '#0091ec',
+    color3: '#5C6BC0',
+    color4: '#03A9F4',
   },
 };
 

@@ -47,7 +47,7 @@ const createStyles = (theme: IColorScheme) =>
       paddingRight: wp(12),
     },
     title: {
-      ...fontFamily.RALEWAY_MEDIUM,
+      ...fontFamily.RALEWAY_BOLD,
       fontSize: fontSize.md,
       color: theme.textDark,
     },

@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 
 import Booking from '@/screens/main/booking';
+import BookingSuccess from '@/screens/main/booking_success';
 import Detail from '@/screens/main/detail';
 import SearchScreen from '@/screens/main/search';
 import TabScreens from '@/screens/main/tab';
@@ -15,6 +16,7 @@ export type MainStackParamList = {
     unitId: string;
   };
   Booking: undefined;
+  BookingSuccess: undefined;
 };
 
 export const MainScreens: Record<string, keyof MainStackParamList> = {
@@ -22,6 +24,7 @@ export const MainScreens: Record<string, keyof MainStackParamList> = {
   Search: 'Search',
   Detail: 'Detail',
   Booking: 'Booking',
+  BookingSuccess: 'BookingSuccess',
 };
 const Stack = createNativeStackNavigator<MainStackParamList>();
 
@@ -47,7 +50,12 @@ const MainStack: FC = () => {
       <Stack.Screen
         name={MainScreens.Booking}
         component={Booking}
-        options={{ animation: 'ios_from_right' }}
+        options={{ animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
+        name={MainScreens.BookingSuccess}
+        component={BookingSuccess}
+        options={{ animation: 'slide_from_right', gestureEnabled: false }}
       />
     </Stack.Navigator>
   );
