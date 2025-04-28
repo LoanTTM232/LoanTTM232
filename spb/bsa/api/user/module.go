@@ -26,6 +26,7 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 
 	userRoute := router.Group("/api/v1/users")
 	userRoute.Get("/", UserHandler.GetAll, customMiddleware.CheckAccess("user:list"))
+	userRoute.Get("/roles", UserHandler.GetRoles, customMiddleware.CheckAccess("user:read"))
 	userRoute.Get("/:id", UserHandler.GetByID, customMiddleware.CheckAccess("user:read"))
 	userRoute.Put("/:id", UserHandler.Update, customMiddleware.CheckAccess("user:update"))
 }
