@@ -14,6 +14,7 @@ type IService interface {
 	GetByEmail(email string) (*tb.User, error)
 	GetByID(userId, currentUserRoleName string) (*tb.User, error)
 	Update(reqBody *model.UpdateUserRequest, userId string) error
+	GetAll(reqBody *model.GetUsersRequest) ([]*tb.User, int64, error) // Add this line
 }
 
 type Service struct {

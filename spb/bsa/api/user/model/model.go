@@ -2,7 +2,6 @@ package model
 
 import (
 	roleModel "spb/bsa/api/role/model"
-	"spb/bsa/pkg/utils"
 )
 
 var ORDER_BY = []string{
@@ -13,8 +12,7 @@ var ORDER_BY = []string{
 }
 
 type GetUsersRequest struct {
-	Pagination utils.Pagination
-	Role       string
+	Pagination UserPagination
 }
 
 type UserResponse struct {
@@ -32,9 +30,9 @@ type PermissionResponse struct {
 }
 
 type GetUsersResponse struct {
-	Users      []*UserResponse   `json:"users"`
-	Total      uint              `json:"total"`
-	Pagination *utils.Pagination `json:"pagination"`
+	Users      []*UserResponse `json:"users"`
+	Total      uint            `json:"total"`
+	Pagination *UserPagination `json:"pagination"`
 }
 
 type CreateUserRequest struct {
