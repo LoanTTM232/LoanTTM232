@@ -11,7 +11,7 @@ type IHandler interface {
 	Update(ctx fiber.Ctx) error
 	GetAll(ctx fiber.Ctx) error
 	GetRoles(ctx fiber.Ctx) error
-	// Create(ctx fiber.Ctx) error
+	Create(ctx fiber.Ctx) error
 	// Delete(ctx fiber.Ctx) error
 }
 

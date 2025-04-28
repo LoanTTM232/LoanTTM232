@@ -29,4 +29,5 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	userRoute.Get("/roles", UserHandler.GetRoles, customMiddleware.CheckAccess("user:read"))
 	userRoute.Get("/:id", UserHandler.GetByID, customMiddleware.CheckAccess("user:read"))
 	userRoute.Put("/:id", UserHandler.Update, customMiddleware.CheckAccess("user:update"))
+	userRoute.Post("/", UserHandler.Create, customMiddleware.CheckAccess("user:create"))
 }

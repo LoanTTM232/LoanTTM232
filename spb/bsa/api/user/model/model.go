@@ -36,9 +36,11 @@ type GetUsersResponse struct {
 }
 
 type CreateUserRequest struct {
-	Email    string `json:"email" validate:"min=6,max=256,required,email"`
-	Password string `json:"password" validate:"min=6,max=256,required"`
+	Email    string `json:"email"    validate:"min=6,max=256,required,email"`
+	Password string `json:"password" validate:"min=6,max=256,required,password"`
 	Role     string `json:"role" validate:"required,uuid"`
+	FullName string `json:"full_name" validate:"min=2,max=255"`
+	Phone    string `json:"phone" validate:"e164"`
 }
 
 type UpdateUserRequest struct {
