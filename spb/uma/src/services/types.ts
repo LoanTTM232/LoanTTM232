@@ -177,3 +177,19 @@ export type PaymentRequest = {
   unitName: string;
   timestamp: string;
 };
+
+export type CalendarSection = {
+  title: string;
+  data: CalendarEvent[];
+};
+
+export type CalendarEvent = {
+  startTime: Date;
+  endTime: Date;
+  duration: string;
+  title: string;
+  price: number;
+  currency: string;
+  itemCustomHeightType?: string;
+  id: string;
+};

@@ -70,7 +70,9 @@
         "see_all": "See All"
     },
     "common": {
-        "back_to_home": "Back to Home"
+        "back_to_home": "Back to Home",
+        "loading": "Loading...",
+        "refresh": "Refresh"
     },
     "filter": {
         "title": "Filter",
@@ -128,6 +130,25 @@
         "proceed_to_payment": "Proceed to Payment",
         "i_already_paid": "I already paid",
         "redirect_note": "If you are not redirected, please click the button below."
+    },
+    "schedule": {
+        "my_bookings": "My Bookings",
+        "no_bookings_title": "No bookings found",
+        "no_bookings_description": "You have no bookings yet. Book a field to see it here.",
+        "month_view": "Month View",
+        "week_view": "Week View"
+    },
+    "profile": {
+        "edit_profile": "Edit Profile",
+        "app_settings": "App Settings",
+        "language": "Language",
+        "notifications": "Notifications",
+        "security": "Security",
+        "app_preferences": "App Preferences",
+        "about": "About",
+        "terms_conditions": "Terms & Conditions",
+        "privacy_policy": "Privacy Policy",
+        "logout": "Log Out"
     },
     "error": {
         "ERS000": "Network error, please try again later.",

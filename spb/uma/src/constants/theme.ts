@@ -18,6 +18,7 @@ export interface IColorScheme {
   backgroundLight: string;
   backgroundDark: string;
   backgroundContent: string;
+  backgroundVariant: string;
   primary: string;
   secondary: string;
   disable: string;
@@ -49,6 +50,7 @@ export const Color: IColor = {
     backgroundLight: '#FFFFFF',
     backgroundDark: '#f2f2f2',
     backgroundContent: '#F7F7F9',
+	backgroundVariant: '#F0F2F5',
     primary: '#FE7743',
     secondary: '#F7F7F9',
     disable: '#DDDDDD',
@@ -74,6 +76,7 @@ export const Color: IColor = {
     backgroundLight: '#FFFFFF',
     backgroundDark: '#f2f2f2',
     backgroundContent: '#F7F7F9',
+	backgroundVariant: '#F0F2F5',
     primary: '#FE7743',
     secondary: '#F7F7F9',
     disable: '#DDDDDD',

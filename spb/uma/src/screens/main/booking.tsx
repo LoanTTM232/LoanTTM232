@@ -147,7 +147,6 @@ const Booking: FC = () => {
 
   const handlePaymentComplete = () => {
     // Handle post-payment logic
-    console.log('Payment completed');
     navigation.navigate('BookingSuccess');
   };
 

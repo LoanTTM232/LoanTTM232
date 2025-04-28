@@ -26,22 +26,24 @@ export const reverseGeocode = async (lat: number, lon: number) => {
 };
 
 export const getPosition = () => {
-  return new Promise<{latitude: number; longitude: number}>((resolve, reject) => {
-    Geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        resolve({ latitude, longitude });
-      },
-      (error) => {
-        reject(error);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 15000,
-        maximumAge: 10000,
-      }
-    );
-  });
+  return new Promise<{ latitude: number; longitude: number }>(
+    (resolve, reject) => {
+      Geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          resolve({ latitude, longitude });
+        },
+        (error) => {
+          reject(error);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 10000,
+        }
+      );
+    }
+  );
 };
 
 export const useLocationTracking = () => {

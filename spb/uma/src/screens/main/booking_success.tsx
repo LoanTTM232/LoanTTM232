@@ -49,7 +49,7 @@ const BookingSuccessScreen: FC = () => {
     navigation.reset({
       index: 0,
       // @ts-ignore
-      routes: [{ name: 'Main' }, { name: 'BookingHistory' }],
+      routes: [{ name: 'Main' }, { name: 'Tabs' }, { name: 'Schedule' }],
     });
   };
 
