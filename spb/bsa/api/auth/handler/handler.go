@@ -31,6 +31,7 @@ type IHandler interface {
 	SendVerification(ctx fiber.Ctx) error
 	VerifyForgotPasswordToken(ctx fiber.Ctx) error
 	VerifyRegisterToken(ctx fiber.Ctx) error
+	ChangePassword(ctx fiber.Ctx) error
 }
 
 type Handler struct {

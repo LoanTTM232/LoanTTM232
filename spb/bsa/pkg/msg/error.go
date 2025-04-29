@@ -15,6 +15,7 @@ const (
 	CODE_REQUEST_BODY_INVALID     = "ERA005"
 	CODE_PARAM_INVALID            = "ERA006"
 	CODE_EMAIL_ALREADY_EXIST      = "ERA007"
+	CODE_INCORRECT_PASSWORD       = "ERA008"
 
 	CODE_PAYMENT_AMOUNT_INVALID = "ERPA001"
 	CODE_PAYMENT_FAILED         = "ERPA002"
@@ -44,6 +45,7 @@ var (
 	VERIFY_TOKEN_EXPIRED     = fiber.NewError(fiber.StatusBadRequest, CODE_VERIFY_TOKEN_EXPIRED)
 	EMAIL_DOES_NOT_EXIST     = fiber.NewError(fiber.StatusNotFound, CODE_EMAIL_DOES_NOT_EXIST)
 	EMAIL_ALREADY_EXIST      = fiber.NewError(fiber.StatusBadRequest, CODE_EMAIL_ALREADY_EXIST)
+	INCORRECT_PASSWORD       = fiber.NewError(fiber.StatusBadRequest, CODE_INCORRECT_PASSWORD)
 
 	// payment
 	PAYMENT_AMOUNT_INVALID = fiber.NewError(fiber.StatusBadRequest, CODE_PAYMENT_AMOUNT_INVALID)

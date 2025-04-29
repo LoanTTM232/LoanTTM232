@@ -54,6 +54,10 @@ func EmailIsNotVerity(db *gorm.DB) *gorm.DB {
 	return db.Where("is_email_verified = ?", false)
 }
 
+func HasProviders(db *gorm.DB) *gorm.DB {
+	return db.Where("authentication_providers IS NOT NULL")
+}
+
 // @author: LoanTT
 // @function: MapRawGooglePayload
 // @description: Mapping google payload to user
