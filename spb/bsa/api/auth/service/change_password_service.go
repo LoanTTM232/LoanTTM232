@@ -2,7 +2,6 @@ package service
 
 import (
 	"spb/bsa/api/auth/model"
-	"spb/bsa/api/auth/utility"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
@@ -15,7 +14,11 @@ import (
 // @return: error
 func (s *Service) ChangePassword(userID string, reqBody *model.ChangePasswordRequest) (err error) {
 	user := new(tb.User)
-	err = s.db.Scopes(utility.EmailIsVerity).Where("id = ?", userID).First(user).Error
+
+	// Get user with either verified email or authentication providers
+	err = s.db.Where("id = ?", userID).
+		Where("is_email_verified = ? OR authentication_providers IS NOT NULL", true).
+		First(user).Error
 	if err != nil {
 		return err
 	}
