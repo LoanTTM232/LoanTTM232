@@ -23,6 +23,7 @@ func MappingLoginResponse(user *tb.User, tokens map[string]string) model.LoginRe
 			FullName: user.FullName,
 			Email:    user.Email,
 			Phone:    user.Phone,
+			Role:     user.Role.Name,
 		},
 	}
 }
