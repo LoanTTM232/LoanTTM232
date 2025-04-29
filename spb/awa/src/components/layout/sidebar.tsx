@@ -1,17 +1,12 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
-import {
-  LayoutDashboard,
-  Users,
-  BarChart3,
-  Search,
-  UserCircle
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { BarChart3, LayoutDashboard, Search, UserCircle, Users } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import React from 'react';
+
+import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -37,11 +32,11 @@ const Sidebar = () => {
       href: "/users",
       icon: <UserCircle className="h-5 w-5" />,
     },
-    {
-      name: "Analyze",
-      href: "/analyze",
-      icon: <BarChart3 className="h-5 w-5" />,
-    },
+    // {
+    //   name: "Analyze",
+    //   href: "/analyze",
+    //   icon: <BarChart3 className="h-5 w-5" />,
+    // },
   ];
 
   return (
