@@ -1,14 +1,17 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import MainLayout from "@/components/layout/main-layout";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import Link from "next/link";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+
+import MainLayout from '@/components/layout/main-layout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 
 // Define the Role interface
 interface Role {
@@ -20,7 +23,7 @@ interface Role {
 export default function NewUserPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const editUserId = searchParams.get('edit');
+  const editUserId = searchParams?.get('edit');
   const isEditMode = !!editUserId;
 
   const [loading, setLoading] = useState(false);

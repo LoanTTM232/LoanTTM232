@@ -1,17 +1,18 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
-import MainLayout from "@/components/layout/main-layout";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { usersData } from "@/data/mock-data";
-import ClubIcon from "@/components/ui/club-icon";
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+
+import MainLayout from '@/components/layout/main-layout';
+import { Button } from '@/components/ui/button';
+import ClubIcon from '@/components/ui/club-icon';
+import { usersData } from '@/data/mock-data';
 
 export default function UserDetailPage() {
   const router = useRouter();
   const params = useParams();
-  const userId = params.id as string;
+  const userId = params?.id as string;
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

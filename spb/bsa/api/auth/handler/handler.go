@@ -59,13 +59,21 @@ func SetRefreshTokenToCookie(tokens map[string]string, ctx fiber.Ctx) error {
 	if tokens[config.ACCESS_TOKEN_NAME] == "" || tokens[config.REFRESH_TOKEN_NAME] == "" {
 		return msg.ErrMissingToken
 	}
+	sameSite := fiber.CookieSameSiteNoneMode
+	secure := true
+
+	if !global.IsProd() {
+		sameSite = fiber.CookieSameSiteLaxMode
+		secure = false
+	}
 	expires := time.Now().Add(time.Minute * time.Duration(global.SPB_CONFIG.JWT.RefreshTokenExp))
 	cookie := &fiber.Cookie{
 		Name:     config.REFRESH_TOKEN_NAME,
 		Value:    tokens[config.REFRESH_TOKEN_NAME],
 		Expires:  expires,
 		HTTPOnly: true,
-		Secure:   global.IsProd(),
+		Secure:   secure,
+		SameSite: sameSite,
 		Path:     "/",
 	}
 	ctx.Cookie(cookie)
