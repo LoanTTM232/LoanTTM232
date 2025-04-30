@@ -17,9 +17,8 @@ func (s *Service) ChangePassword(userID string, reqBody *model.ChangePasswordReq
 
 	// Get user with either verified email or authentication providers
 	err = s.db.Model(&tb.User{}).
-		Joins("left join authentication_providers ap", "ap.user_id = \"user\".id").
-		Where("id = ?", userID).
-		Where("\"user\".is_email_verified = ? OR ap.id IS NOT NULL", true).
+		Where("\"user\".id = ?", userID).
+		Where("\"user\".is_email_verified = ?", true).
 		First(user).Error
 	if err != nil {
 		return err
