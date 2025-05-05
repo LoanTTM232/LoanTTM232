@@ -1,7 +1,6 @@
 package service
 
 import (
-	"spb/bsa/api/user/utility"
 	tb "spb/bsa/pkg/entities"
 )
 
@@ -14,9 +13,11 @@ func (s *Service) GetByEmail(email string) (*tb.User, error) {
 	var err error
 	user := new(tb.User)
 
-	err = s.db.Scopes(utility.EmailIsVerity).
+	err = s.db.Model(&tb.User{}).
 		Preload("Role").
+		Joins("Left Join authentication_provider ap on ap.user_id = \"user\".id").
 		Where("email = ?", email).
+		Where("is_email_verified = ? or ap.id is not null ", true).
 		First(user).Error
 	if err != nil {
 		return nil, err

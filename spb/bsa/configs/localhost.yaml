@@ -38,12 +38,12 @@ oauth:
 database:
     engine: "postgres"
     postgres:
-        host: "spb-booking.ctcu6o22mk8d.ap-southeast-1.rds.amazonaws.com"
+        host: "localhost"
         port: "5432"
         user: "spb_user"
         password: "spb_password"
         dbname: "spb_database"
-        ssl_mode: "require"
+        ssl_mode: "disable"
 
 redis:
     addrs:
@@ -62,7 +62,7 @@ logging:
     filename: "requests.log"
 
 aws:
-    region: "us-east-1"
+    region: "ap-southeast-1"
     max_retries: 3
 
 notification:
@@ -88,7 +88,7 @@ payment:
         key1: "sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn"
         key2: "trMrHtvjo6myautxDUiAcYsVtaeQ8nhf"
         endpoint: "https://sb-openapi.zalopay.vn"
-        callback_url: "https://duties-rug-detected-merchant.trycloudflare.com/api/v1/orders/zalopay/callback"
+        callback_url: "https://awards-warnings-federal-prostate.trycloudflare.com/api/v1/orders/zalopay/callback"
         redirect_url: ""
 
 order:
