@@ -44,10 +44,8 @@ const ClubInfo: FC<ClubInfoProps> = ({ club, theme, onEditPress }) => {
         </View>
       </View>
       
-      <Text style={styles.descriptionLabel}>Description:</Text>
       <Text style={styles.description}>{club.description}</Text>
       
-      <Text style={styles.imagesLabel}>Images:</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.imagesContainer}>
         {club.media.map((image, index) => (
           <Image
@@ -94,7 +92,7 @@ const createStyles = (theme: IColorScheme) => StyleSheet.create({
   subtitle: {
     ...fontFamily.POPPINS_REGULAR,
     fontSize: fontSize.sm,
-    color: theme.textDark,
+    color: theme.textLight,
   },
   editButton: {
     backgroundColor: theme.primary,
@@ -123,26 +121,14 @@ const createStyles = (theme: IColorScheme) => StyleSheet.create({
   infoValue: {
     ...fontFamily.POPPINS_REGULAR,
     fontSize: fontSize.sm,
-    color: theme.textDark,
+    color: theme.textLight,
     flex: 1,
   },
-  descriptionLabel: {
-    ...fontFamily.RALEWAY_MEDIUM,
-    fontSize: fontSize.sm,
-    color: theme.textDark,
-    marginBottom: hp(0.5),
-  },
   description: {
-    ...fontFamily.POPPINS_REGULAR,
+    ...fontFamily.POPPINS_ITALIC,
     fontSize: fontSize.sm,
     color: theme.textDark,
     marginBottom: hp(2),
-  },
-  imagesLabel: {
-    ...fontFamily.RALEWAY_MEDIUM,
-    fontSize: fontSize.sm,
-    color: theme.textDark,
-    marginBottom: hp(1),
   },
   imagesContainer: {
     flexDirection: 'row',

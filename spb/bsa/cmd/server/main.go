@@ -193,13 +193,7 @@ func (f *Fiber) Start() {
 	addr := fmt.Sprintf("%s:%s", global.SPB_CONFIG.Server.Host, global.SPB_CONFIG.Server.Port)
 
 	fmt.Printf("Server started at %s\n", addr)
-	err := f.App.Listen(
-		addr,
-		// fiber.ListenConfig{
-		// 	CertFile:    global.SPB_CONFIG.Server.CertFile,
-		// 	CertKeyFile: global.SPB_CONFIG.Server.KeyFile,
-		// },
-	)
+	err := f.App.Listen(addr)
 	if err != nil {
 		zaplog.Errorf(msg.ErrServerStartFailed(err))
 	}

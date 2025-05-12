@@ -7,7 +7,7 @@ import snakecaseKeys from 'snakecase-keys';
 import ConcurrencyHandler from '@/helpers/concurrency';
 import { ResponseError } from '@/helpers/error';
 import i18next from '@/helpers/i18n';
-import { logDebug, logError } from '@/helpers/logger';
+import { logError } from '@/helpers/logger';
 import { navigationRef } from '@/helpers/navigation';
 import { getData } from '@/helpers/storage';
 import { toastError } from '@/helpers/toast';
@@ -21,6 +21,8 @@ class AxiosConfig {
   private isProtected: boolean = false;
 
   constructor() {
+ 
+    console.log('API_URL', API_URL);
     this.axiosInstance = axios.create({
       baseURL: API_URL,
       headers: this.defaultHeaders(),
@@ -238,7 +240,7 @@ const responseParse = <K, T extends ApiResponse<K> = ApiResponse<K>>(
       return new ResponseError(i18next.t(res.data.code));
     })
     .catch((error) => {
-      logDebug(error, 'Error in responseParse:');
+      logError(error, 'Error in responseParse:');
       return new ResponseError(i18next.t('error.ERS001'));
     });
 };

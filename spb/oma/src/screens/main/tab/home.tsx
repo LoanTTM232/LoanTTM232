@@ -34,7 +34,9 @@ const ClubHomeScreen: FC = () => {
   // Handle refresh
   const onRefresh = () => {
     setRefreshing(true);
-    fetchClubByOwner(userId);
+    fetchClubByOwner(userId).then(() => {
+      setRefreshing(false);
+    });
   };
 
   // Handle edit club

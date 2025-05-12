@@ -46,7 +46,7 @@ const UnitsList: FC<UnitsListProps> = ({ units, theme, onManageUnitPress }) => {
           </Text>
           <Text style={styles.unitDetail}>Phone: {item.phone}</Text>
           <Text style={styles.unitDetail}>
-            Sport Types: {item.sportTypes.map((st) => st).join(', ')}
+            Sport Types: {item.sportTypes.map((st) => st.name).join(', ')}
           </Text>
           <View style={styles.unitFooter}>
             <Text style={styles.unitFooterText}>

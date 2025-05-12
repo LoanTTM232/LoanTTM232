@@ -59,4 +59,4 @@ export const GET_ALL_SPORT_TYPE_PATH = `${V1_PREFIX}/sport-types`;
 // Club API paths
 export const GET_CLUB_BY_OWNER_PATH = `${V1_PREFIX}/clubs/owner/:owner_id`;
 
-export const UPDATE_CLUB_PATH = `${V1_PREFIX}/clubs`;
+export const UPDATE_CLUB_PATH = `${V1_PREFIX}/clubs/:id`;

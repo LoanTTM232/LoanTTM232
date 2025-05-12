@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 import clubService from '@/services/club.service';
-import { ClubModel } from '@/types/model';
+import { ClubModel, ClubUpdateModel } from '@/types/model';
 import { createSelectors } from '@/zustand/selectors';
 
 interface ClubState {
@@ -10,10 +10,7 @@ interface ClubState {
 
 interface ClubAction {
   fetchClubByOwner: (ownerId: string) => Promise<void>;
-  //   updateClub: (club: ClubModel) => Promise<void>;
-  //   createUnit: (unit: UnitModel) => Promise<void>;
-  //   updateUnit: (unit: UnitModel) => Promise<void>;
-  //   deleteUnit: (unitId: string) => Promise<void>;
+  updateClub: (club: ClubUpdateModel, clubId: string) => Promise<void>;
 }
 
 const initialState: ClubState = {
@@ -28,6 +25,11 @@ const useClubStoreBase = create<ClubState & ClubAction>((set) => ({
     if (response instanceof Error) throw response;
 
     set({ club: response.data });
+  },
+
+  updateClub: async (club: ClubUpdateModel, clubId: string) => {
+    const response = await clubService.updateClub(club, clubId);
+    if (response instanceof Error) throw response;
   },
 }));
 

@@ -125,3 +125,33 @@ export type ClubModel = {
   sportTypes: SportTypeModel[];
   units: UnitModel[];
 };
+
+export type AddressUpdateModel = {
+	address?: string;
+	wardId?: string;
+	locationGeography?: {
+		latitude?: number;
+		longitude?: number;
+	}
+}
+
+export type ClubUpdateModel = {
+  name?: string;
+  phone?: string;
+  address?: AddressUpdateModel;
+  description?: string;
+  sportTypes?: string[];
+};
+
+export type UnitUpdateModel = {
+  name?: string;
+  openTime?: string;
+  closeTime?: string;
+  phone?: string;
+  description?: string;
+  address?: AddressUpdateModel;
+  unitPrices?: UnitPriceModel[];
+  unitServices?: UnitServiceModel[];
+  media?: MediaModel[];
+  sportTypes?: SportTypeModel[];
+};

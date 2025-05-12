@@ -14,25 +14,11 @@ const UnitTab: FC<UnitTabProps> = ({ routes, initialTabIndex = 0 }) => {
   const styles = createStyles(theme);
   const viewRef = useRef<PagerView>(null);
   const [activeTab, setActiveTab] = useState(initialTabIndex);
-  const slideAnim = useRef(new Animated.Value(initialTabIndex * (70 + hp(3)))).current;
 
   const handleTabSwitch = useCallback((index: number) => {
     viewRef.current?.setPage(index);
     setActiveTab(index);
-
-    // Animate the active indicator
-    Animated.spring(slideAnim, {
-      toValue: index * (70 + hp(3)),
-      useNativeDriver: true,
-      friction: 8,
-      tension: 50,
-    }).start();
-  }, [slideAnim]);
-
-  // Initialize animation position
-  useEffect(() => {
-    slideAnim.setValue(activeTab * (70 + hp(3)));
-  }, [slideAnim, activeTab]);
+  }, []);
 
   const renderTab = useCallback(
     (route: Route, index: number) => (
@@ -69,16 +55,6 @@ const UnitTab: FC<UnitTabProps> = ({ routes, initialTabIndex = 0 }) => {
         <View style={styles.tabBar}>
           <View style={styles.tabSwitch}>
             {routes.map((route, index) => renderTab(route, index))}
-
-            {/* Animated indicator */}
-            <Animated.View
-              style={[
-                styles.activeIndicator,
-                {
-                  transform: [{ translateX: slideAnim }],
-                }
-              ]}
-            />
           </View>
         </View>
       </ShadowedView>
@@ -126,7 +102,7 @@ export const createStyles = (theme: IColorScheme) =>
     },
     tab: {
       alignItems: 'center',
-      width: 70,
+      width: 100,
       gap: hp(0.5),
       paddingVertical: hp(1),
       zIndex: 1,
@@ -135,16 +111,6 @@ export const createStyles = (theme: IColorScheme) =>
       ...fontFamily.POPPINS_MEDIUM,
       fontSize: fontSize.xs,
       color: theme.textLight,
-    },
-    activeIndicator: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      width: 70,
-      height: '100%',
-      backgroundColor: `${theme.primary}15`, // 15% opacity
-      borderRadius: Radius.md,
-      zIndex: 0,
     },
     pagerView: {
       width: '100%',
