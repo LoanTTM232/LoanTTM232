@@ -1,5 +1,6 @@
 import {
-  GeographyModel, NotificationModel, OrderModel, SportTypeModel, UnitModel, UnitPagination
+  AddressModel, GeographyModel, MediaModel, NotificationModel, OrderModel, SportTypeModel,
+  UnitModel, UnitPagination
 } from '@/types/model';
 
 export type LoginRequest = {
@@ -13,6 +14,7 @@ export type LoginResponse = {
     userId: string;
     email: string;
     fullName: string;
+	role: string;
   };
 };
 
@@ -104,6 +106,7 @@ export type UnitCard = {
   closeTime: Date;
   description: string;
   address: string;
+  status: number;
   price: UnitPrice[];
   image: string[];
   distance: string;
@@ -192,4 +195,16 @@ export type CalendarEvent = {
   currency: string;
   itemCustomHeightType?: string;
   id: string;
+};
+
+export type ClubCard = {
+  id: string;
+  name: string;
+  phone: string;
+  ownerId: string;
+  address: string;
+  description: string;
+  image: string[];
+  sportTypes: string[];
+  units: UnitCard[];
 };

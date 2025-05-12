@@ -4,10 +4,11 @@ import {
 } from 'react-native';
 import { ShadowedView } from 'react-native-fast-shadow';
 
-import { DEFAULT_ICON_SIZE, fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
+import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { hp, wp } from '@/helpers/dimensions';
-import { Unit, UnitPrice, UnitService } from '@/types/club';
-import { MediaModel, SportTypeModel } from '@/types/model';
+import {
+  MediaModel, SportTypeModel, UnitModel, UnitPriceModel, UnitServiceModel
+} from '@/types/model';
 import Button from '@/ui/button/BaseButton';
 import IconButton from '@/ui/button/IconButton';
 import CloseIcon from '@/ui/icon/Close';
@@ -17,9 +18,9 @@ import { PLACEHOLDER_IMAGE } from '@env';
 interface UnitFormProps {
   visible: boolean;
   onClose: () => void;
-  unit?: Unit;
+  unit: UnitModel;
   sportTypes: SportTypeModel[];
-  onSave: (unit: Unit) => void;
+  onSave: (unit: UnitModel) => void;
   theme: IColorScheme;
 }
 
@@ -34,39 +35,11 @@ const UnitForm: FC<UnitFormProps> = ({
   const styles = createStyles(theme);
 
   // State for unit data
-  const [unitData, setUnitData] = useState<Unit>(
-    unit || {
-      id: Date.now().toString(),
-      name: '',
-      openTime: '08:00',
-      closeTime: '22:00',
-      phone: '',
-      description: '',
-      status: 1,
-      address: {
-        id: Date.now().toString(),
-        address: '',
-        locationGeography: {
-          latitude: 0,
-          longitude: 0,
-        },
-        ward: '',
-        wardCode: '',
-        district: '',
-        districtCode: '',
-        province: '',
-        provinceCode: '',
-      },
-      sportTypes: [],
-      images: [],
-      services: [],
-      prices: [],
-    }
-  );
+  const [unitData, setUnitData] = useState<UnitModel>(unit);
 
   // State for price form
   const [showPriceForm, setShowPriceForm] = useState(false);
-  const [currentPrice, setCurrentPrice] = useState<UnitPrice>({
+  const [currentPrice, setCurrentPrice] = useState<UnitPriceModel>({
     id: '',
     price: 0,
     currency: 'VND',
@@ -76,16 +49,18 @@ const UnitForm: FC<UnitFormProps> = ({
 
   // State for service form
   const [showServiceForm, setShowServiceForm] = useState(false);
-  const [currentService, setCurrentService] = useState<UnitService>({
+  const [currentService, setCurrentService] = useState<UnitServiceModel>({
     id: '',
     name: '',
+	icon: '',
     description: '',
     price: 0,
     currency: 'VND',
+	status: 1,
   });
 
   // Handle update unit field
-  const handleUpdateUnitField = (field: keyof Unit, value: any) => {
+  const handleUpdateUnitField = (field: keyof UnitModel, value: any) => {
     setUnitData((prevData) => ({
       ...prevData,
       [field]: value,
@@ -128,7 +103,7 @@ const UnitForm: FC<UnitFormProps> = ({
       // Update existing price
       setUnitData({
         ...unitData,
-        prices: unitData.prices.map((p) =>
+        unitPrices: unitData.unitPrices.map((p) =>
           p.id === currentPrice.id ? currentPrice : p
         ),
       });
@@ -140,7 +115,7 @@ const UnitForm: FC<UnitFormProps> = ({
       };
       setUnitData({
         ...unitData,
-        prices: [...unitData.prices, newPrice],
+        unitPrices: [...unitData.unitPrices, newPrice],
       });
     }
 
@@ -156,7 +131,7 @@ const UnitForm: FC<UnitFormProps> = ({
   };
 
   // Handle edit price
-  const handleEditPrice = (price: UnitPrice) => {
+  const handleEditPrice = (price: UnitPriceModel) => {
     setCurrentPrice(price);
     setShowPriceForm(true);
   };
@@ -165,7 +140,7 @@ const UnitForm: FC<UnitFormProps> = ({
   const handleDeletePrice = (id: string) => {
     setUnitData({
       ...unitData,
-      prices: unitData.prices.filter((p) => p.id !== id),
+      unitPrices: unitData.unitPrices.filter((p) => p.id !== id),
     });
   };
 
@@ -175,7 +150,7 @@ const UnitForm: FC<UnitFormProps> = ({
       // Update existing service
       setUnitData({
         ...unitData,
-        services: unitData.services.map((s) =>
+        unitServices: unitData.unitServices.map((s) =>
           s.id === currentService.id ? currentService : s
         ),
       });
@@ -187,7 +162,7 @@ const UnitForm: FC<UnitFormProps> = ({
       };
       setUnitData({
         ...unitData,
-        services: [...unitData.services, newService],
+        unitServices: [...unitData.unitServices, newService],
       });
     }
 
@@ -195,15 +170,17 @@ const UnitForm: FC<UnitFormProps> = ({
     setCurrentService({
       id: '',
       name: '',
+	  icon: '',
       description: '',
       price: 0,
       currency: 'VND',
+	  status: 1,
     });
     setShowServiceForm(false);
   };
 
   // Handle edit service
-  const handleEditService = (service: UnitService) => {
+  const handleEditService = (service: UnitServiceModel) => {
     setCurrentService(service);
     setShowServiceForm(true);
   };
@@ -212,7 +189,7 @@ const UnitForm: FC<UnitFormProps> = ({
   const handleDeleteService = (id: string) => {
     setUnitData({
       ...unitData,
-      services: unitData.services.filter((s) => s.id !== id),
+      unitServices: unitData.unitServices.filter((s) => s.id !== id),
     });
   };
 
@@ -229,7 +206,7 @@ const UnitForm: FC<UnitFormProps> = ({
 
     setUnitData({
       ...unitData,
-      images: [...unitData.images, newImage],
+      media: [...unitData.media, newImage],
     });
   };
 
@@ -237,7 +214,7 @@ const UnitForm: FC<UnitFormProps> = ({
   const handleDeleteImage = (id: string) => {
     setUnitData({
       ...unitData,
-      images: unitData.images.filter((img) => img.id !== id),
+      media: unitData.media.filter((img) => img.id !== id),
     });
   };
 
@@ -272,7 +249,7 @@ const UnitForm: FC<UnitFormProps> = ({
   };
 
   // Render price item
-  const renderPriceItem = ({ item }: { item: UnitPrice }) => {
+  const renderPriceItem = ({ item }: { item: UnitPriceModel }) => {
     return (
       <View style={styles.itemCard}>
         <View style={styles.itemContent}>
@@ -302,7 +279,7 @@ const UnitForm: FC<UnitFormProps> = ({
   };
 
   // Render service item
-  const renderServiceItem = ({ item }: { item: UnitService }) => {
+  const renderServiceItem = ({ item }: { item: UnitServiceModel }) => {
     return (
       <View style={styles.itemCard}>
         <View style={styles.itemContent}>
@@ -360,7 +337,7 @@ const UnitForm: FC<UnitFormProps> = ({
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
-		  showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
         >
           {/* Basic Information */}
           <View style={styles.section}>
@@ -512,9 +489,9 @@ const UnitForm: FC<UnitFormProps> = ({
               </TouchableOpacity>
             </View>
 
-            {unitData.images.length > 0 ? (
+            {unitData.media.length > 0 ? (
               <FlatList
-                data={unitData.images}
+                data={unitData.media}
                 renderItem={renderImageItem}
                 keyExtractor={(item) => item.id}
                 horizontal
@@ -547,9 +524,9 @@ const UnitForm: FC<UnitFormProps> = ({
               </TouchableOpacity>
             </View>
 
-            {unitData.prices.length > 0 ? (
+            {unitData.unitPrices.length > 0 ? (
               <FlatList
-                data={unitData.prices}
+                data={unitData.unitPrices}
                 renderItem={renderPriceItem}
                 keyExtractor={(item) => item.id}
                 scrollEnabled={false}
@@ -573,6 +550,8 @@ const UnitForm: FC<UnitFormProps> = ({
                     description: '',
                     price: 0,
                     currency: 'VND',
+					status: 1,
+					icon: '',
                   });
                   setShowServiceForm(true);
                 }}
@@ -581,9 +560,9 @@ const UnitForm: FC<UnitFormProps> = ({
               </TouchableOpacity>
             </View>
 
-            {unitData.services.length > 0 ? (
+            {unitData.unitServices.length > 0 ? (
               <FlatList
-                data={unitData.services}
+                data={unitData.unitServices}
                 renderItem={renderServiceItem}
                 keyExtractor={(item) => item.id}
                 scrollEnabled={false}
@@ -792,9 +771,9 @@ const createStyles = (theme: IColorScheme) =>
     header: {
       flexDirection: 'row',
       width: '100%',
-	  backgroundColor: theme.backgroundLight,
+      backgroundColor: theme.backgroundLight,
       justifyContent: 'space-between',
-	  shadowOffset: {
+      shadowOffset: {
         width: 0,
         height: 2,
       },

@@ -18,12 +18,12 @@ import (
 func (s *Service) Create(reqBody *model.CreateClubRequest) (*tb.Club, error) {
 	var count int64
 	if err := s.db.Model(&tb.Club{}).
-		Where("name = ?", reqBody.Name).
+		Where("name = ? OR owner_id = ?", reqBody.Name, reqBody.OwnerID).
 		Count(&count).Error; err != nil {
 		return nil, err
 	}
 	if count > 0 {
-		return nil, msg.ErrUniqueExists("club.name")
+		return nil, msg.ErrUniqueExists("club.name or club.owner_id")
 	}
 
 	// Begin transaction

@@ -1,15 +1,9 @@
-import React, { FC, useState, useContext } from 'react';
-import { 
-  StyleSheet, 
-  Text, 
-  View, 
-  Dimensions, 
-  TouchableOpacity 
-} from 'react-native';
+import React, { FC, useContext, useState } from 'react';
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import { ShadowedView } from 'react-native-fast-shadow';
 
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
-import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import { getBookingStats } from '@/mock/booking_stats';
 
@@ -84,7 +78,7 @@ const BookingChart: FC<BookingChartProps> = ({ theme }) => {
   };
   
   return (
-    <View style={styles.container}>
+    <ShadowedView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Booking Statistics</Text>
         <View style={styles.periodSelector}>
@@ -139,7 +133,7 @@ const BookingChart: FC<BookingChartProps> = ({ theme }) => {
           style={styles.chart}
         />
       </View>
-    </View>
+    </ShadowedView>
   );
 };
 
@@ -154,9 +148,8 @@ const createStyles = (theme: IColorScheme) => StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.3,
     shadowRadius: 3,
-    elevation: 3,
   },
   header: {
     flexDirection: 'row',
@@ -186,7 +179,7 @@ const createStyles = (theme: IColorScheme) => StyleSheet.create({
   periodButtonText: {
     ...fontFamily.POPPINS_MEDIUM,
     fontSize: fontSize.xs,
-    color: theme.textMedium,
+    color: theme.textLight,
   },
   periodButtonTextActive: {
     color: theme.white,
@@ -210,7 +203,7 @@ const createStyles = (theme: IColorScheme) => StyleSheet.create({
   unitButtonText: {
     ...fontFamily.POPPINS_MEDIUM,
     fontSize: fontSize.xs,
-    color: theme.textMedium,
+    color: theme.textLight,
   },
   unitButtonTextActive: {
     color: theme.white,

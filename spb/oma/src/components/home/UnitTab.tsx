@@ -111,7 +111,6 @@ export const createStyles = (theme: IColorScheme) =>
       },
       shadowOpacity: 0.1,
       shadowRadius: 4,
-      elevation: 3,
     },
     tabBar: {
       backgroundColor: theme.backgroundLight,

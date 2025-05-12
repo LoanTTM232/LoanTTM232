@@ -12,6 +12,7 @@ import (
 type IService interface {
 	Update(reqBody *model.UpdateClubRequest, clubId, ownerId string) error
 	GetByID(clubId string) (*tb.Club, error)
+	GetByOwner(ownerId string) (*tb.Club, error)
 	Delete(clubId string) error
 	Create(reqBody *model.CreateClubRequest) (*tb.Club, error)
 	GetAll(reqBody *model.GetClubsRequest) ([]*tb.Club, int64, error)

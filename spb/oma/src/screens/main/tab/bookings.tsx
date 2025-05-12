@@ -1,6 +1,7 @@
 import React, { FC, useContext, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { ShadowedView } from 'react-native-fast-shadow';
+import { useShallow } from 'zustand/shallow';
 
 import BookingItem from '@/components/booking/BookingItem';
 import Header from '@/components/common/Header';
@@ -8,9 +9,9 @@ import UnitTab from '@/components/home/UnitTab';
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
-import { mockClub } from '@/mock/club';
-import { Unit } from '@/types/club';
+import { UnitModel } from '@/types/model';
 import CalendarIcon from '@/ui/icon/Calendar';
+import { useClubStore } from '@/zustand';
 
 // Mock bookings data
 const mockBookings = {
@@ -55,14 +56,14 @@ const mockBookings = {
 const BookingsScreen: FC = () => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
-  const [club] = useState(mockClub);
+  const club = useClubStore(useShallow((state) => state.club));
 
   const handleBookingPress = (bookingId: string) => {
     // Handle booking press
     console.log('Booking pressed:', bookingId);
   };
 
-  const renderBookingList = (unit: Unit) => {
+  const renderBookingList = (unit: UnitModel) => {
     const unitBookings = mockBookings[unit.id as keyof typeof mockBookings] || [];
 
     if (unitBookings.length === 0) {
@@ -145,7 +146,6 @@ const createStyles = (theme: IColorScheme) =>
       },
       shadowOpacity: 0.15,
       shadowRadius: 8,
-      elevation: 5,
     },
     emptyCard: {
       backgroundColor: theme.backgroundLight,

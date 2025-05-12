@@ -105,7 +105,7 @@ const BookingItem: FC<BookingItemProps> = ({ booking, theme, onPress }) => {
 const createStyles = (theme: IColorScheme) =>
   StyleSheet.create({
     shadowContainer: {
-      borderRadius: Radius.md,
+      borderRadius: Radius.xs,
       shadowColor: theme.shadow,
       shadowOffset: {
         width: 0,
@@ -113,14 +113,13 @@ const createStyles = (theme: IColorScheme) =>
       },
       shadowOpacity: 0.15,
       shadowRadius: 8,
-      elevation: 5,
       marginBottom: hp(1.5),
     },
     container: {
       backgroundColor: theme.backgroundLight,
-      borderRadius: Radius.md,
+      borderRadius: Radius.xs,
       padding: hp(2),
-      borderLeftWidth: 4,
+      borderLeftWidth: 6,
       overflow: 'hidden',
     },
     header: {

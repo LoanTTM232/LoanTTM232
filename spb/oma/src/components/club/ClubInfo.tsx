@@ -1,12 +1,13 @@
 import React, { FC } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ShadowedView } from 'react-native-fast-shadow';
 
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { hp, wp } from '@/helpers/dimensions';
-import { Club } from '@/types/club';
+import { ClubModel } from '@/types/model';
 
 interface ClubInfoProps {
-  club: Club;
+  club: ClubModel;
   theme: IColorScheme;
   onEditPress: () => void;
 }
@@ -15,7 +16,7 @@ const ClubInfo: FC<ClubInfoProps> = ({ club, theme, onEditPress }) => {
   const styles = createStyles(theme);
   
   return (
-    <View style={styles.container}>
+    <ShadowedView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{club.name}</Text>
@@ -48,7 +49,7 @@ const ClubInfo: FC<ClubInfoProps> = ({ club, theme, onEditPress }) => {
       
       <Text style={styles.imagesLabel}>Images:</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.imagesContainer}>
-        {club.images.map((image, index) => (
+        {club.media.map((image, index) => (
           <Image
             key={index}
             source={{ uri: image.filePath }}
@@ -57,7 +58,7 @@ const ClubInfo: FC<ClubInfoProps> = ({ club, theme, onEditPress }) => {
           />
         ))}
       </ScrollView>
-    </View>
+    </ShadowedView>
   );
 };
 
@@ -72,9 +73,8 @@ const createStyles = (theme: IColorScheme) => StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.3,
     shadowRadius: 3,
-    elevation: 3,
   },
   header: {
     flexDirection: 'row',

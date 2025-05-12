@@ -3,17 +3,17 @@ import {
   Alert, FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View
 } from 'react-native';
 import { ShadowedView } from 'react-native-fast-shadow';
+import { useShallow } from 'zustand/shallow';
 
 import UnitForm from '@/components/club/UnitForm';
 import HeaderWithBack from '@/components/common/HeaderWithBack';
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
-import { mockClub, mockSportTypes } from '@/mock/club';
 import { MainStackParamList } from '@/screens/main';
-import { Club, Unit } from '@/types/club';
-import { SportTypeModel } from '@/types/model';
+import { ClubModel, MediaModel, SportTypeModel, UnitModel } from '@/types/model';
 import Button from '@/ui/button/BaseButton';
+import { useClubStore, useSportTypeStore } from '@/zustand';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -22,16 +22,19 @@ const ClubManagementScreen: FC = () => {
   const styles = createStyles(theme);
   const navigation = useNavigation<NativeStackNavigationProp<MainStackParamList>>();
 
+  const sportType = useSportTypeStore(useShallow((state) => state.sportType));
+  const clubModel = useClubStore(useShallow((state) => state.club));
+
   // State for club data
-  const [club, setClub] = useState<Club>(mockClub);
-  const [selectedSportTypes, setSelectedSportTypes] = useState<SportTypeModel[]>(mockClub.sportTypes);
+  const [club, setClub] = useState<ClubModel>(clubModel);
+  const [selectedSportTypes, setSelectedSportTypes] = useState<SportTypeModel[]>(sportType);
 
   // State for unit form modal
   const [showUnitForm, setShowUnitForm] = useState(false);
-  const [currentUnit, setCurrentUnit] = useState<Unit | undefined>(undefined);
+  const [currentUnit, setCurrentUnit] = useState<UnitModel | undefined>(undefined);
 
   // Handle club field updates
-  const handleUpdateClubField = (field: keyof Club, value: string) => {
+  const handleUpdateClubField = (field: keyof ClubModel, value: string) => {
     setClub(prevClub => ({
       ...prevClub,
       [field]: value
@@ -71,14 +74,8 @@ const ClubManagementScreen: FC = () => {
     setShowUnitForm(true);
   };
 
-  // Handle edit unit
-  const handleEditUnit = (unit: Unit) => {
-    setCurrentUnit(unit);
-    setShowUnitForm(true);
-  };
-
   // Handle save unit
-  const handleSaveUnit = (unit: Unit) => {
+  const handleSaveUnit = (unit: UnitModel) => {
     if (currentUnit) {
       // Update existing unit
       setClub({
@@ -135,7 +132,7 @@ const ClubManagementScreen: FC = () => {
   };
 
   // Render club image item
-  const renderImageItem = ({ item, index }: { item: any, index: number }) => {
+  const renderImageItem = ({ item, index }: { item: MediaModel, index: number }) => {
     return (
       <View style={styles.imageContainer}>
         <Image
@@ -151,7 +148,7 @@ const ClubManagementScreen: FC = () => {
   };
 
   // Render unit item
-  const renderUnitItem = ({ item }: { item: Unit }) => {
+  const renderUnitItem = ({ item }: { item: UnitModel }) => {
     return (
       <View style={styles.unitCard}>
         <View style={styles.unitHeader}>
@@ -171,7 +168,7 @@ const ClubManagementScreen: FC = () => {
           Sport Types: {item.sportTypes.map(st => st.name).join(', ')}
         </Text>
         <Text style={styles.unitDetail}>
-          Services: {item.services.length} | Prices: {item.prices.length}
+          Services: {item.unitServices.length} | Prices: {item.unitPrices.length}
         </Text>
       </View>
     );
@@ -240,7 +237,7 @@ const ClubManagementScreen: FC = () => {
           <Text style={styles.sectionDescription}>Select all sport types available at this club</Text>
 
           <FlatList
-            data={mockSportTypes}
+            data={sportType}
             renderItem={renderSportTypeItem}
             keyExtractor={(item) => item.id}
             horizontal={false}
@@ -255,7 +252,7 @@ const ClubManagementScreen: FC = () => {
           <Text style={styles.sectionTitle}>Images</Text>
 
           <FlatList
-            data={club.images}
+            data={club.media}
             renderItem={renderImageItem}
             keyExtractor={(item) => item.id}
             horizontal
@@ -303,14 +300,14 @@ const ClubManagementScreen: FC = () => {
         </View>
 
         {/* Unit Form Modal */}
-        <UnitForm
+        {/* <UnitForm
           visible={showUnitForm}
           onClose={() => setShowUnitForm(false)}
           unit={currentUnit}
-          sportTypes={mockSportTypes}
+          sportTypes={sportType}
           onSave={handleSaveUnit}
           theme={theme}
-        />
+        /> */}
 
         {/* Save Button */}
         <Button

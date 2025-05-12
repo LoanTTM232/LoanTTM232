@@ -4,6 +4,7 @@ import (
 	addressModel "spb/bsa/api/address/model"
 	mediaModel "spb/bsa/api/media/model"
 	sportType "spb/bsa/api/sport_type/model"
+	unit "spb/bsa/api/unit/model"
 	"spb/bsa/pkg/utils"
 )
 
@@ -52,6 +53,7 @@ type ClubResponse struct {
 	Description string                         `json:"description"`
 	Media       []*mediaModel.MediaResponse    `json:"media"`
 	SportTypes  []*sportType.SportTypeResponse `json:"sport_types"`
+	Units       []*unit.UnitResponse           `json:"units"`
 }
 
 type GetClubsRequest struct {

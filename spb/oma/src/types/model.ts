@@ -52,11 +52,12 @@ export type UnitModel = {
   closeTime: string;
   phone: string;
   description: string;
+  status: number;
   address: AddressModel;
-  unitPrices: UnitPriceModel[] | null;
-  unitServices: UnitServiceModel[] | null;
-  media: MediaModel[] | null;
-  sportTypes: SportTypeModel[] | null;
+  unitPrices: UnitPriceModel[];
+  unitServices: UnitServiceModel[];
+  media: MediaModel[];
+  sportTypes: SportTypeModel[];
 };
 
 export type Pagination = {
@@ -111,4 +112,16 @@ export type NotificationModel = {
   notificationTypeId: string;
   sender: string | null;
   receiver: string | null;
+};
+
+export type ClubModel = {
+  id: string;
+  name: string;
+  phone: string;
+  ownerId: string;
+  address: AddressModel;
+  description: string;
+  media: MediaModel[];
+  sportTypes: SportTypeModel[];
+  units: UnitModel[];
 };

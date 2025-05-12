@@ -5,6 +5,7 @@ import (
 	"spb/bsa/api/club/model"
 	media "spb/bsa/api/media/utility"
 	st "spb/bsa/api/sport_type/utility"
+	unit "spb/bsa/api/unit/utility"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/utils"
 )
@@ -15,7 +16,7 @@ import (
 // @param: club *tb.Club
 // @return: model.ClubResponse
 func MapEntityToResponse(club *tb.Club) *model.ClubResponse {
-	return &model.ClubResponse{
+	response := &model.ClubResponse{
 		ClubID:      club.ID,
 		Name:        club.Name,
 		Address:     addr.MapAddressEntityToResponse(club.Address),
@@ -25,6 +26,13 @@ func MapEntityToResponse(club *tb.Club) *model.ClubResponse {
 		Media:       media.MapMediaEntitiesToResponse(club.Media),
 		SportTypes:  st.MapSportTypeEntitiesToListResponse(club.SportTypes),
 	}
+
+	if club.Units != nil {
+		unitResponse := unit.MapUnitEntitiesToResponseWithoutPagination(club.Units)
+		response.Units = unitResponse.Units
+	}
+
+	return response
 }
 
 func MapCreateRequestToEntity(reqBody *model.CreateClubRequest) *tb.Club {

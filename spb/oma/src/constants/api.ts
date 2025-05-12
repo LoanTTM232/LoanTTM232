@@ -1,8 +1,6 @@
 const V1_PREFIX = '/api/v1';
 
 // Auth API paths
-export const GOOGLE_SIGNIN_CALLBACK_PATH = '/api/auth/google/callback';
-
 export const LOGIN_PATH = `${V1_PREFIX}/auth/login`;
 
 export const LOGOUT_PATH = `${V1_PREFIX}/auth/logout`;
@@ -32,6 +30,12 @@ export const GET_UNIT_PATH = `${V1_PREFIX}/units/:id`;
 
 export const GET_BOOKED_TIME_PATH = `${V1_PREFIX}/units/:id/booked-time`;
 
+export const CREATE_UNIT_PATH = `${V1_PREFIX}/units`;
+
+export const UPDATE_UNIT_PATH = `${V1_PREFIX}/units/:id`;
+
+export const DELETE_UNIT_PATH = `${V1_PREFIX}/units/:id`;
+
 // Order API paths
 export const GET_ORDERS_BY_USER_ID_PATH = `${V1_PREFIX}/orders/:userId`;
 
@@ -51,3 +55,8 @@ export const WARD_PATH = `${V1_PREFIX}/addresses/districts/:id/wards`;
 
 // Sport type API paths
 export const GET_ALL_SPORT_TYPE_PATH = `${V1_PREFIX}/sport-types`;
+
+// Club API paths
+export const GET_CLUB_BY_OWNER_PATH = `${V1_PREFIX}/clubs/owner/:owner_id`;
+
+export const UPDATE_CLUB_PATH = `${V1_PREFIX}/clubs`;
