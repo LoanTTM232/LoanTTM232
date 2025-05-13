@@ -19,6 +19,7 @@ import Dropdown from '@/ui/dropdown/Dropdown';
 import CloseIcon from '@/ui/icon/Close';
 import BaseModal from '@/ui/modal/BaseModal';
 import { useClubStore, useLocationStore } from '@/zustand';
+import { PLACEHOLDER_IMAGE } from '@env';
 
 import MapView from '../common/MapView';
 
@@ -303,7 +304,7 @@ const UnitForm: FC<UnitFormProps> = ({
       const selectedImage = result.assets[0];
       // Create file object from URI
       const fileToUpload: RNImageFile = {
-        uri: selectedImage.uri,
+        uri: selectedImage.uri || PLACEHOLDER_IMAGE,
         type: selectedImage.type || 'image/jpeg',
         name: selectedImage.fileName || `image_${Date.now()}.jpg`,
       };

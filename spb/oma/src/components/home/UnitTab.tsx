@@ -1,5 +1,5 @@
-import React, { FC, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import React, { FC, useCallback, useContext, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { ShadowedView } from 'react-native-fast-shadow';
 import PagerView from 'react-native-pager-view';
 
@@ -51,12 +51,12 @@ const UnitTab: FC<UnitTabProps> = ({ routes, initialTabIndex = 0 }) => {
 
   return (
     <View style={styles.container} accessibilityRole="tablist">
-      <ShadowedView style={styles.tabBarShadow}>
-        <View style={styles.tabBar}>
+      <ShadowedView style={styles.tabBarShadow} >
+        <ScrollView style={styles.tabBar} horizontal={true} showsHorizontalScrollIndicator={false}>
           <View style={styles.tabSwitch}>
             {routes.map((route, index) => renderTab(route, index))}
           </View>
-        </View>
+        </ScrollView>
       </ShadowedView>
 
       <PagerView

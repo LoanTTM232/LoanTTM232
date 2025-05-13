@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import { ShadowedView } from 'react-native-fast-shadow';
 import { useShallow } from 'zustand/shallow';
@@ -11,67 +11,32 @@ import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import { UnitModel } from '@/types/model';
 import CalendarIcon from '@/ui/icon/Calendar';
-import { useClubStore } from '@/zustand';
-
-// Mock bookings data
-const mockBookings = {
-  '1': [ // Tennis Court A
-    {
-      id: '1',
-      date: '2023-10-25',
-      startTime: '09:00',
-      endTime: '11:00',
-      status: 'confirmed',
-      customerName: 'John Doe'
-    },
-    {
-      id: '2',
-      date: '2023-10-25',
-      startTime: '14:00',
-      endTime: '16:00',
-      status: 'pending',
-      customerName: 'Jane Smith'
-    }
-  ],
-  '2': [ // Basketball Court
-    {
-      id: '3',
-      date: '2023-10-25',
-      startTime: '10:00',
-      endTime: '12:00',
-      status: 'confirmed',
-      customerName: 'Mike Johnson'
-    },
-    {
-      id: '4',
-      date: '2023-10-25',
-      startTime: '16:00',
-      endTime: '18:00',
-      status: 'cancelled',
-      customerName: 'Sarah Wilson'
-    }
-  ]
-};
+import { useClubStore, useOrderStore } from '@/zustand';
 
 const BookingsScreen: FC = () => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
   const club = useClubStore(useShallow((state) => state.club));
+  const getOrderByClub = useOrderStore((state) => state.getOrderByClub);
+  const ordersByClub = useOrderStore(useShallow((state) => state.ordersByClub));
 
-  const handleBookingPress = (bookingId: string) => {
-    // Handle booking press
-    console.log('Booking pressed:', bookingId);
-  };
+  useEffect(() => {
+    getOrderByClub(club.id);
+  }, [getOrderByClub, club]);
 
   const renderBookingList = (unit: UnitModel) => {
-    const unitBookings = mockBookings[unit.id as keyof typeof mockBookings] || [];
+	if (ordersByClub.length === 0) return null;
+
+    const unitBookings = ordersByClub?.find(item => item?.unitId === unit.id)?.orders ?? [];
 
     if (unitBookings.length === 0) {
       return (
         <View style={[styles.bookingListContainer, styles.emptyContainer]}>
           <CalendarIcon color={theme.textLight} size={30} />
           <Text style={styles.emptyTitle}>No Bookings</Text>
-          <Text style={styles.emptyText}>There are no bookings for {unit.name} yet</Text>
+          <Text style={styles.emptyText}>
+            There are no bookings for {unit.name} yet
+          </Text>
         </View>
       );
     }
@@ -81,23 +46,17 @@ const BookingsScreen: FC = () => {
         data={unitBookings}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.bookingListContainer}
-        renderItem={({ item }) => (
-          <BookingItem
-            booking={item as { id: string; date: string; startTime: string; endTime: string; status: 'confirmed' | 'pending' | 'cancelled'; customerName: string }}
-            theme={theme}
-            onPress={handleBookingPress}
-          />
-        )}
+        renderItem={({ item }) => <BookingItem booking={item} theme={theme} />}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
     );
   };
 
-  const routes = club.units.map(unit => ({
+  const routes = club.units.map((unit) => ({
     key: unit.id,
     title: unit.name,
     component: renderBookingList(unit),
-    icon: () => <CalendarIcon color="#000" size={18} />
+    icon: () => <CalendarIcon color="#000" size={18} />,
   }));
 
   return (
@@ -173,7 +132,3 @@ const createStyles = (theme: IColorScheme) =>
   });
 
 export default BookingsScreen;
-
-
-
-

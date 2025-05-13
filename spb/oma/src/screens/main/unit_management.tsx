@@ -110,6 +110,7 @@ const UnitManagementScreen: FC = () => {
               renderItem={renderUnitItem}
               keyExtractor={(item) => item.id}
               contentContainerStyle={styles.unitList}
+			  showsVerticalScrollIndicator={false}
             />
           )}
         </View>

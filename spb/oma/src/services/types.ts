@@ -75,6 +75,11 @@ export type ListOrderResponse = {
   total: number;
 };
 
+export type OrderByUnitResponse = {
+	orders: OrderModel[];
+	unitId: string;
+}
+
 export type GetSportTypesResponse = {
   sportTypes: SportTypeModel[];
   total: number;

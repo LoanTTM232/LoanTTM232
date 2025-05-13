@@ -2,7 +2,6 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { useShallow } from 'zustand/shallow';
 
-import BookingChart from '@/components/club/BookingChart';
 import ClubInfo from '@/components/club/ClubInfo';
 import UnitsList from '@/components/club/UnitsList';
 import Header from '@/components/common/Header';
@@ -85,9 +84,6 @@ const ClubHomeScreen: FC = () => {
         {club?.id && (
           <ClubInfo club={club} theme={theme} onEditPress={handleEditClub} />
         )}
-
-        {/* Booking Chart Section */}
-        <BookingChart theme={theme} />
 
         {/* Units List Section */}
         <UnitsList

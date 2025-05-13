@@ -172,4 +172,7 @@ export type UnitUpdateModel = {
   unitPrices?: UnitPriceUpdateModel[];
   unitServices?: UnitServiceUpdateModel[];
   sportTypes?: string[];
+  media?: MediaModel[];
+  clubId?: string;
+  status?: number;
 };

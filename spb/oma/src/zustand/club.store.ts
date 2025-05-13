@@ -14,6 +14,7 @@ interface ClubAction {
   fetchClubByOwner: (ownerId: string) => Promise<void>;
   updateClub: (club: ClubUpdateModel, clubId: string) => Promise<void>;
   updateUnit: (unit: UnitUpdateModel, unitId: string) => Promise<void>;
+  addUnit: (unit: UnitUpdateModel) => Promise<void>;
   addMediaToClub: (clubId: string, media: MediaModel) => Promise<string>;
   removeMediaFromClub: (mediaId: string) => Promise<void>;
   addMediaToUnit: (unitId: string, media: MediaModel) => Promise<string>;
@@ -43,7 +44,11 @@ const useClubStoreBase = create<ClubState & ClubAction>((set) => ({
 
   updateUnit: async (unit: UnitUpdateModel, unitId: string) => {
     const response = await clubService.updateUnit(unit, unitId);
-    console.log(response);
+    if (response instanceof Error) throw response;
+  },
+
+  addUnit: async (unit: UnitUpdateModel) => {
+    const response = await clubService.addUnit(unit);
     if (response instanceof Error) throw response;
   },
 

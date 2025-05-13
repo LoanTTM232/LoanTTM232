@@ -16,8 +16,7 @@ import { toastError, toastSuccess } from '@/helpers/toast';
 import { MainStackParamList } from '@/screens/main';
 import mediaService, { RNImageFile } from '@/services/media.service';
 import {
-  MediaModel, SportTypeModel, UnitModel, UnitPriceModel, UnitPriceUpdateModel, UnitServiceModel,
-  UnitServiceUpdateModel, UnitUpdateModel
+  MediaModel, SportTypeModel, UnitModel, UnitPriceModel, UnitServiceModel, UnitUpdateModel
 } from '@/types/model';
 import Button from '@/ui/button/BaseButton';
 import Dropdown from '@/ui/dropdown/Dropdown';
@@ -28,7 +27,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 interface UnitFormScreenRouteParams {
-  unitId: string;
+  unitId?: string;
 }
 
 const UnitFormScreen: FC = () => {
@@ -47,12 +46,34 @@ const UnitFormScreen: FC = () => {
   const getWard = useLocationStore((state) => state.getWard);
   const addMediaToUnit = useClubStore((state) => state.addMediaToUnit);
   const sportType = useSportTypeStore(useShallow((state) => state.sportType));
-  const clubs = useClubStore(useShallow((state) => state.club));
+  const club = useClubStore(useShallow((state) => state.club));
   const updateUnit = useClubStore((state) => state.updateUnit);
+  const addUnit = useClubStore((state) => state.addUnit);
 
   // State for unit data
   const [unit, setUnit] = useState<UnitModel>(
-    clubs.units.find((u) => u.id === unitId) as UnitModel
+    (club.units.find((u) => u.id === unitId) as UnitModel) || {
+      id: '',
+      name: '',
+      openTime: '',
+      closeTime: '',
+      phone: '',
+      description: '',
+      status: 1,
+      address: {
+        province: '',
+        provinceId: '',
+        district: '',
+        districtId: '',
+        ward: '',
+        wardId: '',
+        street: '',
+      },
+      unitPrices: [],
+      unitServices: [],
+      media: [],
+      sportTypes: [],
+    }
   );
   const [updatedUnit, setUpdatedUnit] = useState<UnitUpdateModel>({
     sportTypes: unit.sportTypes.map((st) => st.id),
@@ -444,11 +465,22 @@ const UnitFormScreen: FC = () => {
 
       // Add uploaded image to unit media
       const newMedia = response.data;
-      const mediaId = await addMediaToUnit(unit.id, newMedia);
-      setUnit({
-        ...unit,
-        media: [...unit.media, { ...newMedia, mediaId }],
-      });
+      if (unit.id !== '') {
+        const mediaId = await addMediaToUnit(unit.id, newMedia);
+        setUnit({
+          ...unit,
+          media: [...unit.media, { ...newMedia, mediaId }],
+        });
+      } else {
+        setUnit({
+          ...unit,
+          media: [...unit.media, { ...newMedia }],
+        });
+		setUpdatedUnit({
+          ...updatedUnit,
+          media: [...(updatedUnit.media || []), newMedia],
+        });
+      }
     } catch (error) {
       logError(error as Error);
       toastError('Failed to upload image');
@@ -486,8 +518,14 @@ const UnitFormScreen: FC = () => {
   // Save unit
   const handleSave = async () => {
     try {
-      console.log(updatedUnit);
-      await updateUnit(updatedUnit, unit.id);
+      if (unit.id === '') {
+		updatedUnit.clubId = club.id;
+        console.log('add unit: ', updatedUnit);
+        await addUnit(updatedUnit);
+      } else {
+        console.log('update unit: ', updatedUnit);
+        await updateUnit(updatedUnit, unit.id);
+      }
       // pop 2 routes
       navigation.pop(2);
       // Navigate back and pass the updated unit data

@@ -24,6 +24,8 @@ export const GET_ORDERS_BY_USER_ID_PATH = `${V1_PREFIX}/orders/:userId`;
 
 export const PROCESS_PAYMENT_PATH = `${V1_PREFIX}/orders/pay`;
 
+export const GET_ORDER_BY_CLUB_ID_PATH = `${V1_PREFIX}/orders/club/:clubId`;
+
 // Location API paths
 export const PROVINCE_PATH = `${V1_PREFIX}/addresses/provinces`;
 
@@ -40,6 +42,8 @@ export const GET_CLUB_BY_OWNER_PATH = `${V1_PREFIX}/clubs/owner/:owner_id`;
 export const UPDATE_CLUB_PATH = `${V1_PREFIX}/clubs/:id`;
 
 export const UPDATE_UNIT_PATH = `${V1_PREFIX}/units/:id`;
+
+export const ADD_UNIT_PATH = `${V1_PREFIX}/units`;
 
 // Media API paths
 export const UPLOAD_MEDIA_PATH = `${V1_PREFIX}/media/upload`;
