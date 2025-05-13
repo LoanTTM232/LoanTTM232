@@ -1,14 +1,14 @@
 import {
   CHANGE_PASSWORD_PATH, FORGOT_PASSWORD_PATH, LOGIN_PATH, LOGOUT_PATH, REFRESH_TOKEN_PATH,
-  REGISTER_PATH, RESEND_VERIFY_REGISTER_TOKEN_PATH, RESET_PASSWORD_PATH,
-  VERIFY_FORGOT_PASSWORD_TOKEN_PATH, VERIFY_REGISTER_TOKEN_PATH
+  RESEND_VERIFY_REGISTER_TOKEN_PATH, RESET_PASSWORD_PATH, VERIFY_FORGOT_PASSWORD_TOKEN_PATH,
+  VERIFY_REGISTER_TOKEN_PATH
 } from '@/constants';
 import { ResponseError } from '@/helpers/error';
 import { logError } from '@/helpers/logger';
 import { removeData, storeData } from '@/helpers/storage';
 import { apiFactory, ApiResponse } from '@/services/http';
 import {
-  GoogleCallbackRequest, LoginRequest, LoginResponse, RefreshTokenResponse, RegisterRequest
+  LoginRequest, LoginResponse, RefreshTokenResponse, RegisterRequest
 } from '@/services/types';
 
 export interface IAuthService {
@@ -16,7 +16,6 @@ export interface IAuthService {
     data: LoginRequest
   ): Promise<ApiResponse<LoginResponse> | ResponseError>;
   logout(): Promise<void>;
-  register(data: RegisterRequest): Promise<ApiResponse<null> | ResponseError>;
   refreshToken(): Promise<ApiResponse<RefreshTokenResponse> | ResponseError>;
   verifyEmail(
     token: number,
@@ -52,12 +51,6 @@ class AuthService {
     }
     removeData('accessToken');
     removeData('userInfo');
-  }
-
-  public register(
-    data: RegisterRequest
-  ): Promise<ApiResponse<null> | ResponseError> {
-    return apiFactory(REGISTER_PATH, false).post(data);
   }
 
   public async refreshToken(): Promise<

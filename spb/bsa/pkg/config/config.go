@@ -81,6 +81,7 @@ type Notification struct {
 type AWS struct {
 	Region     string `mapstructure:"region"`
 	MaxRetries int    `mapstructure:"max_retries"`
+	S3Bucket   string `mapstructure:"s3_bucket"`
 }
 
 type OTP struct {

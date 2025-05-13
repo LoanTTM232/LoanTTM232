@@ -34,10 +34,13 @@ type AddressResponse struct {
 	LocationGeography Point  `json:"location_geography"`
 	Ward              string `json:"ward"`
 	WardCode          string `json:"ward_code"`
+	WardId            string `json:"ward_id"`
 	District          string `json:"district"`
 	DistrictCode      string `json:"district_code"`
+	DistrictId        string `json:"district_id"`
 	Province          string `json:"province"`
 	ProvinceCode      string `json:"province_code"`
+	ProvinceId        string `json:"province_id"`
 }
 
 type AddressesResponse struct {

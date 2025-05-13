@@ -3,8 +3,8 @@ package service
 import (
 	"spb/bsa/api/club/model"
 	"spb/bsa/api/club/utility"
+	media "spb/bsa/api/media"
 	mediaModel "spb/bsa/api/media/model"
-	mediaServ "spb/bsa/api/media/service"
 	spt "spb/bsa/api/sport_type"
 	tb "spb/bsa/pkg/entities"
 	"spb/bsa/pkg/msg"
@@ -47,7 +47,7 @@ func (s *Service) Create(reqBody *model.CreateClubRequest) (*tb.Club, error) {
 	}
 
 	if len(reqBody.Media) > 0 {
-		if _, err := mediaServ.CreateMedia(tx, reqBody.Media, club.ID, mediaModel.OwnerTypeClub); err != nil {
+		if _, err := media.MediaService.CreateMedia(tx, reqBody.Media, club.ID, mediaModel.OwnerTypeClub); err != nil {
 			return nil, msg.ErrCreateFailed("media", err)
 		}
 	}

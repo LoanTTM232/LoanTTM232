@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func CreateMedia(tx *gorm.DB, media []*model.CreateMediaRequest, OwnerID string, OwnerType model.OwnerType) ([]*tb.Media, error) {
+func (s *Service) CreateMedia(tx *gorm.DB, media []*model.CreateMediaRequest, OwnerID string, OwnerType model.OwnerType) ([]*tb.Media, error) {
 	mediaEntity := utility.MapCreateRequestToEntities(media)
 	for i := range mediaEntity {
 		mediaEntity[i].OwnerID = OwnerID

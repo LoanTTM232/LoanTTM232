@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import Detail from '@/screens/main/detail';
+import ClubManagementScreen from '@/screens/main/club_management';
 import AboutScreen from '@/screens/main/profile/about';
 import ChangePasswordScreen from '@/screens/main/profile/change_password';
 import LanguageScreen from '@/screens/main/profile/language';
@@ -11,13 +11,8 @@ import TabScreens from '@/screens/main/tab';
 import UnitManagementScreen from '@/screens/main/unit_management';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import ClubManagementScreen from './club_management';
-
 export type MainStackParamList = {
   Tabs: undefined;
-  Detail: {
-    unitId: string;
-  };
   Language: undefined;
   Security: undefined;
   About: undefined;
@@ -30,7 +25,6 @@ export type MainStackParamList = {
 
 export const MainScreens: Record<string, keyof MainStackParamList> = {
   Tabs: 'Tabs',
-  Detail: 'Detail',
   Language: 'Language',
   Security: 'Security',
   About: 'About',
@@ -49,12 +43,6 @@ const MainStack: FC = () => {
       screenOptions={{ animation: 'slide_from_right', headerShown: false }}
     >
       <Stack.Screen name={MainScreens.Tabs} component={TabScreens} />
-      <Stack.Screen
-        name={MainScreens.Detail}
-        component={Detail}
-        options={{ animation: 'fade_from_bottom' }}
-        initialParams={{ unitId: undefined }}
-      />
       <Stack.Screen
         name={MainScreens.Language}
         component={LanguageScreen}

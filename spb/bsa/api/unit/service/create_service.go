@@ -1,8 +1,8 @@
 package service
 
 import (
+	media "spb/bsa/api/media"
 	mediaModel "spb/bsa/api/media/model"
-	mediaServ "spb/bsa/api/media/service"
 	spt "spb/bsa/api/sport_type"
 	"spb/bsa/api/unit/model"
 	"spb/bsa/api/unit/utility"
@@ -54,7 +54,7 @@ func (s *Service) Create(reqBody *model.CreateUnitRequest, ownerId string) (*tb.
 	}
 
 	if len(reqBody.Media) > 0 {
-		if _, err := mediaServ.CreateMedia(tx, reqBody.Media, unit.ID, mediaModel.OwnerTypeUnit); err != nil {
+		if _, err := media.MediaService.CreateMedia(tx, reqBody.Media, unit.ID, mediaModel.OwnerTypeUnit); err != nil {
 			return nil, msg.ErrCreateFailed("Media", err)
 		}
 	}

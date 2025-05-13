@@ -65,6 +65,10 @@ var (
 
 	// media
 	ErrMediaCreateFailed = NewError("failed to create media")
+	ErrGetFileFailed     = NewErrorArgs("failed to get file from form: %v")
+	ErrFileTypeInvalid   = NewErrorArgs("file type is not allowed: %s")
+	ErrFileUploadFailed  = NewErrorArgs("failed to upload file to S3: %v")
+	ErrOpenFileFailed    = NewErrorArgs("failed to open file: %v")
 
 	// queue
 	ErrMissingWorker       = NewError("missing worker module")

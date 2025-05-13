@@ -29,6 +29,8 @@ const (
 	CODE_UNIT_NAME_ALREADY_EXISTS = "ERU003"
 
 	CODE_MEDIA_CREATE_FAILED = "ERM001"
+	CODE_FILE_UPLOAD_FAILED  = "ERM002"
+	CODE_FILE_TYPE_INVALID   = "ERM003"
 )
 
 var (
@@ -63,4 +65,6 @@ var (
 
 	// media
 	MEDIA_CREATE_FAILED = fiber.NewError(fiber.StatusBadRequest, CODE_MEDIA_CREATE_FAILED)
+	FILE_UPLOAD_FAILED  = fiber.NewError(fiber.StatusInternalServerError, CODE_FILE_UPLOAD_FAILED)
+	FILE_TYPE_INVALID   = fiber.NewError(fiber.StatusBadRequest, CODE_FILE_TYPE_INVALID)
 )

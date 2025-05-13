@@ -21,7 +21,7 @@ class AxiosConfig {
   private isProtected: boolean = false;
 
   constructor() {
- 
+
     console.log('API_URL', API_URL);
     this.axiosInstance = axios.create({
       baseURL: API_URL,
@@ -68,13 +68,25 @@ class AxiosConfig {
       }
     }
 
+    // Check if data is FormData, if so, don't try to convert it
     if (
       config.data &&
       typeof config.data === 'object' &&
+      !(config.data instanceof FormData) &&
       typeof config.headers['Content-Type'] === 'string' &&
       config.headers['Content-Type']?.includes('application/json')
     ) {
       config.data = snakecaseKeys(config.data, { deep: true });
+    }
+
+    // If data is FormData, make sure Content-Type is not set to application/json
+    if (config.data instanceof FormData) {
+      console.log('FormData detected, removing Content-Type header');
+      // Remove Content-Type header to let the browser set it with the boundary
+      delete config.headers['Content-Type'];
+
+      // Set the correct multipart/form-data header for React Native
+      config.headers['Content-Type'] = 'multipart/form-data';
     }
 
     return config;
@@ -240,7 +252,22 @@ const responseParse = <K, T extends ApiResponse<K> = ApiResponse<K>>(
       return new ResponseError(i18next.t(res.data.code));
     })
     .catch((error) => {
-      logError(error, 'Error in responseParse:');
+      console.error('API Error details:', error);
+
+      // Log more detailed error information
+      if (axios.isAxiosError(error)) {
+        console.error('Request config:', error.config);
+        console.error('Response data:', error.response?.data);
+        console.error('Response status:', error.response?.status);
+        console.error('Response headers:', error.response?.headers);
+
+        // Create a more descriptive error message
+        const errorMessage = error.response?.data?.message || error.message;
+        logError(new Error(`API Error: ${errorMessage}`), 'Error in responseParse:');
+        return new ResponseError(errorMessage || i18next.t('error.ERS001'));
+      }
+
+      logError(error as Error, 'Error in responseParse:');
       return new ResponseError(i18next.t('error.ERS001'));
     });
 };

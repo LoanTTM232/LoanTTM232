@@ -10,7 +10,7 @@ import { IColorScheme } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import { MainStackParamList } from '@/screens/main';
-import { useAuthStore, useClubStore, useSportTypeStore } from '@/zustand';
+import { useAuthStore, useClubStore, useLocationStore, useSportTypeStore } from '@/zustand';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -25,11 +25,26 @@ const ClubHomeScreen: FC = () => {
   const club = useClubStore(useShallow((state) => state.club));
   const userId = useAuthStore(useShallow((state) => state.userId));
   const fetchSportTypes = useSportTypeStore((state) => state.fetchSportTypes);
+  const getProvince = useLocationStore((state) => state.getProvince);
+  const getDistrict = useLocationStore((state) => state.getDistrict);
+  const getWard = useLocationStore((state) => state.getWard);
 
   useEffect(() => {
     fetchClubByOwner(userId);
     fetchSportTypes();
   }, [fetchClubByOwner]);
+
+  useEffect(() => {
+    if (club?.address) {
+      getProvince();
+    }
+    if (club?.address?.provinceId) {
+      getDistrict(club.address.provinceId);
+    }
+    if (club?.address?.districtId) {
+      getWard(club.address.districtId);
+    }
+  }, [getProvince, getDistrict, getWard, club]);
 
   // Handle refresh
   const onRefresh = () => {

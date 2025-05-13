@@ -1,8 +1,10 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import {
-  Alert, FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View
+  ActivityIndicator, Alert, FlatList, Image, ScrollView, StyleSheet, Text, TextInput,
+  TouchableOpacity, View
 } from 'react-native';
 import { ShadowedView } from 'react-native-fast-shadow';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { useShallow } from 'zustand/shallow';
 
 import HeaderWithBack from '@/components/common/HeaderWithBack';
@@ -11,10 +13,15 @@ import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import { logError } from '@/helpers/logger';
+import { toastError, toastSuccess } from '@/helpers/toast';
 import { MainStackParamList } from '@/screens/main';
+import locationService from '@/services/location.service';
+import mediaService, { RNImageFile } from '@/services/media.service';
+import { District, Province, Ward } from '@/services/types';
 import { ClubModel, ClubUpdateModel, MediaModel, SportTypeModel } from '@/types/model';
 import Button from '@/ui/button/BaseButton';
-import { useAuthStore, useClubStore, useSportTypeStore } from '@/zustand';
+import Dropdown from '@/ui/dropdown/Dropdown';
+import { useAuthStore, useClubStore, useLocationStore, useSportTypeStore } from '@/zustand';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -27,9 +34,18 @@ const ClubManagementScreen: FC = () => {
   const sportType = useSportTypeStore(useShallow((state) => state.sportType));
   const clubModel = useClubStore(useShallow((state) => state.club));
   const userId = useAuthStore(useShallow((state) => state.userId));
+  const getDistrict = useLocationStore((state) => state.getDistrict);
+  const getWard = useLocationStore((state) => state.getWard);
+  const provinces = useLocationStore((state) => state.province);
+  const districts = useLocationStore((state) => state.district);
+  const wards = useLocationStore((state) => state.ward);
 
   const fetchClubByOwner = useClubStore((state) => state.fetchClubByOwner);
   const updateClub = useClubStore((state) => state.updateClub);
+  const addMediaToClub = useClubStore((state) => state.addMediaToClub);
+  const removeMediaFromClub = useClubStore(
+    (state) => state.removeMediaFromClub
+  );
 
   // State for club data
   const [club, setClub] = useState<ClubModel>(clubModel);
@@ -40,6 +56,15 @@ const ClubManagementScreen: FC = () => {
     SportTypeModel[]
   >(club.sportTypes);
 
+  // Address selection state
+  const [selectedProvince, setSelectedProvince] = useState<string>(
+    club.address.provinceId
+  );
+  const [selectedDistrict, setSelectedDistrict] = useState<string>(
+    club.address.districtId
+  );
+  const [selectedWard, setSelectedWard] = useState<string>(club.address.wardId);
+
   const [scrollEnabled, setScrollEnabled] = useState(true);
 
   const handleMapTouchStart = () => {
@@ -48,6 +73,90 @@ const ClubManagementScreen: FC = () => {
 
   const handleOutsideMapTouch = () => {
     setScrollEnabled(true);
+  };
+
+  // Handle province selection
+  const handleProvinceSelect = (provinceId: string) => {
+    const province = provinces.find((p) => p.id === provinceId);
+
+    setSelectedProvince(provinceId);
+    setSelectedDistrict('');
+    setSelectedWard('');
+
+    // Update club address with province info
+    setClub((prevClub) => ({
+      ...prevClub,
+      address: {
+        ...prevClub.address,
+        province: province?.name || '',
+        provinceId: provinceId,
+        district: '',
+        districtCode: '',
+        ward: '',
+        wardCode: '',
+      },
+    }));
+
+    // Update updatedClub for API
+    setUpdatedClub((prevClub) => ({
+      ...prevClub,
+      address: {
+        ...prevClub.address,
+        wardId: '',
+      },
+    }));
+
+    // Fetch districts for the selected province
+    getDistrict(provinceId);
+  };
+
+  // Handle district selection
+  const handleDistrictSelect = (districtId: string) => {
+    const district = districts.find((d) => d.id === districtId);
+
+    setSelectedDistrict(districtId);
+    setSelectedWard('');
+
+    // Update club address with district info
+    setClub((prevClub) => ({
+      ...prevClub,
+      address: {
+        ...prevClub.address,
+        district: district?.name || '',
+        districtCode: districtId,
+        ward: '',
+        wardCode: '',
+      },
+    }));
+
+    // Fetch wards for the selected district
+    getWard(districtId);
+  };
+
+  // Handle ward selection
+  const handleWardSelect = (wardId: string) => {
+    const ward = wards.find((w) => w.id === wardId);
+
+    setSelectedWard(wardId);
+
+    // Update club address with ward info
+    setClub((prevClub) => ({
+      ...prevClub,
+      address: {
+        ...prevClub.address,
+        ward: ward?.name || '',
+        wardCode: wardId,
+      },
+    }));
+
+    // Update updatedClub for API
+    setUpdatedClub((prevClub) => ({
+      ...prevClub,
+      address: {
+        ...prevClub.address,
+        wardId: wardId,
+      },
+    }));
   };
 
   // Handle club field updates
@@ -98,8 +207,7 @@ const ClubManagementScreen: FC = () => {
   const handleLocationChange = (feature: GeoJSON.Feature) => {
     if (feature.geometry.type === 'Point') {
       const coords = (feature.geometry as GeoJSON.Point).coordinates;
-      console.log('Location changed', coords);
-	  setClub((prevClub) => ({
+      setClub((prevClub) => ({
         ...prevClub,
         address: {
           ...prevClub.address,
@@ -124,20 +232,32 @@ const ClubManagementScreen: FC = () => {
 
   // Handle save changes
   const handleSaveChanges = async () => {
-    // In a real app, this would save to backend
-    console.log('Saving club data:', updatedClub);
+    // Ensure address information is properly included
+    const finalUpdatedClub: ClubUpdateModel = {
+      ...updatedClub,
+      address: {
+        ...updatedClub.address,
+        address: club.address.address,
+        wardId: selectedWard || undefined,
+        locationGeography: club.address.locationGeography,
+      },
+    };
+
+    console.log('Saving club data:', finalUpdatedClub);
     try {
-      await updateClub(updatedClub, club.id);
-      // Show success message or navigate back
-      Alert.alert('Success', 'Club information saved successfully');
+      await updateClub(finalUpdatedClub, club.id);
+      // Show success message
+      toastSuccess('Club information saved successfully');
     } catch (error) {
       logError(error as Error);
+      toastError('Failed to save club information');
     }
     fetchClubByOwner(userId);
   };
 
   // Render club image item
   const renderImageItem = ({ item }: { item: MediaModel }) => {
+    console.log(item);
     return (
       <View style={styles.imageContainer}>
         <Image
@@ -146,12 +266,76 @@ const ClubManagementScreen: FC = () => {
           resizeMode="cover"
         />
         {club.media.length <= 1 ? null : (
-          <TouchableOpacity style={styles.removeImageButton}>
+          <TouchableOpacity
+            style={styles.removeImageButton}
+            onPress={async () => await handleRemoveImage(item.mediaId)}
+          >
             <Text style={styles.removeImageText}>✕</Text>
           </TouchableOpacity>
         )}
       </View>
     );
+  };
+
+  const handleAddImage = async () => {
+    try {
+      // Launch image picker
+      const result = await launchImageLibrary({
+        mediaType: 'photo',
+        quality: 0.8,
+      });
+
+      if (result.didCancel || !result.assets || result.assets.length === 0) {
+        return;
+      }
+
+      const selectedImage = result.assets[0];
+
+      // Create file object from URI with all required properties
+      const fileToUpload: RNImageFile = {
+        uri: selectedImage.uri,
+        type: selectedImage.type || 'image/jpeg',
+        name: selectedImage.fileName || `image_${Date.now()}.jpg`,
+      };
+
+      // Upload image
+      const response = await mediaService.upload(fileToUpload);
+
+      if (response instanceof Error) {
+        throw response;
+      }
+
+      // Add uploaded image to club media
+      const newMedia = response.data;
+      const mediaId = await addMediaToClub(club.id, newMedia);
+
+      setClub((prevClub) => ({
+        ...prevClub,
+        media: [...prevClub.media, { ...newMedia, mediaId }],
+      }));
+    } catch (error) {
+      console.error('Image upload error:', error);
+      logError(error as Error);
+
+      // Show more detailed error message
+      if (error instanceof Error) {
+        toastError(`Failed to upload image: ${error.message}`);
+      } else {
+        toastError('Failed to upload image');
+      }
+    }
+  };
+
+  const handleRemoveImage = async (mediaId: string) => {
+    try {
+      await removeMediaFromClub(mediaId);
+      setClub((prevClub) => ({
+        ...prevClub,
+        media: prevClub.media.filter((img) => img.mediaId !== mediaId),
+      }));
+    } catch (error) {
+      logError(error as Error);
+    }
   };
 
   return (
@@ -204,11 +388,59 @@ const ClubManagementScreen: FC = () => {
                 setUpdatedClub({
                   ...updatedClub,
                   address: {
+                    ...updatedClub.address,
                     address: text,
                   },
                 });
               }}
               placeholder="Address"
+            />
+          </View>
+
+          {/* Province Dropdown */}
+          <View style={styles.formField}>
+            <Text style={styles.label}>Province</Text>
+            <Dropdown
+              value={selectedProvince}
+              items={provinces.map((province) => ({
+                label: province.name,
+                value: province.id,
+              }))}
+              onSelect={handleProvinceSelect}
+              placeholder="Select Province"
+              containerStyle={styles.dropdown}
+            />
+          </View>
+
+          {/* District Dropdown */}
+          <View style={styles.formField}>
+            <Text style={styles.label}>District</Text>
+            <Dropdown
+              value={selectedDistrict}
+              items={districts.map((district) => ({
+                label: district.name,
+                value: district.id,
+              }))}
+              onSelect={handleDistrictSelect}
+              placeholder="Select District"
+              containerStyle={styles.dropdown}
+              disabled={!selectedProvince}
+            />
+          </View>
+
+          {/* Ward Dropdown */}
+          <View style={styles.formField}>
+            <Text style={styles.label}>Ward</Text>
+            <Dropdown
+              value={selectedWard}
+              items={wards.map((ward) => ({
+                label: ward.name,
+                value: ward.id,
+              }))}
+              onSelect={handleWardSelect}
+              placeholder="Select Ward"
+              containerStyle={styles.dropdown}
+              disabled={!selectedDistrict}
             />
           </View>
 
@@ -276,12 +508,15 @@ const ClubManagementScreen: FC = () => {
           <FlatList
             data={club.media}
             renderItem={renderImageItem}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.mediaId}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.imageList}
             ListFooterComponent={
-              <TouchableOpacity style={styles.addImageButton}>
+              <TouchableOpacity
+                style={styles.addImageButton}
+                onPress={handleAddImage}
+              >
                 <Text style={styles.addImageText}>+</Text>
               </TouchableOpacity>
             }
@@ -476,9 +711,6 @@ const createStyles = (theme: IColorScheme) =>
       fontSize: fontSize.xl,
       color: theme.textLight,
     },
-    unitList: {
-      marginTop: hp(1),
-    },
     unitCard: {
       backgroundColor: theme.backgroundLight,
       borderRadius: Radius.xs,
@@ -504,25 +736,8 @@ const createStyles = (theme: IColorScheme) =>
       color: theme.textDark,
       marginBottom: hp(0.5),
     },
-    unitActions: {
-      flexDirection: 'row',
-    },
     unitButtonsContainer: {
       flexDirection: 'row',
-    },
-    editButton: {
-      backgroundColor: theme.primary,
-      paddingVertical: hp(0.5),
-      paddingHorizontal: wp(2),
-      borderRadius: Radius.xs,
-      marginLeft: wp(1),
-    },
-    deleteButton: {
-      backgroundColor: theme.error,
-      paddingVertical: hp(0.5),
-      paddingHorizontal: wp(2),
-      borderRadius: Radius.xs,
-      marginLeft: wp(1),
     },
     manageButton: {
       backgroundColor: theme.primary,
@@ -546,6 +761,9 @@ const createStyles = (theme: IColorScheme) =>
     saveButton: {
       marginHorizontal: wp(4),
       marginTop: hp(3),
+    },
+    dropdown: {
+      marginBottom: hp(1),
     },
   });
 

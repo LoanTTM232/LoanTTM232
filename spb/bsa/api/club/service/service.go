@@ -16,7 +16,7 @@ type IService interface {
 	Delete(clubId string) error
 	Create(reqBody *model.CreateClubRequest) (*tb.Club, error)
 	GetAll(reqBody *model.GetClubsRequest) ([]*tb.Club, int64, error)
-	AddMedia(reqBody *mediaModel.CreateMediaRequest, clubId, ownerId string) error
+	AddMedia(reqBody *mediaModel.CreateMediaRequest, clubId, ownerId string) (string, error)
 	DeleteMedia(mediaId, ownerId string) error
 }
 

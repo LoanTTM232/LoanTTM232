@@ -4,6 +4,7 @@ import (
 	"spb/bsa/pkg/config"
 	"spb/bsa/pkg/notification"
 
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/storage/redis/v3"
 	"gorm.io/gorm"
@@ -16,6 +17,7 @@ var (
 	SPB_REDIS       *redis.Storage
 	SPB_NOTIFY      *notification.Notification
 	SPB_PERMISSIONS map[string]uint64
+	SPB_AWS         *session.Session
 )
 
 // @author: LoanTT

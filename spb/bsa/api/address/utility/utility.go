@@ -37,10 +37,13 @@ func MapAddressEntityToResponse(address *tb.Address) *model.AddressResponse {
 		LocationGeography: GeoJSONToPoint(address.LocationGeography),
 		Ward:              address.Ward.Name,
 		WardCode:          address.Ward.Code,
+		WardId:            address.Ward.ID,
 		District:          address.Ward.District.Name,
 		DistrictCode:      address.Ward.District.Code,
+		DistrictId:        address.Ward.District.ID,
 		Province:          address.Ward.District.Province.Name,
 		ProvinceCode:      address.Ward.District.Province.Code,
+		ProvinceId:        address.Ward.District.Province.ID,
 	}
 }
 

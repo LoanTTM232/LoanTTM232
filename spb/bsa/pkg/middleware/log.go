@@ -1,14 +1,12 @@
 package middleware
 
 import (
-	"encoding/base64"
 	"encoding/json"
 	"strings"
 	"time"
 
 	"spb/bsa/pkg/auth"
 	"spb/bsa/pkg/logger"
-	"spb/bsa/pkg/msg"
 	"spb/bsa/pkg/utils"
 
 	"github.com/gofiber/fiber/v3"
@@ -71,16 +69,6 @@ func ExtractBodyJson(contentType []byte, bodyByte []byte) *string {
 	if len(bodyByte) > 0 {
 		if string(contentType) == "application/json" {
 			bodyJson = utils.ToPtr(string(bodyByte))
-		} else {
-			nonJsonMap := map[string]any{}
-			b64Str := base64.StdEncoding.EncodeToString(bodyByte)
-			nonJsonMap["requestType"] = string(bodyByte)
-			nonJsonMap["base64"] = b64Str
-			if jsonBytes, err := json.Marshal(nonJsonMap); err != nil {
-				logger.Errorf(msg.ErrMarshalFailed(err))
-			} else {
-				bodyJson = utils.ToPtr(string(jsonBytes))
-			}
 		}
 	}
 	return bodyJson

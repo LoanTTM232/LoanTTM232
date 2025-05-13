@@ -7,6 +7,7 @@ import (
 	"spb/bsa/api/address"
 	"spb/bsa/api/auth"
 	"spb/bsa/api/club"
+	"spb/bsa/api/media"
 	"spb/bsa/api/metadata"
 	"spb/bsa/api/notification"
 	"spb/bsa/api/notification_type"
@@ -82,7 +83,7 @@ func (f *Fiber) GetApp() {
 		panic(msg.ErrLoadValidatorFailed(err))
 	}
 
-	awsSession, err := aws.NewAWSSession(global.SPB_CONFIG)
+	global.SPB_AWS, err = aws.NewAWSSession(global.SPB_CONFIG)
 	if err != nil {
 		panic(msg.ErrAWSConnectFailed(err))
 	}
@@ -90,7 +91,7 @@ func (f *Fiber) GetApp() {
 	global.SPB_NOTIFY = notify.NewNotification(
 		global.SPB_CONFIG,
 		global.SPB_REDIS,
-		ses.NewSESService(awsSession))
+		ses.NewSESService(global.SPB_AWS))
 
 	cache.NewCache(global.SPB_REDIS)
 
@@ -98,9 +99,9 @@ func (f *Fiber) GetApp() {
 		CaseSensitive:                true,
 		StrictRouting:                false,
 		ServerHeader:                 global.SPB_CONFIG.ProjectName,
-		BodyLimit:                    500 << 20, // 500 MB
-		DisablePreParseMultipartForm: true,
-		StreamRequestBody:            true,
+		BodyLimit:                    100 << 20, // 500 MB
+		DisablePreParseMultipartForm: false,
+		StreamRequestBody:            false,
 		JSONEncoder:                  json.Marshal,
 		JSONDecoder:                  json.Unmarshal,
 	})
@@ -164,6 +165,7 @@ func (f *Fiber) LoadRoutes() {
 	club.LoadModule(router, custMiddlewares)
 	address.LoadModule(router, custMiddlewares)
 	order.LoadModule(router, custMiddlewares)
+	media.LoadModule(router, custMiddlewares)
 
 	permissions, err := permission.GetPermissions()
 	if err != nil {

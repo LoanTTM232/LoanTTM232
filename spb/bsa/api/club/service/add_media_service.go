@@ -7,15 +7,15 @@ import (
 	"spb/bsa/pkg/msg"
 )
 
-func (s *Service) AddMedia(reqBody *mediaModel.CreateMediaRequest, clubId, ownerId string) error {
+func (s *Service) AddMedia(reqBody *mediaModel.CreateMediaRequest, clubId, ownerId string) (string, error) {
 	var club tb.Club
 	err := s.db.Model(&tb.Club{}).Where("id = ?", clubId).First(&club).Error
 	if err != nil {
-		return msg.ErrClubNotFound
+		return "", msg.ErrClubNotFound
 	}
 
 	if club.OwnerID != ownerId {
-		return msg.ErrClubWrongOwner
+		return "", msg.ErrClubWrongOwner
 	}
 
 	// Create media record
@@ -24,8 +24,8 @@ func (s *Service) AddMedia(reqBody *mediaModel.CreateMediaRequest, clubId, owner
 	media.OwnerType = string(mediaModel.OwnerTypeClub)
 
 	if err := s.db.Create(media).Error; err != nil {
-		return msg.ErrMediaCreateFailed
+		return "", msg.ErrMediaCreateFailed
 	}
 
-	return nil
+	return media.ID, nil
 }

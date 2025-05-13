@@ -5,8 +5,6 @@ export const LOGIN_PATH = `${V1_PREFIX}/auth/login`;
 
 export const LOGOUT_PATH = `${V1_PREFIX}/auth/logout`;
 
-export const REGISTER_PATH = `${V1_PREFIX}/auth/register`;
-
 export const REFRESH_TOKEN_PATH = `${V1_PREFIX}/auth/refresh`;
 
 export const VERIFY_REGISTER_TOKEN_PATH = `${V1_PREFIX}/auth/verify-register-token`;
@@ -21,30 +19,10 @@ export const RESET_PASSWORD_PATH = `${V1_PREFIX}/auth/reset-password`;
 
 export const CHANGE_PASSWORD_PATH = `${V1_PREFIX}/auth/change-password`;
 
-// Unit API paths
-export const POPULAR_UNITS_PATH = `${V1_PREFIX}/units/popularity`;
-
-export const SEARCH_UNITS_PATH = `${V1_PREFIX}/units`;
-
-export const GET_UNIT_PATH = `${V1_PREFIX}/units/:id`;
-
-export const GET_BOOKED_TIME_PATH = `${V1_PREFIX}/units/:id/booked-time`;
-
-export const CREATE_UNIT_PATH = `${V1_PREFIX}/units`;
-
-export const UPDATE_UNIT_PATH = `${V1_PREFIX}/units/:id`;
-
-export const DELETE_UNIT_PATH = `${V1_PREFIX}/units/:id`;
-
 // Order API paths
 export const GET_ORDERS_BY_USER_ID_PATH = `${V1_PREFIX}/orders/:userId`;
 
 export const PROCESS_PAYMENT_PATH = `${V1_PREFIX}/orders/pay`;
-
-// Notification API paths
-export const RECEIVER_NOTIFICATIONS_PATH = `${V1_PREFIX}/notifications/receiver/:id`;
-
-export const SENDER_NOTIFICATIONS_PATH = `${V1_PREFIX}/notifications/sender/:id`;
 
 // Location API paths
 export const PROVINCE_PATH = `${V1_PREFIX}/addresses/provinces`;
@@ -60,3 +38,14 @@ export const GET_ALL_SPORT_TYPE_PATH = `${V1_PREFIX}/sport-types`;
 export const GET_CLUB_BY_OWNER_PATH = `${V1_PREFIX}/clubs/owner/:owner_id`;
 
 export const UPDATE_CLUB_PATH = `${V1_PREFIX}/clubs/:id`;
+
+// Media API paths
+export const UPLOAD_MEDIA_PATH = `${V1_PREFIX}/media/upload`;
+
+export const ADD_MEDIA_TO_CLUB_PATH = `${V1_PREFIX}/clubs/:clubId/media`;
+
+export const REMOVE_MEDIA_FROM_CLUB_PATH = `${V1_PREFIX}/clubs/media/:mediaId`;
+
+export const ADD_MEDIA_TO_UNIT_PATH = `${V1_PREFIX}/units/:unitId/media`;
+
+export const REMOVE_MEDIA_FROM_UNIT_PATH = `${V1_PREFIX}/units/media/:mediaId`;

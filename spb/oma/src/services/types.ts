@@ -208,3 +208,7 @@ export type ClubCard = {
   sportTypes: string[];
   units: UnitCard[];
 };
+
+export type CreateMediaResponse = {
+	mediaId: string;
+}

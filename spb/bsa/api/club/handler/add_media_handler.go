@@ -42,7 +42,8 @@ func (h *Handler) AddMedia(ctx fiber.Ctx) error {
 	claims := ctx.Locals("claims").(authModel.UserClaims)
 	userId := claims.UserID
 
-	if err = h.service.AddMedia(reqBody, clubId, userId); err != nil {
+	var mediaId string
+	if mediaId, err = h.service.AddMedia(reqBody, clubId, userId); err != nil {
 		logger.Errorf(msg.ErrAddPropertyFailed("media", "club", err))
 		switch err {
 		case msg.ErrClubNotFound:
@@ -56,5 +57,5 @@ func (h *Handler) AddMedia(ctx fiber.Ctx) error {
 		}
 	}
 
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, map[string]string{"media_id": mediaId})
 }

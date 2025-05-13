@@ -9,10 +9,13 @@ export type AddressModel = {
   locationGeography: GeographyModel;
   ward: string;
   wardCode: string;
+  wardId: string;
   district: string;
   districtCode: string;
+  districtId: string;
   province: string;
   provinceCode: string;
+  provinceId: string;
 };
 
 export type UnitPriceModel = {
@@ -34,7 +37,7 @@ export type UnitServiceModel = {
 };
 
 export type MediaModel = {
-  id: string;
+  mediaId: string;
   filePath: string;
   fileType: string;
   hash: string;

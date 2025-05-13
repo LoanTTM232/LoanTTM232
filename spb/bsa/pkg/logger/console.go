@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"fmt"
 	"os"
 
 	"go.uber.org/zap"
@@ -25,8 +26,8 @@ func Debugf(format string) {
 	Zlog.Debugf(format)
 }
 
-func Infof(format string) {
-	Zlog.Infof(format)
+func Infof(format string, args ...any) {
+	Zlog.Infof(format, args...)
 }
 
 func Warnf(format string) {
@@ -52,9 +53,10 @@ func (zl *ZapLog) Debugf(message string) {
 // @function: Infof
 // @description: Infof
 // @param: message string
-func (zl *ZapLog) Infof(message string) {
+func (zl *ZapLog) Infof(message string, args ...any) {
 	sugar := Zlog.ConsoleLogger.Sugar()
 	if zl.Level <= InfoLevel {
+		message = fmt.Sprintf(message, args...)
 		sugar.Infof("- %s", message)
 	}
 }
