@@ -39,6 +39,8 @@ export const GET_CLUB_BY_OWNER_PATH = `${V1_PREFIX}/clubs/owner/:owner_id`;
 
 export const UPDATE_CLUB_PATH = `${V1_PREFIX}/clubs/:id`;
 
+export const UPDATE_UNIT_PATH = `${V1_PREFIX}/units/:id`;
+
 // Media API paths
 export const UPLOAD_MEDIA_PATH = `${V1_PREFIX}/media/upload`;
 

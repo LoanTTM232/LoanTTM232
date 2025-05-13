@@ -52,7 +52,6 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 	}
 
 	// search by unit name and description
-	//  TODO: can search by address
 	if IsSearchByQuery(reqBody) {
 		baseQuery = baseQuery.
 			Where("SIMILARITY(unit.keywords, ?) > 0.1", reqBody.Pagination.Query)
@@ -72,6 +71,7 @@ func (s *Service) Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, e
 
 	err = dataQuery.
 		Scopes(utils.Paginate(&reqBody.Pagination.Pagination)).
+		Where("unit.status = 1").
 		Find(&units).Error
 	if err != nil {
 		logger.Errorf(msg.ErrGetFailed("Unit", err))

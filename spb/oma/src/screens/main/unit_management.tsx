@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { FC, useContext, useEffect } from 'react';
 import {
   Alert, FlatList, Image, StyleSheet, Switch, Text, TouchableOpacity, View
 } from 'react-native';
@@ -6,56 +6,44 @@ import { ShadowedView } from 'react-native-fast-shadow';
 import { useShallow } from 'zustand/shallow';
 
 import HeaderWithBack from '@/components/common/HeaderWithBack';
-import UnitForm from '@/components/unit/UnitForm';
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
 import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
-import { dateTimeToStringTime } from '@/helpers/function';
-import { UnitCard } from '@/services/types';
+import { MainStackParamList } from '@/screens/main';
 import { UnitModel } from '@/types/model';
 import FloatButton from '@/ui/button/FloatButton';
 import PlusIcon from '@/ui/icon/Plus';
-import { useClubStore, useSportTypeStore } from '@/zustand';
+import { useAuthStore, useClubStore } from '@/zustand';
 import { PLACEHOLDER_IMAGE } from '@env';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const UnitManagementScreen: FC = () => {
   const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<MainStackParamList>>();
 
-  // State for units data
-  const units = useClubStore(useShallow((state) => state.club.units));
-  const sportType = useSportTypeStore(useShallow((state) => state.sportType));
+  // State for club.units data
+  const club = useClubStore(useShallow((state) => state.club));
+  const userId = useAuthStore(useShallow((state) => state.userId));
+  const fetchClubByOwner = useClubStore((state) => state.fetchClubByOwner);
+  const isLoading = useClubStore(useShallow((state) => state.isLoading));
 
-  // State for unit form modal
-  const [showUnitForm, setShowUnitForm] = useState(false);
-  const [currentUnit, setCurrentUnit] = useState<UnitModel | undefined>(
-    undefined
-  );
+  useEffect(() => {
+    fetchClubByOwner(userId);
+  }, []);
 
   // Handle add unit
   const handleAddUnit = () => {
-    setShowUnitForm(true);
+    // Navigate to UnitForm screen with empty unit
+    navigation.navigate('UnitForm', { unitId: undefined });
   };
 
   // Handle edit unit
-  const handleEditUnit = (unit: UnitModel) => {
-    setShowUnitForm(true);
-  };
-
-  // Handle save unit
-  const handleSaveUnit = (unit: UnitModel) => {
-    if (currentUnit) {
-      // Update existing unit
-      //   setUnits((prevUnits) =>
-      //     prevUnits.map((u) => (u.id === unit.id ? unit : u))
-      //   );
-      Alert.alert('Success', 'Unit updated successfully');
-    } else {
-      // Add new unit
-      //   setUnits((prevUnits) => [...prevUnits, unit]);
-      Alert.alert('Success', 'Unit added successfully');
-    }
-    setShowUnitForm(false);
+  const handleEditUnit = (unitId: string) => {
+    // Navigate to UnitForm screen with selected unitId
+    navigation.navigate('UnitForm', { unitId });
   };
 
   // Handle disable/enable unit
@@ -72,13 +60,11 @@ const UnitManagementScreen: FC = () => {
         {
           text: 'Confirm',
           onPress: () => {
-            const updatedUnit = {
-              ...unit,
-              status: unit.status === 1 ? 0 : 1,
-            };
-            // setUnits((prevUnits) =>
-            //   prevUnits.map((u) => (u.id === unit.id ? updatedUnit : u))
-            // );
+            // In a real app, this would update the unit status
+            Alert.alert(
+              'Status Updated',
+              `Unit status has been ${unit.status === 1 ? 'disabled' : 'enabled'}`
+            );
           },
         },
       ]
@@ -93,7 +79,10 @@ const UnitManagementScreen: FC = () => {
           <View style={styles.unitTitleRow}>
             <Image
               source={{
-                uri: item.media.length > 0 ? item.media[0].filePath : PLACEHOLDER_IMAGE,
+                uri:
+                  item.media.length > 0
+                    ? item.media[0].filePath
+                    : PLACEHOLDER_IMAGE,
               }}
               style={styles.unitImage}
             />
@@ -107,7 +96,7 @@ const UnitManagementScreen: FC = () => {
           <View style={styles.unitActions}>
             <TouchableOpacity
               style={styles.editButton}
-              onPress={() => handleEditUnit(item)}
+              onPress={() => handleEditUnit(item.id)}
             >
               <Text style={styles.editButtonText}>Edit</Text>
             </TouchableOpacity>
@@ -121,15 +110,15 @@ const UnitManagementScreen: FC = () => {
         </View>
         <View style={styles.unitDetails}>
           <Text style={styles.unitDetail}>
-            Open: {item.openTime} -{' '}
-            {item.closeTime}
+            Open: {item.openTime} - {item.closeTime}
           </Text>
           <Text style={styles.unitDetail}>Phone: {item.phone}</Text>
           <Text style={styles.unitDetail}>
             Sport Types: {item.sportTypes.map((st) => st.name).join(', ')}
           </Text>
           <Text style={styles.unitDetail}>
-            Services: {item.unitServices.length} | Prices: {item.unitPrices.length}
+            Services: {item.unitServices.length} | Prices:{' '}
+            {item.unitPrices.length}
           </Text>
           <Text style={styles.unitAddress} numberOfLines={2}>
             Address: {item.address.address}
@@ -142,35 +131,24 @@ const UnitManagementScreen: FC = () => {
   return (
     <View style={styles.container}>
       <HeaderWithBack title="Unit Management" isClose={false} />
-
-      <View style={styles.content}>
-        {units.length > 0 && (
-          <FlatList
-            data={units}
-            renderItem={renderUnitItem}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.unitList}
-          />
-        )}
-      </View>
-
-      {/* Floating Add Button */}
-      {units.length > 0 && (
+      {isLoading ? (
+        <Text style={styles.loadingText}>Loading...</Text>
+      ) : (
+        <View style={styles.content}>
+          {club.units.length > 0 && (
+            <FlatList
+              data={club.units}
+              renderItem={renderUnitItem}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.unitList}
+            />
+          )}
+        </View>
+      )}
+      {club.units.length > 0 && (
         <FloatButton
           icon={<PlusIcon color={theme.white} />}
           onPress={handleAddUnit}
-        />
-      )}
-
-      {/* Unit Form Modal */}
-      {currentUnit && (
-        <UnitForm
-          visible={showUnitForm}
-          onClose={() => setShowUnitForm(false)}
-          unit={currentUnit}
-          sportTypes={sportType}
-          onSave={handleSaveUnit}
-          theme={theme}
         />
       )}
     </View>

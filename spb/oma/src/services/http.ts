@@ -21,8 +21,6 @@ class AxiosConfig {
   private isProtected: boolean = false;
 
   constructor() {
-
-    console.log('API_URL', API_URL);
     this.axiosInstance = axios.create({
       baseURL: API_URL,
       headers: this.defaultHeaders(),
@@ -263,7 +261,10 @@ const responseParse = <K, T extends ApiResponse<K> = ApiResponse<K>>(
 
         // Create a more descriptive error message
         const errorMessage = error.response?.data?.message || error.message;
-        logError(new Error(`API Error: ${errorMessage}`), 'Error in responseParse:');
+        logError(
+          new Error(`API Error: ${errorMessage}`),
+          'Error in responseParse:'
+        );
         return new ResponseError(errorMessage || i18next.t('error.ERS001'));
       }
 

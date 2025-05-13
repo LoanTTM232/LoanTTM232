@@ -8,6 +8,7 @@ import PrivacyPolicyScreen from '@/screens/main/profile/privacy';
 import SecurityScreen from '@/screens/main/profile/security';
 import TermsConditionsScreen from '@/screens/main/profile/terms';
 import TabScreens from '@/screens/main/tab';
+import UnitFormScreen from '@/screens/main/unit_form';
 import UnitManagementScreen from '@/screens/main/unit_management';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -20,6 +21,9 @@ export type MainStackParamList = {
   PrivacyPolicy: undefined;
   ChangePassword: undefined;
   UnitManagement: undefined;
+  UnitForm: {
+    unitId?: string;
+  };
   ClubManagement: undefined;
 };
 
@@ -32,6 +36,7 @@ export const MainScreens: Record<string, keyof MainStackParamList> = {
   PrivacyPolicy: 'PrivacyPolicy',
   ChangePassword: 'ChangePassword',
   UnitManagement: 'UnitManagement',
+  UnitForm: 'UnitForm',
   ClubManagement: 'ClubManagement'
 };
 const Stack = createNativeStackNavigator<MainStackParamList>();
@@ -76,6 +81,11 @@ const MainStack: FC = () => {
       <Stack.Screen
         name={MainScreens.UnitManagement}
         component={UnitManagementScreen}
+        options={{ animation: 'slide_from_right' }}
+      />
+      <Stack.Screen
+        name={MainScreens.UnitForm}
+        component={UnitFormScreen}
         options={{ animation: 'slide_from_right' }}
       />
       <Stack.Screen

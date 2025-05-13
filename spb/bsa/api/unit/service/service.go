@@ -15,7 +15,7 @@ type IService interface {
 	Delete(unitId, ownerId string) error
 	Create(reqBody *model.CreateUnitRequest, ownerId string) (*tb.Unit, error)
 	Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, error)
-	AddMedia(reqBody *mediaModel.CreateMediaRequest, clubId, ownerId string) error
+	AddMedia(reqBody *mediaModel.CreateMediaRequest, clubId, ownerId string) (string, error)
 	DeleteMedia(mediaId, ownerId string) error
 	BookedTimeOnDay(reqBody *model.BookedTimeRequest, unitId string) ([]model.BookedTime, error)
 	GetPopularity(reqBody *model.PopularityRequest) ([]*tb.Unit, error)

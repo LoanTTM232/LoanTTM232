@@ -1,44 +1,42 @@
 import { Feature, Point } from 'geojson';
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import {
-  FlatList, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View
+  FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View
 } from 'react-native';
-import { ShadowedView } from 'react-native-fast-shadow';
 import { launchImageLibrary } from 'react-native-image-picker';
+import { useShallow } from 'zustand/shallow';
 
+import HeaderWithBack from '@/components/common/HeaderWithBack';
+import MapView from '@/components/common/MapView';
 import { fontFamily, fontSize, IColorScheme, Radius } from '@/constants';
+import { ThemeContext } from '@/contexts/theme';
 import { hp, wp } from '@/helpers/dimensions';
 import { logError } from '@/helpers/logger';
 import { toastError, toastSuccess } from '@/helpers/toast';
+import { MainStackParamList } from '@/screens/main';
 import mediaService, { RNImageFile } from '@/services/media.service';
 import {
-  MediaModel, SportTypeModel, UnitModel, UnitPriceModel, UnitServiceModel
+  MediaModel, SportTypeModel, UnitModel, UnitPriceModel, UnitServiceModel, UnitUpdateModel
 } from '@/types/model';
 import Button from '@/ui/button/BaseButton';
 import Dropdown from '@/ui/dropdown/Dropdown';
-import CloseIcon from '@/ui/icon/Close';
 import BaseModal from '@/ui/modal/BaseModal';
-import { useClubStore, useLocationStore } from '@/zustand';
+import { useClubStore, useLocationStore, useSportTypeStore } from '@/zustand';
+import { PLACEHOLDER_IMAGE } from '@env';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import MapView from '../common/MapView';
-
-interface UnitFormProps {
-  visible: boolean;
-  onClose: () => void;
-  unit: UnitModel;
-  sportTypes: SportTypeModel[];
-  onSave: (unit: UnitModel) => void;
-  theme: IColorScheme;
+interface UnitFormScreenRouteParams {
+  unitId: string;
 }
 
-const UnitForm: FC<UnitFormProps> = ({
-  visible,
-  onClose,
-  unit,
-  sportTypes,
-  onSave,
-  theme,
-}) => {
+const UnitFormScreen: FC = () => {
+  const route = useRoute();
+  const { unitId } = route.params as UnitFormScreenRouteParams;
+
+  const navigation =
+    useNavigation<NativeStackNavigationProp<MainStackParamList>>();
+  const { theme } = useContext(ThemeContext);
   const styles = createStyles(theme);
 
   const provinces = useLocationStore((state) => state.province);
@@ -47,9 +45,17 @@ const UnitForm: FC<UnitFormProps> = ({
   const getDistrict = useLocationStore((state) => state.getDistrict);
   const getWard = useLocationStore((state) => state.getWard);
   const addMediaToUnit = useClubStore((state) => state.addMediaToUnit);
+  const sportType = useSportTypeStore(useShallow((state) => state.sportType));
+  const clubs = useClubStore(useShallow((state) => state.club));
+  const updateUnit = useClubStore((state) => state.updateUnit);
 
   // State for unit data
-  const [unitData, setUnitData] = useState<UnitModel>(unit);
+  const [unit, setUnit] = useState<UnitModel>(
+    clubs.units.find((u) => u.id === unitId) as UnitModel
+  );
+  const [updatedUnit, setUpdatedUnit] = useState<UnitUpdateModel>({
+    sportTypes: unit.sportTypes.map((st) => st.id),
+  });
 
   // State for scroll control
   const [scrollEnabled, setScrollEnabled] = useState(true);
@@ -64,6 +70,10 @@ const UnitForm: FC<UnitFormProps> = ({
   const [selectedWard, setSelectedWard] = useState<string>(
     unit.address.wardId || ''
   );
+
+  const [selectedSportTypes, setSelectedSportTypes] = useState<
+    SportTypeModel[]
+  >(unit.sportTypes);
 
   // State for price form
   const [showPriceForm, setShowPriceForm] = useState(false);
@@ -89,7 +99,11 @@ const UnitForm: FC<UnitFormProps> = ({
 
   // Handle update unit field
   const handleUpdateUnitField = (field: keyof UnitModel, value: any) => {
-    setUnitData((prevData) => ({
+    setUnit((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+    setUpdatedUnit((prevData) => ({
       ...prevData,
       [field]: value,
     }));
@@ -97,7 +111,14 @@ const UnitForm: FC<UnitFormProps> = ({
 
   // Handle update address field
   const handleUpdateAddressField = (field: string, value: string) => {
-    setUnitData((prevData) => ({
+    setUnit((prevData) => ({
+      ...prevData,
+      address: {
+        ...prevData.address,
+        [field]: value,
+      },
+    }));
+    setUpdatedUnit((prevData) => ({
       ...prevData,
       address: {
         ...prevData.address,
@@ -107,31 +128,45 @@ const UnitForm: FC<UnitFormProps> = ({
   };
 
   // Handle toggle sport type
-  const handleToggleSportType = (sportType: SportTypeModel) => {
-    const isSelected = unitData.sportTypes.some((st) => st.id === sportType.id);
+  const toggleSportType = (sportType: SportTypeModel) => {
+    const isSelected = selectedSportTypes.some((st) => st.id === sportType.id);
 
     if (isSelected) {
-      // Remove sport type
-      setUnitData((prevData) => ({
-        ...prevData,
-        sportTypes: prevData.sportTypes.filter((st) => st.id !== sportType.id),
-      }));
+      setSelectedSportTypes(
+        selectedSportTypes.filter((st) => st.id !== sportType.id)
+      );
     } else {
-      // Add sport type
-      setUnitData((prevData) => ({
-        ...prevData,
-        sportTypes: [...prevData.sportTypes, sportType],
-      }));
+      setSelectedSportTypes([...selectedSportTypes, sportType]);
     }
+
+    // Update club with selected sport types
+    setUnit((prevUnit) => ({
+      ...prevUnit,
+      sportTypes: isSelected
+        ? prevUnit.sportTypes.filter((st) => st.id !== sportType.id)
+        : [...prevUnit.sportTypes, sportType],
+    }));
+    setUpdatedUnit((prevUnit) => {
+      let preSportType: string[] = [];
+      if (prevUnit.sportTypes && prevUnit.sportTypes.length > 0) {
+        preSportType = prevUnit?.sportTypes;
+      }
+      return {
+        ...prevUnit,
+        sportTypes: isSelected
+          ? preSportType.filter((st) => st !== sportType.id)
+          : [...preSportType, sportType.id],
+      };
+    });
   };
 
   // Handle add price
   const handleAddPrice = () => {
     if (currentPrice.id) {
       // Update existing price
-      setUnitData({
-        ...unitData,
-        unitPrices: unitData.unitPrices.map((p) =>
+      setUnit({
+        ...unit,
+        unitPrices: unit.unitPrices.map((p) =>
           p.id === currentPrice.id ? currentPrice : p
         ),
       });
@@ -141,9 +176,9 @@ const UnitForm: FC<UnitFormProps> = ({
         ...currentPrice,
         id: Date.now().toString(),
       };
-      setUnitData({
-        ...unitData,
-        unitPrices: [...unitData.unitPrices, newPrice],
+      setUnit({
+        ...unit,
+        unitPrices: [...unit.unitPrices, newPrice],
       });
     }
 
@@ -166,9 +201,9 @@ const UnitForm: FC<UnitFormProps> = ({
 
   // Handle delete price
   const handleDeletePrice = (id: string) => {
-    setUnitData({
-      ...unitData,
-      unitPrices: unitData.unitPrices.filter((p) => p.id !== id),
+    setUnit({
+      ...unit,
+      unitPrices: unit.unitPrices.filter((p) => p.id !== id),
     });
   };
 
@@ -176,9 +211,9 @@ const UnitForm: FC<UnitFormProps> = ({
   const handleAddService = () => {
     if (currentService.id) {
       // Update existing service
-      setUnitData({
-        ...unitData,
-        unitServices: unitData.unitServices.map((s) =>
+      setUnit({
+        ...unit,
+        unitServices: unit.unitServices.map((s) =>
           s.id === currentService.id ? currentService : s
         ),
       });
@@ -188,9 +223,9 @@ const UnitForm: FC<UnitFormProps> = ({
         ...currentService,
         id: Date.now().toString(),
       };
-      setUnitData({
-        ...unitData,
-        unitServices: [...unitData.unitServices, newService],
+      setUnit({
+        ...unit,
+        unitServices: [...unit.unitServices, newService],
       });
     }
 
@@ -215,9 +250,9 @@ const UnitForm: FC<UnitFormProps> = ({
 
   // Handle delete service
   const handleDeleteService = (id: string) => {
-    setUnitData({
-      ...unitData,
-      unitServices: unitData.unitServices.filter((s) => s.id !== id),
+    setUnit({
+      ...unit,
+      unitServices: unit.unitServices.filter((s) => s.id !== id),
     });
   };
 
@@ -230,7 +265,7 @@ const UnitForm: FC<UnitFormProps> = ({
     setSelectedWard('');
 
     // Update unit address with province info
-    setUnitData((prevUnit) => ({
+    setUnit((prevUnit) => ({
       ...prevUnit,
       address: {
         ...prevUnit.address,
@@ -255,7 +290,7 @@ const UnitForm: FC<UnitFormProps> = ({
     setSelectedWard('');
 
     // Update unit address with district info
-    setUnitData((prevUnit) => ({
+    setUnit((prevUnit) => ({
       ...prevUnit,
       address: {
         ...prevUnit.address,
@@ -277,12 +312,20 @@ const UnitForm: FC<UnitFormProps> = ({
     setSelectedWard(wardId);
 
     // Update unit address with ward info
-    setUnitData((prevUnit) => ({
+    setUnit((prevUnit) => ({
       ...prevUnit,
       address: {
         ...prevUnit.address,
         ward: ward?.name || '',
         wardCode: wardId,
+      },
+    }));
+
+    setUpdatedUnit((prevData) => ({
+      ...prevData,
+      address: {
+        ...prevData.address,
+        wardId: wardId,
       },
     }));
   };
@@ -303,7 +346,7 @@ const UnitForm: FC<UnitFormProps> = ({
       const selectedImage = result.assets[0];
       // Create file object from URI
       const fileToUpload: RNImageFile = {
-        uri: selectedImage.uri,
+        uri: selectedImage.uri || PLACEHOLDER_IMAGE,
         type: selectedImage.type || 'image/jpeg',
         name: selectedImage.fileName || `image_${Date.now()}.jpg`,
       };
@@ -317,9 +360,9 @@ const UnitForm: FC<UnitFormProps> = ({
       // Add uploaded image to unit media
       const newMedia = response.data;
       const mediaId = await addMediaToUnit(unit.id, newMedia);
-      setUnitData({
-        ...unitData,
-        media: [...unitData.media, { ...newMedia, mediaId }],
+      setUnit({
+        ...unit,
+        media: [...unit.media, { ...newMedia, mediaId }],
       });
     } catch (error) {
       logError(error as Error);
@@ -337,9 +380,9 @@ const UnitForm: FC<UnitFormProps> = ({
       }
 
       // Then remove it from the local state
-      setUnitData({
-        ...unitData,
-        media: unitData.media.filter((img) => img.mediaId !== id),
+      setUnit({
+        ...unit,
+        media: unit.media.filter((img) => img.mediaId !== id),
       });
 
       toastSuccess('Image removed successfully');
@@ -348,29 +391,27 @@ const UnitForm: FC<UnitFormProps> = ({
       toastError('Failed to remove image');
 
       // Still remove from local state even if server removal fails
-      setUnitData({
-        ...unitData,
-        media: unitData.media.filter((img) => img.mediaId !== id),
+      setUnit({
+        ...unit,
+        media: unit.media.filter((img) => img.mediaId !== id),
       });
     }
   };
 
   // Save unit
-  const handleSave = () => {
-    // Ensure address information is properly included
-    const finalUnitData = {
-      ...unitData,
-      address: {
-        ...unitData.address,
-        provinceCode: selectedProvince,
-        districtCode: selectedDistrict,
-        wardCode: selectedWard,
-      },
-    };
-
-    onSave(finalUnitData);
-    onClose();
-    toastSuccess('Unit saved successfully');
+  const handleSave = async () => {
+    try {
+      console.log(updatedUnit);
+      await updateUnit(updatedUnit, unit.id);
+      // pop 2 routes
+      navigation.pop(2);
+      // Navigate back and pass the updated unit data
+      navigation.navigate('UnitManagement');
+      toastSuccess('Unit saved successfully');
+    } catch (err) {
+      logError(err as Error);
+      toastError('Failed to save unit');
+    }
   };
 
   const handleMapTouchStart = () => {
@@ -384,7 +425,18 @@ const UnitForm: FC<UnitFormProps> = ({
   const handleLocationChange = (feature: Feature) => {
     if (feature.geometry.type === 'Point') {
       const coords = (feature.geometry as Point).coordinates;
-      setUnitData((prevUnit) => ({
+      setUnit((prevUnit) => ({
+        ...prevUnit,
+        address: {
+          ...prevUnit.address,
+          locationGeography: {
+            latitude: coords[1],
+            longitude: coords[0],
+          },
+        },
+      }));
+
+      setUpdatedUnit((prevUnit) => ({
         ...prevUnit,
         address: {
           ...prevUnit.address,
@@ -395,30 +447,6 @@ const UnitForm: FC<UnitFormProps> = ({
         },
       }));
     }
-  };
-
-  // Render sport type item
-  const renderSportTypeItem = ({ item }: { item: SportTypeModel }) => {
-    const isSelected = unitData.sportTypes.some((st) => st.id === item.id);
-
-    return (
-      <TouchableOpacity
-        style={[
-          styles.sportTypeItem,
-          isSelected && styles.sportTypeItemSelected,
-        ]}
-        onPress={() => handleToggleSportType(item)}
-      >
-        <Text
-          style={[
-            styles.sportTypeText,
-            isSelected && styles.sportTypeTextSelected,
-          ]}
-        >
-          {item.name}
-        </Text>
-      </TouchableOpacity>
-    );
   };
 
   // Render price item
@@ -486,301 +514,317 @@ const UnitForm: FC<UnitFormProps> = ({
   const renderImageItem = ({ item }: { item: MediaModel }) => {
     return (
       <View style={styles.imageContainer}>
-        <Image source={{ uri: item.filePath }} style={styles.image} />
-        <TouchableOpacity
-          style={styles.deleteImageButton}
-          onPress={() => handleDeleteImage(item.mediaId)}
-        >
-          <Text style={styles.deleteImageText}>X</Text>
-        </TouchableOpacity>
+        <Image
+          source={{ uri: item.filePath }}
+          style={styles.image}
+          resizeMode="cover"
+        />
+        {unit.media.length <= 1 ? null : (
+          <TouchableOpacity
+            style={styles.deleteImageButton}
+            onPress={() => handleDeleteImage(item.mediaId)}
+          >
+            <Text style={styles.deleteImageText}>X</Text>
+          </TouchableOpacity>
+        )}
       </View>
     );
   };
 
   return (
-    <BaseModal visible={visible} onClose={onClose}>
-      <View style={styles.container}>
-        <ShadowedView style={styles.header}>
-          <Text style={styles.title}>{unit ? 'Edit Unit' : 'Add Unit'}</Text>
-          <Pressable onPress={onClose}>
-            <CloseIcon color={theme.icon} />
-          </Pressable>
-        </ShadowedView>
+    <View style={styles.container}>
+      <HeaderWithBack
+        title={unit.id ? 'Edit Unit' : 'Add Unit'}
+        isClose={false}
+      />
 
-        <ScrollView
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-          scrollEnabled={scrollEnabled}
-        >
-          {/* Basic Information */}
-          <View style={styles.section} onTouchStart={handleOutsideMapTouch}>
-            <Text style={styles.sectionTitle}>Basic Information</Text>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        scrollEnabled={scrollEnabled}
+      >
+        {/* Basic Information */}
+        <View style={styles.section} onTouchStart={handleOutsideMapTouch}>
+          <Text style={styles.sectionTitle}>Basic Information</Text>
 
-            <View style={styles.formField}>
-              <Text style={styles.label}>Name</Text>
-              <TextInput
-                style={styles.input}
-                value={unitData.name}
-                onChangeText={(text) => handleUpdateUnitField('name', text)}
-                placeholder="Unit name"
-              />
-            </View>
-
-            <View style={styles.formRow}>
-              <View style={[styles.formField, styles.halfWidth]}>
-                <Text style={styles.label}>Open Time</Text>
-                <TextInput
-                  style={styles.input}
-                  value={unitData.openTime}
-                  onChangeText={(text) =>
-                    handleUpdateUnitField('openTime', text)
-                  }
-                  placeholder="HH:MM"
-                />
-              </View>
-
-              <View style={[styles.formField, styles.halfWidth]}>
-                <Text style={styles.label}>Close Time</Text>
-                <TextInput
-                  style={styles.input}
-                  value={unitData.closeTime}
-                  onChangeText={(text) =>
-                    handleUpdateUnitField('closeTime', text)
-                  }
-                  placeholder="HH:MM"
-                />
-              </View>
-            </View>
-
-            <View style={styles.formField}>
-              <Text style={styles.label}>Phone</Text>
-              <TextInput
-                style={styles.input}
-                value={unitData.phone}
-                onChangeText={(text) => handleUpdateUnitField('phone', text)}
-                placeholder="Phone number"
-                keyboardType="phone-pad"
-              />
-            </View>
-
-            <View style={styles.formField}>
-              <Text style={styles.label}>Description</Text>
-              <TextInput
-                style={[styles.input, styles.textArea]}
-                value={unitData.description}
-                onChangeText={(text) =>
-                  handleUpdateUnitField('description', text)
-                }
-                placeholder="Description"
-                multiline
-                numberOfLines={4}
-                textAlignVertical="top"
-              />
-            </View>
-          </View>
-
-          {/* Address */}
-          <View style={styles.section} onTouchStart={handleOutsideMapTouch}>
-            <Text style={styles.sectionTitle}>Address</Text>
-
-            <View style={styles.formField}>
-              <Text style={styles.label}>Address</Text>
-              <TextInput
-                style={styles.input}
-                value={unitData.address.address}
-                onChangeText={(text) =>
-                  handleUpdateAddressField('address', text)
-                }
-                placeholder="Street address"
-              />
-            </View>
-
-            {/* Province Dropdown */}
-            <View style={styles.formField}>
-              <Text style={styles.label}>Province</Text>
-              <Dropdown
-                value={selectedProvince}
-                items={provinces.map((province) => ({
-                  label: province.name,
-                  value: province.id,
-                }))}
-                onSelect={handleProvinceSelect}
-                placeholder="Select Province"
-                containerStyle={styles.dropdown}
-              />
-            </View>
-
-            {/* District Dropdown */}
-            <View style={styles.formField}>
-              <Text style={styles.label}>District</Text>
-              <Dropdown
-                value={selectedDistrict}
-                items={districts.map((district) => ({
-                  label: district.name,
-                  value: district.id,
-                }))}
-                onSelect={handleDistrictSelect}
-                placeholder="Select District"
-                containerStyle={styles.dropdown}
-                disabled={!selectedProvince}
-              />
-            </View>
-
-            {/* Ward Dropdown */}
-            <View style={styles.formField}>
-              <Text style={styles.label}>Ward</Text>
-              <Dropdown
-                value={selectedWard}
-                items={wards.map((ward) => ({
-                  label: ward.name,
-                  value: ward.id,
-                }))}
-                onSelect={handleWardSelect}
-                placeholder="Select Ward"
-                containerStyle={styles.dropdown}
-                disabled={!selectedDistrict}
-              />
-            </View>
-          </View>
-
-          {/* Map View */}
-          <View style={styles.mapContainer} onTouchStart={handleOutsideMapTouch}>
-            <MapView
-              scrollEnabled={true}
-              onMapTouchStart={handleMapTouchStart}
-              coordinates={unitData.address.locationGeography}
-              onMapPress={handleLocationChange}
-              height={hp(30)}
+          <View style={styles.formField}>
+            <Text style={styles.label}>Name</Text>
+            <TextInput
+              style={styles.input}
+              value={unit.name}
+              onChangeText={(text) => handleUpdateUnitField('name', text)}
+              placeholder="Unit name"
             />
           </View>
 
-          {/* Sport Types */}
-          <View style={styles.section} onTouchStart={handleOutsideMapTouch}>
-            <Text style={styles.sectionTitle}>Sport Types</Text>
-            <Text style={styles.sectionDescription}>
-              Select all sport types available at this unit
-            </Text>
+          <View style={styles.formRow}>
+            <View style={[styles.formField, styles.halfWidth]}>
+              <Text style={styles.label}>Open Time</Text>
+              <TextInput
+                style={styles.input}
+                value={unit.openTime}
+                onChangeText={(text) => handleUpdateUnitField('openTime', text)}
+                placeholder="HH:MM"
+              />
+            </View>
 
-            <FlatList
-              data={sportTypes}
-              renderItem={renderSportTypeItem}
-              keyExtractor={(item) => item.id}
-              horizontal={false}
-              numColumns={3}
-              scrollEnabled={false}
-              contentContainerStyle={styles.sportTypeList}
+            <View style={[styles.formField, styles.halfWidth]}>
+              <Text style={styles.label}>Close Time</Text>
+              <TextInput
+                style={styles.input}
+                value={unit.closeTime}
+                onChangeText={(text) =>
+                  handleUpdateUnitField('closeTime', text)
+                }
+                placeholder="HH:MM"
+              />
+            </View>
+          </View>
+
+          <View style={styles.formField}>
+            <Text style={styles.label}>Phone</Text>
+            <TextInput
+              style={styles.input}
+              value={unit.phone}
+              onChangeText={(text) => handleUpdateUnitField('phone', text)}
+              placeholder="Phone number"
+              keyboardType="phone-pad"
             />
           </View>
 
-          {/* Images */}
-          <View style={styles.section} onTouchStart={handleOutsideMapTouch}>
-            <Text style={styles.sectionTitle}>Images</Text>
-
-            <FlatList
-              data={unitData.media}
-              renderItem={renderImageItem}
-              keyExtractor={(item) => item.mediaId}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.imageList}
-              ListFooterComponent={
-                <TouchableOpacity
-                  style={styles.addImageButton}
-                  onPress={handleAddImage}
-                >
-                  <Text style={styles.addImageText}>+</Text>
-                </TouchableOpacity>
+          <View style={styles.formField}>
+            <Text style={styles.label}>Description</Text>
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              value={unit.description}
+              onChangeText={(text) =>
+                handleUpdateUnitField('description', text)
               }
+              placeholder="Description"
+              multiline
+              numberOfLines={4}
+              textAlignVertical="top"
+            />
+          </View>
+        </View>
+
+        {/* Address */}
+        <View style={styles.section} onTouchStart={handleOutsideMapTouch}>
+          <Text style={styles.sectionTitle}>Address</Text>
+
+          <View style={styles.formField}>
+            <Text style={styles.label}>Address</Text>
+            <TextInput
+              style={styles.input}
+              value={unit.address.address}
+              onChangeText={(text) => handleUpdateAddressField('address', text)}
+              placeholder="Street address"
             />
           </View>
 
-          {/* Unit Prices */}
-          <View style={styles.section} onTouchStart={handleOutsideMapTouch}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Prices</Text>
+          {/* Province Dropdown */}
+          <View style={styles.formField}>
+            <Text style={styles.label}>Province</Text>
+            <Dropdown
+              value={selectedProvince}
+              items={provinces.map((province) => ({
+                label: province.name,
+                value: province.id,
+              }))}
+              onSelect={handleProvinceSelect}
+              placeholder="Select Province"
+              containerStyle={styles.dropdown}
+            />
+          </View>
+
+          {/* District Dropdown */}
+          <View style={styles.formField}>
+            <Text style={styles.label}>District</Text>
+            <Dropdown
+              value={selectedDistrict}
+              items={districts.map((district) => ({
+                label: district.name,
+                value: district.id,
+              }))}
+              onSelect={handleDistrictSelect}
+              placeholder="Select District"
+              containerStyle={styles.dropdown}
+              disabled={!selectedProvince}
+            />
+          </View>
+
+          {/* Ward Dropdown */}
+          <View style={styles.formField}>
+            <Text style={styles.label}>Ward</Text>
+            <Dropdown
+              value={selectedWard}
+              items={wards.map((ward) => ({
+                label: ward.name,
+                value: ward.id,
+              }))}
+              onSelect={handleWardSelect}
+              placeholder="Select Ward"
+              containerStyle={styles.dropdown}
+              disabled={!selectedDistrict}
+            />
+          </View>
+        </View>
+
+        {/* Map View */}
+        <MapView
+          scrollEnabled={true}
+          onMapTouchStart={handleMapTouchStart}
+          coordinates={unit.address.locationGeography}
+          onMapPress={handleLocationChange}
+          height={hp(30)}
+        />
+
+        {/* Sport Types */}
+        <View style={styles.section} onTouchStart={handleOutsideMapTouch}>
+          <Text style={styles.sectionTitle}>Sport Types</Text>
+          <Text style={styles.sectionDescription}>
+            Select all sport types available at this club
+          </Text>
+
+          <View style={styles.sportTypeContainer}>
+            {sportType.map((item) => {
+              const isSelected = selectedSportTypes.some(
+                (st) => st.id === item.id
+              );
+              return (
+                <TouchableOpacity
+                  key={item.id}
+                  style={[
+                    styles.sportTypeItem,
+                    isSelected && styles.sportTypeItemSelected,
+                  ]}
+                  onPress={() => toggleSportType(item)}
+                >
+                  <Text
+                    style={[
+                      styles.sportTypeText,
+                      isSelected && styles.sportTypeTextSelected,
+                    ]}
+                  >
+                    {item.name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+
+        {/* Images */}
+        <View style={styles.section} onTouchStart={handleOutsideMapTouch}>
+          <Text style={styles.sectionTitle}>Images</Text>
+
+          <FlatList
+            data={unit.media}
+            renderItem={renderImageItem}
+            keyExtractor={(item) => item.mediaId}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.imageList}
+            ListFooterComponent={
               <TouchableOpacity
-                style={styles.addButton}
-                onPress={() => {
-                  setCurrentPrice({
-                    id: '',
-                    price: 0,
-                    currency: 'VND',
-                    startTime: '',
-                    endTime: '',
-                  });
-                  setShowPriceForm(true);
-                }}
+                style={styles.addImageButton}
+                onPress={handleAddImage}
               >
-                <Text style={styles.addButtonText}>+ Add Price</Text>
+                <Text style={styles.addImageText}>+</Text>
               </TouchableOpacity>
-            </View>
+            }
+          />
+        </View>
 
-            {unitData.unitPrices.length > 0 ? (
-              <FlatList
-                data={unitData.unitPrices}
-                renderItem={renderPriceItem}
-                keyExtractor={(item) => item.id}
-                scrollEnabled={false}
-                contentContainerStyle={styles.itemList}
-              />
-            ) : (
-              <Text style={styles.emptyText}>No prices added yet</Text>
-            )}
+        {/* Unit Prices */}
+        <View style={styles.section} onTouchStart={handleOutsideMapTouch}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Prices</Text>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => {
+                setCurrentPrice({
+                  id: '',
+                  price: 0,
+                  currency: 'VND',
+                  startTime: '',
+                  endTime: '',
+                });
+                setShowPriceForm(true);
+              }}
+            >
+              <Text style={styles.addButtonText}>+ Add Price</Text>
+            </TouchableOpacity>
           </View>
 
-          {/* Unit Services */}
-          <View style={styles.section} onTouchStart={handleOutsideMapTouch}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Services</Text>
-              <TouchableOpacity
-                style={styles.addButton}
-                onPress={() => {
-                  setCurrentService({
-                    id: '',
-                    name: '',
-                    description: '',
-                    price: 0,
-                    currency: 'VND',
-                    status: 1,
-                    icon: '',
-                  });
-                  setShowServiceForm(true);
-                }}
-              >
-                <Text style={styles.addButtonText}>+ Add Service</Text>
-              </TouchableOpacity>
-            </View>
-
-            {unitData.unitServices.length > 0 ? (
-              <FlatList
-                data={unitData.unitServices}
-                renderItem={renderServiceItem}
-                keyExtractor={(item) => item.id}
-                scrollEnabled={false}
-                contentContainerStyle={styles.itemList}
-              />
-            ) : (
-              <Text style={styles.emptyText}>No services added yet</Text>
-            )}
-          </View>
-
-          {/* Buttons */}
-          <View style={styles.buttonContainer} onTouchStart={handleOutsideMapTouch}>
-            <Button
-              title="Cancel"
-              onPress={onClose}
-              buttonStyle={styles.cancelButton}
-              textStyle={styles.cancelButtonText}
+          {unit.unitPrices.length > 0 ? (
+            <FlatList
+              data={unit.unitPrices}
+              renderItem={renderPriceItem}
+              keyExtractor={(item) => item.id}
+              scrollEnabled={false}
+              contentContainerStyle={styles.itemList}
             />
-            <Button
-              title="Save"
-              onPress={handleSave}
-              buttonStyle={styles.saveButton}
-            />
+          ) : (
+            <Text style={styles.emptyText}>No prices added yet</Text>
+          )}
+        </View>
+
+        {/* Unit Services */}
+        <View style={styles.section} onTouchStart={handleOutsideMapTouch}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Services</Text>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => {
+                setCurrentService({
+                  id: '',
+                  name: '',
+                  description: '',
+                  price: 0,
+                  currency: 'VND',
+                  status: 1,
+                  icon: '',
+                });
+                setShowServiceForm(true);
+              }}
+            >
+              <Text style={styles.addButtonText}>+ Add Service</Text>
+            </TouchableOpacity>
           </View>
-        </ScrollView>
-      </View>
+
+          {unit.unitServices.length > 0 ? (
+            <FlatList
+              data={unit.unitServices}
+              renderItem={renderServiceItem}
+              keyExtractor={(item) => item.id}
+              scrollEnabled={false}
+              contentContainerStyle={styles.itemList}
+            />
+          ) : (
+            <Text style={styles.emptyText}>No services added yet</Text>
+          )}
+        </View>
+
+        {/* Buttons */}
+        <View
+          style={styles.buttonContainer}
+          onTouchStart={handleOutsideMapTouch}
+        >
+          <Button
+            title="Cancel"
+            onPress={() => navigation.goBack()}
+            buttonStyle={styles.cancelButton}
+            textStyle={styles.cancelButtonText}
+          />
+          <Button
+            title="Save"
+            onPress={async () => await handleSave()}
+            buttonStyle={styles.saveButton}
+          />
+        </View>
+      </ScrollView>
 
       {/* Price Form Modal */}
       <BaseModal
@@ -946,43 +990,21 @@ const UnitForm: FC<UnitFormProps> = ({
           </View>
         </View>
       </BaseModal>
-    </BaseModal>
+    </View>
   );
 };
 
 const createStyles = (theme: IColorScheme) =>
   StyleSheet.create({
     container: {
+      flex: 1,
       backgroundColor: theme.backgroundLight,
-      borderTopLeftRadius: Radius.lg,
-      borderTopRightRadius: Radius.lg,
-      height: '90%',
-      width: '100%',
-      padding: wp(5),
-    },
-    header: {
-      flexDirection: 'row',
-      width: '100%',
-      backgroundColor: theme.backgroundLight,
-      justifyContent: 'space-between',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 3,
-      marginBottom: hp(2),
-    },
-    title: {
-      ...fontFamily.RALEWAY_BOLD,
-      fontSize: fontSize.xl,
-      color: theme.textDark,
-      marginBottom: hp(2),
     },
     scrollView: {
       flex: 1,
     },
     scrollContent: {
+      padding: wp(5),
       paddingBottom: hp(5),
     },
     section: {
@@ -999,6 +1021,11 @@ const createStyles = (theme: IColorScheme) =>
       fontSize: fontSize.xs,
       color: theme.textLight,
       marginBottom: hp(1),
+    },
+    sportTypeContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      marginTop: hp(1),
     },
     addImageButton: {
       width: wp(25),
@@ -1231,4 +1258,4 @@ const createStyles = (theme: IColorScheme) =>
     },
   });
 
-export default UnitForm;
+export default UnitFormScreen;

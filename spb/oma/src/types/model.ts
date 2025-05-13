@@ -130,13 +130,13 @@ export type ClubModel = {
 };
 
 export type AddressUpdateModel = {
-	address?: string;
-	wardId?: string;
-	locationGeography?: {
-		latitude?: number;
-		longitude?: number;
-	}
-}
+  address?: string;
+  wardId?: string;
+  locationGeography?: {
+    latitude?: number;
+    longitude?: number;
+  };
+};
 
 export type ClubUpdateModel = {
   name?: string;
@@ -146,6 +146,22 @@ export type ClubUpdateModel = {
   sportTypes?: string[];
 };
 
+export type UnitPriceUpdateModel = {
+  price: number;
+  currency: string;
+  startTime: string;
+  endTime: string;
+};
+
+export type UnitServiceUpdateModel = {
+  name: string;
+  icon: string;
+  price: number;
+  currency: string;
+  description: string;
+  status: number;
+};
+
 export type UnitUpdateModel = {
   name?: string;
   openTime?: string;
@@ -153,8 +169,7 @@ export type UnitUpdateModel = {
   phone?: string;
   description?: string;
   address?: AddressUpdateModel;
-  unitPrices?: UnitPriceModel[];
-  unitServices?: UnitServiceModel[];
-  media?: MediaModel[];
-  sportTypes?: SportTypeModel[];
+  unitPrices?: UnitPriceUpdateModel[];
+  unitServices?: UnitServiceUpdateModel[];
+  sportTypes?: string[];
 };

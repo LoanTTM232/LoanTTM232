@@ -13,7 +13,7 @@ func (s *Service) BookedTimeOnDay(reqBody *model.BookedTimeRequest, unitId strin
 	var unit entities.Unit
 
 	err := s.db.Model(&entities.Unit{}).
-		Where("id = ?", unitId).First(&unit).Error
+		Where("id = ? AND status = 1", unitId).First(&unit).Error
 	if err != nil {
 		return nil, msg.ErrUnitNotFound
 	}

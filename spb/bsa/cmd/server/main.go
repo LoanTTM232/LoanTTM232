@@ -99,7 +99,7 @@ func (f *Fiber) GetApp() {
 		CaseSensitive:                true,
 		StrictRouting:                false,
 		ServerHeader:                 global.SPB_CONFIG.ProjectName,
-		BodyLimit:                    100 << 20, // 500 MB
+		BodyLimit:                    500 << 20, // 500 MB
 		DisablePreParseMultipartForm: false,
 		StreamRequestBody:            false,
 		JSONEncoder:                  json.Marshal,

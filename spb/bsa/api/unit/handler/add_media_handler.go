@@ -42,7 +42,8 @@ func (h *Handler) AddMedia(ctx fiber.Ctx) error {
 	claims := ctx.Locals("claims").(authModel.UserClaims)
 	userId := claims.UserID
 
-	if err = h.service.AddMedia(reqBody, unitId, userId); err != nil {
+	var mediaId string
+	if mediaId, err = h.service.AddMedia(reqBody, unitId, userId); err != nil {
 		logger.Errorf(msg.ErrAddPropertyFailed("unit", "media", err))
 		switch err {
 		case msg.ErrUnitNotFound:
@@ -54,5 +55,5 @@ func (h *Handler) AddMedia(ctx fiber.Ctx) error {
 		}
 	}
 
-	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS)
+	return fctx.JsonResponse(fiber.StatusOK, msg.CODE_SUCCESS, map[string]string{"media_id": mediaId})
 }

@@ -19,7 +19,7 @@ func (s *Service) GetByID(unitId string) (*tb.Unit, error) {
 		Preload("UnitService").
 		Preload("Media").
 		Preload("SportTypes").
-		Where("id = ?", unitId).First(unit).Error
+		Where("id = ? AND status = 1", unitId).First(unit).Error
 	if err != nil {
 		return nil, err
 	}

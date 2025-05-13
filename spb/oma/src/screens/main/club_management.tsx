@@ -1,7 +1,6 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import {
-  ActivityIndicator, Alert, FlatList, Image, ScrollView, StyleSheet, Text, TextInput,
-  TouchableOpacity, View
+  FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View
 } from 'react-native';
 import { ShadowedView } from 'react-native-fast-shadow';
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -15,13 +14,12 @@ import { hp, wp } from '@/helpers/dimensions';
 import { logError } from '@/helpers/logger';
 import { toastError, toastSuccess } from '@/helpers/toast';
 import { MainStackParamList } from '@/screens/main';
-import locationService from '@/services/location.service';
 import mediaService, { RNImageFile } from '@/services/media.service';
-import { District, Province, Ward } from '@/services/types';
 import { ClubModel, ClubUpdateModel, MediaModel, SportTypeModel } from '@/types/model';
 import Button from '@/ui/button/BaseButton';
 import Dropdown from '@/ui/dropdown/Dropdown';
 import { useAuthStore, useClubStore, useLocationStore, useSportTypeStore } from '@/zustand';
+import { PLACEHOLDER_IMAGE } from '@env';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -243,7 +241,6 @@ const ClubManagementScreen: FC = () => {
       },
     };
 
-    console.log('Saving club data:', finalUpdatedClub);
     try {
       await updateClub(finalUpdatedClub, club.id);
       // Show success message
@@ -257,7 +254,6 @@ const ClubManagementScreen: FC = () => {
 
   // Render club image item
   const renderImageItem = ({ item }: { item: MediaModel }) => {
-    console.log(item);
     return (
       <View style={styles.imageContainer}>
         <Image
@@ -293,7 +289,7 @@ const ClubManagementScreen: FC = () => {
 
       // Create file object from URI with all required properties
       const fileToUpload: RNImageFile = {
-        uri: selectedImage.uri,
+        uri: selectedImage.uri || PLACEHOLDER_IMAGE,
         type: selectedImage.type || 'image/jpeg',
         name: selectedImage.fileName || `image_${Date.now()}.jpg`,
       };
@@ -530,7 +526,9 @@ const ClubManagementScreen: FC = () => {
             <View style={styles.unitButtonsContainer}>
               <TouchableOpacity
                 style={styles.manageButton}
-                onPress={() => navigation.navigate('UnitManagement')}
+                onPress={() =>
+                  navigation.navigate('UnitManagement')
+                }
               >
                 <Text style={styles.manageButtonText}>Manage Units</Text>
               </TouchableOpacity>

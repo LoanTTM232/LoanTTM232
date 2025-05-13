@@ -19,7 +19,7 @@ func (s *Service) Pay(reqBody *model.PayRequest) (*payment.PaymentResponse, erro
 	err = s.db.Model(&tb.Unit{}).
 		Preload("UnitPrice").
 		Preload("UnitService").
-		Where("id = ?", reqBody.UnitID).First(unit).Error
+		Where("id = ? AND status = 1", reqBody.UnitID).First(unit).Error
 	if err != nil {
 		return nil, err
 	}
