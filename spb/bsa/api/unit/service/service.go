@@ -11,7 +11,7 @@ import (
 
 type IService interface {
 	Update(reqBody *model.UpdateUnitRequest, unitId, ownerId string) error
-	GetByID(unitId string) (*tb.Unit, error)
+	GetByID(unitId string, includeInactive bool) (*tb.Unit, error)
 	Delete(unitId, ownerId string) error
 	Create(reqBody *model.CreateUnitRequest, ownerId string) (*tb.Unit, error)
 	Search(reqBody *model.SearchUnitRequest) ([]*tb.Unit, int64, error)

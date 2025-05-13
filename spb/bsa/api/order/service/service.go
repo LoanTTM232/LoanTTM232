@@ -14,6 +14,7 @@ type IService interface {
 	Pay(reqBody *model.PayRequest) (*payment.PaymentResponse, error)
 	ZaloPayCallback(reqBody map[string]interface{}) (*model.CallBackResponse, error)
 	GetByUserID(userID string) ([]*tb.Order, error)
+	GetByClubID(clubID string) (map[string][]*tb.Order, error)
 	ValidateStartTimeEndTime(reqBody *model.PayRequest, booking *domain.Booking) error
 }
 

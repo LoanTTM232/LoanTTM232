@@ -26,4 +26,5 @@ func LoadModule(router fiber.Router, customMiddleware middleware.ICustomMiddlewa
 	orderRoute.Post("/pay", OrderHandler.Pay, customMiddleware.CheckAccess("order:pay"))
 	orderRoute.Post("/zalopay/callback", OrderHandler.ZaloPayCallback)
 	orderRoute.Get("/:id", OrderHandler.GetByUserID, customMiddleware.CheckAccess("order:read"))
+	orderRoute.Get("/club/:id", OrderHandler.GetByClubID, customMiddleware.CheckAccess("order:read"))
 }

@@ -45,6 +45,17 @@ func MapOrderToResponse(order *tb.Order) model.OrderResponse {
 	return orderResponse
 }
 
+func MapOrdersByUnitToResponse(ordersByUnit map[string][]*tb.Order) []model.OrdersByUnitResponse {
+	ordersByUnitResponse := []model.OrdersByUnitResponse{}
+	for unitID, orders := range ordersByUnit {
+		ordersByUnitResponse = append(ordersByUnitResponse, model.OrdersByUnitResponse{
+			UnitID: unitID,
+			Orders: MapOrdersToResponse(orders).Orders,
+		})
+	}
+	return ordersByUnitResponse
+}
+
 func MapOrdersToResponse(orders []*tb.Order) model.OrdersResponse {
 	ordersResponses := model.OrdersResponse{}
 	ordersResponses.Orders = make([]model.OrderResponse, 0, len(orders))

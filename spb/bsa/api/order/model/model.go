@@ -49,3 +49,8 @@ type OrdersResponse struct {
 	Orders []OrderResponse `json:"orders"`
 	Total  int64           `json:"total"`
 }
+
+type OrdersByUnitResponse struct {
+	UnitID string          `json:"unit_id"`
+	Orders []OrderResponse `json:"orders"`
+}

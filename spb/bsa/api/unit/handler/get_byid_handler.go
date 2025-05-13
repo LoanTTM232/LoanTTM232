@@ -32,7 +32,7 @@ func (s *Handler) GetByID(ctx fiber.Ctx) error {
 		return fctx.ErrResponse(msg.PARAM_INVALID)
 	}
 
-	if unit, err = s.service.GetByID(unitId); err != nil {
+	if unit, err = s.service.GetByID(unitId, false); err != nil {
 		logger.Errorf(msg.ErrGetFailed("unit", err))
 		return fctx.ErrResponse(msg.BAD_REQUEST)
 	}

@@ -32,7 +32,7 @@ func (s *Service) GetByOwner(ownerId string) (*tb.Club, error) {
 
 	// Get units
 	for i := 0; i < len(club.Units); i++ {
-		club.Units[i], err = unit.UnitService.GetByID(club.Units[i].ID)
+		club.Units[i], err = unit.UnitService.GetByID(club.Units[i].ID, true)
 		if err != nil {
 			return nil, msg.ErrNotFound("Unit")
 		}

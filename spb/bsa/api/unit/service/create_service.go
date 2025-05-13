@@ -66,7 +66,7 @@ func (s *Service) Create(reqBody *model.CreateUnitRequest, ownerId string) (*tb.
 	}
 
 	// get unit by id
-	completedUnit, err := s.GetByID(unit.ID)
+	completedUnit, err := s.GetByID(unit.ID, true)
 	if err != nil {
 		return nil, err
 	}

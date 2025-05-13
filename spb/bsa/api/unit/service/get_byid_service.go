@@ -11,15 +11,21 @@ import (
 // @description: Service for get unit
 // @param: unitId string,
 // @return: *tb.Unit, error
-func (s *Service) GetByID(unitId string) (*tb.Unit, error) {
+func (s *Service) GetByID(unitId string, includeInactive bool) (*tb.Unit, error) {
 	unit := new(tb.Unit)
 
-	err := s.db.Model(&tb.Unit{}).
+	query := s.db.Model(&tb.Unit{}).
 		Preload("UnitPrice").
 		Preload("UnitService").
 		Preload("Media").
 		Preload("SportTypes").
-		Where("id = ? AND status = 1", unitId).First(unit).Error
+		Where("id = ?", unitId)
+
+	if !includeInactive {
+		query = query.Where("status = 1")
+	}
+
+	err := query.First(unit).Error
 	if err != nil {
 		return nil, err
 	}
