@@ -46,31 +46,6 @@ const UnitManagementScreen: FC = () => {
     navigation.navigate('UnitForm', { unitId });
   };
 
-  // Handle disable/enable unit
-  const handleToggleUnitStatus = (unit: UnitModel) => {
-    // In a real app, this would call an API to update the unit status
-    Alert.alert(
-      'Confirm',
-      `Are you sure you want to ${unit.status === 1 ? 'disable' : 'enable'} this unit?`,
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Confirm',
-          onPress: () => {
-            // In a real app, this would update the unit status
-            Alert.alert(
-              'Status Updated',
-              `Unit status has been ${unit.status === 1 ? 'disabled' : 'enabled'}`
-            );
-          },
-        },
-      ]
-    );
-  };
-
   // Render unit item
   const renderUnitItem = ({ item }: { item: UnitModel }) => {
     return (
@@ -100,12 +75,6 @@ const UnitManagementScreen: FC = () => {
             >
               <Text style={styles.editButtonText}>Edit</Text>
             </TouchableOpacity>
-            <Switch
-              value={item.status === 1}
-              onValueChange={() => handleToggleUnitStatus(item)}
-              trackColor={{ false: theme.disable, true: theme.primary }}
-              thumbColor={theme.white}
-            />
           </View>
         </View>
         <View style={styles.unitDetails}>

@@ -1,5 +1,5 @@
 import { Feature, Point } from 'geojson';
-import React, { FC, useContext, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import {
   FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View
 } from 'react-native';
@@ -16,7 +16,8 @@ import { toastError, toastSuccess } from '@/helpers/toast';
 import { MainStackParamList } from '@/screens/main';
 import mediaService, { RNImageFile } from '@/services/media.service';
 import {
-  MediaModel, SportTypeModel, UnitModel, UnitPriceModel, UnitServiceModel, UnitUpdateModel
+  MediaModel, SportTypeModel, UnitModel, UnitPriceModel, UnitPriceUpdateModel, UnitServiceModel,
+  UnitServiceUpdateModel, UnitUpdateModel
 } from '@/types/model';
 import Button from '@/ui/button/BaseButton';
 import Dropdown from '@/ui/dropdown/Dropdown';
@@ -97,6 +98,11 @@ const UnitFormScreen: FC = () => {
     status: 1,
   });
 
+  useEffect(() => {
+    getDistrict(unit.address.provinceId);
+    getWard(unit.address.districtId);
+  }, [getDistrict, getWard]);
+
   // Handle update unit field
   const handleUpdateUnitField = (field: keyof UnitModel, value: any) => {
     setUnit((prevData) => ({
@@ -161,24 +167,52 @@ const UnitFormScreen: FC = () => {
   };
 
   // Handle add price
-  const handleAddPrice = () => {
-    if (currentPrice.id) {
-      // Update existing price
+  const handleAddUpdatePrice = () => {
+    // Update existing price
+    if (currentPrice.id !== '') {
+      const updatedPrice = unit.unitPrices.map((p) =>
+        p.id === currentPrice.id ? currentPrice : p
+      );
       setUnit({
         ...unit,
-        unitPrices: unit.unitPrices.map((p) =>
-          p.id === currentPrice.id ? currentPrice : p
-        ),
+        unitPrices: updatedPrice,
+      });
+
+      setUpdatedUnit((preUnit) => {
+        if (!preUnit.openTime || !preUnit.closeTime) {
+          preUnit.openTime = unit.openTime;
+          preUnit.closeTime = unit.closeTime;
+        }
+        return {
+          ...preUnit,
+          unitPrices: updatedPrice.map((p) => ({
+            price: p.price,
+            currency: p.currency,
+            startTime: p.startTime,
+            endTime: p.endTime,
+          })),
+        };
       });
     } else {
-      // Add new price
-      const newPrice = {
-        ...currentPrice,
-        id: Date.now().toString(),
-      };
       setUnit({
         ...unit,
-        unitPrices: [...unit.unitPrices, newPrice],
+        unitPrices: [...unit.unitPrices, { ...currentPrice }],
+      });
+
+      setUpdatedUnit((preUnit) => {
+        if (!preUnit.openTime || !preUnit.closeTime) {
+          preUnit.openTime = unit.openTime;
+          preUnit.closeTime = unit.closeTime;
+        }
+        return {
+          ...preUnit,
+          unitPrices: [...(unit.unitPrices || []), currentPrice].map((p) => ({
+            price: p.price,
+            currency: p.currency,
+            startTime: p.startTime,
+            endTime: p.endTime,
+          })),
+        };
       });
     }
 
@@ -205,27 +239,65 @@ const UnitFormScreen: FC = () => {
       ...unit,
       unitPrices: unit.unitPrices.filter((p) => p.id !== id),
     });
+    setUpdatedUnit((preUnit) => {
+      if (!preUnit.openTime || !preUnit.closeTime) {
+        preUnit.openTime = unit.openTime;
+        preUnit.closeTime = unit.closeTime;
+      }
+      return {
+        ...preUnit,
+        unitPrices: unit.unitPrices
+          .filter((p) => p.id !== id)
+          .map((p) => ({
+            price: p.price,
+            currency: p.currency,
+            startTime: p.startTime,
+            endTime: p.endTime,
+          })),
+      };
+    });
   };
 
   // Handle add service
   const handleAddService = () => {
-    if (currentService.id) {
-      // Update existing service
+    // Update existing service
+    if (currentService.id !== '') {
+      const updatedService = unit.unitServices.map((s) =>
+        s.id === currentService.id ? currentService : s
+      );
+
       setUnit({
         ...unit,
-        unitServices: unit.unitServices.map((s) =>
-          s.id === currentService.id ? currentService : s
-        ),
+        unitServices: updatedService,
+      });
+      setUpdatedUnit({
+        ...updatedUnit,
+        unitServices: updatedService.map((s) => ({
+          name: s.name,
+          icon: s.icon,
+          price: s.price,
+          currency: s.currency,
+          description: s.description,
+          status: s.status,
+        })),
       });
     } else {
-      // Add new service
-      const newService = {
-        ...currentService,
-        id: Date.now().toString(),
-      };
       setUnit({
         ...unit,
-        unitServices: [...unit.unitServices, newService],
+        unitServices: [...unit.unitServices, { ...currentService }],
+      });
+      setUpdatedUnit({
+        ...updatedUnit,
+        unitServices: [...(unit.unitServices || []), currentService].map(
+          (s) => ({
+            name: s.name,
+            icon: s.icon,
+            price: s.price,
+            currency: s.currency,
+            description: s.description,
+            status: s.status,
+          })
+        ),
       });
     }
 
@@ -253,6 +325,19 @@ const UnitFormScreen: FC = () => {
     setUnit({
       ...unit,
       unitServices: unit.unitServices.filter((s) => s.id !== id),
+    });
+    setUpdatedUnit({
+      ...updatedUnit,
+      unitServices: unit.unitServices
+        .filter((s) => s.id !== id)
+        .map((s) => ({
+          name: s.name,
+          icon: s.icon,
+          price: s.price,
+          currency: s.currency,
+          description: s.description,
+          status: s.status,
+        })),
     });
   };
 
@@ -778,15 +863,6 @@ const UnitFormScreen: FC = () => {
             <TouchableOpacity
               style={styles.addButton}
               onPress={() => {
-                setCurrentService({
-                  id: '',
-                  name: '',
-                  description: '',
-                  price: 0,
-                  currency: 'VND',
-                  status: 1,
-                  icon: '',
-                });
                 setShowServiceForm(true);
               }}
             >
@@ -901,7 +977,7 @@ const UnitFormScreen: FC = () => {
             />
             <Button
               title="Save"
-              onPress={handleAddPrice}
+              onPress={handleAddUpdatePrice}
               buttonStyle={styles.saveButton}
             />
           </View>
@@ -911,7 +987,18 @@ const UnitFormScreen: FC = () => {
       {/* Service Form Modal */}
       <BaseModal
         visible={showServiceForm}
-        onClose={() => setShowServiceForm(false)}
+        onClose={() => {
+          setShowServiceForm(false);
+          setCurrentService({
+            id: '',
+            name: '',
+            icon: '',
+            description: '',
+            price: 0,
+            currency: 'VND',
+            status: 1,
+          });
+        }}
       >
         <View style={styles.formModal}>
           <Text style={styles.formModalTitle}>
